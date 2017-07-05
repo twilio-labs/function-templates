@@ -1,0 +1,17 @@
+{
+  "name": "useful-twilio-functions",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A set of useful Twilio Functions.",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Phil Nash <philnash@twilio.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "jest-cli": "^20.0.4"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
