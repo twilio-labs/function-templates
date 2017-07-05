@@ -16,7 +16,7 @@ Each Function lives in its own directory within this repo. To use the code, copy
 
 This is the list of Functions available in this repo:
 
-* [Hello world](helloWorld) - A very basic Function to get this repo started
+* [Hello world](hello-world) - A very basic Function to get this repo started
 
 ## Contribute
 
