@@ -1,5 +1,7 @@
 # Useful Twilio Functions
 
+[![Build Status](https://travis-ci.org/philnash/useful-twilio-functions.svg?branch=master)](https://travis-ci.org/philnash/useful-twilio-functions)
+
 [Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
 
 ## This repo
