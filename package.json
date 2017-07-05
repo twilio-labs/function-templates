@@ -13,5 +13,8 @@
   },
   "jest": {
     "testEnvironment": "node"
+  },
+  "dependencies": {
+    "twilio": "^3.4.0-alpha-1"
   }
 }
