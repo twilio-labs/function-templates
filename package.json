@@ -15,6 +15,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "got": "^7.1.0",
     "twilio": "^3.4.0-alpha-1"
   }
 }
