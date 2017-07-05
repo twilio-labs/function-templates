@@ -17,6 +17,7 @@ Each Function lives in its own directory within this repo. To use the code, copy
 This is the list of Functions available in this repo:
 
 * [Hello world](hello-world) - A very basic Function to get this repo started
+* [Forward message](forward-message) - Forward incoming SMS messages to another number
 
 ## Contribute
 
