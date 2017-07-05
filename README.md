@@ -20,6 +20,20 @@ This is the list of Functions available in this repo:
 * [Forward message](forward-message) - Forward incoming SMS messages to another number
 * [Forward message to email using SendGrid](forward-message-as-email)
 
+### Todo
+
+[ ] Forward message to email with other API providers
+[ ] Generate Video access token
+[ ] Generate Sync access token
+[ ] Generate Chat access token
+[ ] Generate Twilio Client access token
+[ ] Voicemail
+[ ] Conference line
+[ ] Inbound calls for SIP registration
+[ ] Outbound calls for SIP registration
+
+Please add ideas if you have them.
+
 ## Contribute
 
 Pull requests and new Functions are accepted. To make a contribution, follow these steps:
@@ -34,7 +48,7 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ### Install
 
-This project uses Node.js version 6.10.2. I recommend using [nvm](https://github.com/creationix/nvm) if you need to install multiple versions of Node.js. Clone or download the project, use the correct version of Node.js and install the dependencies:
+This project and Twilio Functions use Node.js version 6.10.2. I recommend using [nvm](https://github.com/creationix/nvm) if you need to install multiple versions of Node.js. Clone or download the project, use the correct version of Node.js and install the dependencies:
 
 ```bash
 nvm use
