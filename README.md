@@ -22,15 +22,15 @@ This is the list of Functions available in this repo:
 
 ### Todo
 
-[ ] Forward message to email with other API providers
-[ ] Generate Video access token
-[ ] Generate Sync access token
-[ ] Generate Chat access token
-[ ] Generate Twilio Client access token
-[ ] Voicemail
-[ ] Conference line
-[ ] Inbound calls for SIP registration
-[ ] Outbound calls for SIP registration
+- [ ] Forward message to email with other API providers
+- [ ] Generate Video access token
+- [ ] Generate Sync access token
+- [ ] Generate Chat access token
+- [ ] Generate Twilio Client access token
+- [ ] Voicemail
+- [ ] Conference line
+- [ ] Inbound calls for SIP registration
+- [ ] Outbound calls for SIP registration
 
 Please add ideas if you have them.
 
