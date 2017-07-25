@@ -31,6 +31,7 @@ This is the list of Functions available in this repo:
 - [ ] Conference line
 - [ ] Inbound calls for SIP registration
 - [ ] Outbound calls for SIP registration
+- [ ] Hunt/FindMe caller (take a list of numbers and calls each in order until one answers)
 
 Please add ideas if you have them.
 
