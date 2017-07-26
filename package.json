@@ -12,7 +12,9 @@
     "jest-cli": "^20.0.4"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"]
   },
   "dependencies": {
     "got": "^7.1.0",
