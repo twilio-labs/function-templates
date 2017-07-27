@@ -18,7 +18,7 @@ This Function expects three environment variables to be set.
 | :------------------- | :------ |
 | `SPARKPOST_API_KEY`  | Your SparkPost API key |
 | `TO_EMAIL_ADDRESS`   | The email address to forward the message to |
-| `FROM_EMAIL_ADDRESS` | The email address that SendGrid should send the email from |
+| `FROM_EMAIL_ADDRESS` | The email address that SparkPost should send the email from |
 
 
 
