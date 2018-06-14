@@ -20,6 +20,14 @@ This Function expects three environment variables to be set.
 | `TO_EMAIL_ADDRESS`   | The email address to forward the message to |
 | `FROM_EMAIL_ADDRESS` | The email address that SendGrid should send the email from |
 
+### Dependencies
+
+This Function depends on one npm module. You should add the following dependencies in your [Functions configuration page](https://www.twilio.com/console/runtime/functions/configure).
+
+| Dependency | Version |
+| :--------- | :------ |
+| `got`      | 8.3.1   |
+
 ### Parameters
 
 This Function expects the incoming request to be a messaging webhook. The parameters that will be used are `From` and `Body`.
