@@ -10,7 +10,7 @@
   "license": "MIT",
   "devDependencies": {
     "eslint": "^5.4.0",
-    "jest-cli": "^20.0.4"
+    "jest-cli": "^23.5.0"
   },
   "jest": {
     "testEnvironment": "node",
