@@ -9,15 +9,19 @@
   "author": "Phil Nash <philnash@twilio.com>",
   "license": "MIT",
   "devDependencies": {
+    "eslint": "^5.4.0",
     "jest-cli": "^20.0.4"
   },
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ]
   },
   "dependencies": {
-    "got": "^7.1.0",
-    "twilio": "^3.4.0-alpha-1"
+    "got": "^6.7.1",
+    "twilio": "3.6.3"
   }
 }
