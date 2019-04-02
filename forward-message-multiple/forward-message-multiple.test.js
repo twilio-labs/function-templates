@@ -3,11 +3,11 @@ const forwardMessageMultiple = require('./forward-message-multiple').handler;
 const Twilio = require('twilio');
 
 const context = {
-  FORWARDING_NUMBERS: 'TwilioNumber1, TwilioNumber2'
+  FORWARDING_NUMBERS: 'TwilioNumber1, TwilioNumber2',
 };
 const event = {
   Body: 'Hello',
-  From: 'ExternalNumber'
+  From: 'ExternalNumber',
 };
 
 beforeAll(() => {
