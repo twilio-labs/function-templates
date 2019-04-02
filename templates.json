@@ -1,0 +1,34 @@
+{
+  "templates": [
+    {
+      "id": "hello-world",
+      "name": "Hello World",
+      "description": "Basic Function that will return Hello World"
+    },
+    {
+      "id": "forward-message",
+      "name": "Forward Message",
+      "description": "Forwards an incoming messages to another number"
+    },
+    {
+      "id": "forward-message-multiple",
+      "name": "Forward Message to Multiple Numbers",
+      "description": "Forwards incoming messages to a set of numbers"
+    },
+    {
+      "id": "forward-message-sendgrid",
+      "name": "Forward Message to Email via SendGrid",
+      "description": "Uses SendGrid to forward incoming messages via email"
+    },
+    {
+      "id": "forward-message-sparkpost",
+      "name": "Forward Message to Email via Sparkpost",
+      "description": "Uses Sparkpost to forward incoming messages via email"
+    },
+    {
+      "id": "hunt",
+      "name": "Hunt / Find Me",
+      "description": "Will call a list of configured numbers until one answers"
+    }
+  ]
+}

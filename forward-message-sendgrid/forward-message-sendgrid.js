@@ -8,18 +8,18 @@ exports.handler = function(context, event, callback) {
     content: [
       {
         type: 'text/plain',
-        value: event.Body
-      }
-    ]
+        value: event.Body,
+      },
+    ],
   };
 
   got
     .post('https://api.sendgrid.com/v3/mail/send', {
       headers: {
         Authorization: `Bearer ${context.SENDGRID_API_KEY}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(requestBody),
     })
     .then(response => {
       let twiml = new Twilio.twiml.MessagingResponse();
