@@ -1,6 +1,11 @@
 {
   "templates": [
     {
+      "id": "blank",
+      "name": "Blank Template",
+      "description": "Barebones template to get started"
+    },
+    {
       "id": "hello-world",
       "name": "Hello World",
       "description": "Basic Function that will return Hello World"
