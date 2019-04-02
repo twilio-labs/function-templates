@@ -1,12 +1,12 @@
-# Useful Twilio Functions
+# Twilio Function Templates
 
-[![Build Status](https://travis-ci.org/philnash/useful-twilio-functions.svg?branch=master)](https://travis-ci.org/philnash/useful-twilio-functions)
+[![Build Status](https://travis-ci.org/twilio-labs/function-templates.svg?branch=master)](https://travis-ci.org/twilio-labs/function-templates)
 
 [Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
 
 ## This repo
 
-This repo is intended to be a collection of useful Twilio Functions that are tested and documented. The intention is that you can take any of these Functions and drop them into a project, confident they will work. Whether you are a developer looking for a particular building block or a builder who justs needs a particular Function.
+This repo is intended to be a collection of useful Twilio Functions that are tested and documented. The intention is that you can take any of these Functions and drop them into a project, confident they will work. Whether you are a developer looking for a particular building block or a builder who justs needs a particular Function. These templates are also available through `twilio-run new` inside the [`twilio-run`](https://npm.im/twilio-run) CLI.
 
 ## Usage
 
@@ -16,9 +16,12 @@ Each Function lives in its own directory within this repo. To use the code, copy
 
 This is the list of Functions available in this repo:
 
-* [Hello world](hello-world) - A very basic Function to get this repo started
-* [Forward message](forward-message) - Forward incoming SMS messages to another number
-* [Forward message to email using SendGrid](forward-message-as-email)
+* [Blank Template](blank) - Barebones template to get started
+* [Hello World](hello-world) - A very basic Function to get this repo started
+* [Forward Message](forward-message) - Forward incoming SMS messages to another number
+* [Forward Message to Multiple Numbers](forward-message-multiple) - Forwards incoming messages to a set of numbers
+* [Forwad Message to Email via SendGrid](forward-message-sendgrid) - Uses SendGrid to forward incoming messages via email
+* [Forwad Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email
 * [Hunt/Find me](hunt) - Call a list of numbers in order until one answers
 
 ### Todo
@@ -41,7 +44,7 @@ Please add ideas if you have them.
 
 Pull requests and new Functions are accepted. To make a contribution, follow these steps:
 
-1. Fork this repository ( https://github.com/philnash/useful-twilio-functions/fork )
+1. Fork this repository ( https://github.com/twilio-labs/function-templates/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
 3. Commit your changes (git commit -am 'Add some feature')
 4. Push to the branch (git push origin my-new-feature)
