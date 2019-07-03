@@ -20,8 +20,8 @@ This is the list of Functions available in this repo:
 * [Hello World](hello-world) - A very basic Function to get this repo started
 * [Forward Message](forward-message) - Forward incoming SMS messages to another number
 * [Forward Message to Multiple Numbers](forward-message-multiple) - Forwards incoming messages to a set of numbers
-* [Forwad Message to Email via SendGrid](forward-message-sendgrid) - Uses SendGrid to forward incoming messages via email
-* [Forwad Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email
+* [Forward Message to Email via SendGrid](forward-message-sendgrid) - Uses SendGrid to forward incoming messages via email
+* [Forward Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email
 * [Hunt/Find me](hunt) - Call a list of numbers in order until one answers
 
 ### Todo
