@@ -1,5 +1,5 @@
-const helpers = require('../test/test-helper');
-const hunt = require('./hunt').handler;
+const helpers = require('../../test/test-helper');
+const hunt = require('../functions/hunt').handler;
 const Twilio = require('twilio');
 
 const context = {

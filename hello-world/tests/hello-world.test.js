@@ -1,4 +1,4 @@
-const helloWorld = require('./hello-world').handler;
+const helloWorld = require('../functions/hello-world').handler;
 
 test('returns the string "Hello world!"', done => {
   const callback = (err, result) => {
