@@ -11,6 +11,11 @@
       "description": "Basic Function that will return Hello World"
     },
     {
+      "id": "never-gonna-give-you-up",
+      "name": "Never gonna give you up",
+      "description": "Never gonna let you down. Plays a song to a phone call"
+    },
+    {
       "id": "forward-message",
       "name": "Forward Message",
       "description": "Forwards an incoming messages to another number"
