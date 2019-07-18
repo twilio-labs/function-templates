@@ -20,11 +20,10 @@ of the script. These script properties are defined at the top of the file.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
-| Twiml instructions       | `Twiml`        | `ECHO\_TWIML`  | `MY_TWIML`     |
-| (as text)                |                |                |                |
+| Description                  | Context    | Environment    | Script     |
+| :--------------------------- | :--------- | :------------- | :--------- |
+|                              |            |                |            |
+| Twiml instructions (as text) | `Twiml`    | `ECHO\_TWIML`  | `MY_TWIML` |
 
 ## Output
 
