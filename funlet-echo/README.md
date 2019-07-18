@@ -23,7 +23,7 @@ of the script. These script properties are defined at the top of the file.
 | Description              | Context        | Environment    | Script         |
 | :----------------------- | :------------- | :------------- | :------------- |
 |                          |                |                |                |
-| Twiml instructions       | `Twiml`        | `ECHO\_TWIML`  | `DEFAULT_TWIML`|
+| Twiml instructions       | `Twiml`        | `ECHO\_TWIML`  | `MY_TWIML`     |
 | (as text)                |                |                |                |
 
 ## Output
