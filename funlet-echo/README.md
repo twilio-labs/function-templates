@@ -1,6 +1,9 @@
-# Funlet
+# Echo Funlet
 
-This Twilio Function is based on the Twimlet of the same name.
+This Twilio Function is based on the [Twimlet of the same name][twimlet].
+[twimlet]: https://www.twilio.com/labs/twimlets/echo
+
+## Usage
 
 It can be used as a drop-in replacement for the Twimlet, with the
 same GET parameters, by using the URL of the Twilio Function as
@@ -20,7 +23,9 @@ of the script. These script properties are defined at the top of the file.
 | Description              | Context        | Environment    | Script         |
 | :----------------------- | :------------- | :------------- | :------------- |
 |                          |                |                |                |
+| Twiml instructions       | `Twiml`        | `ECHO\_TWIML`  | `DEFAULT_TWIML`|
+| (as text)                |                |                |                |
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function simply returns the TwiML instructions provided as input.
