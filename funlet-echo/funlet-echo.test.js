@@ -9,7 +9,7 @@ function expectTwiml(result, Twiml) {
   expect( result.headers['Content-Type'] ).toBe( 'text/xml' );
 }
 
-test('[Echo-1.1] Echo (GET)', done => {
+test.skip('[Echo-1.1] Echo (GET)', done => {
   const callback = (err, result) => {
     expectTwiml(result, TWIML);
     done();
@@ -17,7 +17,7 @@ test('[Echo-1.1] Echo (GET)', done => {
   funlet({}, {Twiml:TWIML}, callback);
 });
 
-test('[Echo-1.2] Echo (ENV)', done => {
+test.skip('[Echo-1.2] Echo (ENV)', done => {
   const callback = (err, result) => {
     expectTwiml(result, TWIML);
     done();
@@ -25,7 +25,7 @@ test('[Echo-1.2] Echo (ENV)', done => {
   funlet({ECHO_TWIML:TWIML}, {}, callback);
 });
 
-test('[Echo-1.3] Echo (Default)', done => {
+test.skip('[Echo-1.3] Echo (Default)', done => {
   const DEFAULT_TWIML = '<Response><Say>echo</Say></Response>';
   const callback = (err, result) => {
     expectTwiml(result, DEFAULT_TWIML);
