@@ -1,6 +1,7 @@
-# Funlet
+# Whisper Funlet
 
-This Twilio Function is based on the Twimlet of the same name.
+This Twilio Function is based on the undocumented Twimlet of the same name
+(`whisper.php`).
 
 It can be used as a drop-in replacement for the Twimlet, with the
 same GET parameters, by using the URL of the Twilio Function as

@@ -1,6 +1,8 @@
-# Funlet
+# Call Me Funlet
 
-This Twilio Function is based on the Twimlet of the same name.
+This Twilio Function is based on the [Twimlet of the same name][twimlet].
+
+[twimlet]: https://www.twilio.com/labs/twimlets/callme
 
 It can be used as a drop-in replacement for the Twimlet, with the
 same GET parameters, by using the URL of the Twilio Function as
