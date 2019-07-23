@@ -1,38 +1,44 @@
 // # Echo Funlet
 
-// ## Parameters
+// ## Input
+exports.input = {};
 
-// * MY_TWIML: string, default TwiML output
-const MY_TWIML = '<Response><Say>echo</Say></Response>';
+function getTwiml(context, event) {
+  const MY_TWIML = '<Response><Say>echo</Say></Response>';
+  return event.Twiml || context.FUNLET_ECHO_TWIML || MY_TWIML;
+}
+exports.input.getTwiml = getTwiml;
 
 // ## Dependencies
-
 const Twilio = require('twilio');
 
+// ## Output
+exports.output = {};
+
 /*
-  ## Function: echo()
+  Function: echo(twiml)
 
-  ### Parameters
-    * event.Twiml: string, input TwiML read from GET/POST parameters
-    * context.ECHO_TWIML: string, input TwiML read from the environment
-    * MY_TWIML: string, input TwiML read from constant at top of this script
+  Parameters:
+    * Twiml - string, input TwiML
 
-  ### Returns
-    the first non-empty string found in the three input parameters.
+  Returns:
+    string, the TwiML instructions received as input, unchanged
 */
-function echo(context, event) {
-  return event.Twiml || context.ECHO_TWIML || MY_TWIML;
+function echo( twiml ) {
+  return twiml;
 }
+exports.output.echo = echo;
 
-// ## Module Exports
-
-exports.echo = echo;
 exports.handler = function(context, event, callback) {
   // Create a custom response in XML format
   let response = new Twilio.Response();
   response.appendHeader("Content-Type", "text/xml");
 
-  response.setBody( echo(event, context) )
+  response.setBody(
+    echo(
+      twiml(context, event)
+    )
+  );
 
   // Return the response
   callback(null, response);
