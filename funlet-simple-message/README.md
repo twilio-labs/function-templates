@@ -23,10 +23,23 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Message
+
+A list of text string messages, each being a recording URL or a text to say.
+*(Any string starting with 'http' is considered to be a URL)*
+
+1. Event
+  o GET: a single `Message=` or a list of `Message[]=` parameters
+  o POST: a `Message` string or array of string values
+2. Environment: up to five string messages,
+  each in a separate environment property:
+  - `FUNLET_MESSAGE1`,
+  - `FUNLET_MESSAGE2`,
+  - `FUNLET_MESSAGE3`,
+  - `FUNLET_MESSAGE4`,
+  - `FUNLET_MESSAGE5`
+3. Script: `MY_MESSAGE` constant string or array of string values
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.

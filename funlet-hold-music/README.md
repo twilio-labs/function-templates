@@ -23,10 +23,28 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Bucket
+
+Text string, a public Amazon S3 bucket which contains a list of music files
+to play, with the extension '.mp3', '.wav' or '.ul'.
+
+1. Event
+  o GET: `Bucket` parameter
+  o POST: `Bucket` property
+2. Environment: `FUNLET_HOLDMUSIC_BUCKET` environment property
+3. Script: `MY_BUCKET` constant
+
+### Message
+
+Text string: a recording URL or a text to say between songs.
+*(A string starting with 'http' is considered to be a URL)*
+
+1. Event
+  o GET: `Message` parameter
+  o POST: `Message` property
+2. Environment: `FUNLET_HOLDMUSIC_MESSAGE` environment property
+3. Script: `MY_MESSAGE` constant
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.

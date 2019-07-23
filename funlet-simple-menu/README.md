@@ -23,10 +23,49 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Message
+
+Text string: a recording URL or a text to say.
+*(A string starting with 'http' is considered to be a URL)*
+
+1. Event
+  o GET: `Message` parameter
+  o POST: `Message` property
+2. Environment: `FUNLET_MENU_MESSAGE` environment property
+3. Script: `MY_MESSAGE` constant
+
+### Options
+
+A list of action URLs to redirect to when the matching digits are input.
+The digits are assigned by setting a custom key for the array index,
+for example: `Options[42]=http://example.com/action` associates the
+action URL `http://example.com/action` with the digits `42`.
+
+Note that when no key is assigned, as in `Options[]=//example.com/action`, a
+sequence of digits starting with 0, not 1, will be associated with each option.
+
+1. Event
+  o GET: a list of `Options[digits]=URL` parameters:
+    e.g. `Options[1]=...&Options[2]=...&Options[101]=...`
+  o POST: a list of `"Options[digits]": "URL"` properties
+    or a single `Options` property with key/values for digits/URLs:
+    ```
+    "Options":{
+      "1": "...",
+      "2": "...",
+      ...
+      "101": "..."
+    }
+    ```
+2. Environment: up to 10 action URL and matching digits,
+  each in a separate environment property:
+  - `FUNLET_MENU_OPTION1_URL` and `FUNLET_MENU_OPTION1_DIGITS`
+  - `FUNLET_MENU_OPTION2_URL` and `FUNLET_MENU_OPTION2_DIGITS`
+  - ...
+  - `FUNLET_MENU_OPTION9_URL` and `FUNLET_MENU_OPTION9_DIGITS`
+  - `FUNLET_MENU_OPTION0_URL` and `FUNLET_MENU_OPTION0_DIGITS`
+3. Script: `MY_OPTIONS` property with key/values for digits/URLs
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.

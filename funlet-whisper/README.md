@@ -22,10 +22,34 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Message
+
+Text string: a recording URL or a text to say.
+*(A string starting with 'http' is considered to be a URL)*
+
+1. Event
+  o GET: `Message` parameter
+  o POST: `Message` property
+2. Environment: `FUNLET_WHISPER_MESSAGE` environment property
+3. Script: `MY_MESSAGE` constant
+
+### HumanCheck
+
+Boolean, defaults to false. Whether to request the recipient to press
+a key to accept the call explicitly.
+
+1. Event
+  o GET: `HumanCheck` parameter
+  o POST: `HumanCheck` property
+2. Environment: `FUNLET_WHISPER_HUMAN_CHECK` environment property
+3. Script: `MY_HUMAN_CHECK` constant
+
+### Caller
+
+Text string, the caller's phone number.
+
+1. Event: `From` or `Caller` property provided by the Twilio Voice event
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.

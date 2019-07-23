@@ -23,10 +23,56 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Phone Numbers
+
+A list of text strings for the forwarding phone numbers to try one by one,
+in sequence.
+
+1. Event
+  o GET: a single `PhoneNumbers=` or a list of `PhoneNumbers[]=` parameters
+  o POST: `PhoneNumbers` string or array of string values
+2. Environment: up to five forwarding phone numbers,
+  each in a separate environment property:
+  - `FUNLET_FINDME_PHONE_NUMBER1`,
+  - `FUNLET_FINDME_PHONE_NUMBER2`,
+  - `FUNLET_FINDME_PHONE_NUMBER3`,
+  - `FUNLET_FINDME_PHONE_NUMBER4`,
+  - `FUNLET_FINDME_PHONE_NUMBER5`
+3. Script: `MY_PHONE_NUMBERS` constant string or array of string values
+
+### Fallback Url
+
+Text string, fallback URL where further instructions are requested
+when the forwarding call fails.
+
+1. Event
+  o GET: `FailUrl` parameter
+  o POST: `FailUrl` property
+2. Environment: `FUNLET_FINDME_FALLBACK_URL` environment property
+3. Script: `MY_FALLBACK_URL` constant
+
+### Message
+
+Text string: a recording URL or a text to say,
+asking the recipient to press any key to accept the call.
+*(A string starting with 'http' is considered to be a URL)*
+
+1. Event
+  o GET: `Message` parameter
+  o POST: `Message` property
+2. Environment: `FUNLET_FINDME_MESSAGE` environment property
+3. Script: `MY_MESSAGE` constant
+
+### Timeout
+
+Number: duration in seconds to let the call ring before the recipient picks up.
+
+1. Event
+  o GET: `Timeout` parameter
+  o POST:  `Timeout` property
+2. Environment: `FUNLET_FINDME_TIMEOUT` environment property
+3. Script: `MY_TIMEOUT` constant
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.

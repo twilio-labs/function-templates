@@ -25,10 +25,15 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description                  | Context    | Environment    | Script     |
-| :--------------------------- | :--------- | :------------- | :--------- |
-|                              |            |                |            |
-| Twiml instructions (as text) | `Twiml`    | `ECHO_TWIML`   | `MY_TWIML` |
+### Twiml
+
+Twiml instructions, as a text string.
+
+1. Event
+  o GET: `Twiml` parameter
+  o POST: `Twiml` property
+2. Context: `FUNLET_ECHO_TWIML` environment property
+3. Script: `MY_TWIML` constant
 
 ## Output
 

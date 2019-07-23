@@ -23,10 +23,46 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Email
+
+Text string, email address to send a notification with the link
+to the recorded voicemail.
+
+1. Event
+  o GET: `Email` parameter
+  o POST: `Email` property
+2. Environment: `FUNLET_VOICEMAIL_EMAIL` environment property
+3. Script: `MY_EMAIL` constant
+
+### Transcribe
+
+Boolean, whether to include a transcription of the voicemail
+in the email notification; defaults to true.
+
+1. Event
+  o GET: `Transcribe` parameter
+  o POST: `Transcribe` property
+2. Environment: `FUNLET_VOICEMAIL_TRANSCRIBE` environment property
+3. Script: `MY_TRANSCRIBE` constant
+
+### Message
+
+Text string: a recording URL or a text to say to invite the caller
+to leave a message.
+*(A string starting with 'http' is considered to be a URL)*
+
+1. Event
+  o GET: `Message` parameter
+  o POST: `Message` property
+2. Environment: `FUNLET_VOICEMAIL_MESSAGE` environment property
+3. Script: `MY_MESSAGE` constant
+
+### Caller
+
+Text string, the caller's phone number.
+
+1. Event: `From` or `Caller` property provided by the Twilio Voice event
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.

@@ -23,10 +23,83 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-| Description              | Context        | Environment    | Script         |
-| :----------------------- | :------------- | :------------- | :------------- |
-|                          |                |                |                |
+### Phone Number
+
+Text string, the forwarding number.
+
+1. Event
+  o GET: `PhoneNumber` parameter
+  o POST: `PhoneNumber` property
+2. Environment: `FUNLET_FORWARD_PHONE_NUMBER` environment property
+3. Script: `MY_PHONE_NUMBER` constant
+
+### Caller ID
+
+Text string, one of the verified phone numbers of your account
+that you want to appear as caller ID for the forwarded call.
+
+1. Event
+  o GET: `CallerId` parameter
+  o POST: `CallerId` property
+2. Environment: `FUNLET_FORWARD_CALLER_ID` environment property
+3. Script: `MY_CALLER_ID` constant
+
+### Fallback Url
+
+Text string, fallback URL where further instructions are requested
+when the forwarding call fails.
+
+1. Event
+  o GET: `FailUrl` parameter
+  o POST: `FailUrl` property
+2. Environment: `FUNLET_FORWARD_FALLBACK_URL` environment property
+3. Script: `MY_FALLBACK_URL` constant
+
+### Timeout
+
+Number: duration in seconds to let the call ring before the recipient picks up.
+
+1. Event
+  o GET: `Timeout` parameter
+  o POST:  `Timeout` property
+2. Environment: `FUNLET_FORWARD_TIMEOUT` environment property
+3. Script: `MY_TIMEOUT` constant
+
+### Allowed Callers
+
+A list of text strings with the only phone numbers of callers that will be
+allowed to be forwarded.
+
+1. Event
+  o GET: a single `AllowedCallers=` or a list of `AllowedCallers[]=` parameters
+  o POST: `AllowedCallers` string or array of string values
+2. Environment: up to five allowed callers,
+  each in a separate environment property:
+  - `FUNLET_FORWARD_ALLOWED_CALLER1`,
+  - `FUNLET_FORWARD_ALLOWED_CALLER2`,
+  - `FUNLET_FORWARD_ALLOWED_CALLER3`,
+  - `FUNLET_FORWARD_ALLOWED_CALLER4`,
+  - `FUNLET_FORWARD_ALLOWED_CALLER5`
+3. Script: `MY_ALLOWED_CALLERS` constant string or array of string values
+
+### Caller
+
+Text string, the caller's phone number.
+
+1. Event: `From` or `Caller` property provided by the Twilio Voice event
+
+### Phone Number Called
+
+Text string, the Twilio phone number called for the forwarding.
+
+1. Event: `To` or `Called` property provided by the Twilio Voice event
+
+### API Version
+
+Text string, the API version.
+
+1. Event: `ApiVersion` property provided by the Twilio Voice event
 
 ## Output
 
-This Twilio Function returns TwiML instructions.
+This Twilio Function returns TwiML instructions for Twilio Voice.
