@@ -1,27 +1,33 @@
 const funlet = require('./funlet-echo');
 const Twilio = require('twilio');
 const TWIML = '<Response><Say>echo okay</Say></Response>';
+const DEFAULT_TWIML = '<Response><Say>echo</Say></Response>';
 
-test('[ECHO-1.1] Echo (GET)', () => {
+test('[ECHO-INPUT-TWIML-1] Read Twiml from Event', () => {
   expect(
-    funlet.echo({}, {Twiml:TWIML})
+    funlet.input.getTwiml({}, {Twiml:TWIML})
   ).toBe( TWIML );
 });
 
-test('[ECHO-1.2] Echo (ENV)', () => {
+test('[ECHO-INPUT-TWIML-2] Read Twiml from Context', () => {
   expect(
-    funlet.echo({ECHO_TWIML:TWIML}, {})
+    funlet.input.getTwiml({FUNLET_ECHO_TWIML:TWIML}, {})
   ).toBe( TWIML );
 });
 
-test('[ECHO-1.3] Echo (Default)', () => {
-  const DEFAULT_TWIML = '<Response><Say>echo</Say></Response>';
+test('[ECHO-INPUT-TWIML-3] Read Default Twiml from Script', () => {
   expect(
-    funlet.echo({}, {})
+    funlet.input.getTwiml({}, {})
   ).toBe( DEFAULT_TWIML );
 });
 
-test.skip('[ECHO-1] Response', done => {
+test('[ECHO-OUTPUT-ECHO-1] echo() shall return its input', () => {
+  expect(
+    funlet.output.echo( TWIML )
+  ).toBe( TWIML );
+});
+
+test.skip('[ECHO-1] Full Response', done => {
   const callback = (err, result) => {
     expect( result ).toBeInstanceOf( Twilio.Response );
     expect( result.statusCode ).toBe( 200 );
