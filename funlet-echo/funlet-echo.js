@@ -16,10 +16,10 @@ const Twilio = require('twilio');
 exports.output = {};
 
 /*
-  Function: echo(twiml)
+  Function: echo()
 
   Parameters:
-    * Twiml - string, input TwiML
+    * twiml - string, input TwiML
 
   Returns:
     string, the TwiML instructions received as input, unchanged
