@@ -3,9 +3,9 @@
 // ## Input
 exports.input = {};
 
-function getTwiml(context, event) {
+function getTwiml(env, params) {
   const MY_TWIML = '<Response><Say>echo</Say></Response>';
-  return event.Twiml || context.FUNLET_ECHO_TWIML || MY_TWIML;
+  return params.Twiml || env.FUNLET_ECHO_TWIML || MY_TWIML;
 }
 exports.input.getTwiml = getTwiml;
 
@@ -29,17 +29,17 @@ function echo( twiml ) {
 }
 exports.output.echo = echo;
 
-exports.handler = function(context, event, callback) {
-  // Create a custom response in XML format
+exports.handler = function(env, params, reply) {
+  const NO_ERROR = null;
+
   let response = new Twilio.Response();
   response.appendHeader("Content-Type", "text/xml");
 
   response.setBody(
     echo(
-      twiml(context, event)
+      twiml(env, params)
     )
   );
 
-  // Return the response
-  callback(null, response);
+  reply(NO_ERROR, response);
 };
