@@ -37,7 +37,7 @@ const Twilio = require('twilio');
 exports.output = {};
 
 /*
-  Function: message(response,message)
+  Function: message()
 
   Parameters:
     * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
@@ -47,14 +47,15 @@ exports.output = {};
                  with an American accent or 'en-gb' for English with a British
                  accent. Use the voice 'alice' for the largest list of
                  supported languages and accents.
-    * voice - string, one of 'man', 'woman' or 'alice'.
+    * voice - string, voice for text messages,
+              one of 'man', 'woman' or 'alice'.
 
   Response:
     The input response is modified with further instructions to Play or Say
     the given message. The input response is returned unchanged when the
     given message is empty.
 */
-function message(response, message, language, voice) {
+function outputMessage(response, message, language, voice) {
   if ( message.length === 0 ) {
     return;
   }
@@ -64,7 +65,33 @@ function message(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.message = message;
+exports.output.message = outputMessage;
+
+/*
+  Function: messages()
+
+  Parameters:
+    * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
+    * messages - array of string, list of messages, either recorded messages
+                 (URL starting with 'http') to play or text message to say
+    * language - string, language for text messages, e.g. 'en' for English
+                 with an American accent or 'en-gb' for English with a British
+                 accent. Use the voice 'alice' for the largest list of
+                 supported languages and accents.
+    * voice - string, voice for text messages,
+              one of 'man', 'woman' or 'alice'.
+
+  Response:
+    The input response is modified with further instructions to Play or Say
+    each message. The input response is returned unchanged when the
+    list of messages is empty.
+*/
+function outputMessages(response, messages, language, voice) {
+  messages.forEach(
+    message => outputMessage(response, message, language, voice)
+  );
+}
+exports.output.messages = outputMessages;
 
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;

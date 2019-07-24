@@ -97,6 +97,65 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-2] message() a Text Message',
   expect( response.toString() ).toEqual( SAY_TEXT_MESSAGE );
 });
 
+test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-0] messages() an Empty List',
+() => {
+  const NO_MESSAGES=[];
+  const EMPTY_RESPONSE=
+    XML_DECLARATION+
+    '<Response/>';
+
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.messages( response, NO_MESSAGES, ENGLISH, ALICE );
+  expect( response.toString() ).toEqual( EMPTY_RESPONSE );
+});
+
+test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-1] messages() a Single Recorded Message',
+() => {
+  const SINGLE_RECORDED_MESSAGE=["https://example.com/recorded-message"];
+  const PLAY_RECORDED_MESSAGE =
+    XML_DECLARATION+
+    '<Response>'+
+      '<Play>'+SINGLE_RECORDED_MESSAGE+'</Play>'+
+    '</Response>';
+
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.messages(response, SINGLE_RECORDED_MESSAGE, ENGLISH, ALICE);
+  expect( response.toString() ).toEqual( PLAY_RECORDED_MESSAGE );
+});
+
+test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-2] messages() a Single Text Message',
+() => {
+  const SINGLE_TEXT_MESSAGE=["Text message"];
+  const SAY_TEXT_MESSAGE =
+    XML_DECLARATION+
+    '<Response>'+
+      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+
+        SINGLE_TEXT_MESSAGE+
+      '</Say>'+
+    '</Response>';
+
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.messages(response, SINGLE_TEXT_MESSAGE, ENGLISH, ALICE);
+  expect( response.toString() ).toEqual( SAY_TEXT_MESSAGE );
+});
+
+test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-3] messages() Multiple Messages',
+() => {
+  const MULTIPLE_MESSAGES=[MESSAGE1,MESSAGE2,MESSAGE3];
+  const PLAY_AND_SAY_MESSAGES =
+    XML_DECLARATION+
+    '<Response>'+
+      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE1+'</Say>'+
+      '<Play>'+MESSAGE2+'</Play>'+
+      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE3+'</Say>'+
+    '</Response>';
+
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.messages(response, MULTIPLE_MESSAGES, ENGLISH, ALICE);
+  expect( response.toString() ).toEqual( PLAY_AND_SAY_MESSAGES );
+});
+
+
 test.skip('Missing Tests', done => {
   const callback = (err, result) => {
     expect(result).toBe('...');
