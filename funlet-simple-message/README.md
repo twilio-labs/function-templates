@@ -40,6 +40,28 @@ A list of text string messages, each being a recording URL or a text to say.
   - `FUNLET_MESSAGE5`
 3. Script: `MY_MESSAGE` constant string or array of string values
 
+### Language
+
+Text string, language code for text messages, e.g. 'en' or 'en-gb'.
+Defaults to 'en': English with an American accent.
+
+1. Event
+  o GET: `Language` parameter
+  o POST: `Language` property
+2. Environment: `FUNLET_MESSAGE_LANGUAGE` environment property
+3. Script: `MY_LANGUAGE` constant
+
+### Voice
+
+Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
+Defaults to 'alice', who speaks in a large selection languages.
+
+1. Event
+  o GET: `Voice` parameter
+  o POST: `Voice` property
+2. Environment: `FUNLET_MESSAGE_VOICE` environment property
+3. Script: `MY_VOICE` constant
+
 ## Output
 
 This Twilio Function returns TwiML instructions for Twilio Voice.
