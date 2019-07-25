@@ -23,9 +23,10 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 ## Input
 
-### Message
+### Messages
 
-A list of text string messages, each being a recording URL or a text to say.
+A list of one or several text string messages,
+each being a recording URL or a text to say.
 *(Any string starting with 'http' is considered to be a URL)*
 
 1. Event
@@ -38,7 +39,7 @@ A list of text string messages, each being a recording URL or a text to say.
   - `FUNLET_MESSAGE3`,
   - `FUNLET_MESSAGE4`,
   - `FUNLET_MESSAGE5`
-3. Script: `MY_MESSAGE` constant string or array of string values
+3. Script: `MY_MESSAGES` array of string values
 
 ### Language
 

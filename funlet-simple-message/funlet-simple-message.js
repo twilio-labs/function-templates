@@ -3,8 +3,8 @@
 // ## Input
 exports.input = {};
 
-function getMessage(env, params) {
-  const MY_MESSAGE = "";
+function getMessages(env, params) {
+  const MY_MESSAGES = [""];
   if ( params.hasOwnProperty("Message") ) {
     if ( typeof params.Message === "string" ) {
       return [params.Message];
@@ -26,9 +26,9 @@ function getMessage(env, params) {
       env.FUNLET_MESSAGE5
     ].filter( message => typeof message === "string" );
   }
-  return [MY_MESSAGE];
+  return MY_MESSAGES;
 }
-exports.input.getMessage = getMessage;
+exports.input.getMessages = getMessages;
 
 function getLanguage(env, params) {
   const MY_LANGUAGE = "en";
@@ -107,6 +107,12 @@ exports.output.simpleMessages = simpleMessages;
 
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;
-  throw Error("Not implemented!");
-  reply(NO_ERROR, 'response');
+  let response = new Twilio.twiml.VoiceResponse();
+  simpleMessages(
+    response,
+    getMessages(env, params),
+    getLanguage(env, params),
+    getVoice(env, params)
+  );
+  reply(NO_ERROR, response);
 };

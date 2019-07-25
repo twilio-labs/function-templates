@@ -20,31 +20,62 @@ const WOMAN="woman";
 const ALICE="alice";
 const DEFAULT_VOICE=ALICE;
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGE-1] Read Single Message from Event',
+const RECORDED_MESSAGE="https://example.com/recorded-message";
+const PLAY_RECORDED_MESSAGE =
+  XML_DECLARATION+
+  '<Response>'+
+    '<Play>'+RECORDED_MESSAGE+'</Play>'+
+  '</Response>';
+
+const TEXT_MESSAGE="Text message";
+const SAY_TEXT_MESSAGE =
+  XML_DECLARATION+
+  '<Response>'+
+    '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+TEXT_MESSAGE+'</Say>'+
+  '</Response>';
+
+const NO_MESSAGES=[];
+const EMPTY_RESPONSE=
+  XML_DECLARATION+
+  '<Response/>';
+
+const SINGLE_RECORDED_MESSAGE=[RECORDED_MESSAGE];
+const SINGLE_TEXT_MESSAGE=[TEXT_MESSAGE];
+
+const MULTIPLE_MESSAGES=[MESSAGE1,MESSAGE2,MESSAGE3];
+const PLAY_AND_SAY_MESSAGES =
+  XML_DECLARATION+
+  '<Response>'+
+    '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE1+'</Say>'+
+    '<Play>'+MESSAGE2+'</Play>'+
+    '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE3+'</Say>'+
+  '</Response>';
+
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-1] Read Single Message from Event',
 () => {
   expect(
-    funlet.input.getMessage({}, {Message:MESSAGE1})
+    funlet.input.getMessages({}, {Message:MESSAGE1})
   ).toEqual( [MESSAGE1] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGE-2] Read List of Messages from Event',
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-2] Read List of Messages from Event',
 () => {
   expect(
-    funlet.input.getMessage({}, {Message:[MESSAGE1,MESSAGE2,MESSAGE3]})
+    funlet.input.getMessages({}, {Message:[MESSAGE1,MESSAGE2,MESSAGE3]})
   ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGE-3] Read Single Message from Environment',
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-3] Read Single Message from Environment',
 () => {
   expect(
-    funlet.input.getMessage({FUNLET_MESSAGE1:MESSAGE1}, {})
+    funlet.input.getMessages({FUNLET_MESSAGE1:MESSAGE1}, {})
   ).toEqual( [MESSAGE1] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGE-4] Read Five Messages from Environment',
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-4] Read Five Messages from Environment',
 () => {
   expect(
-    funlet.input.getMessage(
+    funlet.input.getMessages(
       {
         FUNLET_MESSAGE1:MESSAGE1,
         FUNLET_MESSAGE2:MESSAGE2,
@@ -59,7 +90,7 @@ test('[SIMPLE-MESSAGE-INPUT-MESSAGE-4] Read Five Messages from Environment',
 test('[SIMPLE-MESSAGE-INPUT-MESSAGE-5] Read Default Message from Script',
 () => {
   expect(
-    funlet.input.getMessage({}, {})
+    funlet.input.getMessages({}, {})
   ).toEqual( [DEFAULT_MESSAGE] );
 });
 
@@ -121,13 +152,6 @@ test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-0] '+
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-1] '+
      'simpleMessage() with Recorded Message',
 () => {
-  const RECORDED_MESSAGE="https://example.com/recorded-message";
-  const PLAY_RECORDED_MESSAGE =
-    XML_DECLARATION+
-    '<Response>'+
-      '<Play>'+RECORDED_MESSAGE+'</Play>'+
-    '</Response>';
-
   let response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMessage(response, RECORDED_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( PLAY_RECORDED_MESSAGE );
@@ -136,13 +160,6 @@ test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-1] '+
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-2] '+
      'simpleMessage() with Text Message',
 () => {
-  const TEXT_MESSAGE="Text message";
-  const SAY_TEXT_MESSAGE =
-    XML_DECLARATION+
-    '<Response>'+
-      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+TEXT_MESSAGE+'</Say>'+
-    '</Response>';
-
   let response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMessage(response, TEXT_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( SAY_TEXT_MESSAGE );
@@ -151,11 +168,6 @@ test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-2] '+
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-0] '+
      'simpleMessages() with Empty List',
 () => {
-  const NO_MESSAGES=[];
-  const EMPTY_RESPONSE=
-    XML_DECLARATION+
-    '<Response/>';
-
   let response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMessages( response, NO_MESSAGES, ENGLISH, ALICE );
   expect( response.toString() ).toEqual( EMPTY_RESPONSE );
@@ -164,13 +176,6 @@ test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-0] '+
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-1] '+
      'simpleMessages() with Single Recorded Message',
 () => {
-  const SINGLE_RECORDED_MESSAGE=["https://example.com/recorded-message"];
-  const PLAY_RECORDED_MESSAGE =
-    XML_DECLARATION+
-    '<Response>'+
-      '<Play>'+SINGLE_RECORDED_MESSAGE+'</Play>'+
-    '</Response>';
-
   let response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMessages(response, SINGLE_RECORDED_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( PLAY_RECORDED_MESSAGE );
@@ -179,15 +184,6 @@ test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-1] '+
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-2] '+
      'simpleMessages() with Single Text Message',
 () => {
-  const SINGLE_TEXT_MESSAGE=["Text message"];
-  const SAY_TEXT_MESSAGE =
-    XML_DECLARATION+
-    '<Response>'+
-      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+
-        SINGLE_TEXT_MESSAGE+
-      '</Say>'+
-    '</Response>';
-
   let response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMessages(response, SINGLE_TEXT_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( SAY_TEXT_MESSAGE );
@@ -196,25 +192,16 @@ test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-2] '+
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-3] '+
      'simpleMessages() with Multiple Messages',
 () => {
-  const MULTIPLE_MESSAGES=[MESSAGE1,MESSAGE2,MESSAGE3];
-  const PLAY_AND_SAY_MESSAGES =
-    XML_DECLARATION+
-    '<Response>'+
-      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE1+'</Say>'+
-      '<Play>'+MESSAGE2+'</Play>'+
-      '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE3+'</Say>'+
-    '</Response>';
-
   let response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMessages(response, MULTIPLE_MESSAGES, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( PLAY_AND_SAY_MESSAGES );
 });
 
-test.skip('[SIMPLE-MESSAGE-1] Full Response', done => {
-  // ...
+test('[SIMPLE-MESSAGE-3] Full Response: Multiple Messages', done => {
   const callback = (err, result) => {
-    expect(result).toBe('...');
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( PLAY_AND_SAY_MESSAGES );
     done();
   };
-  funlet({}, {}, callback);
+  funlet.handler({}, {Message:MULTIPLE_MESSAGES}, callback);
 });
