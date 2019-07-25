@@ -37,7 +37,7 @@ exports.handler = function(env, params, reply) {
 
   response.setBody(
     echo(
-      twiml(env, params)
+      getTwiml(env, params)
     )
   );
 
