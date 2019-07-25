@@ -37,7 +37,7 @@ const Twilio = require('twilio');
 exports.output = {};
 
 /*
-  Function: message()
+  Function: simpleMessage()
 
   Parameters:
     * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
@@ -55,7 +55,7 @@ exports.output = {};
     the given message. The input response is returned unchanged when the
     given message is empty.
 */
-function outputMessage(response, message, language, voice) {
+function simpleMessage(response, message, language, voice) {
   if ( message.length === 0 ) {
     return;
   }
@@ -65,10 +65,10 @@ function outputMessage(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.message = outputMessage;
+exports.output.simpleMessage = simpleMessage;
 
 /*
-  Function: messages()
+  Function: simpleMessages()
 
   Parameters:
     * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
@@ -86,12 +86,12 @@ exports.output.message = outputMessage;
     each message. The input response is returned unchanged when the
     list of messages is empty.
 */
-function outputMessages(response, messages, language, voice) {
+function simpleMessages(response, messages, language, voice) {
   messages.forEach(
-    message => outputMessage(response, message, language, voice)
+    message => simpleMessage(response, message, language, voice)
   );
 }
-exports.output.messages = outputMessages;
+exports.output.simpleMessages = simpleMessages;
 
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;

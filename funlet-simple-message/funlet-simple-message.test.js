@@ -57,7 +57,8 @@ test('[SIMPLE-MESSAGE-INPUT-MESSAGE-5] Read Default Message from Script',
   ).toEqual( [DEFAULT_MESSAGE] );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-0] message() an Empty Message',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-0] '+
+     'simpleMessage() with Empty Message',
 () => {
   const EMPTY_MESSAGE="";
   const EMPTY_RESPONSE=
@@ -65,11 +66,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-0] message() an Empty Message',
     '<Response/>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.message( response, EMPTY_MESSAGE, ENGLISH, ALICE );
+  funlet.output.simpleMessage( response, EMPTY_MESSAGE, ENGLISH, ALICE );
   expect( response.toString() ).toEqual( EMPTY_RESPONSE );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-1] message() a Recorded Message',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-1] '+
+     'simpleMessage() with Recorded Message',
 () => {
   const RECORDED_MESSAGE="https://example.com/recorded-message";
   const PLAY_RECORDED_MESSAGE =
@@ -79,11 +81,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-1] message() a Recorded Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.message(response, RECORDED_MESSAGE, ENGLISH, ALICE);
+  funlet.output.simpleMessage(response, RECORDED_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( PLAY_RECORDED_MESSAGE );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-2] message() a Text Message',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-2] '+
+     'simpleMessage() with Text Message',
 () => {
   const TEXT_MESSAGE="Text message";
   const SAY_TEXT_MESSAGE =
@@ -93,11 +96,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGE-2] message() a Text Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.message(response, TEXT_MESSAGE, ENGLISH, ALICE);
+  funlet.output.simpleMessage(response, TEXT_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( SAY_TEXT_MESSAGE );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-0] messages() an Empty List',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-0] '+
+     'simpleMessages() with Empty List',
 () => {
   const NO_MESSAGES=[];
   const EMPTY_RESPONSE=
@@ -105,11 +109,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-0] messages() an Empty List',
     '<Response/>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.messages( response, NO_MESSAGES, ENGLISH, ALICE );
+  funlet.output.simpleMessages( response, NO_MESSAGES, ENGLISH, ALICE );
   expect( response.toString() ).toEqual( EMPTY_RESPONSE );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-1] messages() a Single Recorded Message',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-1] '+
+     'simpleMessages() with Single Recorded Message',
 () => {
   const SINGLE_RECORDED_MESSAGE=["https://example.com/recorded-message"];
   const PLAY_RECORDED_MESSAGE =
@@ -119,11 +124,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-1] messages() a Single Recorded Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.messages(response, SINGLE_RECORDED_MESSAGE, ENGLISH, ALICE);
+  funlet.output.simpleMessages(response, SINGLE_RECORDED_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( PLAY_RECORDED_MESSAGE );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-2] messages() a Single Text Message',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-2] '+
+     'simpleMessages() with Single Text Message',
 () => {
   const SINGLE_TEXT_MESSAGE=["Text message"];
   const SAY_TEXT_MESSAGE =
@@ -135,11 +141,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-2] messages() a Single Text Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.messages(response, SINGLE_TEXT_MESSAGE, ENGLISH, ALICE);
+  funlet.output.simpleMessages(response, SINGLE_TEXT_MESSAGE, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( SAY_TEXT_MESSAGE );
 });
 
-test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-3] messages() Multiple Messages',
+test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-3] '+
+     'simpleMessages() with Multiple Messages',
 () => {
   const MULTIPLE_MESSAGES=[MESSAGE1,MESSAGE2,MESSAGE3];
   const PLAY_AND_SAY_MESSAGES =
@@ -151,12 +158,12 @@ test('[SIMPLE-MESSAGE-OUTPUT-MESSAGES-3] messages() Multiple Messages',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.messages(response, MULTIPLE_MESSAGES, ENGLISH, ALICE);
+  funlet.output.simpleMessages(response, MULTIPLE_MESSAGES, ENGLISH, ALICE);
   expect( response.toString() ).toEqual( PLAY_AND_SAY_MESSAGES );
 });
 
-
-test.skip('Missing Tests', done => {
+test.skip('[SIMPLE-MESSAGE-1] Full Response', done => {
+  // ...
   const callback = (err, result) => {
     expect(result).toBe('...');
     done();
