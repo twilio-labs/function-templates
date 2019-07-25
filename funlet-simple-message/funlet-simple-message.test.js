@@ -12,7 +12,13 @@ const DEFAULT_MESSAGE="";
 const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
 
 const ENGLISH="en";
+const FRENCH="fr";
+const DEFAULT_LANGUAGE=ENGLISH;
+
+const MAN="man";
+const WOMAN="woman";
 const ALICE="alice";
+const DEFAULT_VOICE=ALICE;
 
 test('[SIMPLE-MESSAGE-INPUT-MESSAGE-1] Read Single Message from Event',
 () => {
@@ -55,6 +61,48 @@ test('[SIMPLE-MESSAGE-INPUT-MESSAGE-5] Read Default Message from Script',
   expect(
     funlet.input.getMessage({}, {})
   ).toEqual( [DEFAULT_MESSAGE] );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-1] Read Language from Event',
+() => {
+  expect(
+    funlet.input.getLanguage({}, {Language:FRENCH})
+  ).toEqual( FRENCH );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-2] Read Language from Environment',
+() => {
+  expect(
+    funlet.input.getLanguage({FUNLET_MESSAGE_LANGUAGE:FRENCH}, {})
+  ).toEqual( FRENCH );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-3] Read Default Language from Script',
+() => {
+  expect(
+    funlet.input.getLanguage({}, {})
+  ).toEqual( DEFAULT_LANGUAGE );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-VOICE-1] Read Voice from Event',
+() => {
+  expect(
+    funlet.input.getVoice({}, {Voice:MAN})
+  ).toEqual( MAN );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-VOICE-2] Read Voice from Environment',
+() => {
+  expect(
+    funlet.input.getVoice({FUNLET_MESSAGE_VOICE:WOMAN}, {})
+  ).toEqual( WOMAN );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-VOICE-3] Read Default Voice from Script',
+() => {
+  expect(
+    funlet.input.getVoice({}, {})
+  ).toEqual( DEFAULT_VOICE );
 });
 
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-0] '+

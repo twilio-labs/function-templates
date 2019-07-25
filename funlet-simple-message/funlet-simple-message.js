@@ -30,6 +30,18 @@ function getMessage(env, params) {
 }
 exports.input.getMessage = getMessage;
 
+function getLanguage(env, params) {
+  const MY_LANGUAGE = "en";
+  return params.Language || env.FUNLET_MESSAGE_LANGUAGE || MY_LANGUAGE;
+}
+exports.input.getLanguage = getLanguage;
+
+function getVoice(env, params) {
+  const MY_VOICE = "alice";
+  return params.Voice || env.FUNLET_MESSAGE_VOICE || MY_VOICE;
+}
+exports.input.getVoice = getVoice;
+
 // ## Dependencies
 const Twilio = require('twilio');
 
