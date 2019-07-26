@@ -50,6 +50,14 @@ Text string, the caller's phone number.
 
 1. Event: `From` or `Caller` property provided by the Twilio Voice event
 
+### Digits (Stage 2)
+
+Stage 2: When one or several digits have been pressed.
+Text string, list of digits pressed.
+
+1. Event
+  o POST: `Digits` property provided by `<Gather>`
+
 ## Output
 
 This Twilio Function returns TwiML instructions for Twilio Voice.

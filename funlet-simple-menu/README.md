@@ -66,6 +66,14 @@ sequence of digits starting with 0, not 1, will be associated with each option.
   - `FUNLET_MENU_OPTION0_URL` and `FUNLET_MENU_OPTION0_DIGITS`
 3. Script: `MY_OPTIONS` property with key/values for digits/URLs
 
+### Digits (Stage 2)
+
+Stage 2: When one or several digits have been pressed.
+Text string, list of digits pressed.
+
+1. Event
+  o POST: `Digits` property provided by `<Gather>`
+
 ## Output
 
 This Twilio Function returns TwiML instructions for Twilio Voice.

@@ -63,6 +63,30 @@ Text string, the caller's phone number.
 
 1. Event: `From` or `Caller` property provided by the Twilio Voice event
 
+### Recording URL (Stage 2 and Stage 3)
+
+Stage 2: When a recording has completed.
+Stage 3: When an optional transcription has completed.
+Text string, URL of the voicemail recording.
+
+1. Event
+  o POST: `RecordingUrl` property provided by `<Record>`
+
+### Transcription Status (Stage 3)
+
+Stage 3: When an optional transcription has completed.
+Text string, status of the speech-to-text transcription of the recording.
+
+1. Event
+  o POST: `TranscriptionStatus` property provided by `<Record>`
+
+### Transcription Text (Stage 3)
+
+Text string, speech-to-text transcription of the recording.
+
+1. Event
+  o POST: `TranscriptionText` property provided by `<Record>`
+
 ## Output
 
 This Twilio Function returns TwiML instructions for Twilio Voice.

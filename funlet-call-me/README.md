@@ -66,6 +66,23 @@ Number: duration in seconds to let the call ring before the recipient picks up.
 2. Environment: `FUNLET_CALLME_TIMEOUT` environment property
 3. Script: `MY_TIMEOUT` constant
 
+### Dial (Stage 2)
+
+Stage 2: When the forwarded call ends.
+Boolean, a flag set to true to bypass the first stage of processing
+when returning from the call to the forwarding number.
+
+1. Event
+  o GET: `Dial` parameter
+
+### Call Status (Stage 2)
+
+Stage 2: When the forwarded call ends.
+Text string, the status of the forwarding call.
+
+1. Event
+  o POST: `DialCallStatus` or `DialStatus` property provided by `<Dial>`
+
 ## Output
 
 This Twilio Function returns TwiML instructions for Twilio Voice.
