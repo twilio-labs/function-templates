@@ -14,18 +14,23 @@ indentXml(){
   xmllint --format -
 }
 
+# Join HTTP parameters with '&'
+# and save them into $params.
+joinParams(){
+  regularIFS="$IFS"
+  IFS=\&
+  params="$*"
+  IFS="$regularIFS"
+}
+
 # Function: query()
+# Query the Twimlet/Funlet using given HTTP parameters
 #
 # Parameters:
 #   $* - list of key or key=value HTTP parameters, properly URL-encoded
 #
 query(){
-  # join parameters with '&'
-  regularIFS="$IFS"
-  IFS=\&
-  params="$*"
-  IFS="$regularIFS"
-
+  joinParams "$@"
   curl -s "$url"?"$params" | indentXml
 }
 
