@@ -51,16 +51,16 @@ then
 fi
 
 echo '[CALL-ME-1-1] Call Me with Phone Number Only (from Example 1)'
-phoneNumber1='415-555-1212'
-query PhoneNumber="$phoneNumber1"
+phoneNumber='415-555-1212'
+query PhoneNumber="$phoneNumber"
 echo
 echo '[CALL-ME-1-2] Call Me with Phone Number and Fallback URL (from Example 2)'
 fallbackUrl='https%3A%2F%2Fexample.com%2Fplease-try-later.mp3'
-query PhoneNumber="$phoneNumber1" FailUrl="$fallbackUrl"
+query PhoneNumber="$phoneNumber" FailUrl="$fallbackUrl"
 echo
 echo '[CALL-ME-1-3] Call Me with Custom Timeout and Message'
 message='Custom%20message'
-query PhoneNumber="$phoneNumber1" Timeout=42 Message="$message"
+query PhoneNumber="$phoneNumber" Timeout=42 Message="$message"
 echo
 echo '[CALL-ME-2-1] Call Completed'
 query Dial=true DialCallStatus=completed FailUrl="$fallbackUrl"
