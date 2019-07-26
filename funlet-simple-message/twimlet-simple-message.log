@@ -1,0 +1,23 @@
+[SIMPLE-MESSAGE-0] No Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response/>
+
+[SIMPLE-MESSAGE-1] Single Recorded Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>https://example.com/recorded-message.mp3</Play>
+</Response>
+
+[SIMPLE-MESSAGE-2] Single Text Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Single message</Say>
+</Response>
+
+[SIMPLE-MESSAGE-3] Multiple Messages
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Message one</Say>
+  <Play>https://example.com/message-two.mp3</Play>
+  <Say>Message three</Say>
+</Response>
