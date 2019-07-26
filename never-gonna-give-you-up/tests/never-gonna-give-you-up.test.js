@@ -1,5 +1,5 @@
-const neverGonnaGiveYouUp = require('./never-gonna-give-you-up').handler;
-const helpers = require('../test/test-helper');
+const neverGonnaGiveYouUp = require('../functions/never-gonna-give-you-up').handler;
+const helpers = require('../../test/test-helper');
 
 describe('', () => {
   beforeAll(() => {
