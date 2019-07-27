@@ -1,0 +1,118 @@
+[CONFERENCE-1-1] Request Password: No Password Provided
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Gather numDigits="4">
+    <Say>Please enter your conference pass code</Say>
+  </Gather>
+  <Redirect/>
+</Response>
+
+[CONFERENCE-1-2] Request Password: Wrong Password Provided
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Gather numDigits="4">
+    <Say>Please enter your conference pass code</Say>
+  </Gather>
+  <Redirect/>
+</Response>
+
+[CONFERENCE-2-1] Correct Password
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference>d41d8cd98f00b204e9800998ecf8427e</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-2] Named Conference (from example 1)
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference>foo</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-3] Text Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Custom message</Say>
+  <Dial>
+    <Conference>foo</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-4] Recorded Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>https://example.com/recorded-message.mp3</Play>
+  <Dial>
+    <Conference>foo</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-5] Hold Music from Twilio Genres (from example 3)
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference waitUrl="http://twimlets.com/holdmusic?Bucket=com.twilio.music.rock" waitMethod="GET">d41d8cd98f00b204e9800998ecf8427e</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-6] Hold Music from a TwiML Script
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference waitUrl="https://twimlets.com/holdmusic?Bucket=com.twilio.music.soft-rock" waitMethod="GET">d41d8cd98f00b204e9800998ecf8427e</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-7] Hold Music from a Music File
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference waitUrl="https://example.com/hold-music.mp3" waitMethod="GET">d41d8cd98f00b204e9800998ecf8427e</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-8] Two Moderators (from example 2)
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference startConferenceOnEnter="false">a5b8b5b4fa69de6fb8dad5cbf3545d9f</Conference>
+  </Dial>
+</Response>
+
+CONFERENCE-2-9] SMS Notifications for Two Moderators
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Message to="4155551212">916-555-0123 has entered your conference.  Call the number this text came from to join.</Message>
+  <Message to="5558675309">916-555-0123 has entered your conference.  Call the number this text came from to join.</Message>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference startConferenceOnEnter="false">a5b8b5b4fa69de6fb8dad5cbf3545d9f</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-10] One of the Two Moderators Calls
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference startConferenceOnEnter="true">a5b8b5b4fa69de6fb8dad5cbf3545d9f</Conference>
+  </Dial>
+</Response>
+
+[CONFERENCE-2-11] When the Conference Number is a Moderator
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>You are now entering the conference line.</Say>
+  <Dial>
+    <Conference startConferenceOnEnter="true">a5b8b5b4fa69de6fb8dad5cbf3545d9f</Conference>
+  </Dial>
+</Response>
