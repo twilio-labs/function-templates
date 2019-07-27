@@ -1,0 +1,47 @@
+[VOICEMAIL-1-1] Voicemail with Default Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Please leave a message after the beep.</Say>
+  <Record/>
+</Response>
+
+[VOICEMAIL-1-2] Voicemail with Custom Text Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Custom message</Say>
+  <Record/>
+</Response>
+
+[VOICEMAIL-1-3] Voicemail with Recorded Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>https://example.com/recorded-message.mp3</Play>
+  <Record/>
+</Response>
+
+[VOICEMAIL-1-4] Voicemail with Text Transcription
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Please leave a message after the beep.</Say>
+  <Record transcribe="true" transcribeCallback="http://twimlets.com/voicemail?Email=you@example.com"/>
+</Response>
+
+[VOICEMAIL-2-1] Recording Callback Without Transcription
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Thanks. Good bye.</Say>
+  <Hangup/>
+</Response>
+
+[VOICEMAIL-2-2] Recording Callback With Transcription
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Thanks. Good bye.</Say>
+  <Hangup/>
+</Response>
+
+[VOICEMAIL-3-1] Transcription Successful
+HTTP/2 200 
+
+[VOICEMAIL-3-2] Transcription Failed
+HTTP/2 200 
