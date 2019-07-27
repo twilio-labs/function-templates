@@ -1,0 +1,35 @@
+[HOLD-MUSIC-1] Missing Bucket
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>An S 3 bucket is required.</Say>
+</Response>
+
+[HOLD-MUSIC-2] Bucket Not Found
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Failed to fetch the hold music.</Say>
+</Response>
+
+[HOLD-MUSIC-3] No Songs Found in Bucket
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Failed to fetch the hold music.</Say>
+</Response>
+
+[HOLD-MUSIC-4] Successful Hold Music (Without Message)
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>http://com.twilio.music.guitars.s3.amazonaws.com/Pitx_-_A_Thought.mp3</Play>
+  <Play>http://com.twilio.music.guitars.s3.amazonaws.com/Pitx_-_Long_Winter.mp3</Play>
+  <Redirect/>
+</Response>
+
+[HOLD-MUSIC-5] Successful Hold Music With Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>http://com.twilio.music.guitars.s3.amazonaws.com/Pitx_-_Long_Winter.mp3</Play>
+  <Say>Please hold the line</Say>
+  <Play>http://com.twilio.music.guitars.s3.amazonaws.com/Pitx_-_A_Thought.mp3</Play>
+  <Say>Please hold the line</Say>
+  <Redirect/>
+</Response>
