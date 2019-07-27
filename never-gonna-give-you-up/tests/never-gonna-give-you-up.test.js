@@ -1,4 +1,5 @@
-const neverGonnaGiveYouUp = require('../functions/never-gonna-give-you-up').handler;
+const neverGonnaGiveYouUp = require('../functions/never-gonna-give-you-up')
+  .handler;
 const helpers = require('../../test/test-helper');
 
 describe('', () => {
