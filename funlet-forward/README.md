@@ -100,7 +100,7 @@ Text string, the API version.
 
 1. Event: `ApiVersion` property provided by the Twilio Voice event
 
-### Dial (Stage 2)
+### Dial Done (Stage 2)
 
 Stage 2: When the forwarded call ends.
 Boolean, a flag set to true to bypass the first stage of processing

@@ -73,7 +73,7 @@ Number: duration in seconds to let the call ring before the recipient picks up.
 2. Environment: `FUNLET_FINDME_TIMEOUT` environment property
 3. Script: `MY_TIMEOUT` constant
 
-### Dial (Stage 2)
+### Dial Done (Stage 2)
 
 Stage 2: When the forwarded call ends.
 Boolean, a flag set to true to bypass the first stage of processing
