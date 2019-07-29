@@ -33,6 +33,28 @@ Text string: a recording URL or a text to say.
 2. Environment: `FUNLET_WHISPER_MESSAGE` environment property
 3. Script: `MY_MESSAGE` constant
 
+### Language
+
+Text string, language code for text messages, e.g. 'en' or 'en-gb'.
+Defaults to 'en': English with an American accent.
+
+1. Event
+  o GET: `Language` parameter
+  o POST: `Language` property
+2. Environment: `FUNLET_WHISPER_LANGUAGE` environment property
+3. Script: `MY_LANGUAGE` constant
+
+### Voice
+
+Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
+Defaults to 'alice', who speaks in a large selection languages.
+
+1. Event
+  o GET: `Voice` parameter
+  o POST: `Voice` property
+2. Environment: `FUNLET_WHISPER_VOICE` environment property
+3. Script: `MY_VOICE` constant
+
 ### HumanCheck
 
 Boolean, defaults to false. Whether to request the recipient to press
