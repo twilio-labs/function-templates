@@ -47,5 +47,4 @@
 </Response>
 
 [SIMULRING-2-4] Failure with Fallback URL
-HTTP/2 302 
-location: https://example.com/please-try-later.mp3
+Redirect: https://example.com/please-try-later.mp3

@@ -26,8 +26,7 @@
 </Response>
 
 [SIMPLE-MENU-2-1] Digits Pressed Match an Option
-HTTP/2 302 
-location: https://example.com/12345
+Redirect: https://example.com/12345
 
 [SIMPLE-MENU-2-2] Digits Pressed Do Not Match Any Option
 <?xml version="1.0" encoding="UTF-8"?>

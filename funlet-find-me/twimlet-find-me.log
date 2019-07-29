@@ -45,8 +45,7 @@
 </Response>
 
 [FIND-ME-1-7] No More Numbers, With Fallback URL
-HTTP/2 302 
-location: https://example.com/please-try-later.mp3
+Redirect: https://example.com/please-try-later.mp3
 
 [FIND-ME-2-1] Call Answered
 <?xml version="1.0" encoding="UTF-8"?>
