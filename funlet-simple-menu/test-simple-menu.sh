@@ -36,11 +36,17 @@ query(){
 
 # Function: showRedirect()
 # Alternative to query() for use when a redirect is expected instead of TwiML.
-# Displays the status code and the `location` header with the target URL.
+# If the `location` header is found, displays the redirect URL.
+# Otherwise, display the output of the query, indented as XML,
+# expecting to display a TwiML <Redirect/> instead.
 showRedirect()
 {
   joinParams "$@"
-  curl -I -s "$url"?"$params" | grep '^HTTP\|^location'
+  response="$( curl -s -w 'Redirect: %{redirect_url}' "$url"?"$params" )"
+  case "$response" in
+    'Redirect: '*) echo "$response" ;;
+    *) echo "$response" | sed '/^Redirect:/d' | indentXml
+  esac
 }
 
 if test -z "$url"
