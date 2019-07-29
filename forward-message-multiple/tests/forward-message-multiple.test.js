@@ -1,9 +1,10 @@
-const helpers = require('../test/test-helper');
-const forwardMessage = require('./forward-message').handler;
+const helpers = require('../../test/test-helper');
+const forwardMessageMultiple = require('../functions/forward-message-multiple')
+  .handler;
 const Twilio = require('twilio');
 
 const context = {
-  MY_PHONE_NUMBER: 'TwilioNumber'
+  FORWARDING_NUMBERS: 'TwilioNumber1, TwilioNumber2'
 };
 const event = {
   Body: 'Hello',
@@ -24,16 +25,19 @@ test('returns a MessagingResponse', done => {
     done();
   };
 
-  forwardMessage(context, event, callback);
+  forwardMessageMultiple(context, event, callback);
 });
 
-test('forwards the message to the number from the context', done => {
+test('forwards the message to both numbers from the context', done => {
   const callback = (err, result) => {
-    expect(result.toString()).toMatch('to="' + context.MY_PHONE_NUMBER + '"');
+    const twiml = result.toString();
+    expect(twiml).toMatch('to="TwilioNumber1"');
+    expect(twiml).toMatch('to="TwilioNumber2"');
+    expect(twiml.match(/<Message/g).length).toEqual(2);
     done();
   };
 
-  forwardMessage(context, event, callback);
+  forwardMessageMultiple(context, event, callback);
 });
 
 test('includes the original From number and Body', done => {
@@ -44,5 +48,5 @@ test('includes the original From number and Body', done => {
     done();
   };
 
-  forwardMessage(context, event, callback);
+  forwardMessageMultiple(context, event, callback);
 });

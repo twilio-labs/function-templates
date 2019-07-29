@@ -1,16 +1,16 @@
-const helpers = require('../test/test-helper');
+const helpers = require('../../test/test-helper');
 const got = jest.mock('got');
-const sendGrid = require('./forward-message-sendgrid').handler;
+const sparkPost = require('../functions/forward-message-sparkpost').handler;
 const Twilio = require('twilio');
 
 const context = {
-  SENDGRID_API_KEY: 'APIKEY',
+  SPARKPOST_API_KEY: 'APIKEY',
   TO_EMAIL_ADDRESS: 'test_to@example.com',
-  FROM_EMAIL_ADDRESS: 'test_from@example.com',
+  FROM_EMAIL_ADDRESS: 'test_from@example.com'
 };
 const event = {
   Body: 'Hello',
-  From: 'ExternalNumber',
+  From: 'ExternalNumber'
 };
 
 beforeAll(() => {
@@ -27,7 +27,7 @@ test('returns an TwiML MessagingResponse', done => {
     done();
   };
 
-  sendGrid(context, event, callback);
+  sparkPost(context, event, callback);
 });
 
 test('returns an error when the external request fails', done => {
@@ -38,5 +38,5 @@ test('returns an error when the external request fails', done => {
 
   got.shouldSucceed = false;
 
-  sendGrid(context, event, callback);
+  sparkPost(context, event, callback);
 });
