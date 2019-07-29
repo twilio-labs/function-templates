@@ -69,6 +69,7 @@ sequence of digits starting with 0, not 1, will be associated with each option.
 1. Event
   o GET: a list of `Options[digits]=URL` parameters:
     e.g. `Options[1]=...&Options[2]=...&Options[101]=...`
+    or a single `Options=URL` string parameter, associated with digit `0`.
   o POST: a list of `"Options[digits]": "URL"` properties
     or a single `Options` property with key/values for digits/URLs:
     ```
