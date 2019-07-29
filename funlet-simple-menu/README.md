@@ -87,6 +87,9 @@ sequence of digits starting with 0, not 1, will be associated with each option.
   - ...
   - `FUNLET_MENU_OPTION9_URL` and `FUNLET_MENU_OPTION9_DIGITS`
   - `FUNLET_MENU_OPTION0_URL` and `FUNLET_MENU_OPTION0_DIGITS`
+  If the environment property for an option URL is set without the
+  environment property for the matching digits, the digits default
+  to the number of the option: 1, 2, ..., 9, 0.
 3. Script: `MY_OPTIONS` constant with key/values for digits/URLs
 
 ### Digits (Stage 2)
