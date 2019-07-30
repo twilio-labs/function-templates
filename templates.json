@@ -11,6 +11,16 @@
       "description": "Basic Function that will return Hello World"
     },
     {
+      "id": "hello-voice",
+      "name": "Hello Voice",
+      "description": "Function to get you started with Twilio Prog. Voice"
+    },
+    {
+      "id": "hello-messaging",
+      "name": "Hello Messaging",
+      "description": "Function to get you started with Twilio Prog. Messaging"
+    },
+    {
       "id": "never-gonna-give-you-up",
       "name": "Never gonna give you up",
       "description": "Never gonna let you down. Plays a song to a phone call"
