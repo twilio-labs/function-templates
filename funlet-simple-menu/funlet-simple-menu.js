@@ -64,6 +64,14 @@ function getDigits(env, params) {
 }
 exports.input.getDigits = getDigits;
 
+function getErrorMessage(env, params) {
+  const MY_ERROR_MESSAGE = "I'm sorry, that wasn't a valid option.";
+  return params.ErrorMessage ||
+         env.FUNLET_MENU_ERROR_MESSAGE ||
+         MY_ERROR_MESSAGE;
+}
+exports.input.getErrorMessage = getErrorMessage;
+
 // ## Dependencies
 const Twilio = require('twilio');
 
