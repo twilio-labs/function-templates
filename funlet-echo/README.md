@@ -6,12 +6,11 @@ This Twilio Function is based on the [Twimlet of the same name][twimlet].
 
 ## Usage
 
-It can be used as a drop-in replacement for the Twimlet, with the
-same GET parameters, by using the URL of the Twilio Function as
-a webhook with the GET method.
+It can be used as a drop-in replacement for the Twimlet, by using the URL
+of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
-environment. GET or POST parameters are considered first, if provided,
+environment. GET and POST parameters are considered first, if provided,
 then environment properties, then default values declared in the script.
 
 Environment properties are most convenient when you are using a single
@@ -29,9 +28,7 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 Twiml instructions, as a text string.
 
-1. Event
-  o GET: `Twiml` parameter
-  o POST: `Twiml` property
+1. Event: `Twiml` parameter
 2. Context: `FUNLET_ECHO_TWIML` environment property
 3. Script: `MY_TWIML` constant
 

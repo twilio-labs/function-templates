@@ -4,12 +4,11 @@ This Twilio Function is based on the [Twimlet of the same name][twimlet].
 
 [twimlet]: https://www.twilio.com/labs/twimlets/forward
 
-It can be used as a drop-in replacement for the Twimlet, with the
-same GET parameters, by using the URL of the Twilio Function as
-a webhook with the GET method.
+It can be used as a drop-in replacement for the Twimlet, by using the URL
+of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
-environment. GET or POST parameters are considered first, if provided,
+environment. GET and POST parameters are considered first, if provided,
 then environment properties, then default values declared in the script.
 
 Environment properties are most convenient when you are using a single
@@ -27,9 +26,7 @@ You may also rewrite these functions fully to better accommodate your needs.
 
 Text string, the forwarding number.
 
-1. Event
-  o GET: `PhoneNumber` parameter
-  o POST: `PhoneNumber` property
+1. Event: `PhoneNumber` parameter
 2. Environment: `FUNLET_FORWARD_PHONE_NUMBER` environment property
 3. Script: `MY_PHONE_NUMBER` constant
 
@@ -38,9 +35,7 @@ Text string, the forwarding number.
 Text string, one of the verified phone numbers of your account
 that you want to appear as caller ID for the forwarded call.
 
-1. Event
-  o GET: `CallerId` parameter
-  o POST: `CallerId` property
+1. Event: `CallerId` parameter
 2. Environment: `FUNLET_FORWARD_CALLER_ID` environment property
 3. Script: `MY_CALLER_ID` constant
 
@@ -49,9 +44,7 @@ that you want to appear as caller ID for the forwarded call.
 Text string, fallback URL where further instructions are requested
 when the forwarding call fails.
 
-1. Event
-  o GET: `FailUrl` parameter
-  o POST: `FailUrl` property
+1. Event: `FailUrl` parameter
 2. Environment: `FUNLET_FORWARD_FALLBACK_URL` environment property
 3. Script: `MY_FALLBACK_URL` constant
 
@@ -59,9 +52,7 @@ when the forwarding call fails.
 
 Number: duration in seconds to let the call ring before the recipient picks up.
 
-1. Event
-  o GET: `Timeout` parameter
-  o POST:  `Timeout` property
+1. Event: `Timeout` parameter
 2. Environment: `FUNLET_FORWARD_TIMEOUT` environment property
 3. Script: `MY_TIMEOUT` constant
 
@@ -70,9 +61,7 @@ Number: duration in seconds to let the call ring before the recipient picks up.
 A list of text strings with the only phone numbers of callers that will be
 allowed to be forwarded.
 
-1. Event
-  o GET: a single `AllowedCallers=` or a list of `AllowedCallers[]=` parameters
-  o POST: `AllowedCallers` string or array of string values
+1. Event: a single `AllowedCallers=` or a list of `AllowedCallers[]=` parameters
 2. Environment: up to five allowed callers,
   each in a separate environment property:
   - `FUNLET_FORWARD_ALLOWED_CALLER1`,
@@ -114,8 +103,7 @@ when returning from the call to the forwarding number.
 Stage 2: When the forwarded call ends.
 Text string, the status of the forwarding call.
 
-1. Event
-  o POST: `DialCallStatus` or `DialStatus` property provided by `<Dial>`
+1. Event: `DialCallStatus` or `DialStatus` property provided by `<Dial>`
 
 ## Output
 

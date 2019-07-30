@@ -3,12 +3,11 @@
 This Twilio Function is based on the undocumented Twimlet of the same name
 (`whisper.php`).
 
-It can be used as a drop-in replacement for the Twimlet, with the
-same GET parameters, by using the URL of the Twilio Function as
-a webhook with the GET method.
+It can be used as a drop-in replacement for the Twimlet, by using the URL
+of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
-environment. GET or POST parameters are considered first, if provided,
+environment. GET and POST parameters are considered first, if provided,
 then environment properties, then default values declared in the script.
 
 Environment properties are most convenient when you are using a single
@@ -27,9 +26,7 @@ You may also rewrite these functions fully to better accommodate your needs.
 Text string: a recording URL or a text to say.
 *(A string starting with 'http' is considered to be a URL)*
 
-1. Event
-  o GET: `Message` parameter
-  o POST: `Message` property
+1. Event: `Message` parameter
 2. Environment: `FUNLET_WHISPER_MESSAGE` environment property
 3. Script: `MY_MESSAGE` constant
 
@@ -38,9 +35,7 @@ Text string: a recording URL or a text to say.
 Text string, language code for text messages, e.g. 'en' or 'en-gb'.
 Defaults to 'en': English with an American accent.
 
-1. Event
-  o GET: `Language` parameter
-  o POST: `Language` property
+1. Event: `Language` parameter
 2. Environment: `FUNLET_WHISPER_LANGUAGE` environment property
 3. Script: `MY_LANGUAGE` constant
 
@@ -49,9 +44,7 @@ Defaults to 'en': English with an American accent.
 Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
 Defaults to 'alice', who speaks in a large selection languages.
 
-1. Event
-  o GET: `Voice` parameter
-  o POST: `Voice` property
+1. Event: `Voice` parameter
 2. Environment: `FUNLET_WHISPER_VOICE` environment property
 3. Script: `MY_VOICE` constant
 
@@ -60,9 +53,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 Boolean, defaults to false. Whether to request the recipient to press
 a key to accept the call explicitly.
 
-1. Event
-  o GET: `HumanCheck` parameter
-  o POST: `HumanCheck` property
+1. Event: `HumanCheck` parameter
 2. Environment: `FUNLET_WHISPER_HUMAN_CHECK` environment property
 3. Script: `MY_HUMAN_CHECK` constant
 
@@ -77,8 +68,7 @@ Text string, the caller's phone number.
 Stage 2: When one or several digits have been pressed.
 Text string, list of digits pressed.
 
-1. Event
-  o POST: `Digits` property provided by `<Gather>`
+1. Event: `Digits` property provided by `<Gather>`
 
 ## Output
 

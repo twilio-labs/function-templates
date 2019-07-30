@@ -4,12 +4,11 @@ This Twilio Function is based on the [Twimlet of the same name][twimlet].
 
 [twimlet]: https://www.twilio.com/labs/twimlets/findme
 
-It can be used as a drop-in replacement for the Twimlet, with the
-same GET parameters, by using the URL of the Twilio Function as
-a webhook with the GET method.
+It can be used as a drop-in replacement for the Twimlet, by using the URL
+of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
-environment. GET or POST parameters are considered first, if provided,
+environment. GET and POST parameters are considered first, if provided,
 then environment properties, then default values declared in the script.
 
 Environment properties are most convenient when you are using a single
@@ -28,9 +27,7 @@ You may also rewrite these functions fully to better accommodate your needs.
 A list of text strings for the forwarding phone numbers to try one by one,
 in sequence.
 
-1. Event
-  o GET: a single `PhoneNumbers=` or a list of `PhoneNumbers[]=` parameters
-  o POST: `PhoneNumbers` string or array of string values
+1. Event: a single `PhoneNumbers=` or a list of `PhoneNumbers[]=` parameters
 2. Environment: up to five forwarding phone numbers,
   each in a separate environment property:
   - `FUNLET_FINDME_PHONE_NUMBER1`,
@@ -45,9 +42,7 @@ in sequence.
 Text string, fallback URL where further instructions are requested
 when the forwarding call fails.
 
-1. Event
-  o GET: `FailUrl` parameter
-  o POST: `FailUrl` property
+1. Event: `FailUrl` parameter
 2. Environment: `FUNLET_FINDME_FALLBACK_URL` environment property
 3. Script: `MY_FALLBACK_URL` constant
 
@@ -57,9 +52,7 @@ Text string: a recording URL or a text to say,
 asking the recipient to press any key to accept the call.
 *(A string starting with 'http' is considered to be a URL)*
 
-1. Event
-  o GET: `Message` parameter
-  o POST: `Message` property
+1. Event: `Message` parameter
 2. Environment: `FUNLET_FINDME_MESSAGE` environment property
 3. Script: `MY_MESSAGE` constant
 
@@ -68,9 +61,7 @@ asking the recipient to press any key to accept the call.
 Text string, language code for text messages, e.g. 'en' or 'en-gb'.
 Defaults to 'en': English with an American accent.
 
-1. Event
-  o GET: `Language` parameter
-  o POST: `Language` property
+1. Event: `Language` parameter
 2. Environment: `FUNLET_FINDME_LANGUAGE` environment property
 3. Script: `MY_LANGUAGE` constant
 
@@ -79,9 +70,7 @@ Defaults to 'en': English with an American accent.
 Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
 Defaults to 'alice', who speaks in a large selection languages.
 
-1. Event
-  o GET: `Voice` parameter
-  o POST: `Voice` property
+1. Event: `Voice` parameter
 2. Environment: `FUNLET_FINDME_VOICE` environment property
 3. Script: `MY_VOICE` constant
 
@@ -89,9 +78,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 Number: duration in seconds to let the call ring before the recipient picks up.
 
-1. Event
-  o GET: `Timeout` parameter
-  o POST:  `Timeout` property
+1. Event: `Timeout` parameter
 2. Environment: `FUNLET_FINDME_TIMEOUT` environment property
 3. Script: `MY_TIMEOUT` constant
 
@@ -109,8 +96,7 @@ when returning from the call to the forwarding number.
 Stage 2: When the forwarded call ends.
 Text string, the status of the forwarding call.
 
-1. Event
-  o POST: `DialCallStatus` or `DialStatus` property provided by `<Dial>`
+1. Event: `DialCallStatus` or `DialStatus` property provided by `<Dial>`
 
 ## Output
 
