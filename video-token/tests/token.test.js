@@ -21,7 +21,6 @@ describe('video-token/token', () => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
       jwt.verify(result._body.token, baseContext.API_SECRET, (err, decoded) => {
-        console.log(decoded);
         expect(err).toBeNull();
         expect(decoded.iss).toBe(baseContext.API_KEY);
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
