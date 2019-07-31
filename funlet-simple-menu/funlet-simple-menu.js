@@ -171,8 +171,8 @@ exports.output.simpleMenuStage1 = simpleMenuStage1;
 
   Response:
     The input response is modified with instructions to redirect to the
-    URL of the option matching the given digits, if any, or to say an
-    error message.
+    URL of the option matching the given digits, if any, or to say an error
+    message. If no digits have been pressed, the response is left unchanged.
 
   Returns:
     boolean, true if a matching option was found, and false otherwise
@@ -180,6 +180,9 @@ exports.output.simpleMenuStage1 = simpleMenuStage1;
 function simpleMenuStage2(
   response, digits, options, errorMessage, language, voice
 ) {
+  if ( digits === "" ) {
+    return false;
+  }
   if ( !options.hasOwnProperty(digits) ) {
     simpleMessage(response, errorMessage, language, voice);
     return false;

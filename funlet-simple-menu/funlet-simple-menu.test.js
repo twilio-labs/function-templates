@@ -274,6 +274,19 @@ test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-1-3] Multiple Digits to Gather',
   expect( response.toString() ).toEqual( GATHER_MULTIPLE_DIGITS );
 });
 
+test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-0] No Digits',
+() => {
+  const EMPTY_RESPONSE =
+    XML_DECLARATION+
+    '<Response/>';
+  let response = new Twilio.twiml.VoiceResponse();
+  let hasMatch = funlet.output.simpleMenuStage2(
+    response, "", {"12345":ACTION12345}, ERROR_MESSAGE, FRENCH, MAN
+  );
+  expect( hasMatch ).toBe( false );
+  expect( response.toString() ).toEqual( EMPTY_RESPONSE );
+});
+
 test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-1] Digits Pressed Match an Option',
 () => {
   const REDIRECT_TO_MATCHING_OPTION =
