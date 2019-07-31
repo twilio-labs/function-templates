@@ -54,6 +54,28 @@ test('[SIMPLE-MENU-INPUT-MESSAGE-3] Read Default Message from Script',
   ).toEqual( DEFAULT_MESSAGE );
 });
 
+test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-1] Read Error Message from Event',
+() => {
+  expect(
+    funlet.input.getErrorMessage({}, {ErrorMessage:ERROR_MESSAGE})
+  ).toEqual( ERROR_MESSAGE );
+});
+
+test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-2] Read Error Message from Environment',
+() => {
+  expect(
+    funlet.input.getErrorMessage({FUNLET_MENU_ERROR_MESSAGE:ERROR_MESSAGE}, {})
+  ).toEqual( ERROR_MESSAGE );
+});
+
+test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-3] '+
+     'Read Default Error Message from Script',
+() => {
+  expect(
+    funlet.input.getErrorMessage({}, {})
+  ).toEqual( DEFAULT_ERROR_MESSAGE );
+});
+
 test('[SIMPLE-MENU-INPUT-LANGUAGE-1] Read Language from Event',
 () => {
   expect(
@@ -176,30 +198,6 @@ test('[SIMPLE-MENU-INPUT-DIGITS-1] Read Non-Empty Digits from Event',
     funlet.input.getDigits({},{Digits:NON_EMPTY_DIGITS})
   ).toEqual( NON_EMPTY_DIGITS );
 });
-
-test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-1] Read Error Message from Event',
-() => {
-  expect(
-    funlet.input.getErrorMessage({}, {ErrorMessage:ERROR_MESSAGE})
-  ).toEqual( ERROR_MESSAGE );
-});
-
-test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-2] Read Error Message from Environment',
-() => {
-  expect(
-    funlet.input.getErrorMessage({FUNLET_MENU_ERROR_MESSAGE:ERROR_MESSAGE}, {})
-  ).toEqual( ERROR_MESSAGE );
-});
-
-test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-3] '+
-     'Read Default Error Message from Script',
-() => {
-  expect(
-    funlet.input.getErrorMessage({}, {})
-  ).toEqual( DEFAULT_ERROR_MESSAGE );
-});
-
-
 
 test('[SIMPLE-MENU-OUTPUT-GATHER-DIGITS-0] Gather Digits Without Message',
 () => {

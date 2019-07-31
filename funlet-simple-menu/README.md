@@ -31,6 +31,17 @@ Text string: a recording URL or a text to say.
 2. Environment: `FUNLET_MENU_MESSAGE` environment property
 3. Script: `MY_MESSAGE` constant
 
+### Error Message (Stage 2)
+
+Stage 2: When one or several digits have been pressed.
+Text string, a recording URL or a text to say when the digits pressed
+do not match any option. For a text message, the same language and voice
+will be used as for the message in stage 1.
+
+1. Event: `ErrorMessage` parameter
+2. Environment: `FUNLET_MENU_ERROR_MESSAGE` environment property
+3. Script: `MY_ERROR_MESSAGE` constant
+
 ### Language
 
 Text string, language code for text messages, e.g. 'en' or 'en-gb'.
@@ -80,17 +91,6 @@ Stage 2: When one or several digits have been pressed.
 Text string, list of digits pressed.
 
 1. Event: `Digits` property provided by `<Gather>`
-
-### Error Message (Stage 2)
-
-Stage 2: When one or several digits have been pressed.
-Text string, a recording URL or a text to say when the digits pressed
-do not match any option. For a text message, the same language and voice
-will be used as for the message in stage 1.
-
-1. Event: `ErrorMessage` parameter
-2. Environment: `FUNLET_MENU_ERROR_MESSAGE` environment property
-3. Script: `MY_ERROR_MESSAGE` constant
 
 ## Output
 
