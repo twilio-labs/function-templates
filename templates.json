@@ -69,6 +69,11 @@
       "id": "hunt",
       "name": "Hunt / Find Me",
       "description": "Will call a list of configured numbers until one answers"
+    },
+    {
+      "id": "http-redirect",
+      "name": "HTTP Redirect",
+      "description": "Redirects a Function call to another URL"
     }
   ]
 }
