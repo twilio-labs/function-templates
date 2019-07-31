@@ -195,6 +195,22 @@ exports.output.simpleMenuStage2 = simpleMenuStage2;
 
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;
-  throw Error("Not implemented!");
-  reply(NO_ERROR, 'response');
+
+  let
+    response = new Twilio.twiml.VoiceResponse(),
+    digits = getDigits(env, params),
+    message = getMessage(env, params),
+    errorMessage = getErrorMessage(env, params),
+    language = getLanguage(env, params),
+    voice = getVoice(env, params),
+    options = getOptions(env, params);
+
+  if (
+    ! simpleMenuStage2(
+      response, digits, options, errorMessage, language, voice
+    )
+  ) {
+    simpleMenuStage1(response, message, language, voice, options);
+  }
+  reply(NO_ERROR, response);
 };

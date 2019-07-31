@@ -318,10 +318,22 @@ test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-2] '+
   expect( response.toString() ).toEqual( PLAY_ERROR_MESSAGE );
 });
 
-test.skip('Missing Tests', done => {
+test('[SIMPLE-MENU-1-2] Full Response: Text Message', done => {
+  const FULL_RESPONSE_SIMPLE_MENU_1_2 =
+    XML_DECLARATION+
+    '<Response>'+
+      '<Gather numDigits="1">'+
+        '<Say language="'+DEFAULT_LANGUAGE+'" voice="'+DEFAULT_VOICE+'">'+
+          TEXT_MESSAGE+
+        '</Say>'+
+      '</Gather>'+
+      '<Redirect/>'+
+    '</Response>';
+
   const callback = (err, result) => {
-    expect(result).toBe('...');
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_SIMPLE_MENU_1_2 );
     done();
   };
-  funlet.handler({}, {}, callback);
+  funlet.handler({}, {Message:TEXT_MESSAGE}, callback);
 });
