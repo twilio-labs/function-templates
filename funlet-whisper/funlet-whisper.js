@@ -4,6 +4,8 @@
 // if the check is requested and no digits are pressed, hang up.
 // If digits are pressed (stage 2), bridge the call.
 
+// ## Script Parameters
+
 // ## Input
 exports.input = {};
 

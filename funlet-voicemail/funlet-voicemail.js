@@ -3,6 +3,8 @@
 // has been recorded (stage 2) or the optional speech-to-text transcription
 // has completed (stage 3), send an email notification for the new voicemail.
 
+// ## Script Parameters
+
 // ## Input
 exports.input = {};
 

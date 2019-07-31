@@ -4,6 +4,8 @@
 // forwarding call ends, just hang up if it was successful,
 // or redirect to the fallback URL/Funlet, if any (stage 2).
 
+// ## Script Parameters
+
 // ## Input
 exports.input = {};
 
