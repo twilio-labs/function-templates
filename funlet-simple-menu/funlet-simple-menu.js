@@ -1,4 +1,6 @@
 // # Simple Menu Funlet
+// Ask the caller to select an option in a menu (stage 1)
+// then gather digits pressed and redirect to a new URL/Funlet (stage 2)
 
 // ## Input
 exports.input = {};

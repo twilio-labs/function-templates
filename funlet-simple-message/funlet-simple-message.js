@@ -1,4 +1,6 @@
 // # Simple Message Funlet
+// Play one or several messages from recordings in MP3 format or through
+// speech-to-text synthesis in a choice of languages and voices.
 
 // ## Input
 exports.input = {};

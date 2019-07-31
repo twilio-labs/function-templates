@@ -1,4 +1,8 @@
 // # Forward Funlet
+// Forward the call to a forwarding number, optionally checking that
+// the caller is on a white list of allowed numbers (stage 1).
+// When the forwarding call ends (stage 2), hang up if it was successful
+// or redirect to the fallback URL/Funlet, if any.
 
 // ## Input
 exports.input = {};

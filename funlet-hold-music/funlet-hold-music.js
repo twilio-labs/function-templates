@@ -1,4 +1,5 @@
 // # Hold Music Funlet
+// Play songs found in an S3 bucket in a random order
 
 // ## Input
 exports.input = {};

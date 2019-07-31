@@ -1,4 +1,7 @@
 // # Call Me Funlet
+// Forward the call to your forwarding number (stage 1)
+// then hang up, or if the call failed, redirect the caller
+// to a fallback URL/Funlet (stage 2)
 
 // ## Input
 exports.input = {};

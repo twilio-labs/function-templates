@@ -1,4 +1,9 @@
 // # Conference Funlet
+// Host a conference call, optionally protected by password digits (stage 1)
+// which must be pressed by the caller to enter the conference (stage 2).
+// A list of moderators may be defined:
+// - other callers will have to wait for a moderator to enter the conference
+// - optionally, moderators may be notified by SMS when a new caller arrives
 
 // ## Input
 exports.input = {};

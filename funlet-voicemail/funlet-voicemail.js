@@ -1,4 +1,7 @@
 // # Voicemail Funlet
+// Play a message then record voicemail (stage 1). Once the voicemail
+// has been recorded (stage 2) or the optional speech-to-text transcription
+// has completed (stage 3), send an email notification for the new voicemail.
 
 // ## Input
 exports.input = {};

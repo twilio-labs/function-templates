@@ -1,4 +1,7 @@
 // # Echo Funlet
+// Reply with the static TwiML provided as parameter.
+// This is an alternative to TwiML Bins, which can be a starting point
+// to introduce more advanced logic than the TwiML Bins can handle.
 
 // ## Input
 exports.input = {};

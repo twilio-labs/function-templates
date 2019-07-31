@@ -1,4 +1,9 @@
 // # Find Me Funlet
+// Forward the call to one of up to 10 forwarding numbers,
+// tried one by one (stage 1). After each call ends (stage 2),
+// just hang up if the call was successful, or try forwarding
+// to the next number (back to stage 1) until no forwarding numbers
+// are left, then redirect to the fallback URL/Funlet, if any.
 
 // ## Input
 exports.input = {};
