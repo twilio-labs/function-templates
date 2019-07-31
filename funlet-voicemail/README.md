@@ -13,12 +13,8 @@ then environment properties, then default values declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values directly in each copy
-of the script.
-
-You will find a separate accessor function for each parameter at the
-beginning of the script, where you can change just these default value.
-You may also rewrite these functions fully to better accommodate your needs.
+the recommended way is to modify the default values in the script parameter
+constants at the top of the script.
 
 ## Input
 
