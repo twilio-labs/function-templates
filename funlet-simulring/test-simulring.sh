@@ -45,7 +45,7 @@ showRedirect()
   response="$( curl -s -w 'Redirect: %{redirect_url}' "$url"?"$params" )"
   case "$response" in
     'Redirect: '*) echo "$response" ;;
-    *) echo "$response" | sed '/^Redirect:/d' | indentXml
+    *) echo "$response" | sed 's/Redirect: $//' | indentXml
   esac
 }
 
