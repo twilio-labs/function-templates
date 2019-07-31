@@ -46,6 +46,11 @@
       "description": "Uses SendGrid to forward incoming messages via email"
     },
     {
+      "id": "conference",
+      "name": "Simple Conference",
+      "description": "Drops all incoming calls into a conference room"
+    },
+    {
       "id": "chat-token",
       "name": "Chat Token Function",
       "description": "Generates a Chat Access Token for client-side applications"
