@@ -2,11 +2,23 @@
 // Play one or several messages from recordings in MP3 format or through
 // speech-to-text synthesis in a choice of languages and voices.
 
+// ## Script Parameters
+
+// a list of one or several text string messages,
+// each being a recording URL or a text to say.
+const MY_MESSAGES = [""];
+
+// language code for conversion of text-to-speech messages,
+// e.g. 'en' or 'en-gb'
+const MY_LANGUAGE = "en";
+
+// voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
+const MY_VOICE = "alice";
+
 // ## Input
 exports.input = {};
 
 function getMessages(env, params) {
-  const MY_MESSAGES = [""];
   if ( params.hasOwnProperty("Message") ) {
     if ( typeof params.Message === "string" ) {
       return [params.Message];
@@ -33,13 +45,11 @@ function getMessages(env, params) {
 exports.input.getMessages = getMessages;
 
 function getLanguage(env, params) {
-  const MY_LANGUAGE = "en";
   return params.Language || env.FUNLET_MESSAGE_LANGUAGE || MY_LANGUAGE;
 }
 exports.input.getLanguage = getLanguage;
 
 function getVoice(env, params) {
-  const MY_VOICE = "alice";
   return params.Voice || env.FUNLET_MESSAGE_VOICE || MY_VOICE;
 }
 exports.input.getVoice = getVoice;

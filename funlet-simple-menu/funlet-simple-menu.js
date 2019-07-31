@@ -2,17 +2,41 @@
 // Ask the caller to select an option in a menu (stage 1)
 // then gather digits pressed and redirect to a new URL/Funlet (stage 2)
 
+// ## Script Parameters
+
+// a recording URL or a text to say to invite the caller to select an option
+const MY_MESSAGE = "";
+
+// error message (recording URL or text)
+// played when the digits pressed do not match any option
+const MY_ERROR_MESSAGE = "I'm sorry, that wasn't a valid option.";
+
+// language code for conversion of text-to-speech messages,
+// e.g. 'en' or 'en-gb'
+const MY_LANGUAGE = "en";
+
+// voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
+const MY_VOICE = "alice";
+
+// hash of key -> value for options where:
+// - the key is a string of digits
+// - the value is the action URL for the option matching given digits.
+// For example:
+// {
+//   "1": "https://example.com/option/1",
+//   "2": "..."
+// }
+const MY_OPTIONS = {};
+
 // ## Input
 exports.input = {};
 
 function getMessage(env, params) {
-  const MY_MESSAGE = "";
   return params.Message || env.FUNLET_MENU_MESSAGE || MY_MESSAGE;
 }
 exports.input.getMessage = getMessage;
 
 function getErrorMessage(env, params) {
-  const MY_ERROR_MESSAGE = "I'm sorry, that wasn't a valid option.";
   return params.ErrorMessage ||
          env.FUNLET_MENU_ERROR_MESSAGE ||
          MY_ERROR_MESSAGE;
@@ -20,13 +44,11 @@ function getErrorMessage(env, params) {
 exports.input.getErrorMessage = getErrorMessage;
 
 function getLanguage(env, params) {
-  const MY_LANGUAGE = "en";
   return params.Language || env.FUNLET_MENU_LANGUAGE || MY_LANGUAGE;
 }
 exports.input.getLanguage = getLanguage;
 
 function getVoice(env, params) {
-  const MY_VOICE = "alice";
   return params.Voice || env.FUNLET_MENU_VOICE || MY_VOICE;
 }
 exports.input.getVoice = getVoice;

@@ -3,11 +3,18 @@
 // This is an alternative to TwiML Bins, which can be a starting point
 // to introduce more advanced logic than the TwiML Bins can handle.
 
+// ## Script Parameters
+
+// Twiml instructions, as a text string.
+const MY_TWIML =
+  '<Response>'+
+    '<Say>echo</Say>'+
+  '</Response>';
+
 // ## Input
 exports.input = {};
 
 function getTwiml(env, params) {
-  const MY_TWIML = '<Response><Say>echo</Say></Response>';
   return params.Twiml || env.FUNLET_ECHO_TWIML || MY_TWIML;
 }
 exports.input.getTwiml = getTwiml;
