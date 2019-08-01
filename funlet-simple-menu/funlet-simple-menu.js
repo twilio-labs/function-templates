@@ -54,27 +54,7 @@ function getVoice(env, params) {
 exports.input.getVoice = getVoice;
 
 function getOptions(env, params) {
-  let options = {};
-  switch( typeof params.Options ) {
-    case "string":
-      options["0"] = params.Options;
-      break;
-    case "object":
-      let objectOrArray = params.Options;
-      for( let name of Object.keys(objectOrArray) ) {
-        if ( !isNaN( name ) ) {
-          options[ name ] = objectOrArray[ name ];
-        }
-      }
-      break;
-  }
-  for( let name of Object.keys(params) ) {
-    let matches = /^Options\[([0-9]+)\]$/.exec( name );
-    if( matches !== null ) {
-      let digits = matches[1];
-      options[ digits ] = params[ name ];
-    }
-  }
+  let options = Object.assign({},MY_OPTIONS);
   for( let name of Object.keys(env) ) {
     let matches = /^FUNLET_MENU_OPTION([0-9]+)_URL$/.exec( name );
     if( matches !== null ) {
@@ -82,6 +62,21 @@ function getOptions(env, params) {
       let digits = env[ "FUNLET_MENU_OPTION" + optionNumber + "_DIGITS" ]
       digits = digits || optionNumber;
       options[ digits ] = env[ name ];
+    }
+  }
+  switch( typeof params.Options ) {
+    case "string":
+      options["0"] = params.Options;
+      break;
+    case "object":
+      options = Object.assign(options,params.Options);
+      break;
+  }
+  for( let name of Object.keys(params) ) {
+    let matches = /^Options\[([0-9]+)\]$/.exec( name );
+    if( matches !== null ) {
+      let digits = matches[1];
+      options[ digits ] = params[ name ];
     }
   }
   return options;
