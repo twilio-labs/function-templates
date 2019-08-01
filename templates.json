@@ -11,9 +11,24 @@
       "description": "Basic Function that will return Hello World"
     },
     {
+      "id": "hello-voice",
+      "name": "Hello Voice",
+      "description": "Function to get you started with Twilio Prog. Voice"
+    },
+    {
+      "id": "hello-messaging",
+      "name": "Hello Messaging",
+      "description": "Function to get you started with Twilio Prog. Messaging"
+    },
+    {
       "id": "never-gonna-give-you-up",
       "name": "Never gonna give you up",
       "description": "Never gonna let you down. Plays a song to a phone call"
+    },
+    {
+      "id": "forward-call",
+      "name": "Forward Call",
+      "description": "Forwards an incoming call to another number"
     },
     {
       "id": "forward-message",
@@ -36,9 +51,34 @@
       "description": "Uses Sparkpost to forward incoming messages via email"
     },
     {
+      "id": "conference",
+      "name": "Simple Conference",
+      "description": "Drops all incoming calls into a conference room"
+    },
+    {
+      "id": "chat-token",
+      "name": "Chat Token Function",
+      "description": "Generates a Chat Access Token for client-side applications"
+    },
+    {
+      "id": "sync-token",
+      "name": "Sync Token Function",
+      "description": "Generates a Sync Access Token for client-side applications"
+    },
+    {
+      "id": "video-token",
+      "name": "Video Token Function",
+      "description": "Generates a Video Access Token for client-side applications"
+    },
+    {
       "id": "hunt",
       "name": "Hunt / Find Me",
       "description": "Will call a list of configured numbers until one answers"
+    },
+    {
+      "id": "http-redirect",
+      "name": "HTTP Redirect",
+      "description": "Redirects a Function call to another URL"
     }
   ]
 }
