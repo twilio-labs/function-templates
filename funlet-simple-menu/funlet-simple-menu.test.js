@@ -335,3 +335,19 @@ test('[SIMPLE-MENU-1-2] Full Response: Text Message', done => {
   };
   funlet.handler({}, {Message:TEXT_MESSAGE}, callback);
 });
+
+test('[SIMPLE-MENU-2-1] Full Response: Digits Pressed Match an Option',
+done => {
+  const FULL_RESPONSE_SIMPLE_MENU_2_1 =
+    XML_DECLARATION+
+    '<Response>'+
+      '<Redirect>'+ACTION12345+'</Redirect>'+
+    '</Response>';
+
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_SIMPLE_MENU_2_1 );
+    done();
+  };
+  funlet.handler({}, {Digits:"12345", "Options[12345]":ACTION12345}, callback);
+});
