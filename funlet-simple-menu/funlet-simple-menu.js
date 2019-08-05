@@ -84,10 +84,7 @@ function getOptions(env, params) {
 exports.input.getOptions = getOptions;
 
 function getDigits(env, params) {
-  if (typeof params.Digits === "string") {
-    return params.Digits;
-  }
-  return "";
+  return params.Digits || "";
 }
 exports.input.getDigits = getDigits;
 
