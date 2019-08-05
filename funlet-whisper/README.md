@@ -44,7 +44,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 2. Environment: `FUNLET_WHISPER_VOICE` environment property
 3. Script: `MY_VOICE` constant
 
-### HumanCheck
+### Human Check
 
 Boolean, defaults to false. Whether to request the recipient to press
 a key to accept the call explicitly.
