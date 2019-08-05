@@ -210,7 +210,7 @@ test('[SIMPLE-MENU-OUTPUT-GATHER-DIGITS-0] Gather Digits Without Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  let gather = funlet.output.gatherDigits(
+  funlet.output.gatherDigits(
     response, DIGITS, EMPTY_MESSAGE, DEFAULT_LANGUAGE, DEFAULT_VOICE
   );
   expect( response.toString() ).toEqual( GATHER_DIGITS );
@@ -230,7 +230,7 @@ test('[SIMPLE-MENU-OUTPUT-GATHER-DIGITS-1] '+
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  let gather = funlet.output.gatherDigits(
+  funlet.output.gatherDigits(
     response, DIGITS, RECORDED_MESSAGE, DEFAULT_LANGUAGE, DEFAULT_VOICE
   );
   expect( response.toString() ).toEqual( PLAY_MESSAGE_GATHER_DIGITS );
@@ -248,7 +248,7 @@ test('[SIMPLE-MENU-OUTPUT-GATHER-DIGITS-2] Gather Digits With Text Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  let gather = funlet.output.gatherDigits(
+  funlet.output.gatherDigits(
     response, DIGITS, TEXT_MESSAGE, FRENCH, WOMAN
   );
   expect( response.toString() ).toEqual( SAY_MESSAGE_GATHER_DIGITS );
