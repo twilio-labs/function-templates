@@ -38,7 +38,7 @@ in the email notification; defaults to true.
 
 ### Message
 
-Text string: a recording URL or a text to say to invite the caller
+Text string, a recording URL or a text to say to invite the caller
 to leave a message.
 *(A string starting with 'http' is considered to be a URL)*
 

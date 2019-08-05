@@ -46,7 +46,7 @@ when the forwarding call fails.
 
 ### Timeout
 
-Number: duration in seconds to let the call ring before the recipient picks up.
+Number, duration in seconds to let the call ring before the recipient picks up.
 
 1. Event: `Timeout` parameter
 2. Environment: `FUNLET_FORWARD_TIMEOUT` environment property

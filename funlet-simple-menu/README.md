@@ -20,7 +20,7 @@ constants at the top of the script.
 
 ### Message
 
-Text string: a recording URL or a text to say.
+Text string, a recording URL or a text to say.
 *(A string starting with 'http' is considered to be a URL)*
 
 1. Event: `Message` parameter

@@ -37,7 +37,7 @@ when the forwarding call fails.
 
 ### Message
 
-Text string: a recording URL or a text to say,
+Text string, a recording URL or a text to say,
 asking the recipient to press any key to accept the call.
 *(A string starting with 'http' is considered to be a URL)*
 
@@ -65,7 +65,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 ### Timeout
 
-Number: duration in seconds to let the call ring before the recipient picks up.
+Number, duration in seconds to let the call ring before the recipient picks up.
 
 1. Event: `Timeout` parameter
 2. Environment: `FUNLET_CALLME_TIMEOUT` environment property

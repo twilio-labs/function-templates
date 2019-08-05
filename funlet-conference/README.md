@@ -47,7 +47,7 @@ to provide password digits to access the conference.
 
 ### Message
 
-Text string: a recording URL or a text to say before a caller
+Text string, a recording URL or a text to say before a caller
 enters the conference.
 *(A string starting with 'http' is considered to be a URL)*
 
@@ -75,7 +75,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 ### Music
 
-Text string:
+Text string,
 - name of a Twilio genre:
   o 'ambient'
   o 'classical',
