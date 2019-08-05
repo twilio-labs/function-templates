@@ -53,12 +53,6 @@ a key to accept the call explicitly.
 2. Environment: `FUNLET_WHISPER_HUMAN_CHECK` environment property
 3. Script: `MY_HUMAN_CHECK` constant
 
-### Caller
-
-Text string, the caller's phone number.
-
-1. Event: `From` or `Caller` property provided by the Twilio Voice event
-
 ### Digits (Stage 2)
 
 Stage 2: When one or several digits have been pressed.
