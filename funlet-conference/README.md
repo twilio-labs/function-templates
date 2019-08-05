@@ -36,6 +36,15 @@ in the context of the Twilio account.
 2. Environment: `FUNLET_CONFERENCE_NAME` environment property
 3. Script: `MY_NAME`
 
+### Password Request Message
+
+Text string, a recording URL or a text to say to request the caller
+to provide password digits to access the conference.
+
+1. Event: `PasswordRequest` parameter
+2. Environment: `FUNLET_CONFERENCE_PASSWORD_REQUEST` environment property
+3. Script: `MY_PASSWORD_REQUEST` constant
+
 ### Message
 
 Text string: a recording URL or a text to say before a caller
@@ -45,6 +54,24 @@ enters the conference.
 1. Event: `Message` parameter
 2. Environment: `FUNLET_CONFERENCE_MESSAGE` environment property
 3. Script: `MY_MESSAGE` constant
+
+### Language
+
+Text string, language code for text messages, e.g. 'en' or 'en-gb'.
+Defaults to 'en': English with an American accent.
+
+1. Event: `Language` parameter
+2. Environment: `FUNLET_CONFERENCE_LANGUAGE` environment property
+3. Script: `MY_LANGUAGE` constant
+
+### Voice
+
+Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
+Defaults to 'alice', who speaks in a large selection languages.
+
+1. Event: `Voice` parameter
+2. Environment: `FUNLET_CONFERENCE_VOICE` environment property
+3. Script: `MY_VOICE` constant
 
 ### Music
 

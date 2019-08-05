@@ -67,6 +67,33 @@ allowed to be forwarded.
   - `FUNLET_FORWARD_ALLOWED_CALLER5`
 3. Script: `MY_ALLOWED_CALLERS` constant string or array of string values
 
+### Access Restricted Error Message
+
+Text string, a recording URL or a text to say when the calling number
+is not one of the allowed callers configured.
+
+1. Event: `AccessRestricted`
+2. Environment: `FUNLET_FORWARD_ACCESS_RESTRICTED` environment property
+3. Script: `MY_ACCESS_RESTRICTED` constant
+
+### Language
+
+Text string, language code for text messages, e.g. 'en' or 'en-gb'.
+Defaults to 'en': English with an American accent.
+
+1. Event: `Language` parameter
+2. Environment: `FUNLET_FORWARD_LANGUAGE` environment property
+3. Script: `MY_LANGUAGE` constant
+
+### Voice
+
+Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
+Defaults to 'alice', who speaks in a large selection languages.
+
+1. Event: `Voice` parameter
+2. Environment: `FUNLET_FORWARD_VOICE` environment property
+3. Script: `MY_VOICE` constant
+
 ### Caller
 
 Text string, the caller's phone number.
