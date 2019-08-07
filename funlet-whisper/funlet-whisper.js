@@ -158,7 +158,7 @@ function whisperStage2(response, digits) {
   if ( digits === null ) {
     return false;
   }
-  if ( !digits ) {
+  if ( digits==="" ) {
     response.hangup();
   }
   return true;
