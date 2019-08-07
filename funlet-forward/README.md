@@ -118,8 +118,7 @@ Stage 2: When the forwarded call ends.
 Boolean, a flag set to true to bypass the first stage of processing
 when returning from the call to the forwarding number.
 
-1. Event
-  o GET: `Dial` parameter
+1. Event: `Dial` parameter
 
 ### Call Status (Stage 2)
 
