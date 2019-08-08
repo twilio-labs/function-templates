@@ -84,14 +84,14 @@ query \
   Timeout=42 \
   Message="$message"
 echo
-echo '[SIMULRING-2-1] Call Completed'
+echo '[SIMULRING-4-1] Call Completed'
 query Dial=true DialCallStatus=completed FailUrl="$fallbackUrl"
 echo
-echo '[SIMULRING-2-2] Call Answered'
+echo '[SIMULRING-4-2] Call Answered'
 query Dial=true DialStatus=answered FailUrl="$fallbackUrl"
 echo
-echo '[SIMULRING-2-3] Failure with No Fallback URL'
+echo '[SIMULRING-4-3] Failure with No Fallback URL'
 query Dial=true DialCallStatus=busy
 echo
-echo '[SIMULRING-2-4] Failure with Fallback URL'
+echo '[SIMULRING-4-4] Failure with Fallback URL'
 showRedirect Dial=true DialCallStatus=busy FailUrl="$fallbackUrl"

@@ -47,13 +47,13 @@
 [FIND-ME-1-7] No More Numbers, With Fallback URL
 Redirect: https://example.com/please-try-later.mp3
 
-[FIND-ME-2-1] Call Answered
+[FIND-ME-4-1] Call Answered
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Hangup/>
 </Response>
 
-[FIND-ME-2-2] Call Completed
+[FIND-ME-4-2] Call Completed
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Hangup/>

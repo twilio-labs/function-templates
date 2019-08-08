@@ -68,14 +68,14 @@ echo '[CALL-ME-1-3] Call Me with Custom Timeout and Message'
 message='Custom%20message'
 query PhoneNumber="$phoneNumber" Timeout=42 Message="$message"
 echo
-echo '[CALL-ME-2-1] Call Completed'
+echo '[CALL-ME-4-1] Call Completed'
 query Dial=true DialCallStatus=completed FailUrl="$fallbackUrl"
 echo
-echo '[CALL-ME-2-2] Call Answered'
+echo '[CALL-ME-4-2] Call Answered'
 query Dial=true DialStatus=answered FailUrl="$fallbackUrl"
 echo
-echo '[CALL-ME-2-3] Failure with No Fallback URL'
+echo '[CALL-ME-4-3] Failure with No Fallback URL'
 query Dial=true DialCallStatus=busy
 echo
-echo '[CALL-ME-2-4] Failure with Fallback URL'
+echo '[CALL-ME-4-4] Failure with Fallback URL'
 showRedirect Dial=true DialCallStatus=busy FailUrl="$fallbackUrl"

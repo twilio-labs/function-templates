@@ -129,8 +129,8 @@ echo
 echo '[FIND-ME-1-7] No More Numbers, With Fallback URL'
 showRedirect FailUrl="$fallbackUrl"
 echo
-echo '[FIND-ME-2-1] Call Answered'
+echo '[FIND-ME-4-1] Call Answered'
 query Dial=true DialStatus=answered
 echo
-echo '[FIND-ME-2-2] Call Completed'
+echo '[FIND-ME-4-2] Call Completed'
 query Dial=true DialCallStatus=completed

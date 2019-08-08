@@ -28,23 +28,23 @@
   </Dial>
 </Response>
 
-[SIMULRING-2-1] Call Completed
+[SIMULRING-4-1] Call Completed
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Hangup/>
 </Response>
 
-[SIMULRING-2-2] Call Answered
+[SIMULRING-4-2] Call Answered
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Hangup/>
 </Response>
 
-[SIMULRING-2-3] Failure with No Fallback URL
+[SIMULRING-4-3] Failure with No Fallback URL
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Hangup/>
 </Response>
 
-[SIMULRING-2-4] Failure with Fallback URL
+[SIMULRING-4-4] Failure with Fallback URL
 Redirect: https://example.com/please-try-later.mp3
