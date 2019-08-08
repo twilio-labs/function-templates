@@ -79,7 +79,7 @@ allowed to be forwarded.
   - `FUNLET_FORWARD_ALLOWED_CALLER3`,
   - `FUNLET_FORWARD_ALLOWED_CALLER4`,
   - `FUNLET_FORWARD_ALLOWED_CALLER5`
-3. Script: `MY_ALLOWED_CALLERS` constant string or array of string values
+3. Script: `MY_ALLOWED_CALLERS` array of string values
 
 ### Access Restricted Error Message
 
