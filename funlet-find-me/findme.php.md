@@ -93,7 +93,7 @@ if (count($_REQUEST['PhoneNumbers']) > 10) {
 }
 ```
 
-### Stage 2
+### Stage 4
 
 ```
 // if The Dial flag is present, it means we're returning from an attempted Dial
@@ -142,6 +142,17 @@ if (isset($_REQUEST['Dial']) && ($_REQUEST['DialStatus'] == 'answered' || $_REQU
 
 		// add the number to dial
 		$dial->number($nextNumber, array(
+```
+
+### Stage 2 and Stage 3: Whisper
+
+Through the Whisper Twimlet, request the recipient to press a key to accept
+the incoming call (stage 2), then bridge the call when a digit has been
+pressed (stage 3). With the parameter `HumanCheck` set to true, the call
+will be interrupted when a timeout of 5 seconds in `<Gather>` expires
+without any digits pressed.
+
+```
 			'url' => 'whisper?Message=' . urlencode($_REQUEST['Message']) . '&HumanCheck=1',
 		));
 

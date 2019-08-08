@@ -76,7 +76,7 @@ the limitation to 10 numbers is not enforced here.
 $_REQUEST['PhoneNumbers'] = array_filter($_REQUEST['PhoneNumbers']);
 ```
 
-### Stage 2
+### Stage 4
 
 ```
 // if The Dial flag is present, it means we're returning from an attempted Dial
@@ -114,6 +114,18 @@ if (isset($_REQUEST['Dial']) && (strlen($_REQUEST['DialCallStatus']) || strlen($
 	// add each number to the Dial
 	foreach ($_REQUEST['PhoneNumbers'] as $number) {
 		$dial->number($number, array(
+```
+
+### Stage 2 and Stage 3: Whisper
+
+Through the Whisper Twimlet, request the recipient to press a key to accept
+the incoming call (stage 2), then bridge the call when a digit has been
+pressed (stage 3). Note that the Whisper Twimlet requires an extra parameter
+to be set, `HumanCheck=true`, to actually check that a digit has been pressed;
+without this parameter, the call will be bridged whether the recipient pressed
+a digit or not, possibly forwarding the call to a voicemail.
+
+```
 			'url' => 'whisper?Message=' . urlencode($_REQUEST['Message']),
 		));
 	}
