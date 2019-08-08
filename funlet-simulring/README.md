@@ -16,6 +16,23 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Simulring Funlet has four stages:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Forward incoming call to the first forwarding number that answers |
+|     2 | Recipient  | Ask the recipient to press a key to accept the call |
+|     3 | Recipient  | Bridge the call when a digit has been pressed |
+|     4 | Caller     | After a failed call, redirect to fallback URL, if any |
+
+These four stages would typically be implemented in four separate Twilio
+Functions. In the Simulring Funlet, they are running in four separate
+instances of the same Twilio Function. In the original Simulring Twimlet,
+both stage 1 and stage 4 were implemented in the same script, while the
+stages 2 and 3 were delegated to a separate script, the Whisper Twimlet.
+
 ## Input
 
 ### Phone Numbers
@@ -78,17 +95,15 @@ Number, duration in seconds to let the call ring before the recipient picks up.
 2. Environment: `FUNLET_SIMULRING_TIMEOUT` environment property
 3. Script: `MY_TIMEOUT` constant
 
-### Dial Done (Stage 2)
+### Dial Done (Stage 4)
 
-Stage 2: When the forwarded call ends.
 Boolean, a flag set to true to bypass the first stage of processing
 when returning from the call to the forwarding number.
 
 1. Event: `Dial` parameter
 
-### Call Status (Stage 2)
+### Call Status (Stage 4)
 
-Stage 2: When the forwarded call ends.
 Text string, the status of the forwarding call.
 
 1. Event: `DialCallStatus` or `DialStatus` property provided by `<Dial>`

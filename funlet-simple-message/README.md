@@ -16,6 +16,14 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Simple Message Funlet has a single stage:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Play one or several messages to the caller |
+
 ## Input
 
 ### Messages

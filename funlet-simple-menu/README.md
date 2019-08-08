@@ -16,6 +16,20 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Simple Menu Funlet has two stages:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Welcome the caller and gather digits |
+|     2 | Caller     | Redirect to the matching option, if any |
+
+These two stages would typically be implemented in two separate Twilio
+Functions. In the Simple Menu Funlet, they are running in two separate
+instances of the same Twilio Function. This is in line with the original
+Simple Menu Twimlet, which implemented both stages in the same script.
+
 ## Input
 
 ### Message
@@ -29,7 +43,6 @@ Text string, a recording URL or a text to say.
 
 ### Error Message (Stage 2)
 
-Stage 2: When one or several digits have been pressed.
 Text string, a recording URL or a text to say when the digits pressed
 do not match any option. For a text message, the same language and voice
 will be used as for the message in stage 1.
@@ -83,7 +96,6 @@ sequence of digits starting with 0, not 1, will be associated with each option.
 
 ### Digits (Stage 2)
 
-Stage 2: When one or several digits have been pressed.
 Text string, list of digits pressed.
 
 1. Event: `Digits` property provided by `<Gather>`

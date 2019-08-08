@@ -16,6 +16,20 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Forward Funlet has two stages:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Check that caller is allowed and forward the call |
+|     2 | Caller     | After a failed call, redirect to fallback URL, if any |
+
+These two stages would typically be implemented in two separate Twilio
+Functions. In the Forward Funlet, they are running in two separate
+instances of the same Twilio Function. This is in line with the original
+Forward Twimlet, which implemented both stages in the same script.
+
 ## Input
 
 ### Phone Number
@@ -114,7 +128,6 @@ Text string, the API version.
 
 ### Dial Done (Stage 2)
 
-Stage 2: When the forwarded call ends.
 Boolean, a flag set to true to bypass the first stage of processing
 when returning from the call to the forwarding number.
 
@@ -122,7 +135,6 @@ when returning from the call to the forwarding number.
 
 ### Call Status (Stage 2)
 
-Stage 2: When the forwarded call ends.
 Text string, the status of the forwarding call.
 
 1. Event: `DialCallStatus` or `DialStatus` property provided by `<Dial>`

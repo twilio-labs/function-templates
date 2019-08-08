@@ -16,6 +16,21 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Voicemail Funlet has three stages:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Record voicemail |
+|     2 | Caller     | After recording, thank caller and send email notification, unless transcription is pending |
+|     3 | Caller     | Send email notification after transcription, if it was requested |
+
+These three stages would typically be implemented in three separate Twilio
+Functions. In the Voicemail Funlet, they are running in three separate
+instances of the same Twilio Function. This is in line with the original
+Voicemail Twimlet, which implemented both stages in the same script.
+
 ## Input
 
 ### Email

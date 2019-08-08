@@ -16,6 +16,14 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Hold Music Funlet has a single stage:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Play hold music and messages, in a loop |
+
 ## Input
 
 ### Bucket

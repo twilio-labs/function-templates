@@ -15,6 +15,20 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Whisper Funlet has two stages:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Recipient  | Ask recipient to press a key to accept the call |
+|     2 | Recipient  | Bridge the call when a digit has been pressed |
+
+These two stages would typically be implemented in two separate Twilio
+Functions. In the Whisper Funlet, they are running in two separate
+instances of the same Twilio Function. This is in line with the original
+Whisper Twimlet, which implemented both stages in the same script.
+
 ## Input
 
 ### Message
@@ -55,7 +69,6 @@ a key to accept the call explicitly.
 
 ### Digits (Stage 2)
 
-Stage 2: When one or several digits have been pressed.
 Text string, list of digits pressed.
 
 1. Event: `Digits` property provided by `<Gather>`

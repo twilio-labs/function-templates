@@ -16,6 +16,20 @@ instance of this script in your account. To customize multiple instances,
 the recommended way is to modify the default values in the script parameter
 constants at the top of the script.
 
+## Stages
+
+The Conference Funlet has two stages:
+
+| Stage | Addressing | Description |
+| ----: | :--------- | :---------- |
+|     1 | Caller     | Check the conference password digits |
+|     2 | Caller     | Welcome the caller to the conference and notify moderators |
+
+These two stages would typically be implemented in two separate Twilio
+Functions. In the Conference Funlet, they are running in two separate
+instances of the same Twilio Function. This is in line with the original
+Conference Twimlet, which implemented both stages in the same script.
+
 ## Input
 
 ### Password
