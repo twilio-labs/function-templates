@@ -120,12 +120,6 @@ Text string, the Twilio phone number called for the forwarding.
 
 1. Event: `To` or `Called` property provided by the Twilio Voice event
 
-### API Version
-
-Text string, the API version.
-
-1. Event: `ApiVersion` property provided by the Twilio Voice event
-
 ### Dial Done (Stage 2)
 
 Boolean, a flag set to true to bypass the first stage of processing
