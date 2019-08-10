@@ -50,6 +50,9 @@ const WOMAN="woman";
 const ALICE="alice";
 const DEFAULT_VOICE=ALICE;
 
+const DIAL_DONE = true;
+const DIAL_NOT_DONE = false;
+
 const NO_CALL_STATUS="";
 const CALL_ANSWERED="answered";
 const CALL_COMPLETED="completed";
@@ -87,6 +90,18 @@ const FULL_RESPONSE_FORWARD_1_7 =
     '">'+
       PHONE_NUMBER+
     '</Dial>'+
+  '</Response>';
+
+const HANG_UP =
+  XML_DECLARATION+
+  '<Response>'+
+    '<Hangup/>'+
+  '</Response>';
+
+const FULL_RESPONSE_FORWARD_2_4 =
+  XML_DECLARATION+
+  '<Response>'+
+    '<Redirect>'+FALLBACK_URL+'</Redirect>'+
   '</Response>';
 
 test('[FORWARD-INPUT-PHONE-NUMBER-1] Read Phone Number from Event',
@@ -367,14 +382,14 @@ test('[FORWARD-INPUT-DIAL-0] Read No Dial from Event',
 () => {
   expect(
     funlet.input.isDialDone({}, {})
-  ).toEqual( false );
+  ).toEqual( DIAL_NOT_DONE );
 });
 
 test('[FORWARD-INPUT-DIAL-1] Read Dial from Event',
 () => {
   expect(
     funlet.input.isDialDone({}, {Dial:"true"})
-  ).toEqual( true );
+  ).toEqual( DIAL_DONE );
 });
 
 test('[FORWARD-INPUT-CALL-STATUS-0] Read No Call Status from Event',
@@ -480,6 +495,60 @@ test('[FORWARD-OUTPUT-FORWARD-1-7] Custom Timeout and Caller Id',
     CALLER_ID, PHONE_NUMBER, TIMEOUT, DEFAULT_FALLBACK_URL
   );
   expect( response.toString() ).toEqual( FULL_RESPONSE_FORWARD_1_7 );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-2-0] Call Ongoing',
+() => {
+  const EMPTY_RESPONSE =
+    XML_DECLARATION+
+    '<Response/>';
+
+  let response = new Twilio.twiml.VoiceResponse();
+  let isFinished = funlet.output.forwardStage2(
+    response, DIAL_NOT_DONE, NO_CALL_STATUS, DEFAULT_FALLBACK_URL
+  );
+  expect( isFinished ).toEqual( DIAL_NOT_DONE );
+  expect( response.toString() ).toEqual( EMPTY_RESPONSE );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-2-1] Call Completed',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  let isFinished = funlet.output.forwardStage2(
+    response, DIAL_DONE, CALL_COMPLETED, DEFAULT_FALLBACK_URL
+  );
+  expect( isFinished ).toEqual( DIAL_DONE );
+  expect( response.toString() ).toEqual( HANG_UP );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-2-2] Call Answered',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  let isFinished = funlet.output.forwardStage2(
+    response, DIAL_DONE, CALL_ANSWERED, DEFAULT_FALLBACK_URL
+  );
+  expect( isFinished ).toEqual( DIAL_DONE );
+  expect( response.toString() ).toEqual( HANG_UP );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-2-3] Failure with No Fallback URL',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  let isFinished = funlet.output.forwardStage2(
+    response, DIAL_DONE, CALL_BUSY, DEFAULT_FALLBACK_URL
+  );
+  expect( isFinished ).toEqual( DIAL_DONE );
+  expect( response.toString() ).toEqual( HANG_UP );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-2-4] Failure with Fallback URL',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  let isFinished = funlet.output.forwardStage2(
+    response, DIAL_DONE, CALL_BUSY, FALLBACK_URL
+  );
+  expect( isFinished ).toEqual( DIAL_DONE );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_FORWARD_2_4 );
 });
 
 test.skip('Missing Tests', done => {

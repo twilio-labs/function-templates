@@ -253,6 +253,41 @@ function forwardStage1(
 }
 exports.output.forwardStage1 = forwardStage1;
 
+/*
+  Function: forwardStage2()
+
+  Parameters:
+    * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
+    * isDialDone - boolean, whether the forwarding call has completed
+    * callStatus - string, the status of the forwarding call
+    * fallbackUrl - string, URL of a script with further instructions
+                    in case the forwarding call failed
+  Response:
+    Until the forwarding call has completed, the response is left unchanged.
+    When the forwarding call has ended in a failure, the response is modified
+    with instructions to redirect to the fallback URL, if any. Otherwise,
+    an instruction to hang up is added to the response.
+
+  Returns:
+    true when the forwarding call has completed,
+    false otherwise.
+*/
+function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
+  if (isDialDone) {
+    if (
+      callStatus !== "answered" &&
+      callStatus !== "completed" &&
+      fallbackUrl !== ""
+    ) {
+      response.redirect( fallbackUrl );
+    } else {
+      response.hangup();
+    }
+  }
+  return isDialDone;
+}
+exports.output.forwardStage2 = forwardStage2;
+
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;
   throw Error("Not implemented!");
