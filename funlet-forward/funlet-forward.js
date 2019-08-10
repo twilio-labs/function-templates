@@ -290,6 +290,34 @@ exports.output.forwardStage2 = forwardStage2;
 
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;
-  throw Error("Not implemented!");
-  reply(NO_ERROR, 'response');
+
+  let
+    response = new Twilio.twiml.VoiceResponse(),
+    callStatus = getCallStatus(env, params),
+    fallbackUrl = getFallbackUrl(env, params),
+    caller = getCaller(env, params),
+    called = getPhoneNumberCalled(env, params),
+    allowedCallers = getAllowedCallers(env, params),
+    accessRestrictedErrorMessage =
+      getAccessRestrictedErrorMessage(env, params),
+    language = getLanguage(env, params),
+    voice = getVoice(env, params),
+    callerId = getCallerId(env, params),
+    forwardingNumber = getPhoneNumber(env, params),
+    timeout = getTimeout(env, params);
+
+  if (
+    !forwardStage2(
+      response, isDialDone(env,params), callStatus, fallbackUrl
+    )
+  ) {
+    forwardStage1(
+      response,
+      isForwardingAllowed(caller, called, allowedCallers),
+      accessRestrictedErrorMessage, language, voice,
+      callerId, forwardingNumber, timeout, fallbackUrl
+    );
+  }
+
+  reply(NO_ERROR, response);
 };

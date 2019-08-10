@@ -551,10 +551,25 @@ test('[FORWARD-OUTPUT-FORWARD-2-4] Failure with Fallback URL',
   expect( response.toString() ).toEqual( FULL_RESPONSE_FORWARD_2_4 );
 });
 
-test.skip('Missing Tests', done => {
+test('[FORWARD-1-2] Successful Forward + Fallback URL (from Example 2)',
+done => {
   const callback = (err, result) => {
-    expect(result).toBe('...');
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_FORWARD_1_2 );
     done();
   };
-  funlet.handler({}, {}, callback);
+  funlet.handler({}, {
+    PhoneNumber:PHONE_NUMBER, FailUrl:FALLBACK_URL
+  }, callback);
+});
+
+test('[FORWARD-2-4] Failure with Fallback URL', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_FORWARD_2_4 );
+    done();
+  };
+  funlet.handler({}, {
+    Dial:"true", DialCallStatus:"busy", FailUrl:FALLBACK_URL
+  }, callback);
 });
