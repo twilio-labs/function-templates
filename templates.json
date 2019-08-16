@@ -33,7 +33,7 @@
     {
       "id": "forward-message",
       "name": "Forward Message",
-      "description": "Forwards an incoming messages to another number"
+      "description": "Forwards incoming messages to another number"
     },
     {
       "id": "forward-message-multiple",
