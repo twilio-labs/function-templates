@@ -50,16 +50,22 @@ in sequence.
   - `FUNLET_FINDME_PHONE_NUMBER5`
 3. Script: `MY_PHONE_NUMBERS` constant string or array of string values
 
-### Fallback Url
+### Timeout
 
-Text string, fallback URL where further instructions are requested
-when the forwarding call fails.
+Number, duration in seconds to let the call ring before the recipient picks up.
 
-1. Event: `FailUrl` parameter
-2. Environment: `FUNLET_FINDME_FALLBACK_URL` environment property
-3. Script: `MY_FALLBACK_URL` constant
+1. Event: `Timeout` parameter
+2. Environment: `FUNLET_FINDME_TIMEOUT` environment property
+3. Script: `MY_TIMEOUT` constant
 
-### Message
+### Whisper (Stage 2)
+
+Boolean, a flag set to true to bypass the first stage of processing
+and generate instructions targeting the recipient of the forwarded call.
+
+1. Event: `Whisper` parameter
+
+### Message (Stage 2)
 
 Text string, a recording URL or a text to say,
 asking the recipient to press any key to accept the call.
@@ -69,7 +75,7 @@ asking the recipient to press any key to accept the call.
 2. Environment: `FUNLET_FINDME_MESSAGE` environment property
 3. Script: `MY_MESSAGE` constant
 
-### Language
+### Language (Stage 2)
 
 Text string, language code for text messages, e.g. 'en' or 'en-gb'.
 Defaults to 'en': English with an American accent.
@@ -78,7 +84,7 @@ Defaults to 'en': English with an American accent.
 2. Environment: `FUNLET_FINDME_LANGUAGE` environment property
 3. Script: `MY_LANGUAGE` constant
 
-### Voice
+### Voice (Stage 2)
 
 Text string, voice for text messages, one of 'man', 'woman' or 'alice'.
 Defaults to 'alice', who speaks in a large selection languages.
@@ -87,13 +93,20 @@ Defaults to 'alice', who speaks in a large selection languages.
 2. Environment: `FUNLET_FINDME_VOICE` environment property
 3. Script: `MY_VOICE` constant
 
-### Timeout
+### Human Check (Stage 2)
 
-Number, duration in seconds to let the call ring before the recipient picks up.
+Boolean, defaults to false. Whether to hang up when the recipient has not
+pressed any key to accept the call explicitly.
 
-1. Event: `Timeout` parameter
-2. Environment: `FUNLET_FINDME_TIMEOUT` environment property
-3. Script: `MY_TIMEOUT` constant
+1. Event: `HumanCheck` parameter
+2. Environment: `FUNLET_FINDME_HUMAN_CHECK` environment property
+3. Script: `MY_HUMAN_CHECK` constant
+
+### Digits (Stage 3)
+
+Text string, list of digits pressed by the recipient to accept the call.
+
+1. Event: `Digits` property provided by `<Gather>`
 
 ### Dial Done (Stage 4)
 
@@ -107,6 +120,15 @@ when returning from the call to the forwarding number.
 Text string, the status of the forwarding call.
 
 1. Event: `DialCallStatus` or `DialStatus` property provided by `<Dial>`
+
+### Fallback Url (Stage 4)
+
+Text string, fallback URL where further instructions are requested
+when the forwarding call fails.
+
+1. Event: `FailUrl` parameter
+2. Environment: `FUNLET_FINDME_FALLBACK_URL` environment property
+3. Script: `MY_FALLBACK_URL` constant
 
 ## Output
 
