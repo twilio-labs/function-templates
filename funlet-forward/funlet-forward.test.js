@@ -31,7 +31,8 @@ const DEFAULT_CALLER_ID="";
 
 const FALLBACK_URL="https://example.com/please-try-later.mp3";
 const FALLBACK_URL_ENCODED="https%3A%2F%2Fexample.com%2Fplease-try-later.mp3";
-const DEFAULT_FALLBACK_URL="";
+const NO_FALLBACK_URL="";
+const DEFAULT_FALLBACK_URL=NO_FALLBACK_URL;
 
 const TIMEOUT_STRING="42";
 const TIMEOUT=42;
@@ -481,7 +482,7 @@ test('[FORWARD-OUTPUT-FORWARD-1-4] Restricted Number',
   funlet.output.forwardStage1(
     response,
     IS_RESTRICTED_NUMBER, ACCESS_RESTRICTED, FRENCH, MAN,
-    DEFAULT_CALLER_ID, PHONE_NUMBER, DEFAULT_TIMEOUT, DEFAULT_FALLBACK_URL
+    DEFAULT_CALLER_ID, PHONE_NUMBER, DEFAULT_TIMEOUT, NO_FALLBACK_URL
   );
   expect( response.toString() ).toEqual( FULL_RESPONSE_FORWARD_1_4 );
 });
@@ -492,7 +493,7 @@ test('[FORWARD-OUTPUT-FORWARD-1-7] Custom Timeout and Caller Id',
   funlet.output.forwardStage1(
     response,
     IS_ALLOWED_CALLER, DEFAULT_ACCESS_RESTRICTED, ENGLISH, ALICE,
-    CALLER_ID, PHONE_NUMBER, TIMEOUT, DEFAULT_FALLBACK_URL
+    CALLER_ID, PHONE_NUMBER, TIMEOUT, NO_FALLBACK_URL
   );
   expect( response.toString() ).toEqual( FULL_RESPONSE_FORWARD_1_7 );
 });
@@ -505,7 +506,7 @@ test('[FORWARD-OUTPUT-FORWARD-2-0] Call Ongoing',
 
   let response = new Twilio.twiml.VoiceResponse();
   let isFinished = funlet.output.forwardStage2(
-    response, DIAL_NOT_DONE, NO_CALL_STATUS, DEFAULT_FALLBACK_URL
+    response, DIAL_NOT_DONE, NO_CALL_STATUS, NO_FALLBACK_URL
   );
   expect( isFinished ).toEqual( DIAL_NOT_DONE );
   expect( response.toString() ).toEqual( EMPTY_RESPONSE );
@@ -515,7 +516,7 @@ test('[FORWARD-OUTPUT-FORWARD-2-1] Call Completed',
 () => {
   let response = new Twilio.twiml.VoiceResponse();
   let isFinished = funlet.output.forwardStage2(
-    response, DIAL_DONE, CALL_COMPLETED, DEFAULT_FALLBACK_URL
+    response, DIAL_DONE, CALL_COMPLETED, NO_FALLBACK_URL
   );
   expect( isFinished ).toEqual( DIAL_DONE );
   expect( response.toString() ).toEqual( HANG_UP );
@@ -525,7 +526,7 @@ test('[FORWARD-OUTPUT-FORWARD-2-2] Call Answered',
 () => {
   let response = new Twilio.twiml.VoiceResponse();
   let isFinished = funlet.output.forwardStage2(
-    response, DIAL_DONE, CALL_ANSWERED, DEFAULT_FALLBACK_URL
+    response, DIAL_DONE, CALL_ANSWERED, NO_FALLBACK_URL
   );
   expect( isFinished ).toEqual( DIAL_DONE );
   expect( response.toString() ).toEqual( HANG_UP );
@@ -535,7 +536,7 @@ test('[FORWARD-OUTPUT-FORWARD-2-3] Failure with No Fallback URL',
 () => {
   let response = new Twilio.twiml.VoiceResponse();
   let isFinished = funlet.output.forwardStage2(
-    response, DIAL_DONE, CALL_BUSY, DEFAULT_FALLBACK_URL
+    response, DIAL_DONE, CALL_BUSY, NO_FALLBACK_URL
   );
   expect( isFinished ).toEqual( DIAL_DONE );
   expect( response.toString() ).toEqual( HANG_UP );
