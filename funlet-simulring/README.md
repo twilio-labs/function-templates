@@ -48,7 +48,7 @@ called simultaneously.
   - `FUNLET_SIMULRING_PHONE_NUMBER3`,
   - `FUNLET_SIMULRING_PHONE_NUMBER4`,
   - `FUNLET_SIMULRING_PHONE_NUMBER5`
-3. Script: `MY_PHONE_NUMBERS` constant string or array of string values
+3. Script: `MY_PHONE_NUMBERS` constant array of string values
 
 ### Timeout
 

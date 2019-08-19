@@ -48,7 +48,7 @@ in sequence.
   - `FUNLET_FINDME_PHONE_NUMBER3`,
   - `FUNLET_FINDME_PHONE_NUMBER4`,
   - `FUNLET_FINDME_PHONE_NUMBER5`
-3. Script: `MY_PHONE_NUMBERS` constant string or array of string values
+3. Script: `MY_PHONE_NUMBERS` constant array of string values
 
 ### Timeout
 
