@@ -42,7 +42,7 @@ function getVoice(env, params) {
 }
 exports.input.getVoice = getVoice;
 
-function getHumanCheck(env, params) {
+function isHumanCheckRequired(env, params) {
   if ( typeof params.HumanCheck === "string" ) {
     return params.HumanCheck === "true";
   }
@@ -51,7 +51,7 @@ function getHumanCheck(env, params) {
   }
   return MY_HUMAN_CHECK;
 }
-exports.input.getHumanCheck = getHumanCheck;
+exports.input.isHumanCheckRequired = isHumanCheckRequired;
 
 function getDigits(env, params) {
   if ( typeof params.Digits === "string" ) {
@@ -171,13 +171,13 @@ exports.handler = function(env, params, reply) {
   let
     response = new Twilio.twiml.VoiceResponse(),
     digits = getDigits(env, params),
-    humanCheck = getHumanCheck(env, params),
+    humanCheckRequired = isHumanCheckRequired(env, params),
     message = getMessage(env, params),
     language = getLanguage(env, params),
     voice = getVoice(env, params);
 
   if ( !whisperStage2(response, digits) ) {
-    whisperStage1(response, humanCheck, message, language, voice);
+    whisperStage1(response, humanCheckRequired, message, language, voice);
   }
   reply(NO_ERROR, response);
 };

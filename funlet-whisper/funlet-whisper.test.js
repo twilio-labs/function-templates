@@ -101,14 +101,14 @@ test('[WHISPER-INPUT-VOICE-3] Read Default Voice from Script',
 test('[WHISPER-INPUT-HUMAN-CHECK-1] Read Human Check from Event',
 () => {
   expect(
-    funlet.input.getHumanCheck({}, {HumanCheck:"true"})
+    funlet.input.isHumanCheckRequired({}, {HumanCheck:"true"})
   ).toEqual( true );
 });
 
 test('[WHISPER-INPUT-HUMAN-CHECK-2] Read Human Check from Environment',
 () => {
   expect(
-    funlet.input.getHumanCheck({FUNLET_WHISPER_HUMAN_CHECK:"true"}, {})
+    funlet.input.isHumanCheckRequired({FUNLET_WHISPER_HUMAN_CHECK:"true"}, {})
   ).toEqual( true );
 });
 
@@ -116,7 +116,7 @@ test('[WHISPER-INPUT-HUMAN-CHECK-3] Read Default Human Check from Script',
 () => {
   const DEFAULT_HUMAN_CHECK = false;
   expect(
-    funlet.input.getHumanCheck({}, {})
+    funlet.input.isHumanCheckRequired({}, {})
   ).toEqual( DEFAULT_HUMAN_CHECK );
 });
 
