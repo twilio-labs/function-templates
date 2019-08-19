@@ -89,7 +89,7 @@ function getAllowedCallers(env, params) {
     }
   }
 
-  if ( typeof params.AllowedCallers === "object" ) { // actually an array
+  if ( Array.isArray(params.AllowedCallers) ) {
     params.AllowedCallers.forEach(
       phoneNumber => addIfNotEmpty(phoneNumber)
     );

@@ -44,7 +44,7 @@ function getPhoneNumbers(env, params) {
     }
   }
 
-  if ( typeof params.PhoneNumbers === "object" ) { // actually an array
+  if ( Array.isArray(params.PhoneNumbers) ) {
     params.PhoneNumbers.forEach(
       phoneNumber => addIfNotEmpty(phoneNumber)
     );
