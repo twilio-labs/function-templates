@@ -198,6 +198,43 @@ function simpleMessage(response, message, language, voice) {
 exports.output.simpleMessage = simpleMessage;
 
 /*
+  Function: forward()
+
+  Parameters:
+    * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
+    * fallbackUrl - string, URL of a script with further instructions
+                    in case the forwarding call fails
+    * callerId - string, verified phone number to use as caller Id
+                 for the forwarded call
+    * timeout - number, duration in seconds to let the forwarding call ring
+                before the recipient picks up
+
+  Response:
+    A <Dial> element is added to the response, with an action URL
+    configured to handle the next stage of processing in this Funlet,
+    the given caller Id, if any, and the given timeout.
+
+  Returns:
+    The <Dial> element added to the response.
+*/
+function dialForward(response, fallbackUrl, callerId, timeout) {
+  const BASE_URL = ".";
+  let actionUrl = BASE_URL + "?Dial=true";
+  if ( fallbackUrl !== "" ) {
+    actionUrl += "&" + encodeURIComponent(fallbackUrl);
+  }
+  let dialOptions = {
+    action: actionUrl,
+  };
+  if ( callerId !== "" ) {
+    dialOptions.callerId = callerId;
+  }
+  dialOptions.timeout = timeout;
+  return response.dial( dialOptions );
+}
+exports.output.dialForward = dialForward;
+
+/*
   Function: forwardStage1()
 
   Parameters:
@@ -237,19 +274,8 @@ function forwardStage1(
     simpleMessage(response, accessRestrictedErrorMessage, language, voice)
     return;
   }
-  const BASE_URL = ".";
-  let actionUrl = BASE_URL + "?Dial=true";
-  if ( fallbackUrl !== "" ) {
-    actionUrl += "&" + encodeURIComponent(fallbackUrl);
-  }
-  let dialOptions = {
-    action: actionUrl,
-  };
-  if ( callerId !== "" ) {
-    dialOptions.callerId = callerId;
-  }
-  dialOptions.timeout = timeout;
-  response.dial( dialOptions, forwardingNumber );
+  dialForward(response, fallbackUrl, callerId, timeout)
+    .dial.text( forwardingNumber );
 }
 exports.output.forwardStage1 = forwardStage1;
 

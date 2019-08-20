@@ -27,7 +27,8 @@ const CALLED_NUMBER="650-555-1212";
 const CALLED_NUMBER_DIGITS="650-555-1212";
 
 const CALLER_ID=ALLOWED_CALLER2;
-const DEFAULT_CALLER_ID="";
+const NO_CALLER_ID="";
+const DEFAULT_CALLER_ID=NO_CALLER_ID;
 
 const FALLBACK_URL="https://example.com/please-try-later.mp3";
 const FALLBACK_URL_ENCODED="https%3A%2F%2Fexample.com%2Fplease-try-later.mp3";
@@ -463,6 +464,90 @@ test('[FORWARD-UTILS-IS-FORWARDING-ALLOWED-4] Allowed Called Number',
       [ALLOWED_CALLER1_DIGITS,ALLOWED_CALLER2_DIGITS,ALLOWED_CALLER3_DIGITS]
     )
   ).toEqual( true );
+});
+
+function expectDial(dial) {
+  expect( typeof dial ).toEqual( "object" );
+  expect( typeof dial.number ).toEqual( "function" );
+  expect( typeof dial.dial ).toEqual( "object" );
+  expect( typeof dial.dial.text ).toEqual( "function" );
+}
+
+test('[FORWARD-OUTPUT-DIAL-FORWARD-1] Forward Dial without Fallback URL',
+() => {
+  const DIAL_FORWARD_WITHOUT_FALLBACK_URL=
+    XML_DECLARATION+
+    '<Response>'+
+      '<Dial '+
+        'action=".?Dial=true" '+
+        'timeout="'+DEFAULT_TIMEOUT+'"'+
+      '/>'+
+    '</Response>';
+  let response = new Twilio.twiml.VoiceResponse();
+  let dial = funlet.output.dialForward(
+    response,
+    NO_FALLBACK_URL, NO_CALLER_ID, DEFAULT_TIMEOUT
+  );
+  expectDial( dial );
+  expect( response.toString() ).toEqual( DIAL_FORWARD_WITHOUT_FALLBACK_URL );
+});
+
+test('[FORWARD-OUTPUT-DIAL-FORWARD-2] Forward Dial with Fallback URL',
+() => {
+  const DIAL_FORWARD_WITH_FALLBACK_URL=
+    XML_DECLARATION+
+    '<Response>'+
+      '<Dial '+
+        'action=".?Dial=true&amp;'+FALLBACK_URL_ENCODED+'" '+
+        'timeout="'+DEFAULT_TIMEOUT+'"'+
+      '/>'+
+    '</Response>';
+  let response = new Twilio.twiml.VoiceResponse();
+  let dial = funlet.output.dialForward(
+    response,
+    FALLBACK_URL, NO_CALLER_ID, DEFAULT_TIMEOUT
+  );
+  expectDial( dial );
+  expect( response.toString() ).toEqual( DIAL_FORWARD_WITH_FALLBACK_URL );
+});
+
+test('[FORWARD-OUTPUT-DIAL-FORWARD-3] Forward Dial with Caller Id',
+() => {
+  const DIAL_FORWARD_WITH_CALLER_ID=
+    XML_DECLARATION+
+    '<Response>'+
+      '<Dial '+
+        'action=".?Dial=true" '+
+        'callerId="'+CALLER_ID+'" '+
+        'timeout="'+DEFAULT_TIMEOUT+'"'+
+      '/>'+
+    '</Response>';
+  let response = new Twilio.twiml.VoiceResponse();
+  let dial = funlet.output.dialForward(
+    response,
+    NO_FALLBACK_URL, CALLER_ID, DEFAULT_TIMEOUT
+  );
+  expectDial( dial );
+  expect( response.toString() ).toEqual( DIAL_FORWARD_WITH_CALLER_ID );
+});
+
+test('[FORWARD-OUTPUT-DIAL-FORWARD-4] Forward Dial with Custom Timeout',
+() => {
+  const DIAL_FORWARD_WITH_CUSTOM_TIMEOUT=
+    XML_DECLARATION+
+    '<Response>'+
+      '<Dial '+
+        'action=".?Dial=true" '+
+        'timeout="'+TIMEOUT+'"'+
+      '/>'+
+    '</Response>';
+  let response = new Twilio.twiml.VoiceResponse();
+  let dial = funlet.output.dialForward(
+    response,
+    NO_FALLBACK_URL, NO_CALLER_ID, TIMEOUT
+  );
+  expectDial( dial );
+  expect( response.toString() ).toEqual( DIAL_FORWARD_WITH_CUSTOM_TIMEOUT );
 });
 
 test('[FORWARD-OUTPUT-FORWARD-1-2] Forward with Fallback URL',
