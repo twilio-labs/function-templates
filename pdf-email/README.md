@@ -1,6 +1,8 @@
 # Create and send PDF on the fly via Twilio Sendgrid
 
-This Function shows you how to create a PDF on the fly within the function and retrieve it and finally send it via email attachment
+This Function shows you how to create a PDF on the fly within the function and retrieve it and finally send it via email attachment.
+
+The important bit is that this Function shows you have to use the temporary storage where the file is created by default. Keep in mind that this is for single invocations as the /tmp/ directory gets deleted so it's not meant for long term storage
 
 
 ## Environment variables
