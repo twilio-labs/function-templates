@@ -8,11 +8,10 @@ This Function shows you how to create a PDF on the fly within the function and r
 This Function requires the following environment variables set:
 
 | Variable           | Meaning                                                                           
-| :----------------- | :-------------------------------------------------------------------------------- | :------- |
-| `SENDGRID_API_KEY`    | Your Twilio Sendgrid API key. Follow the process here
-                        https://sendgrid.com/docs/for-developers/sending-email/api-getting-started/      | Yes      |
-| `TO_EMAIL_ADDRESS` |  The origin email address                                                         | Yes      |
-| `FROM_EMAIL_ADDRESS`| The destination email address                                                    | Yes      |
+| :----------------- | :-------------------------------------------------------------------------------- |
+| `SENDGRID_API_KEY` | Your Twilio Sendgrid API key. Follow the process here https://sendgrid.com/docs/for-developers/sending-email/api-getting-started/                                                                          
+| `TO_EMAIL_ADDRESS` |  The origin email address                                                         
+| `FROM_EMAIL_ADDRESS`| The destination email address                                                    
 
 ## Parameters
 
