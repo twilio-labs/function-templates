@@ -148,8 +148,169 @@ function spell( numberString ) {
 }
 exports.output.spell = spell;
 
+// Copied from Call Me Funlet
+function getWhisperUrl( params ) {
+  const
+   BASE_WHISPER_URL=".?Whisper=true",
+   SEP="&";
+
+  let whisperUrl = BASE_WHISPER_URL;
+
+  function copyStringParam( name ) {
+    let value = params[name];
+    if ( typeof value === "string" ) {
+      whisperUrl += SEP + name + "=" + encodeURIComponent( value );
+    }
+  }
+
+  copyStringParam( "Message" );
+  copyStringParam( "Language" );
+  copyStringParam( "Voice" );
+
+  return whisperUrl;
+}
+exports.output.getWhisperUrl = getWhisperUrl;
+
+// Copied from Forward Funlet
+function dialForward(response, fallbackUrl, callerId, timeout) {
+  const BASE_URL = ".";
+  let actionUrl = BASE_URL + "?Dial=true";
+  if ( fallbackUrl !== "" ) {
+    actionUrl += "&" + encodeURIComponent(fallbackUrl);
+  }
+  let dialOptions = {
+    action: actionUrl,
+  };
+  if ( callerId !== "" ) {
+    dialOptions.callerId = callerId;
+  }
+  dialOptions.timeout = timeout;
+  return response.dial( dialOptions );
+}
+exports.output.dialForward = dialForward;
+
+/*
+  Function: simulringStage1()
+
+  Parameters:
+    * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
+    * forwardingNumbers - string, the list of forwarding numbers
+    * timeout - number, duration in seconds to let the forwarding call ring
+                before the recipient picks up
+    * whisperUrl - string, action URL to trigger the Whisper Funlet and get
+                   instructions which ask the recipient to accept the call
+    * fallbackUrl - string, URL of a script with further instructions
+                    in case the forwarding call fails
+
+  Response:
+    The response is modified with instructions to:
+      - forward the call to the first of the forwarding numbers
+        to answer a simultaneous call, with given timeout,
+      - to play a message asking the recipient to accept
+        the call by pressing a key,
+      - and to redirect to the given fallback URL
+        if the forwarding call fails.
+*/
+function simulringStage1(
+  response, forwardingNumbers, timeout, whisperUrl, fallbackUrl
+) {
+  const DEFAULT_CALLER_ID="";
+  let dial = dialForward(response, fallbackUrl, DEFAULT_CALLER_ID, timeout);
+  forwardingNumbers.forEach(
+    forwardingNumber => dial.number( {url:whisperUrl}, forwardingNumber )
+  );
+}
+exports.output.simulringStage1 = simulringStage1;
+
+// Copied from Simple Message Funlet
+function simpleMessage(response, message, language, voice) {
+  if ( message.length === 0 ) {
+    return;
+  }
+  if ( message.startsWith("http") ) {
+    response.play({}, message);
+  } else {
+    response.say({language:language, voice:voice}, message);
+  }
+}
+exports.output.simpleMessage = simpleMessage;
+
+// Copied from Simple Menu Funlet
+function gatherDigits(response, maxDigits, message, language, voice) {
+  simpleMessage(
+    response.gather({numDigits: maxDigits}),
+    message,
+    language,
+    voice
+  );
+}
+exports.output.gatherDigits = gatherDigits;
+
+// Copied from Whisper Funlet
+function whisperStage1(response, humanCheck, message, language, voice) {
+  gatherDigits(response, 1, message, language, voice);
+  if ( humanCheck ) {
+    response.hangup();
+  }
+}
+let simulringStage2 = whisperStage1;
+exports.output.simulring2 = simulringStage2;
+
+// Copied from Whisper Funlet
+function whisperStage2(response, digits) {
+  if ( digits === null ) {
+    return false;
+  }
+  if ( digits==="" ) {
+    response.hangup();
+  }
+  return true;
+}
+let simulringStage3 = whisperStage2;
+exports.output.simulringStage3 = simulringStage3;
+
+// Copied from Forward Funlet
+function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
+  if (isDialDone) {
+    if (
+      callStatus !== "answered" &&
+      callStatus !== "completed" &&
+      fallbackUrl !== ""
+    ) {
+      response.redirect( fallbackUrl );
+    } else {
+      response.hangup();
+    }
+  }
+  return isDialDone;
+}
+let simulringStage4 = forwardStage2;
+exports.output.simulringStage4 = simulringStage4;
+
 exports.handler = function(env, params, reply) {
   const NO_ERROR = null;
-  throw Error("Not implemented!");
-  reply(NO_ERROR, 'response');
+
+  let
+    response = new Twilio.twiml.VoiceResponse(),
+    callStatus = getCallStatus(env, params),
+    fallbackUrl = getFallbackUrl(env, params),
+    digits = getDigits(env, params),
+    humanCheckRequired = isHumanCheckRequired(env, params),
+    message = getMessage(env, params),
+    language = getLanguage(env, params),
+    voice = getVoice(env, params),
+    forwardingNumbers = getPhoneNumbers(env, params),
+    timeout = getTimeout(env, params),
+    whisperUrl = getWhisperUrl(params);
+
+  simulringStage4(response, isDialDone(env,params), callStatus, fallbackUrl) ||
+  simulringStage3(response, digits) ||
+  (isWhisper(env, params)?
+    simulringStage2(response, humanCheckRequired, message, language, voice):
+    simulringStage1(
+      response, forwardingNumbers, timeout, whisperUrl, fallbackUrl
+    )
+  );
+
+  reply(NO_ERROR, response);
 };

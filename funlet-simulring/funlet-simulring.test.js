@@ -25,6 +25,9 @@ const DEFAULT_MESSAGE=
   'You are receiving a call from '+SPELLED_FROM_NUMBER+'. '+
   'Press any key to accept.';
 
+const CUSTOM_MESSAGE="Custom Message";
+const CUSTOM_MESSAGE_ENCODED="Custom%20Message";
+
 const ENGLISH="en";
 const FRENCH="fr";
 const DEFAULT_LANGUAGE=ENGLISH;
@@ -48,7 +51,64 @@ const CALL_BUSY="busy";
 
 const FALLBACK_URL="https://example.com/please-try-later.mp3";
 const FALLBACK_URL_ENCODED="https%3A%2F%2Fexample.com%2Fplease-try-later.mp3";
-const DEFAULT_FALLBACK_URL="";
+const NO_FALLBACK_URL="";
+const DEFAULT_FALLBACK_URL=NO_FALLBACK_URL;
+
+const DEFAULT_WHISPER_URL=".?Whisper=true";
+const WHISPER_URL_WITH_CUSTOM_MESSAGE=
+  DEFAULT_WHISPER_URL+"&amp;Message="+CUSTOM_MESSAGE_ENCODED;
+
+const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
+
+const FULL_RESPONSE_SIMULRING_1_1=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Dial '+
+      'action=".?Dial=true" '+
+      'timeout="'+DEFAULT_TIMEOUT+'"'+
+    '>'+
+      '<Number url="'+DEFAULT_WHISPER_URL+'">'+PHONE_NUMBER1+'</Number>'+
+      '<Number url="'+DEFAULT_WHISPER_URL+'">'+PHONE_NUMBER2+'</Number>'+
+      '<Number url="'+DEFAULT_WHISPER_URL+'">'+PHONE_NUMBER3+'</Number>'+
+    '</Dial>'+
+  '</Response>';
+
+const FULL_RESPONSE_SIMULRING_1_3=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Dial '+
+      'action=".?Dial=true" '+
+      'timeout="'+TIMEOUT+'"'+
+    '>'+
+      '<Number url="'+WHISPER_URL_WITH_CUSTOM_MESSAGE+'">'+
+        PHONE_NUMBER1+
+      '</Number>'+
+      '<Number url="'+WHISPER_URL_WITH_CUSTOM_MESSAGE+'">'+
+        PHONE_NUMBER2+
+      '</Number>'+
+      '<Number url="'+WHISPER_URL_WITH_CUSTOM_MESSAGE+'">'+
+        PHONE_NUMBER3+
+      '</Number>'+
+    '</Dial>'+
+  '</Response>';
+
+const FULL_RESPONSE_SIMULRING_2_1=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Gather numDigits="1">'+
+      '<Play>'+RECORDED_MESSAGE+'</Play>'+
+    '</Gather>'+
+  '</Response>';
+
+const FULL_RESPONSE_SIMULRING_3_1=
+  XML_DECLARATION+
+  '<Response/>';
+
+const FULL_RESPONSE_SIMULRING_4_3=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Redirect>'+FALLBACK_URL+'</Redirect>'+
+  '</Response>';
 
 test('[SIMULRING-INPUT-PHONE-NUMBERS-1] Read Single Phone Number from Event',
 () => {
@@ -342,13 +402,54 @@ test('[SIMULRING-INPUT-FALLBACK-URL-3] Read Default Fallback URL from Script',
   ).toEqual( DEFAULT_FALLBACK_URL );
 });
 
+test('[SIMULRING-OUTPUT-SIMULRING-1-1] Simulring with 3 Phone Numbers',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.simulringStage1(
+    response,
+    [PHONE_NUMBER1,PHONE_NUMBER2,PHONE_NUMBER3],
+    DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
+  );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_SIMULRING_1_1 );
+});
 
-
-test.skip('Missing Tests', done => {
+test('[SIMULRING-1-3] Simulring with Custom Timeout and Message', done => {
   const callback = (err, result) => {
     expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
-    expect( result.toString() ).toEqual( '...' );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_SIMULRING_1_3 );
     done();
   };
-  funlet.handler({}, {}, callback);
+  funlet.handler({}, {
+    PhoneNumbers: [PHONE_NUMBER1,PHONE_NUMBER2,PHONE_NUMBER3],
+    Message: CUSTOM_MESSAGE, Timeout: TIMEOUT_STRING
+  }, callback);
+});
+
+test('[SIMULRING-2-1] Whisper: Recorded Message', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_SIMULRING_2_1 );
+    done();
+  };
+  funlet.handler({}, {Whisper:"true",Message:RECORDED_MESSAGE}, callback);
+});
+
+test('[SIMULRING-3-1] Whisper: A Digit was Pressed', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_SIMULRING_3_1 );
+    done();
+  };
+  funlet.handler({}, {Digits:NON_EMPTY_DIGITS}, callback);
+});
+
+test('[SIMULRING-4-3] Failure with Fallback URL', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_SIMULRING_4_3 );
+    done();
+  };
+  funlet.handler({}, {
+    Dial:"true", DialCallStatus:"busy", FailUrl:FALLBACK_URL
+  }, callback);
 });
