@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const require = jest.mock('require');
+const request = jest.mock('require');
 const pdf_email = require('../functions/pdf-email').handler;
 
 const context = {
