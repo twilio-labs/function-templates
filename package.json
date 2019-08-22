@@ -1,27 +1,3 @@
 {
-  "name": "useful-twilio-functions",
-  "version": "0.0.1",
-  "private": true,
-  "description": "A set of useful Twilio Functions.",
-  "scripts": {
-    "test": "jest"
-  },
-  "author": "Phil Nash <philnash@twilio.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "^5.4.0",
-    "jest-cli": "^24.8.0"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ]
-  },
-  "dependencies": {
-    "got": "^6.7.1",
-    "twilio": "^3.33.2"
-  }
+  "dependencies": {}
 }
