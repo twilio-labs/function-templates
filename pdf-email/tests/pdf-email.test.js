@@ -8,9 +8,8 @@ const context = {
   TO_EMAIL_ADDRESS: 'test_to@example.com',
   FROM_EMAIL_ADDRESS: 'test_from@example.com'
 };
-const event = {
-  Body: 'Hello',
-  From: 'ExternalNumber'
+const responseStatus = {
+  statusCode: 202
 };
 
 beforeAll(() => {
@@ -21,13 +20,13 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('returns the response body with 202 status code', done => {
+test('returns the email request response body with 202 status code', done => {
   const callback = (err, result) => {
-    expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
+    expect(JSON.parse(result)).toMatchObject(responseStatus);
     done();
   };
 
-  pdf_email(context, event, callback);
+  pdf_email(context, responseStatus, callback);
 });
 
 test('returns an error when the request fails', done => {
@@ -38,5 +37,5 @@ test('returns an error when the request fails', done => {
 
   request.shouldSucceed = false;
 
-  pdf_email(context, event, callback);
+  pdf_email(context, responseStatus, callback);
 });
