@@ -25,6 +25,9 @@ const DEFAULT_MESSAGE=
   'You are receiving a call from '+SPELLED_FROM_NUMBER+'. '+
   'Press any key to accept.';
 
+const CUSTOM_MESSAGE="Custom Message";
+const CUSTOM_MESSAGE_ENCODED="Custom%20Message";
+
 const ENGLISH="en";
 const FRENCH="fr";
 const DEFAULT_LANGUAGE=ENGLISH;
@@ -48,7 +51,64 @@ const CALL_BUSY="busy";
 
 const FALLBACK_URL="https://example.com/please-try-later.mp3";
 const FALLBACK_URL_ENCODED="https%3A%2F%2Fexample.com%2Fplease-try-later.mp3";
-const DEFAULT_FALLBACK_URL="";
+const NO_FALLBACK_URL="";
+const DEFAULT_FALLBACK_URL=NO_FALLBACK_URL;
+
+const DEFAULT_WHISPER_URL=".?Whisper=true";
+const XML_DEFAULT_WHISPER_URL=".?Whisper=true";
+const XML_WHISPER_URL_WITH_CUSTOM_MESSAGE=
+  XML_DEFAULT_WHISPER_URL+"&amp;Message="+CUSTOM_MESSAGE_ENCODED;
+
+const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
+
+const FULL_RESPONSE_FIND_ME_1_1=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Dial '+
+      'action=".?Dial=true'+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER2+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER3+
+      '" '+
+      'timeout="'+DEFAULT_TIMEOUT+'"'+
+    '>'+
+      '<Number url="'+XML_DEFAULT_WHISPER_URL+'">'+PHONE_NUMBER1+'</Number>'+
+    '</Dial>'+
+  '</Response>';
+
+const FULL_RESPONSE_FIND_ME_1_3=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Dial '+
+      'action=".?Dial=true'+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER2+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER3+
+      '" '+
+      'timeout="'+TIMEOUT+'"'+
+    '>'+
+      '<Number url="'+XML_WHISPER_URL_WITH_CUSTOM_MESSAGE+'">'+
+        PHONE_NUMBER1+
+      '</Number>'+
+    '</Dial>'+
+  '</Response>';
+
+const FULL_RESPONSE_FIND_ME_2_1=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Gather numDigits="1">'+
+      '<Play>'+RECORDED_MESSAGE+'</Play>'+
+    '</Gather>'+
+    '<Hangup/>'+
+  '</Response>';
+
+const FULL_RESPONSE_FIND_ME_3_1=
+  XML_DECLARATION+
+  '<Response/>';
+
+const FULL_RESPONSE_FIND_ME_4_3=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Redirect>'+FALLBACK_URL+'</Redirect>'+
+  '</Response>';
 
 test('[FINDME-INPUT-PHONE-NUMBERS-1] Read Single Phone Number from Event',
 () => {
@@ -236,6 +296,13 @@ test('[FINDME-INPUT-VOICE-3] Read Default Voice from Script',
   ).toEqual( DEFAULT_VOICE );
 });
 
+test('[WHISPER-INPUT-HUMAN-CHECK-0] Read Human Check "1" from Event',
+() => {
+  expect(
+    funlet.input.isHumanCheckRequired({}, {HumanCheck:"1"})
+  ).toEqual( true );
+});
+
 test('[FINDME-INPUT-HUMAN-CHECK-1] Read Human Check from Event',
 () => {
   expect(
@@ -252,7 +319,7 @@ test('[FINDME-INPUT-HUMAN-CHECK-2] Read Human Check from Environment',
 
 test('[FINDME-INPUT-HUMAN-CHECK-3] Read Default Human Check from Script',
 () => {
-  const DEFAULT_HUMAN_CHECK = false;
+  const DEFAULT_HUMAN_CHECK = true;
   expect(
     funlet.input.isHumanCheckRequired({}, {})
   ).toEqual( DEFAULT_HUMAN_CHECK );
@@ -342,14 +409,54 @@ test('[FINDME-INPUT-FALLBACK-URL-3] Read Default Fallback URL from Script',
   ).toEqual( DEFAULT_FALLBACK_URL );
 });
 
+test('[FINDME-OUTPUT-FINDME-1-1] Find Me with 3 Phone Numbers',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.findMeStage1(
+    response,
+    [PHONE_NUMBER1,PHONE_NUMBER2,PHONE_NUMBER3],
+    DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
+  );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_1 );
+});
 
-
-
-test.skip('Missing Tests', done => {
+test('[FINDME-1-3] Find Me with Custom Timeout and Message', done => {
   const callback = (err, result) => {
     expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
-    expect( result.toString() ).toEqual( '...' );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_3 );
     done();
   };
-  funlet.handler({}, {}, callback);
+  funlet.handler({}, {
+    PhoneNumbers: [PHONE_NUMBER1,PHONE_NUMBER2,PHONE_NUMBER3],
+    Message: CUSTOM_MESSAGE, Timeout: TIMEOUT_STRING
+  }, callback);
+});
+
+test('[SIMULRING-2-1] Whisper: Recorded Message', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_2_1 );
+    done();
+  };
+  funlet.handler({}, {Whisper:"true",Message:RECORDED_MESSAGE}, callback);
+});
+
+test('[SIMULRING-3-1] Whisper: A Digit was Pressed', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_3_1 );
+    done();
+  };
+  funlet.handler({}, {Digits:NON_EMPTY_DIGITS}, callback);
+});
+
+test('[SIMULRING-4-3] Failure with Fallback URL', done => {
+  const callback = (err, result) => {
+    expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
+    expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_4_3 );
+    done();
+  };
+  funlet.handler({}, {
+    Dial:"true", DialCallStatus:"busy", FailUrl:FALLBACK_URL
+  }, callback);
 });
