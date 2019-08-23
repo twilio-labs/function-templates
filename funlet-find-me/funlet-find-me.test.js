@@ -432,7 +432,7 @@ test('[FINDME-1-3] Find Me with Custom Timeout and Message', done => {
   }, callback);
 });
 
-test('[SIMULRING-2-1] Whisper: Recorded Message', done => {
+test('[FINDME-2-1] Whisper: Recorded Message', done => {
   const callback = (err, result) => {
     expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
     expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_2_1 );
@@ -441,7 +441,7 @@ test('[SIMULRING-2-1] Whisper: Recorded Message', done => {
   funlet.handler({}, {Whisper:"true",Message:RECORDED_MESSAGE}, callback);
 });
 
-test('[SIMULRING-3-1] Whisper: A Digit was Pressed', done => {
+test('[FINDME-3-1] Whisper: A Digit was Pressed', done => {
   const callback = (err, result) => {
     expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
     expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_3_1 );
@@ -450,7 +450,7 @@ test('[SIMULRING-3-1] Whisper: A Digit was Pressed', done => {
   funlet.handler({}, {Digits:NON_EMPTY_DIGITS}, callback);
 });
 
-test('[SIMULRING-4-3] Failure with Fallback URL', done => {
+test('[FINDME-4-3] Failure with Fallback URL', done => {
   const callback = (err, result) => {
     expect( result ).toBeInstanceOf( Twilio.twiml.VoiceResponse );
     expect( result.toString() ).toEqual( FULL_RESPONSE_FIND_ME_4_3 );
