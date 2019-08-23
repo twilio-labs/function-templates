@@ -4,6 +4,7 @@
   <Gather numDigits="1">
     <Play>https://example.com/recorded-message.mp3</Play>
   </Gather>
+  <Hangup/>
 </Response>
 
 [WHISPER-2-2] Text Message
@@ -12,6 +13,7 @@
   <Gather numDigits="1">
     <Say>Text message</Say>
   </Gather>
+  <Hangup/>
 </Response>
 
 [WHISPER-2-3] Default Message
@@ -20,6 +22,7 @@
   <Gather numDigits="1">
     <Say>You are receiving a call from +. 1. 9. 1. 6. 5. 5. 5. 0. 1. 2. 3. .  Press any key to accept.</Say>
   </Gather>
+  <Hangup/>
 </Response>
 
 [WHISPER-2-4] Human Check

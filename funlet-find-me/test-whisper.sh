@@ -33,7 +33,8 @@ joinParams(){
 #
 query(){
   # add extra flag Whisper=true, used in the Funlet, ignored by Whisper Twimlet
-  joinParams Whisper=true "$@"
+  # add extra flag HumanCheck=1, used in the Twimlet, redundant in the Funlet
+  joinParams Whisper=true HumanCheck=1 "$@"
   curl -s "$url"?"$params" | indentXml
 }
 

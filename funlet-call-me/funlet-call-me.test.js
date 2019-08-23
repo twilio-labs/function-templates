@@ -367,6 +367,15 @@ test('[CALLME-OUTPUT-WHISPER-URL-3] '+
   ).toEqual( WHISPER_URL );
 });
 
+test('[CALLME-OUTPUT-WHISPER-URL-4] Get Whisper URL with Human Check',
+() => {
+  const WHISPER_URL= DEFAULT_WHISPER_URL+"&HumanCheck=true";
+
+  expect(
+    funlet.output.getWhisperUrl({HumanCheck:"true"})
+  ).toEqual( WHISPER_URL );
+});
+
 test('[CALLME-OUTPUT-CALLME-1-1] Call Me with Phone Number Only',
 () => {
   let response = new Twilio.twiml.VoiceResponse();

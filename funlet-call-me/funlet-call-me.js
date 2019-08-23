@@ -161,6 +161,7 @@ function getWhisperUrl( params ) {
   copyStringParam( "Message" );
   copyStringParam( "Language" );
   copyStringParam( "Voice" );
+  copyStringParam( "HumanCheck" );
 
   return whisperUrl;
 }
