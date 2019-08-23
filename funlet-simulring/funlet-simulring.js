@@ -249,7 +249,7 @@ function whisperStage1(response, humanCheck, message, language, voice) {
   }
 }
 let simulringStage2 = whisperStage1;
-exports.output.simulring2 = simulringStage2;
+exports.output.simulringStage2 = simulringStage2;
 
 // Copied from Whisper Funlet
 function whisperStage2(response, digits) {
