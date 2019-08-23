@@ -35,6 +35,12 @@ const FALLBACK_URL_ENCODED="https%3A%2F%2Fexample.com%2Fplease-try-later.mp3";
 const NO_FALLBACK_URL="";
 const DEFAULT_FALLBACK_URL=NO_FALLBACK_URL;
 
+const BASE_ACTION_URL=".?Dial=true";
+const ACTION_URL_WITH_FALLBACK_URL=
+  BASE_ACTION_URL+"&"+FALLBACK_URL_ENCODED;
+const XML_ACTION_URL_WITH_FALLBACK_URL=
+  BASE_ACTION_URL+"&amp;"+FALLBACK_URL_ENCODED;
+
 const TIMEOUT_STRING="42";
 const TIMEOUT=42;
 const DEFAULT_TIMEOUT=20;
@@ -69,7 +75,7 @@ const FULL_RESPONSE_FORWARD_1_1 =
   XML_DECLARATION+
   '<Response>'+
     '<Dial '+
-      'action=".?Dial=true" '+
+      'action="'+BASE_ACTION_URL+'" '+
       'timeout="'+DEFAULT_TIMEOUT+'"'+
     '>'+
       PHONE_NUMBER+
@@ -81,7 +87,7 @@ const FULL_RESPONSE_FORWARD_1_2 =
   XML_DECLARATION+
   '<Response>'+
     '<Dial '+
-      'action=".?Dial=true&amp;'+FALLBACK_URL_ENCODED+'" '+
+      'action="'+XML_ACTION_URL_WITH_FALLBACK_URL+'" '+
       'timeout="'+DEFAULT_TIMEOUT+'"'+
     '>'+
       PHONE_NUMBER+
@@ -98,7 +104,7 @@ const FULL_RESPONSE_FORWARD_1_7 =
   XML_DECLARATION+
   '<Response>'+
     '<Dial '+
-      'action=".?Dial=true" '+
+      'action="'+BASE_ACTION_URL+'" '+
       'callerId="'+CALLER_ID+'" '+
       'timeout="'+TIMEOUT+
     '">'+
@@ -476,6 +482,18 @@ test('[FORWARD-UTILS-IS-FORWARDING-ALLOWED-4] Allowed Called Number',
       [ALLOWED_CALLER1_DIGITS,ALLOWED_CALLER2_DIGITS,ALLOWED_CALLER3_DIGITS]
     )
   ).toEqual( true );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-ACTION-URL-0] Action URL without Fallback URL',
+() => {
+  let actionUrl = funlet.output.getForwardActionUrl( NO_FALLBACK_URL );
+  expect( actionUrl ).toEqual( BASE_ACTION_URL );
+});
+
+test('[FORWARD-OUTPUT-FORWARD-ACTION-URL-1] Action URL with Fallback URL',
+() => {
+  let actionUrl = funlet.output.getForwardActionUrl( FALLBACK_URL );
+  expect( actionUrl ).toEqual( ACTION_URL_WITH_FALLBACK_URL );
 });
 
 test('[FORWARD-OUTPUT-FORWARD-1-1] Forward without Fallback URL',

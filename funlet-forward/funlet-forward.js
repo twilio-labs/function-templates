@@ -198,6 +198,27 @@ function simpleMessage(response, message, language, voice) {
 exports.output.simpleMessage = simpleMessage;
 
 /*
+  Function: getForwardActionUrl()
+
+  Parameter:
+    fallbackUrl - string, URL of a script with further instructions
+                  in case the forwarding call fails
+
+  Returns:
+    string, the action URL to get back to this script and redirect
+    to the fallback URL, if any, when the forwarding call has failed.
+*/
+function getForwardActionUrl( fallbackUrl ) {
+  const BASE_URL = ".";
+  let actionUrl = BASE_URL + "?Dial=true";
+  if ( fallbackUrl !== "" ) {
+    actionUrl += "&" + encodeURIComponent(fallbackUrl);
+  }
+  return actionUrl;
+}
+exports.output.getForwardActionUrl = getForwardActionUrl;
+
+/*
   Function: forwardStage1()
 
   Parameters:
@@ -237,13 +258,8 @@ function forwardStage1(
     simpleMessage(response, accessRestrictedErrorMessage, language, voice)
     return;
   }
-  const BASE_URL = ".";
-  let actionUrl = BASE_URL + "?Dial=true";
-  if ( fallbackUrl !== "" ) {
-    actionUrl += "&" + encodeURIComponent(fallbackUrl);
-  }
   let dialOptions = {
-    action: actionUrl,
+    action: getForwardActionUrl( fallbackUrl ),
   };
   if ( callerId !== "" ) {
     dialOptions.callerId = callerId;
