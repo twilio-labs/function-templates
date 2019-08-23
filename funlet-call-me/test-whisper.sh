@@ -59,8 +59,8 @@ echo
 echo '[WHISPER-2-4] Human Check'
 query Message="$textMessage" HumanCheck=true
 echo
-echo '[WHISPER-4-1] A Digit was Pressed'
+echo '[WHISPER-3-1] A Digit was Pressed'
 query Digits=5
 echo
-echo '[WHISPER-4-2] No Digits were Pressed'
+echo '[WHISPER-3-2] No Digits were Pressed'
 query Digits=

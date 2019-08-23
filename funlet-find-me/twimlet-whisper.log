@@ -31,11 +31,11 @@
   <Hangup/>
 </Response>
 
-[WHISPER-4-1] A Digit was Pressed
+[WHISPER-3-1] A Digit was Pressed
 <?xml version="1.0" encoding="UTF-8"?>
 <Response/>
 
-[WHISPER-4-2] No Digits were Pressed
+[WHISPER-3-2] No Digits were Pressed
 <?xml version="1.0" encoding="UTF-8"?>
 <Response>
   <Hangup/>
