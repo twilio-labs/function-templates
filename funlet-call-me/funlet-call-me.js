@@ -74,7 +74,7 @@ exports.input.getVoice = getVoice;
 
 function isHumanCheckRequired(env, params) {
   if ( typeof params.HumanCheck === "string" ) {
-    return params.HumanCheck === "true";
+    return true;
   }
   if ( typeof env.FUNLET_CALLME_HUMAN_CHECK === "string" ) {
     return env.FUNLET_CALLME_HUMAN_CHECK === "true";
