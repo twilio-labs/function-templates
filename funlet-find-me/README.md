@@ -95,7 +95,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 ### Human Check (Stage 2)
 
-Boolean, defaults to false. Whether to hang up when the recipient has not
+Boolean, defaults to true. Whether to hang up when the recipient has not
 pressed any key to accept the call explicitly.
 
 1. Event: `HumanCheck` parameter
