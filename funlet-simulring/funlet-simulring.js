@@ -172,22 +172,15 @@ function getWhisperUrl( params ) {
 exports.output.getWhisperUrl = getWhisperUrl;
 
 // Copied from Forward Funlet
-function dialForward(response, fallbackUrl, callerId, timeout) {
+function getForwardActionUrl( fallbackUrl ) {
   const BASE_URL = ".";
   let actionUrl = BASE_URL + "?Dial=true";
   if ( fallbackUrl !== "" ) {
     actionUrl += "&" + encodeURIComponent(fallbackUrl);
   }
-  let dialOptions = {
-    action: actionUrl,
-  };
-  if ( callerId !== "" ) {
-    dialOptions.callerId = callerId;
-  }
-  dialOptions.timeout = timeout;
-  return response.dial( dialOptions );
+  return actionUrl;
 }
-exports.output.dialForward = dialForward;
+exports.output.getForwardActionUrl = getForwardActionUrl;
 
 /*
   Function: simulringStage1()
@@ -214,8 +207,10 @@ exports.output.dialForward = dialForward;
 function simulringStage1(
   response, forwardingNumbers, timeout, whisperUrl, fallbackUrl
 ) {
-  const DEFAULT_CALLER_ID="";
-  let dial = dialForward(response, fallbackUrl, DEFAULT_CALLER_ID, timeout);
+  let dial = response.dial({
+    action: getForwardActionUrl( fallbackUrl ),
+    timeout: timeout
+  });
   forwardingNumbers.forEach(
     forwardingNumber => dial.number( {url:whisperUrl}, forwardingNumber )
   );
