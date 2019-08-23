@@ -13,8 +13,10 @@
 exports.handler = function(context, event, callback) {
 
       /*Details to be passed. Here they are passed statically, in real scenario you pass it as parameters in the Twilio Function*/
-      let title = "Title of my pdf";
-      let description = "Description of my pdf";
+      let description = event.Body || 'Content of the pdf';
+      
+      /* change this to a dynamic value if needed*/
+      const recipientEmailAddress = context.TO_EMAIL_ADDRESS; 
 
 
 
@@ -43,14 +45,10 @@ exports.handler = function(context, event, callback) {
 
   /*Find the file in the /tmp/ folder and provide the appropriate permissions*/
     var cmd=require('node-cmd');
-    cmd.get('chmod +x /tmp/' + fileName, function(err, data, stderr){
-        console.log("Error: " + stderr);
-        console.log("Added +x flag to the file");
+    cmd.get('chmod +r /tmp/' + fileName, function(err, data, stderr){
 
         /*Show the contents. This is just for you to see the file, not really affecting the end result, you can remove it*/
         cmd.get('ls -l /tmp/', function(err, data, stderr){
-        console.log("Error: " + stderr);
-        console.log("Data: " + data);
 
         /*Prepare the file. Twilio Sendgrid requires the file to be on base64 format*/
         const request = require('request');
@@ -65,7 +63,7 @@ exports.handler = function(context, event, callback) {
                 {
                   "to": [
                     {
-                      "email": context.TO_EMAIL_ADDRESS,
+                      "email": recipientEmailAddress,
                       "name": "TO Name"
                     }
                   ],
@@ -104,10 +102,6 @@ exports.handler = function(context, event, callback) {
                   },
                   json: data
                 }, function (error, response, body){
-
-                      console.log(error);
-                      console.log(JSON.stringify(response));
-                      console.log(body);
                      callback();
                 });
 
@@ -115,7 +109,7 @@ exports.handler = function(context, event, callback) {
           })
           .catch(
               (error) => {
-                  console.log(error);
+                  callback(error);
               }
           );
         });
