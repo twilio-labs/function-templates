@@ -98,6 +98,13 @@ test('[WHISPER-INPUT-VOICE-3] Read Default Voice from Script',
   ).toEqual( DEFAULT_VOICE );
 });
 
+test('[WHISPER-INPUT-HUMAN-CHECK-0] Read Human Check "1" from Event',
+() => {
+  expect(
+    funlet.input.isHumanCheckRequired({}, {HumanCheck:"1"})
+  ).toEqual( true );
+});
+
 test('[WHISPER-INPUT-HUMAN-CHECK-1] Read Human Check from Event',
 () => {
   expect(
