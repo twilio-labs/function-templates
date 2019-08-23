@@ -148,6 +148,17 @@ function spell( numberString ) {
 }
 exports.output.spell = spell;
 
+// Copied from Forward Funlet
+function getForwardActionUrl( fallbackUrl ) {
+  const BASE_URL = ".";
+  let actionUrl = BASE_URL + "?Dial=true";
+  if ( fallbackUrl !== "" ) {
+    actionUrl += "&" + encodeURIComponent(fallbackUrl);
+  }
+  return actionUrl;
+}
+exports.output.getForwardActionUrl = getForwardActionUrl;
+
 // Copied from Call Me Funlet
 function getWhisperUrl( params ) {
   const
@@ -170,17 +181,6 @@ function getWhisperUrl( params ) {
   return whisperUrl;
 }
 exports.output.getWhisperUrl = getWhisperUrl;
-
-// Copied from Forward Funlet
-function getForwardActionUrl( fallbackUrl ) {
-  const BASE_URL = ".";
-  let actionUrl = BASE_URL + "?Dial=true";
-  if ( fallbackUrl !== "" ) {
-    actionUrl += "&" + encodeURIComponent(fallbackUrl);
-  }
-  return actionUrl;
-}
-exports.output.getForwardActionUrl = getForwardActionUrl;
 
 /*
   Function: simulringStage1()
