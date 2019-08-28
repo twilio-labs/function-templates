@@ -8,12 +8,12 @@ of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
 environment. GET and POST parameters are considered first, if provided,
-then environment properties, then default values declared in the script.
+then environment properties, then config properties declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values in the script parameter
-constants at the top of the script.
+the recommended way is to modify the script parameters in the config object,
+directly in the script.
 
 ## Stages
 
@@ -38,7 +38,7 @@ Text string, a recording URL or a text to say.
 
 1. Event: `Message` parameter
 2. Environment: `FUNLET_WHISPER_MESSAGE` environment property
-3. Script: `MY_MESSAGE` constant
+3. Script: `message` config property
 
 ### Language
 
@@ -47,7 +47,7 @@ Defaults to 'en': English with an American accent.
 
 1. Event: `Language` parameter
 2. Environment: `FUNLET_WHISPER_LANGUAGE` environment property
-3. Script: `MY_LANGUAGE` constant
+3. Script: `language` config property
 
 ### Voice
 
@@ -56,7 +56,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 1. Event: `Voice` parameter
 2. Environment: `FUNLET_WHISPER_VOICE` environment property
-3. Script: `MY_VOICE` constant
+3. Script: `voice` config property
 
 ### Human Check
 
@@ -65,7 +65,7 @@ a key to accept the call explicitly.
 
 1. Event: `HumanCheck` parameter
 2. Environment: `FUNLET_WHISPER_HUMAN_CHECK` environment property
-3. Script: `MY_HUMAN_CHECK` constant
+3. Script: `humanCheck` config property
 
 ### Digits (Stage 2)
 

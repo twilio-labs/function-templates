@@ -9,12 +9,12 @@ of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
 environment. GET and POST parameters are considered first, if provided,
-then environment properties, then default values declared in the script.
+then environment properties, then config properties declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values in the script parameter
-constants at the top of the script.
+the recommended way is to modify the script parameters in the config object,
+directly in the script.
 
 ## Stages
 
@@ -40,7 +40,7 @@ to the recorded voicemail.
 
 1. Event: `Email` parameter
 2. Environment: `FUNLET_VOICEMAIL_EMAIL` environment property
-3. Script: `MY_EMAIL` constant
+3. Script: `email` config property
 
 ### Transcribe
 
@@ -49,7 +49,7 @@ in the email notification; defaults to true.
 
 1. Event: `Transcribe` parameter
 2. Environment: `FUNLET_VOICEMAIL_TRANSCRIBE` environment property
-3. Script: `MY_TRANSCRIBE` constant
+3. Script: `transcribe` config property
 
 ### Message
 
@@ -59,7 +59,7 @@ to leave a message.
 
 1. Event: `Message` parameter
 2. Environment: `FUNLET_VOICEMAIL_MESSAGE` environment property
-3. Script: `MY_MESSAGE` constant
+3. Script: `message` config property
 
 ### Language
 
@@ -68,7 +68,7 @@ Defaults to 'en': English with an American accent.
 
 1. Event: `Language` parameter
 2. Environment: `FUNLET_VOICEMAIL_LANGUAGE` environment property
-3. Script: `MY_LANGUAGE` constant
+3. Script: `language` config property
 
 ### Voice
 
@@ -77,7 +77,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 1. Event: `Voice` parameter
 2. Environment: `FUNLET_VOICEMAIL_VOICE` environment property
-3. Script: `MY_VOICE` constant
+3. Script: `voice` config property
 
 ### Caller
 

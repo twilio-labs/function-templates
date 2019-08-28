@@ -4,21 +4,24 @@
 
 // ## Script Parameters
 
-// a list of one or several text string messages,
-// each being a recording URL or a text to say.
-const MY_MESSAGES = [""];
+let config={
+  // a list of one or several text string messages,
+  // each being a recording URL or a text to say.
+  messages: [""],
 
-// language code for conversion of text-to-speech messages,
-// e.g. 'en' or 'en-gb'
-const MY_LANGUAGE = "en";
+  // language code for conversion of text-to-speech messages,
+  // e.g. 'en' or 'en-gb'
+  language: "en",
 
-// voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
-const MY_VOICE = "alice";
+  // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
+  voice: "alice"
+};
+exports.config = config;
 
 // ## Input
 exports.input = {};
 
-function getMessages(env, params) {
+function getMessages(params, env, config) {
   if ( params.hasOwnProperty("Message") ) {
     if ( typeof params.Message === "string" ) {
       return [params.Message];
@@ -40,17 +43,17 @@ function getMessages(env, params) {
       env.FUNLET_MESSAGE5
     ].filter( message => typeof message === "string" );
   }
-  return MY_MESSAGES;
+  return config.messages;
 }
 exports.input.getMessages = getMessages;
 
-function getLanguage(env, params) {
-  return params.Language || env.FUNLET_MESSAGE_LANGUAGE || MY_LANGUAGE;
+function getLanguage(params, env, config) {
+  return params.Language || env.FUNLET_MESSAGE_LANGUAGE || config.language;
 }
 exports.input.getLanguage = getLanguage;
 
-function getVoice(env, params) {
-  return params.Voice || env.FUNLET_MESSAGE_VOICE || MY_VOICE;
+function getVoice(params, env, config) {
+  return params.Voice || env.FUNLET_MESSAGE_VOICE || config.voice;
 }
 exports.input.getVoice = getVoice;
 
@@ -122,9 +125,9 @@ exports.handler = function(env, params, reply) {
   let response = new Twilio.twiml.VoiceResponse();
   simpleMessages(
     response,
-    getMessages(env, params),
-    getLanguage(env, params),
-    getVoice(env, params)
+    getMessages(params, env, config),
+    getLanguage(params, env, config),
+    getVoice(params, env, config)
   );
   reply(NO_ERROR, response);
 };

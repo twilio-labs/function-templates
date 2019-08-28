@@ -9,12 +9,12 @@ of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
 environment. GET and POST parameters are considered first, if provided,
-then environment properties, then default values declared in the script.
+then environment properties, then config properties declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values in the script parameter
-constants at the top of the script.
+the recommended way is to modify the script parameters in the config object,
+directly in the script.
 
 ## Stages
 
@@ -39,7 +39,7 @@ to be allowed in the conference.
 
 1. Event: `Password` parameter
 2. Environment: `FUNLET_CONFERENCE_PASSWORD` environment property
-3. Script: `MY_PASSWORD`
+3. Script: `password` config property
 
 ### Name
 
@@ -48,7 +48,7 @@ in the context of the Twilio account.
 
 1. Event: `Name` parameter
 2. Environment: `FUNLET_CONFERENCE_NAME` environment property
-3. Script: `MY_NAME`
+3. Script: `name` config property
 
 ### Password Request Message
 
@@ -57,7 +57,7 @@ to provide password digits to access the conference.
 
 1. Event: `PasswordRequest` parameter
 2. Environment: `FUNLET_CONFERENCE_PASSWORD_REQUEST` environment property
-3. Script: `MY_PASSWORD_REQUEST` constant
+3. Script: `passwordRequest` config property
 
 ### Message
 
@@ -67,7 +67,7 @@ enters the conference.
 
 1. Event: `Message` parameter
 2. Environment: `FUNLET_CONFERENCE_MESSAGE` environment property
-3. Script: `MY_MESSAGE` constant
+3. Script: `message` config property
 
 ### Language
 
@@ -76,7 +76,7 @@ Defaults to 'en': English with an American accent.
 
 1. Event: `Language` parameter
 2. Environment: `FUNLET_CONFERENCE_LANGUAGE` environment property
-3. Script: `MY_LANGUAGE` constant
+3. Script: `language` config property
 
 ### Voice
 
@@ -85,7 +85,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 1. Event: `Voice` parameter
 2. Environment: `FUNLET_CONFERENCE_VOICE` environment property
-3. Script: `MY_VOICE` constant
+3. Script: `voice` config property
 
 ### Music
 
@@ -105,7 +105,7 @@ and does not start with 'http' is silently discarded.)*
 
 1. Event: `Music` parameter
 2. Environment: `FUNLET_CONFERENCE_MUSIC` environment property
-3. Script: `MY_MUSIC` constant
+3. Script: `music` config property
 
 ### Moderators
 
@@ -119,7 +119,7 @@ A list of text strings with the phone numbers of moderators.
   - `FUNLET_CONFERENCE_MODERATOR3`,
   - `FUNLET_CONFERENCE_MODERATOR4`,
   - `FUNLET_CONFERENCE_MODERATOR5`
-3. Script: `MY_MODERATORS` constant string or array of string values
+3. Script: `moderators` config property string or array of string values
 
 ### EnableSmsNotifications
 
@@ -129,7 +129,7 @@ defaults to false.
 
 1. Event: `EnableSmsNotifications` parameter
 2. Environment: `FUNLET_CONFERENCE_SMS_NOTIFICATIONS` environment property
-3. Script: `MY_SMS_NOTIFICATIONS` constant
+3. Script: `smsNotifications` config property
 
 ### Caller
 

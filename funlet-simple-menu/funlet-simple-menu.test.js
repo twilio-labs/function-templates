@@ -36,117 +36,141 @@ const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
 test('[SIMPLE-MENU-INPUT-MESSAGE-1] Read Message from Event',
 () => {
   expect(
-    funlet.input.getMessage({}, {Message:MESSAGE})
+    funlet.input.getMessage({Message:MESSAGE}, {}, {})
   ).toEqual( MESSAGE );
 });
 
 test('[SIMPLE-MENU-INPUT-MESSAGE-2] Read Message from Environment',
 () => {
   expect(
-    funlet.input.getMessage({FUNLET_MENU_MESSAGE:MESSAGE}, {})
+    funlet.input.getMessage({}, {FUNLET_MENU_MESSAGE:MESSAGE}, {})
   ).toEqual( MESSAGE );
 });
 
-test('[SIMPLE-MENU-INPUT-MESSAGE-3] Read Default Message from Script',
+test('[SIMPLE-MENU-INPUT-MESSAGE-3] Read Message from Script Config',
 () => {
   expect(
-    funlet.input.getMessage({}, {})
-  ).toEqual( DEFAULT_MESSAGE );
+    funlet.input.getMessage({}, {}, {message: MESSAGE})
+  ).toEqual( MESSAGE );
+});
+
+test('[SIMPLE-MENU-INPUT-MESSAGE-4] Read Default Message from Script Config',
+() => {
+  expect( funlet.config.message ).toEqual( DEFAULT_MESSAGE );
 });
 
 test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-1] Read Error Message from Event',
 () => {
   expect(
-    funlet.input.getErrorMessage({}, {ErrorMessage:ERROR_MESSAGE})
+    funlet.input.getErrorMessage({ErrorMessage:ERROR_MESSAGE}, {}, {})
   ).toEqual( ERROR_MESSAGE );
 });
 
 test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-2] Read Error Message from Environment',
 () => {
   expect(
-    funlet.input.getErrorMessage({FUNLET_MENU_ERROR_MESSAGE:ERROR_MESSAGE}, {})
+    funlet.input.getErrorMessage(
+      {}, {FUNLET_MENU_ERROR_MESSAGE:ERROR_MESSAGE}, {}
+    )
   ).toEqual( ERROR_MESSAGE );
 });
 
 test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-3] '+
-     'Read Default Error Message from Script',
+     'Read Error Message from Script Config',
 () => {
   expect(
-    funlet.input.getErrorMessage({}, {})
-  ).toEqual( DEFAULT_ERROR_MESSAGE );
+    funlet.input.getErrorMessage({}, {}, {errorMessage: ERROR_MESSAGE})
+  ).toEqual( ERROR_MESSAGE );
+});
+
+test('[SIMPLE-MENU-INPUT-ERROR-MESSAGE-4] '+
+     'Read Default Error Message from Script Config',
+() => {
+  expect( funlet.config.errorMessage ).toEqual( DEFAULT_ERROR_MESSAGE );
 });
 
 test('[SIMPLE-MENU-INPUT-LANGUAGE-1] Read Language from Event',
 () => {
   expect(
-    funlet.input.getLanguage({}, {Language:FRENCH})
+    funlet.input.getLanguage({Language:FRENCH}, {}, {})
   ).toEqual( FRENCH );
 });
 
 test('[SIMPLE-MENU-INPUT-LANGUAGE-2] Read Language from Environment',
 () => {
   expect(
-    funlet.input.getLanguage({FUNLET_MENU_LANGUAGE:FRENCH}, {})
+    funlet.input.getLanguage({}, {FUNLET_MENU_LANGUAGE:FRENCH}, {})
   ).toEqual( FRENCH );
 });
 
 test('[SIMPLE-MENU-INPUT-LANGUAGE-3] Read Default Language from Script',
 () => {
   expect(
-    funlet.input.getLanguage({}, {})
-  ).toEqual( DEFAULT_LANGUAGE );
+    funlet.input.getLanguage({}, {}, {language: FRENCH})
+  ).toEqual( FRENCH );
+});
+
+test('[SIMPLE-MENU-INPUT-LANGUAGE-4] Read Default Language from Script Config',
+() => {
+  expect( funlet.config.language ).toEqual( DEFAULT_LANGUAGE );
 });
 
 test('[SIMPLE-MENU-INPUT-VOICE-1] Read Voice from Event',
 () => {
   expect(
-    funlet.input.getVoice({}, {Voice:MAN})
+    funlet.input.getVoice({Voice:MAN}, {}, {})
   ).toEqual( MAN );
 });
 
 test('[SIMPLE-MENU-INPUT-VOICE-2] Read Voice from Environment',
 () => {
   expect(
-    funlet.input.getVoice({FUNLET_MENU_VOICE:WOMAN}, {})
+    funlet.input.getVoice({}, {FUNLET_MENU_VOICE:WOMAN}, {})
   ).toEqual( WOMAN );
 });
 
 test('[SIMPLE-MENU-INPUT-VOICE-3] Read Default Voice from Script',
 () => {
   expect(
-    funlet.input.getVoice({}, {})
-  ).toEqual( DEFAULT_VOICE );
+    funlet.input.getVoice({}, {}, {voice: WOMAN})
+  ).toEqual( WOMAN );
+});
+
+test('[SIMPLE-MENU-INPUT-VOICE-4] Read Default Voice from Script Config',
+() => {
+  expect( funlet.config.voice ).toEqual( DEFAULT_VOICE );
 });
 
 test('[SIMPLE-MENU-INPUT-OPTIONS-1] Read Single Option from Event',
 () => {
   expect(
-    funlet.input.getOptions({}, {Options:ACTION0})
+    funlet.input.getOptions({Options:ACTION0}, {}, {})
   ).toEqual( {"0":ACTION0} );
 });
 
-test('[SIMPLE-MENU-INPUT-OPTIONS-2] Read Sequential List of Options from Event',
+test('[SIMPLE-MENU-INPUT-OPTIONS-2] '+
+     'Read Sequential List of Options from Event',
 () => {
   expect(
-    funlet.input.getOptions({}, {Options:[ACTION0,ACTION1,ACTION2]})
+    funlet.input.getOptions({Options:[ACTION0,ACTION1,ACTION2]}, {}, {})
   ).toEqual( {"0":ACTION0,"1":ACTION1,"2":ACTION2} );
 });
 
 test('[SIMPLE-MENU-INPUT-OPTIONS-3] Read List of Keys/Actions from Event',
 () => {
   expect(
-    funlet.input.getOptions({}, {
+    funlet.input.getOptions({
       "Options[42]":ACTION42,
       "Options[101]":ACTION101,
       "Options[1234]":ACTION1234
-    })
+    }, {}, {})
   ).toEqual( {"42":ACTION42,"101":ACTION101,"1234":ACTION1234} );
 });
 
 test('[SIMPLE-MENU-INPUT-OPTIONS-4] Read Single Option from Environment',
 () => {
   expect(
-    funlet.input.getOptions({
+    funlet.input.getOptions({}, {
       FUNLET_MENU_OPTION7_URL: ACTION7
     }, {})
   ).toEqual( {"7":ACTION7} );
@@ -155,7 +179,7 @@ test('[SIMPLE-MENU-INPUT-OPTIONS-4] Read Single Option from Environment',
 test('[SIMPLE-MENU-INPUT-OPTIONS-5] Read Single Key/Action from Environment',
 () => {
   expect(
-    funlet.input.getOptions({
+    funlet.input.getOptions({}, {
       FUNLET_MENU_OPTION4_DIGITS: 42,
       FUNLET_MENU_OPTION4_URL: ACTION42
     }, {})
@@ -165,7 +189,7 @@ test('[SIMPLE-MENU-INPUT-OPTIONS-5] Read Single Key/Action from Environment',
 test('[SIMPLE-MENU-INPUT-OPTIONS-6] Read Key/Action List from Environment',
 () => {
   expect(
-    funlet.input.getOptions({
+    funlet.input.getOptions({}, {
       FUNLET_MENU_OPTION1_DIGITS: "42",
       FUNLET_MENU_OPTION1_URL: ACTION42,
 
@@ -181,21 +205,32 @@ test('[SIMPLE-MENU-INPUT-OPTIONS-6] Read Key/Action List from Environment',
 test('[SIMPLE-MENU-INPUT-OPTIONS-7] Read Default Options from Script',
 () => {
   expect(
-    funlet.input.getOptions({},{})
-  ).toEqual( DEFAULT_OPTIONS );
+    funlet.input.getOptions({},{},{
+      options:{
+        "42": ACTION42,
+        "101": ACTION101,
+        "1234": ACTION1234
+      }
+    })
+  ).toEqual( {"42":ACTION42,"101":ACTION101,"1234":ACTION1234} );
+});
+
+test('[SIMPLE-MENU-INPUT-OPTIONS-8] Read Default Options from Script Config',
+() => {
+  expect( funlet.config.options ).toEqual( DEFAULT_OPTIONS );
 });
 
 test('[SIMPLE-MENU-INPUT-DIGITS-0] Read No Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{})
+    funlet.input.getDigits({},{},{})
   ).toEqual( NO_DIGITS );
 });
 
 test('[SIMPLE-MENU-INPUT-DIGITS-1] Read Non-Empty Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{Digits:NON_EMPTY_DIGITS})
+    funlet.input.getDigits({Digits:NON_EMPTY_DIGITS},{},{})
   ).toEqual( NON_EMPTY_DIGITS );
 });
 

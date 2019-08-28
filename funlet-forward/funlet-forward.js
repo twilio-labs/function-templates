@@ -6,69 +6,72 @@
 
 // ## Script Parameters
 
-// the forwarding number
-const MY_PHONE_NUMBER="";
+let config={
+  // the forwarding number
+  phoneNumber: "",
 
-// one of the verified phone numbers of your account
-// that you want to appear as caller ID for the forwarded call
-const MY_CALLER_ID="";
+  // one of the verified phone numbers of your account
+  // that you want to appear as caller ID for the forwarded call
+  callerId: "",
 
-// fallback URL where further instructions are requested
-// when the forwarding call fails
-const MY_FALLBACK_URL="";
+  // fallback URL where further instructions are requested
+  // when the forwarding call fails
+  fallbackUrl: "",
 
-// duration in seconds to let the call ring before the recipient picks up
-const MY_TIMEOUT=20;
+  // duration in seconds to let the call ring before the recipient picks up
+  timeout: 20,
 
-// list of text strings with the only phone numbers of callers that will be
-// allowed to be forwarded. When the list is empty, all numbers are allowed.
-const MY_ALLOWED_CALLERS=[];
+  // list of text strings with the only phone numbers of callers that will be
+  // allowed to be forwarded. When the list is empty, all numbers are allowed.
+  allowedCallers: [],
 
-// recording URL or a text to say
-// when the calling number is not one of the allowed callers configured
-const MY_ACCESS_RESTRICTED=
-  "Sorry, you are calling from a restricted number. Good bye.";
+  // recording URL or a text to say
+  // when the calling number is not one of the allowed callers configured
+  accessRestricted:
+    "Sorry, you are calling from a restricted number. Good bye.",
 
-// language code for text messages, e.g. 'en' or 'en-gb'
-const MY_LANGUAGE="en";
+  // language code for text messages, e.g. 'en' or 'en-gb'
+  language: "en",
 
-// voice for text messages, one of 'man', 'woman' or 'alice'
-const MY_VOICE="alice";
+  // voice for text messages, one of 'man', 'woman' or 'alice'
+  voice: "alice"
+};
+exports.config = config;
 
 // ## Input
 exports.input = {};
 
-function getPhoneNumber(env, params) {
+function getPhoneNumber(params, env, config) {
   return params.PhoneNumber ||
     env.FUNLET_FORWARD_PHONE_NUMBER ||
-    MY_PHONE_NUMBER;
+    config.phoneNumber;
 }
 exports.input.getPhoneNumber = getPhoneNumber;
 
-function getCallerId(env, params) {
+function getCallerId(params, env, config) {
   return params.CallerId ||
     env.FUNLET_FORWARD_CALLER_ID ||
-    MY_CALLER_ID;
+    config.callerId;
 }
 exports.input.getCallerId = getCallerId;
 
-function getFallbackUrl(env, params) {
+function getFallbackUrl(params, env, config) {
   return params.FailUrl ||
     env.FUNLET_FORWARD_FALLBACK_URL ||
-    MY_FALLBACK_URL;
+    config.fallbackUrl;
 }
 exports.input.getFallbackUrl = getFallbackUrl;
 
-function getTimeout(env, params) {
+function getTimeout(params, env, config) {
   let timeout = params.Timeout || env.FUNLET_FORWARD_TIMEOUT;
   if ( typeof timeout === "string" && !isNaN(timeout) ) {
     return Number(timeout);
   }
-  return MY_TIMEOUT;
+  return config.timeout;
 }
 exports.input.getTimeout = getTimeout;
 
-function getAllowedCallers(env, params) {
+function getAllowedCallers(params, env, config) {
   let allowedCallers = [];
 
   function formatNumber( phoneNumber ) {
@@ -103,48 +106,50 @@ function getAllowedCallers(env, params) {
   addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER4 );
   addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER5 );
 
-  MY_ALLOWED_CALLERS.forEach(
-    phoneNumber => addIfNotEmpty(phoneNumber)
-  );
+  if ( Array.isArray(config.allowedCallers) ) {
+    config.allowedCallers.forEach(
+      phoneNumber => addIfNotEmpty(phoneNumber)
+    );
+  }
 
   return allowedCallers;
 }
 exports.input.getAllowedCallers = getAllowedCallers;
 
-function getAccessRestrictedErrorMessage(env, params) {
+function getAccessRestrictedErrorMessage(params, env, config) {
   return params.AccessRestricted ||
     env.FUNLET_FORWARD_ACCESS_RESTRICTED ||
-    MY_ACCESS_RESTRICTED;
+    config.accessRestricted;
 }
 exports.input.getAccessRestrictedErrorMessage =
   getAccessRestrictedErrorMessage;
 
-function getLanguage(env, params) {
-  return params.Language || env.FUNLET_FORWARD_LANGUAGE || MY_LANGUAGE;
+function getLanguage(params, env, config) {
+  return params.Language || env.FUNLET_FORWARD_LANGUAGE || config.language;
 }
 exports.input.getLanguage = getLanguage;
 
-function getVoice(env, params) {
-  return params.Voice || env.FUNLET_FORWARD_VOICE || MY_VOICE;
+function getVoice(params, env, config) {
+  return params.Voice || env.FUNLET_FORWARD_VOICE || config.voice;
 }
 exports.input.getVoice = getVoice;
 
-function getCaller(env, params) {
+function getCaller(params, env, config) {
   return params.From || params.Caller;
 }
 exports.input.getCaller = getCaller;
 
-function getPhoneNumberCalled(env, params) {
+function getPhoneNumberCalled(params, env, config) {
   return params.To || params.Called;
 }
 exports.input.getPhoneNumberCalled = getPhoneNumberCalled;
 
-function isDialDone(env, params) {
+function isDialDone(params, env, config) {
   return (typeof params.Dial === "string" );
 }
 exports.input.isDialDone = isDialDone;
 
-function getCallStatus(env, params) {
+function getCallStatus(params, env, config) {
   const NO_CALL_STATUS = "";
   return params.DialStatus || params.DialCallStatus || NO_CALL_STATUS;
 }
@@ -309,23 +314,22 @@ exports.handler = function(env, params, reply) {
 
   let
     response = new Twilio.twiml.VoiceResponse(),
-    callStatus = getCallStatus(env, params),
-    fallbackUrl = getFallbackUrl(env, params),
-    caller = getCaller(env, params),
-    called = getPhoneNumberCalled(env, params),
-    allowedCallers = getAllowedCallers(env, params),
+    isDial = isDialDone(params, env, config),
+    callStatus = getCallStatus(params, env, config),
+    fallbackUrl = getFallbackUrl(params, env, config),
+    caller = getCaller(params, env, config),
+    called = getPhoneNumberCalled(params, env, config),
+    allowedCallers = getAllowedCallers(params, env, config),
     accessRestrictedErrorMessage =
-      getAccessRestrictedErrorMessage(env, params),
-    language = getLanguage(env, params),
-    voice = getVoice(env, params),
-    callerId = getCallerId(env, params),
-    forwardingNumber = getPhoneNumber(env, params),
-    timeout = getTimeout(env, params);
+      getAccessRestrictedErrorMessage(params, env, config),
+    language = getLanguage(params, env, config),
+    voice = getVoice(params, env, config),
+    callerId = getCallerId(params, env, config),
+    forwardingNumber = getPhoneNumber(params, env, config),
+    timeout = getTimeout(params, env, config);
 
   if (
-    !forwardStage2(
-      response, isDialDone(env,params), callStatus, fallbackUrl
-    )
+    !forwardStage2( response, isDial, callStatus, fallbackUrl )
   ) {
     forwardStage1(
       response,

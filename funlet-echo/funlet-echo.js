@@ -5,17 +5,20 @@
 
 // ## Script Parameters
 
-// Twiml instructions, as a text string.
-const MY_TWIML =
-  '<Response>'+
-    '<Say>echo</Say>'+
-  '</Response>';
+let config={
+  // Twiml instructions, as a text string
+  twiml:
+    '<Response>'+
+      '<Say>echo</Say>'+
+    '</Response>'
+};
+exports.config = config;
 
 // ## Input
 exports.input = {};
 
-function getTwiml(env, params) {
-  return params.Twiml || env.FUNLET_ECHO_TWIML || MY_TWIML;
+function getTwiml(params, env, config) {
+  return params.Twiml || env.FUNLET_ECHO_TWIML || config.twiml;
 }
 exports.input.getTwiml = getTwiml;
 
@@ -47,7 +50,7 @@ exports.handler = function(env, params, reply) {
 
   response.setBody(
     echo(
-      getTwiml(env, params)
+      getTwiml(params, env, config)
     )
   );
 

@@ -54,28 +54,28 @@ const PLAY_AND_SAY_MESSAGES =
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-1] Read Single Message from Event',
 () => {
   expect(
-    funlet.input.getMessages({}, {Message:MESSAGE1})
+    funlet.input.getMessages({Message:MESSAGE1}, {}, {})
   ).toEqual( [MESSAGE1] );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-2] Read List of Messages from Event',
 () => {
   expect(
-    funlet.input.getMessages({}, {Message:[MESSAGE1,MESSAGE2,MESSAGE3]})
+    funlet.input.getMessages({Message:[MESSAGE1,MESSAGE2,MESSAGE3]}, {}, {})
   ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3] );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-3] Read Single Message from Environment',
 () => {
   expect(
-    funlet.input.getMessages({FUNLET_MESSAGE1:MESSAGE1}, {})
+    funlet.input.getMessages({}, {FUNLET_MESSAGE1:MESSAGE1}, {})
   ).toEqual( [MESSAGE1] );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-4] Read Five Messages from Environment',
 () => {
   expect(
-    funlet.input.getMessages(
+    funlet.input.getMessages({},
       {
         FUNLET_MESSAGE1:MESSAGE1,
         FUNLET_MESSAGE2:MESSAGE2,
@@ -90,50 +90,67 @@ test('[SIMPLE-MESSAGE-INPUT-MESSAGES-4] Read Five Messages from Environment',
 test('[SIMPLE-MESSAGE-INPUT-MESSAGE-5] Read Default Message from Script',
 () => {
   expect(
-    funlet.input.getMessages({}, {})
-  ).toEqual( [DEFAULT_MESSAGE] );
+    funlet.input.getMessages({}, {}, {messages: [MESSAGE1,MESSAGE2,MESSAGE3]})
+  ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3] );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-MESSAGE-6] '+
+     'Read Default Message from Script Config',
+() => {
+  expect( funlet.config.messages ).toEqual( [DEFAULT_MESSAGE] );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-1] Read Language from Event',
 () => {
   expect(
-    funlet.input.getLanguage({}, {Language:FRENCH})
+    funlet.input.getLanguage({Language:FRENCH}, {}, {})
   ).toEqual( FRENCH );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-2] Read Language from Environment',
 () => {
   expect(
-    funlet.input.getLanguage({FUNLET_MESSAGE_LANGUAGE:FRENCH}, {})
+    funlet.input.getLanguage({}, {FUNLET_MESSAGE_LANGUAGE:FRENCH}, {})
   ).toEqual( FRENCH );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-3] Read Default Language from Script',
+test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-3] Read Language from Script Config',
 () => {
   expect(
-    funlet.input.getLanguage({}, {})
-  ).toEqual( DEFAULT_LANGUAGE );
+    funlet.input.getLanguage({}, {}, {language: FRENCH})
+  ).toEqual( FRENCH );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-LANGUAGE-4] '+
+     'Read Default Language from Script Config',
+() => {
+  expect( funlet.config.language ).toEqual( DEFAULT_LANGUAGE );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-VOICE-1] Read Voice from Event',
 () => {
   expect(
-    funlet.input.getVoice({}, {Voice:MAN})
+    funlet.input.getVoice({Voice:MAN}, {}, {})
   ).toEqual( MAN );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-VOICE-2] Read Voice from Environment',
 () => {
   expect(
-    funlet.input.getVoice({FUNLET_MESSAGE_VOICE:WOMAN}, {})
+    funlet.input.getVoice({}, {FUNLET_MESSAGE_VOICE:WOMAN}, {})
   ).toEqual( WOMAN );
 });
 
 test('[SIMPLE-MESSAGE-INPUT-VOICE-3] Read Default Voice from Script',
 () => {
   expect(
-    funlet.input.getVoice({}, {})
-  ).toEqual( DEFAULT_VOICE );
+    funlet.input.getVoice({}, {}, {voice: WOMAN})
+  ).toEqual( WOMAN );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-VOICE-4] Read Default Voice from Script Config',
+() => {
+  expect( funlet.config.voice ).toEqual( DEFAULT_VOICE );
 });
 
 test('[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-0] '+

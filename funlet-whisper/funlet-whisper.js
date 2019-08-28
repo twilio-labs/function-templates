@@ -6,54 +6,60 @@
 
 // ## Script Parameters
 
-// recording URL or text message to say,
-// e.g. asking the recipient to press a key to accept the call
-const MY_MESSAGE = fromNumber =>
-`You are receiving a call from ${fromNumber}. Press any key to accept.`;
+let config={
+  // recording URL or text message to say,
+  // e.g. asking the recipient to press a key to accept the call
+  message: fromNumber =>
+    `You are receiving a call from ${fromNumber}. Press any key to accept.`,
 
-// language code for conversion of text-to-speech messages,
-// e.g. 'en' or 'en-gb'
-const MY_LANGUAGE = "en";
+  // language code for conversion of text-to-speech messages,
+  // e.g. 'en' or 'en-gb'
+  language: "en",
 
-// voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
-const MY_VOICE = "alice";
+  // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
+  voice: "alice",
 
-// whether to request the recipient to press a key to accept the call
-const MY_HUMAN_CHECK = false;
+  // whether to request the recipient to press a key to accept the call
+  humanCheck: false
+};
+exports.config = config;
 
 // ## Input
 exports.input = {};
 
-function getMessage(env, params) {
+function getMessage(params, env, config) {
   const caller = params.From || params.Caller || "";
   return params.Message ||
     env.FUNLET_WHISPER_MESSAGE ||
-    MY_MESSAGE( spell(caller) );
+    ( typeof config.message === "function"?
+        config.message( spell(caller) ):
+        config.message
+    );
 }
 exports.input.getMessage = getMessage;
 
-function getLanguage(env, params) {
-  return params.Language || env.FUNLET_WHISPER_LANGUAGE || MY_LANGUAGE;
+function getLanguage(params, env, config) {
+  return params.Language || env.FUNLET_WHISPER_LANGUAGE || config.language;
 }
 exports.input.getLanguage = getLanguage;
 
-function getVoice(env, params) {
-  return params.Voice || env.FUNLET_WHISPER_VOICE || MY_VOICE;
+function getVoice(params, env, config) {
+  return params.Voice || env.FUNLET_WHISPER_VOICE || config.voice;
 }
 exports.input.getVoice = getVoice;
 
-function isHumanCheckRequired(env, params) {
+function isHumanCheckRequired(params, env, config) {
   if ( typeof params.HumanCheck === "string" ) {
     return params.HumanCheck !== "false";
   }
   if ( typeof env.FUNLET_WHISPER_HUMAN_CHECK === "string" ) {
     return env.FUNLET_WHISPER_HUMAN_CHECK !== "false";
   }
-  return MY_HUMAN_CHECK;
+  return config.humanCheck;
 }
 exports.input.isHumanCheckRequired = isHumanCheckRequired;
 
-function getDigits(env, params) {
+function getDigits(params, env, config) {
   if ( typeof params.Digits === "string" ) {
    return params.Digits;
   }
@@ -170,11 +176,11 @@ exports.handler = function(env, params, reply) {
 
   let
     response = new Twilio.twiml.VoiceResponse(),
-    digits = getDigits(env, params),
-    humanCheckRequired = isHumanCheckRequired(env, params),
-    message = getMessage(env, params),
-    language = getLanguage(env, params),
-    voice = getVoice(env, params);
+    digits = getDigits(params, env, config),
+    humanCheckRequired = isHumanCheckRequired(params, env, config),
+    message = getMessage(params, env, config),
+    language = getLanguage(params, env, config),
+    voice = getVoice(params, env, config);
 
   if ( !whisperStage2(response, digits) ) {
     whisperStage1(response, humanCheckRequired, message, language, voice);

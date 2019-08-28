@@ -7,35 +7,38 @@
 
 // ## Script Parameters
 
-// list of forwarding phone numbers
-const MY_PHONE_NUMBERS=[];
+let config={
+  // list of forwarding phone numbers
+  phoneNumbers: [],
 
-// duration in seconds to let the call ring before the recipient picks up
-const MY_TIMEOUT=60;
+  // duration in seconds to let the call ring before the recipient picks up
+  timeout: 60,
 
-// recording URL or text message to say,
-// e.g. asking the recipient to press a key to accept the call
-const MY_MESSAGE = fromNumber =>
-`You are receiving a call from ${fromNumber}. Press any key to accept.`;
+  // recording URL or text message to say,
+  // e.g. asking the recipient to press a key to accept the call
+  message: fromNumber =>
+    `You are receiving a call from ${fromNumber}. Press any key to accept.`,
 
-// language code for conversion of text-to-speech messages,
-// e.g. 'en' or 'en-gb'
-const MY_LANGUAGE = "en";
+  // language code for conversion of text-to-speech messages,
+  // e.g. 'en' or 'en-gb'
+  language: "en",
 
-// voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
-const MY_VOICE = "alice";
+  // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
+  voice: "alice",
 
-// whether to request the recipient to press a key to accept the call
-const MY_HUMAN_CHECK = true;
+  // whether to request the recipient to press a key to accept the call
+  humanCheck: true,
 
-// fallback URL where further instructions are requested
-// when the forwarding call fails
-const MY_FALLBACK_URL="";
+  // fallback URL where further instructions are requested
+  // when the forwarding call fails
+  fallbackUrl: ""
+};
+exports.config = config;
 
 // ## Input
 exports.input = {};
 
-function getPhoneNumbers(env, params) {
+function getPhoneNumbers(params, env, config) {
   let phoneNumbers = [];
 
   function addIfNotEmpty( phoneNumber ) {
@@ -58,58 +61,63 @@ function getPhoneNumbers(env, params) {
   addIfNotEmpty( env.FUNLET_FINDME_PHONE_NUMBER4 );
   addIfNotEmpty( env.FUNLET_FINDME_PHONE_NUMBER5 );
 
-  MY_PHONE_NUMBERS.forEach(
-    phoneNumber => addIfNotEmpty(phoneNumber)
-  );
+  if ( Array.isArray(config.phoneNumbers) ) {
+    config.phoneNumbers.forEach(
+      phoneNumber => addIfNotEmpty(phoneNumber)
+    );
+  }
 
   return phoneNumbers;
 }
 exports.input.getPhoneNumbers = getPhoneNumbers;
 
-function getTimeout(env, params) {
+function getTimeout(params, env, config) {
   let timeout = params.Timeout || env.FUNLET_FINDME_TIMEOUT;
   if ( typeof timeout === "string" && !isNaN(timeout) ) {
     return Number(timeout);
   }
-  return MY_TIMEOUT;
+  return config.timeout;
 }
 exports.input.getTimeout = getTimeout;
 
-function isWhisper(env, params) {
+function isWhisper(params, env, config) {
   return ( typeof params.Whisper === "string" );
 }
 exports.input.isWhisper = isWhisper;
 
-function getMessage(env, params) {
+function getMessage(params, env, config) {
   const caller = params.From || params.Caller || "";
   return params.Message ||
     env.FUNLET_FINDME_MESSAGE ||
-    MY_MESSAGE( spell(caller) );
+    ( typeof config.message === "function"?
+        config.message( spell(caller) ):
+        config.message
+    );
 }
 exports.input.getMessage = getMessage;
 
-function getLanguage(env, params) {
-  return params.Language || env.FUNLET_FINDME_LANGUAGE || MY_LANGUAGE;
+function getLanguage(params, env, config) {
+  return params.Language || env.FUNLET_FINDME_LANGUAGE || config.language;
 }
 exports.input.getLanguage = getLanguage;
 
-function getVoice(env, params) {
-  return params.Voice || env.FUNLET_FINDME_VOICE || MY_VOICE;
+function getVoice(params, env, config) {
+  return params.Voice || env.FUNLET_FINDME_VOICE || config.voice;
 }
 exports.input.getVoice = getVoice;
 
-function isHumanCheckRequired(env, params) {
+function isHumanCheckRequired(params, env, config) {
   if ( typeof params.HumanCheck === "string" ) {
     return params.HumanCheck !== "false";
   }
   if ( typeof env.FUNLET_FINDME_HUMAN_CHECK === "string" ) {
     return env.FUNLET_FINDME_HUMAN_CHECK !== "false";
   }
-  return MY_HUMAN_CHECK;
+  return config.humanCheck;
 }
 exports.input.isHumanCheckRequired = isHumanCheckRequired;
 
-function getDigits(env, params) {
+function getDigits(params, env, config) {
   if ( typeof params.Digits === "string" ) {
    return params.Digits;
   }
@@ -117,22 +125,22 @@ function getDigits(env, params) {
 }
 exports.input.getDigits = getDigits;
 
-function isDialDone(env, params) {
+function isDialDone(params, env, config) {
   return (typeof params.Dial === "string" );
 }
 exports.input.isDialDone = isDialDone;
 
 // Copied from Forward Funlet
-function getCallStatus(env, params) {
+function getCallStatus(params, env, config) {
   const NO_CALL_STATUS = "";
   return params.DialStatus || params.DialCallStatus || NO_CALL_STATUS;
 }
 exports.input.getCallStatus = getCallStatus;
 
-function getFallbackUrl(env, params) {
+function getFallbackUrl(params, env, config) {
   return params.FailUrl ||
     env.FUNLET_FINDME_FALLBACK_URL ||
-    MY_FALLBACK_URL;
+    config.fallbackUrl;
 }
 exports.input.getFallbackUrl = getFallbackUrl;
 
@@ -299,20 +307,21 @@ exports.handler = function(env, params, reply) {
 
   let
     response = new Twilio.twiml.VoiceResponse(),
-    callStatus = getCallStatus(env, params),
-    fallbackUrl = getFallbackUrl(env, params),
-    digits = getDigits(env, params),
-    humanCheckRequired = isHumanCheckRequired(env, params),
-    message = getMessage(env, params),
-    language = getLanguage(env, params),
-    voice = getVoice(env, params),
-    forwardingNumbers = getPhoneNumbers(env, params),
-    timeout = getTimeout(env, params),
+    isDial = isDialDone(params, env, config),
+    callStatus = getCallStatus(params, env, config),
+    fallbackUrl = getFallbackUrl(params, env, config),
+    digits = getDigits(params, env, config),
+    humanCheckRequired = isHumanCheckRequired(params, env, config),
+    message = getMessage(params, env, config),
+    language = getLanguage(params, env, config),
+    voice = getVoice(params, env, config),
+    forwardingNumbers = getPhoneNumbers(params, env, config),
+    timeout = getTimeout(params, env, config),
     whisperUrl = getWhisperUrl(params);
 
-  findMeStage4(response, isDialDone(env,params), callStatus, fallbackUrl) ||
+  findMeStage4(response, isDial, callStatus, fallbackUrl) ||
   findMeStage3(response, digits) ||
-  (isWhisper(env, params)?
+  (isWhisper(params, env, config)?
     findMeStage2(response, humanCheckRequired, message, language, voice):
     findMeStage1(
       response, forwardingNumbers, timeout, whisperUrl, fallbackUrl

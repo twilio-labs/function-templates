@@ -9,12 +9,12 @@ of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
 environment. GET and POST parameters are considered first, if provided,
-then environment properties, then default values declared in the script.
+then environment properties, then config properties declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values in the script parameter
-constants at the top of the script.
+the recommended way is to modify the script parameters in the config object,
+directly in the script.
 
 ## Stages
 
@@ -48,7 +48,7 @@ in sequence.
   - `FUNLET_FINDME_PHONE_NUMBER3`,
   - `FUNLET_FINDME_PHONE_NUMBER4`,
   - `FUNLET_FINDME_PHONE_NUMBER5`
-3. Script: `MY_PHONE_NUMBERS` constant array of string values
+3. Script: `phoneNumbers` config property with an array of string values
 
 ### Timeout
 
@@ -56,7 +56,7 @@ Number, duration in seconds to let the call ring before the recipient picks up.
 
 1. Event: `Timeout` parameter
 2. Environment: `FUNLET_FINDME_TIMEOUT` environment property
-3. Script: `MY_TIMEOUT` constant
+3. Script: `timeout` config property
 
 ### Whisper (Stage 2)
 
@@ -73,7 +73,7 @@ asking the recipient to press any key to accept the call.
 
 1. Event: `Message` parameter
 2. Environment: `FUNLET_FINDME_MESSAGE` environment property
-3. Script: `MY_MESSAGE` constant
+3. Script: `message` config property
 
 ### Language (Stage 2)
 
@@ -82,7 +82,7 @@ Defaults to 'en': English with an American accent.
 
 1. Event: `Language` parameter
 2. Environment: `FUNLET_FINDME_LANGUAGE` environment property
-3. Script: `MY_LANGUAGE` constant
+3. Script: `language` config property
 
 ### Voice (Stage 2)
 
@@ -91,7 +91,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 1. Event: `Voice` parameter
 2. Environment: `FUNLET_FINDME_VOICE` environment property
-3. Script: `MY_VOICE` constant
+3. Script: `voice` config property
 
 ### Human Check (Stage 2)
 
@@ -100,7 +100,7 @@ pressed any key to accept the call explicitly.
 
 1. Event: `HumanCheck` parameter
 2. Environment: `FUNLET_FINDME_HUMAN_CHECK` environment property
-3. Script: `MY_HUMAN_CHECK` constant
+3. Script: `humanCheck` config property
 
 ### Digits (Stage 3)
 
@@ -128,7 +128,7 @@ when the forwarding call fails.
 
 1. Event: `FailUrl` parameter
 2. Environment: `FUNLET_FINDME_FALLBACK_URL` environment property
-3. Script: `MY_FALLBACK_URL` constant
+3. Script: `fallbackUrl` config property
 
 ## Output
 

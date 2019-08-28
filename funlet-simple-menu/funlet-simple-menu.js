@@ -4,57 +4,60 @@
 
 // ## Script Parameters
 
-// a recording URL or a text to say to invite the caller to select an option
-const MY_MESSAGE = "";
+let config={
+  // a recording URL or a text to say to invite the caller to select an option
+  message: "",
 
-// error message (recording URL or text)
-// played when the digits pressed do not match any option
-const MY_ERROR_MESSAGE = "I'm sorry, that wasn't a valid option.";
+  // error message (recording URL or text)
+  // played when the digits pressed do not match any option
+  errorMessage: "I'm sorry, that wasn't a valid option.",
 
-// language code for conversion of text-to-speech messages,
-// e.g. 'en' or 'en-gb'
-const MY_LANGUAGE = "en";
+  // language code for conversion of text-to-speech messages,
+  // e.g. 'en' or 'en-gb'
+  language: "en",
 
-// voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
-const MY_VOICE = "alice";
+  // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
+  voice: "alice",
 
-// hash of key -> value for options where:
-// - the key is a string of digits
-// - the value is the action URL for the option matching given digits.
-// For example:
-// {
-//   "1": "https://example.com/option/1",
-//   "2": "..."
-// }
-const MY_OPTIONS = {};
+  // hash of key -> value for options where:
+  // - the key is a string of digits
+  // - the value is the action URL for the option matching given digits.
+  // For example:
+  // {
+  //   "1": "https://example.com/option/1",
+  //   "2": "..."
+  // }
+  options: {}
+};
+exports.config = config;
 
 // ## Input
 exports.input = {};
 
-function getMessage(env, params) {
-  return params.Message || env.FUNLET_MENU_MESSAGE || MY_MESSAGE;
+function getMessage(params, env, config) {
+  return params.Message || env.FUNLET_MENU_MESSAGE || config.message;
 }
 exports.input.getMessage = getMessage;
 
-function getErrorMessage(env, params) {
+function getErrorMessage(params, env, config) {
   return params.ErrorMessage ||
          env.FUNLET_MENU_ERROR_MESSAGE ||
-         MY_ERROR_MESSAGE;
+         config.errorMessage;
 }
 exports.input.getErrorMessage = getErrorMessage;
 
-function getLanguage(env, params) {
-  return params.Language || env.FUNLET_MENU_LANGUAGE || MY_LANGUAGE;
+function getLanguage(params, env, config) {
+  return params.Language || env.FUNLET_MENU_LANGUAGE || config.language;
 }
 exports.input.getLanguage = getLanguage;
 
-function getVoice(env, params) {
-  return params.Voice || env.FUNLET_MENU_VOICE || MY_VOICE;
+function getVoice(params, env, config) {
+  return params.Voice || env.FUNLET_MENU_VOICE || config.voice;
 }
 exports.input.getVoice = getVoice;
 
-function getOptions(env, params) {
-  let options = Object.assign({},MY_OPTIONS);
+function getOptions(params, env, config) {
+  let options = Object.assign({},config.options);
   for( let name of Object.keys(env) ) {
     let matches = /^FUNLET_MENU_OPTION([0-9]+)_URL$/.exec( name );
     if( matches !== null ) {
@@ -83,7 +86,7 @@ function getOptions(env, params) {
 }
 exports.input.getOptions = getOptions;
 
-function getDigits(env, params) {
+function getDigits(params, env, config) {
   return params.Digits || "";
 }
 exports.input.getDigits = getDigits;
@@ -214,12 +217,12 @@ exports.handler = function(env, params, reply) {
 
   let
     response = new Twilio.twiml.VoiceResponse(),
-    digits = getDigits(env, params),
-    message = getMessage(env, params),
-    errorMessage = getErrorMessage(env, params),
-    language = getLanguage(env, params),
-    voice = getVoice(env, params),
-    options = getOptions(env, params);
+    digits = getDigits(params, env, config),
+    message = getMessage(params, env, config),
+    errorMessage = getErrorMessage(params, env, config),
+    language = getLanguage(params, env, config),
+    voice = getVoice(params, env, config),
+    options = getOptions(params, env, config);
 
   if (
     ! simpleMenuStage2(

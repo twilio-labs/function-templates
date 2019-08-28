@@ -20,6 +20,8 @@ const WOMAN="woman";
 const ALICE="alice";
 const DEFAULT_VOICE=ALICE;
 
+const DEFAULT_HUMAN_CHECK = false;
+
 const NO_DIGITS = null;
 const EMPTY_DIGITS="";
 const NON_EMPTY_DIGITS="5";
@@ -29,93 +31,103 @@ const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
 test('[WHISPER-INPUT-MESSAGE-1] Read Message from Event',
 () => {
   expect(
-    funlet.input.getMessage({}, {Message:MESSAGE})
+    funlet.input.getMessage({Message:MESSAGE}, {}, {})
   ).toEqual( MESSAGE );
 });
 
 test('[WHISPER-INPUT-MESSAGE-2] Read Message from Environment',
 () => {
   expect(
-    funlet.input.getMessage({FUNLET_WHISPER_MESSAGE:MESSAGE}, {})
+    funlet.input.getMessage({}, {FUNLET_WHISPER_MESSAGE:MESSAGE}, {})
   ).toEqual( MESSAGE );
 });
 
-test('[WHISPER-INPUT-MESSAGE-3] '+
-     'Read Default Message from Script (with number in From parameter)',
+test('[WHISPER-INPUT-MESSAGE-3] Read Message from Script Config',
 () => {
   expect(
-    funlet.input.getMessage({}, {From:FROM_NUMBER})
-  ).toEqual( DEFAULT_MESSAGE );
+    funlet.input.getMessage({}, {}, {message: MESSAGE})
+  ).toEqual( MESSAGE );
 });
 
-test('[WHISPER-INPUT-MESSAGE-4] '+
-     'Read Default Message from Script (with number in Caller parameter)',
+test('[WHISPER-INPUT-MESSAGE-4] Read Default Message from Script Config',
 () => {
   expect(
-    funlet.input.getMessage({}, {Caller:FROM_NUMBER})
+    funlet.config.message( SPELLED_FROM_NUMBER )
   ).toEqual( DEFAULT_MESSAGE );
 });
 
 test('[WHISPER-INPUT-LANGUAGE-1] Read Language from Event',
 () => {
   expect(
-    funlet.input.getLanguage({}, {Language:FRENCH})
+    funlet.input.getLanguage({Language:FRENCH}, {}, {})
   ).toEqual( FRENCH );
 });
 
 test('[WHISPER-INPUT-LANGUAGE-2] Read Language from Environment',
 () => {
   expect(
-    funlet.input.getLanguage({FUNLET_WHISPER_LANGUAGE:FRENCH}, {})
+    funlet.input.getLanguage({}, {FUNLET_WHISPER_LANGUAGE:FRENCH}, {})
   ).toEqual( FRENCH );
 });
 
-test('[WHISPER-INPUT-LANGUAGE-3] Read Default Language from Script',
+test('[WHISPER-INPUT-LANGUAGE-3] Read Language from Script Config',
 () => {
   expect(
-    funlet.input.getLanguage({}, {})
-  ).toEqual( DEFAULT_LANGUAGE );
+    funlet.input.getLanguage({}, {}, {language: FRENCH})
+  ).toEqual( FRENCH );
+});
+
+test('[WHISPER-INPUT-LANGUAGE-4] Read Default Language from Script Config',
+() => {
+  expect( funlet.config.language ).toEqual( DEFAULT_LANGUAGE );
 });
 
 test('[WHISPER-INPUT-VOICE-1] Read Voice from Event',
 () => {
   expect(
-    funlet.input.getVoice({}, {Voice:MAN})
+    funlet.input.getVoice({Voice:MAN}, {}, {})
   ).toEqual( MAN );
 });
 
 test('[WHISPER-INPUT-VOICE-2] Read Voice from Environment',
 () => {
   expect(
-    funlet.input.getVoice({FUNLET_WHISPER_VOICE:WOMAN}, {})
+    funlet.input.getVoice({}, {FUNLET_WHISPER_VOICE:WOMAN}, {})
   ).toEqual( WOMAN );
 });
 
 test('[WHISPER-INPUT-VOICE-3] Read Default Voice from Script',
 () => {
   expect(
-    funlet.input.getVoice({}, {})
-  ).toEqual( DEFAULT_VOICE );
+    funlet.input.getVoice({}, {}, {voice: WOMAN})
+  ).toEqual( WOMAN );
+});
+
+test('[WHISPER-INPUT-VOICE-4] Read Default Voice from Script Config',
+() => {
+  expect( funlet.config.voice ).toEqual( DEFAULT_VOICE );
 });
 
 test('[WHISPER-INPUT-HUMAN-CHECK-0] Read Human Check "1" from Event',
 () => {
   expect(
-    funlet.input.isHumanCheckRequired({}, {HumanCheck:"1"})
+    funlet.input.isHumanCheckRequired({HumanCheck:"1"}, {}, {})
   ).toEqual( true );
 });
 
 test('[WHISPER-INPUT-HUMAN-CHECK-1] Read Human Check from Event',
 () => {
   expect(
-    funlet.input.isHumanCheckRequired({}, {HumanCheck:"true"})
+    funlet.input.isHumanCheckRequired({HumanCheck:"true"}, {}, {})
   ).toEqual( true );
 });
 
 test('[WHISPER-INPUT-HUMAN-CHECK-2] Read Human Check from Environment',
 () => {
   expect(
-    funlet.input.isHumanCheckRequired({FUNLET_WHISPER_HUMAN_CHECK:"true"}, {})
+    funlet.input.isHumanCheckRequired(
+      {}, {FUNLET_WHISPER_HUMAN_CHECK:"true"}, {}
+    )
   ).toEqual( true );
 });
 
@@ -123,35 +135,41 @@ test('[WHISPER-INPUT-HUMAN-CHECK-3] Read Default Human Check from Script',
 () => {
   const DEFAULT_HUMAN_CHECK = false;
   expect(
-    funlet.input.isHumanCheckRequired({}, {})
-  ).toEqual( DEFAULT_HUMAN_CHECK );
+    funlet.input.isHumanCheckRequired({}, {}, {humanCheck: true})
+  ).toEqual( true );
+});
+
+test('[WHISPER-INPUT-HUMAN-CHECK-3] '+
+     'Read Default Human Check from Script Config',
+() => {
+  expect( funlet.config.humanCheck ).toEqual( DEFAULT_HUMAN_CHECK );
 });
 
 test('[WHISPER-INPUT-DIGITS-0] Read No Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{})
+    funlet.input.getDigits({},{},{})
   ).toEqual( NO_DIGITS );
 });
 
 test('[WHISPER-INPUT-DIGITS-1] Read Empty Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{Digits:EMPTY_DIGITS})
+    funlet.input.getDigits({Digits:EMPTY_DIGITS},{},{})
   ).toEqual( EMPTY_DIGITS );
 });
 
 test('[WHISPER-INPUT-DIGITS-2] Read Non-Empty Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{Digits:NON_EMPTY_DIGITS})
+    funlet.input.getDigits({Digits:NON_EMPTY_DIGITS},{},{})
   ).toEqual( NON_EMPTY_DIGITS );
 });
 
 test('[WHISPER-OUTPUT-SPELL-1] Spell a phone number digit by digit',
 () => {
   expect(
-    funlet.output.spell( FROM_NUMBER)
+    funlet.output.spell( FROM_NUMBER )
   ).toEqual( SPELLED_FROM_NUMBER );
 });
 

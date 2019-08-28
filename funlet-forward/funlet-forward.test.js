@@ -127,91 +127,117 @@ const FULL_RESPONSE_FORWARD_2_4 =
 test('[FORWARD-INPUT-PHONE-NUMBER-1] Read Phone Number from Event',
 () => {
   expect(
-    funlet.input.getPhoneNumber({}, {PhoneNumber:PHONE_NUMBER})
+    funlet.input.getPhoneNumber({PhoneNumber:PHONE_NUMBER}, {}, {})
   ).toEqual( PHONE_NUMBER );
 });
 
 test('[FORWARD-INPUT-PHONE-NUMBER-2] Read Phone Number from Environment',
 () => {
   expect(
-    funlet.input.getPhoneNumber({FUNLET_FORWARD_PHONE_NUMBER:PHONE_NUMBER}, {})
+    funlet.input.getPhoneNumber(
+      {}, {FUNLET_FORWARD_PHONE_NUMBER:PHONE_NUMBER}, {}
+    )
   ).toEqual( PHONE_NUMBER );
 });
 
-test('[FORWARD-INPUT-PHONE-NUMBER-3] Read Default Phone Number from Script',
+test('[FORWARD-INPUT-PHONE-NUMBER-3] Read Phone Number from Script Config',
 () => {
   expect(
-    funlet.input.getPhoneNumber({}, {})
-  ).toEqual( DEFAULT_PHONE_NUMBER );
+    funlet.input.getPhoneNumber({}, {}, {phoneNumber: PHONE_NUMBER})
+  ).toEqual( PHONE_NUMBER );
+});
+
+test('[FORWARD-INPUT-PHONE-NUMBER-4] '+
+     'Read Default Phone Number from Script Config',
+() => {
+  expect( funlet.config.phoneNumber ).toEqual( DEFAULT_PHONE_NUMBER );
 });
 
 test('[FORWARD-INPUT-CALLER-ID-1] Read Caller Id from Event',
 () => {
   expect(
-    funlet.input.getCallerId({}, {CallerId:CALLER_ID})
+    funlet.input.getCallerId({CallerId:CALLER_ID}, {}, {})
   ).toEqual( CALLER_ID );
 });
 
 test('[FORWARD-INPUT-CALLER-ID-2] Read Caller Id from Environment',
 () => {
   expect(
-    funlet.input.getCallerId({FUNLET_FORWARD_CALLER_ID:CALLER_ID}, {})
+    funlet.input.getCallerId({}, {FUNLET_FORWARD_CALLER_ID:CALLER_ID}, {})
   ).toEqual( CALLER_ID );
 });
 
-test('[FORWARD-INPUT-CALLER-ID-3] Read Default Caller Id from Script',
+test('[FORWARD-INPUT-CALLER-ID-3] Read Caller Id from Script Config',
 () => {
   expect(
-    funlet.input.getCallerId({}, {})
-  ).toEqual( DEFAULT_CALLER_ID );
+    funlet.input.getCallerId({}, {}, {callerId: CALLER_ID})
+  ).toEqual( CALLER_ID );
+});
+
+test('[FORWARD-INPUT-CALLER-ID-4] Read Default Caller Id from Script Config',
+() => {
+  expect( funlet.config.callerId ).toEqual( DEFAULT_CALLER_ID );
 });
 
 test('[FORWARD-INPUT-FALLBACK-URL-1] Read Fallback URL from Event',
 () => {
   expect(
-    funlet.input.getFallbackUrl({}, {FailUrl:FALLBACK_URL})
+    funlet.input.getFallbackUrl({FailUrl:FALLBACK_URL}, {}, {})
   ).toEqual( FALLBACK_URL );
 });
 
 test('[FORWARD-INPUT-FALLBACK-URL-2] Read Fallback URL from Environment',
 () => {
   expect(
-    funlet.input.getFallbackUrl({FUNLET_FORWARD_FALLBACK_URL:FALLBACK_URL}, {})
+    funlet.input.getFallbackUrl(
+      {}, {FUNLET_FORWARD_FALLBACK_URL:FALLBACK_URL}, {}
+    )
   ).toEqual( FALLBACK_URL );
 });
 
-test('[FORWARD-INPUT-FALLBACK-URL-3] Read Default Fallback URL from Script',
+test('[FORWARD-INPUT-FALLBACK-URL-3] Read Fallback URL from Script Config',
 () => {
   expect(
-    funlet.input.getFallbackUrl({}, {})
-  ).toEqual( DEFAULT_FALLBACK_URL );
+    funlet.input.getFallbackUrl({}, {}, {fallbackUrl: FALLBACK_URL})
+  ).toEqual( FALLBACK_URL );
+});
+
+test('[FORWARD-INPUT-FALLBACK-URL-4] '+
+     'Read Default Fallback URL from Script Config',
+() => {
+  expect( funlet.config.fallbackUrl ).toEqual( DEFAULT_FALLBACK_URL );
 });
 
 test('[FORWARD-INPUT-TIMEOUT-1] Read Timeout from Event',
 () => {
   expect(
-    funlet.input.getTimeout({}, {Timeout:TIMEOUT_STRING})
+    funlet.input.getTimeout({Timeout:TIMEOUT_STRING}, {}, {})
   ).toEqual( TIMEOUT );
 });
 
 test('[FORWARD-INPUT-TIMEOUT-2] Read Timeout from Environment',
 () => {
   expect(
-    funlet.input.getTimeout({FUNLET_FORWARD_TIMEOUT:TIMEOUT_STRING}, {})
+    funlet.input.getTimeout({}, {FUNLET_FORWARD_TIMEOUT:TIMEOUT_STRING}, {})
   ).toEqual( TIMEOUT );
 });
 
-test('[FORWARD-INPUT-TIMEOUT-3] Read Default Timeout from Script',
+test('[FORWARD-INPUT-TIMEOUT-3] Read Timeout from Script Config',
 () => {
   expect(
-    funlet.input.getTimeout({}, {})
-  ).toEqual( DEFAULT_TIMEOUT );
+    funlet.input.getTimeout({}, {}, {timeout: TIMEOUT})
+  ).toEqual( TIMEOUT );
+});
+
+test('[FORWARD-INPUT-TIMEOUT-4] Read Default Timeout from Script Config',
+() => {
+  expect( funlet.config.timeout ).toEqual( DEFAULT_TIMEOUT );
 });
 
 test('[FORWARD-INPUT-ALLOWED-CALLERS-1] Read Single Allowed Caller from Event',
 () => {
   expect(
-    funlet.input.getAllowedCallers({}, {AllowedCallers:ALLOWED_CALLER1})
+    funlet.input.getAllowedCallers({AllowedCallers:ALLOWED_CALLER1}, {}, {})
   ).toEqual( [ALLOWED_CALLER1_DIGITS] );
 });
 
@@ -219,13 +245,13 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-2] '+
      'Read List of Allowed Callers from Event',
 () => {
   expect(
-    funlet.input.getAllowedCallers({}, {
+    funlet.input.getAllowedCallers({
       AllowedCallers:[
         ALLOWED_CALLER1,
         ALLOWED_CALLER2,
         ALLOWED_CALLER3
       ]
-    })
+    }, {}, {})
   ).toEqual( [
     ALLOWED_CALLER1_DIGITS,
     ALLOWED_CALLER2_DIGITS,
@@ -237,7 +263,7 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-3] '+
      'Read Single Allowed Caller from Environment',
 () => {
   expect(
-    funlet.input.getAllowedCallers({
+    funlet.input.getAllowedCallers({}, {
       FUNLET_FORWARD_ALLOWED_CALLER1:ALLOWED_CALLER1
     }, {})
   ).toEqual( [ALLOWED_CALLER1_DIGITS] );
@@ -247,7 +273,7 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-4] '+
      'Read Five Allowed Callers from Environment',
 () => {
   expect(
-    funlet.input.getAllowedCallers({
+    funlet.input.getAllowedCallers({}, {
       FUNLET_FORWARD_ALLOWED_CALLER1:ALLOWED_CALLER1,
       FUNLET_FORWARD_ALLOWED_CALLER2:ALLOWED_CALLER2,
       FUNLET_FORWARD_ALLOWED_CALLER3:ALLOWED_CALLER3,
@@ -264,17 +290,31 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-4] '+
 });
 
 test('[FORWARD-INPUT-ALLOWED_CALLERS-5] '+
-     'Read Default Allowed Callers from Script',
+     'Read Allowed Callers from Script Config',
 () => {
   expect(
-    funlet.input.getAllowedCallers({}, {})
-  ).toEqual( DEFAULT_ALLOWED_CALLERS );
+    funlet.input.getAllowedCallers({}, {}, {allowedCallers:[
+      ALLOWED_CALLER1,
+      ALLOWED_CALLER2,
+      ALLOWED_CALLER3
+    ]})
+  ).toEqual([
+    ALLOWED_CALLER1_DIGITS,
+    ALLOWED_CALLER2_DIGITS,
+    ALLOWED_CALLER3_DIGITS
+  ]);
 });
 
-test('[FORWARD-INPUT-ALLOWED_CALLERS-6] Skip empty values',
+test('[FORWARD-INPUT-ALLOWED_CALLERS-6] '+
+     'Read Default Allowed Callers from Script Config',
+() => {
+  expect( funlet.config.allowedCallers ).toEqual( DEFAULT_ALLOWED_CALLERS );
+});
+
+test('[FORWARD-INPUT-ALLOWED_CALLERS-7] Skip empty values',
 () => {
   expect(
-    funlet.input.getAllowedCallers({
+    funlet.input.getAllowedCallers({}, {
       FUNLET_FORWARD_ALLOWED_CALLER1:ALLOWED_CALLER1,
       FUNLET_FORWARD_ALLOWED_CALLER2:"",
       FUNLET_FORWARD_ALLOWED_CALLER3:ALLOWED_CALLER3,
@@ -288,13 +328,13 @@ test('[FORWARD-INPUT-ALLOWED_CALLERS-6] Skip empty values',
   ] );
 });
 
-test('[FORWARD-INPUT-ALLOWED-CALLERS-7] Use local US number in API 2008-08-01',
+test('[FORWARD-INPUT-ALLOWED-CALLERS-8] Use local US number in API 2008-08-01',
 () => {
   expect(
-    funlet.input.getAllowedCallers({}, {
+    funlet.input.getAllowedCallers({
       ApiVersion: "2008-08-01",
       AllowedCallers: FULL_US_NUMBER
-    })
+    }, {}, {})
   ).toEqual( [LOCAL_US_NUMBER_DIGITS] );
 });
 
@@ -302,9 +342,9 @@ test('[FORWARD-INPUT-ACCESS-RESTRICTED-1] '+
      'Read Access Restricted Error Message from Event',
 () => {
   expect(
-    funlet.input.getAccessRestrictedErrorMessage({}, {
+    funlet.input.getAccessRestrictedErrorMessage({
       AccessRestricted:ACCESS_RESTRICTED
-    })
+    }, {}, {})
   ).toEqual( ACCESS_RESTRICTED );
 });
 
@@ -312,73 +352,93 @@ test('[FORWARD-INPUT-ACCESS-RESTRICTED-2] '+
      'Read Access Restricted Error Message from Environment',
 () => {
   expect(
-    funlet.input.getAccessRestrictedErrorMessage({
+    funlet.input.getAccessRestrictedErrorMessage({}, {
       FUNLET_FORWARD_ACCESS_RESTRICTED:ACCESS_RESTRICTED
     }, {})
   ).toEqual( ACCESS_RESTRICTED );
 });
 
 test('[FORWARD-INPUT-ACCESS-RESTRICTED-3] '+
-     'Read Default Access Restricted Error Message from Script',
+     'Read Access Restricted Error Message from Script Config',
 () => {
   expect(
-    funlet.input.getAccessRestrictedErrorMessage({}, {})
+    funlet.input.getAccessRestrictedErrorMessage({}, {}, {
+      accessRestricted: ACCESS_RESTRICTED
+    })
+  ).toEqual( ACCESS_RESTRICTED );
+});
+
+test('[FORWARD-INPUT-ACCESS-RESTRICTED-4] '+
+     'Read Default Access Restricted Error Message from Script Config',
+() => {
+  expect(
+    funlet.config.accessRestricted
   ).toEqual( DEFAULT_ACCESS_RESTRICTED );
 });
 
 test('[FORWARD-INPUT-LANGUAGE-1] Read Language from Event',
 () => {
   expect(
-    funlet.input.getLanguage({}, {Language:FRENCH})
+    funlet.input.getLanguage({Language:FRENCH}, {}, {})
   ).toEqual( FRENCH );
 });
 
 test('[FORWARD-INPUT-LANGUAGE-2] Read Language from Environment',
 () => {
   expect(
-    funlet.input.getLanguage({FUNLET_FORWARD_LANGUAGE:FRENCH}, {})
+    funlet.input.getLanguage({}, {FUNLET_FORWARD_LANGUAGE:FRENCH}, {})
   ).toEqual( FRENCH );
 });
 
-test('[FORWARD-INPUT-LANGUAGE-3] Read Default Language from Script',
+test('[FORWARD-INPUT-LANGUAGE-3] Read Language from Script Config',
 () => {
   expect(
-    funlet.input.getLanguage({}, {})
-  ).toEqual( DEFAULT_LANGUAGE );
+    funlet.input.getLanguage({}, {}, {language: FRENCH})
+  ).toEqual( FRENCH );
+});
+
+test('[FORWARD-INPUT-LANGUAGE-4] Read Default Language from Script Config',
+() => {
+  expect( funlet.config.language ).toEqual( DEFAULT_LANGUAGE );
 });
 
 test('[FORWARD-INPUT-VOICE-1] Read Voice from Event',
 () => {
   expect(
-    funlet.input.getVoice({}, {Voice:MAN})
+    funlet.input.getVoice({Voice:MAN}, {}, {})
   ).toEqual( MAN );
 });
 
 test('[FORWARD-INPUT-VOICE-2] Read Voice from Environment',
 () => {
   expect(
-    funlet.input.getVoice({FUNLET_FORWARD_VOICE:WOMAN}, {})
+    funlet.input.getVoice({}, {FUNLET_FORWARD_VOICE:WOMAN}, {})
   ).toEqual( WOMAN );
 });
 
-test('[FORWARD-INPUT-VOICE-3] Read Default Voice from Script',
+test('[FORWARD-INPUT-VOICE-3] Read Voice from Script Config',
 () => {
   expect(
-    funlet.input.getVoice({}, {})
-  ).toEqual( DEFAULT_VOICE );
+    funlet.input.getVoice({}, {}, {voice: WOMAN})
+  ).toEqual( WOMAN );
+});
+
+test('[FORWARD-INPUT-VOICE-4] Read Default Voice from Script Config',
+() => {
+  expect( funlet.config.voice ).toEqual( DEFAULT_VOICE );
 });
 
 test('[FORWARD-INPUT-CALLER-1] Read Caller from Event, in From Parameter',
 () => {
   expect(
-    funlet.input.getCaller({}, {From:CALLER_NUMBER})
+    funlet.input.getCaller({From:CALLER_NUMBER}, {}, {})
   ).toEqual( CALLER_NUMBER );
 });
 
 test('[FORWARD-INPUT-CALLER-2] Read Caller from Event, in Caller Parameter',
 () => {
   expect(
-    funlet.input.getCaller({}, {Caller:CALLER_NUMBER})
+    funlet.input.getCaller({Caller:CALLER_NUMBER}, {}, {})
   ).toEqual( CALLER_NUMBER );
 });
 
@@ -386,7 +446,7 @@ test('[FORWARD-INPUT-PHONE-NUMBER-CALLED-1] '+
      'Read Phone Number Called from Event, in To Parameter',
 () => {
   expect(
-    funlet.input.getPhoneNumberCalled({}, {To:CALLED_NUMBER})
+    funlet.input.getPhoneNumberCalled({To:CALLED_NUMBER}, {}, {})
   ).toEqual( CALLED_NUMBER );
 });
 
@@ -394,49 +454,49 @@ test('[FORWARD-INPUT-PHONE-NUMBER-CALLED-2] '+
      'Read Phone Number Called from Event, in Called Parameter',
 () => {
   expect(
-    funlet.input.getPhoneNumberCalled({}, {Called:CALLED_NUMBER})
+    funlet.input.getPhoneNumberCalled({Called:CALLED_NUMBER}, {}, {})
   ).toEqual( CALLED_NUMBER );
 });
 
 test('[FORWARD-INPUT-DIAL-0] Read No Dial from Event',
 () => {
   expect(
-    funlet.input.isDialDone({}, {})
+    funlet.input.isDialDone({}, {}, {})
   ).toEqual( DIAL_NOT_DONE );
 });
 
 test('[FORWARD-INPUT-DIAL-1] Read Dial from Event',
 () => {
   expect(
-    funlet.input.isDialDone({}, {Dial:"true"})
+    funlet.input.isDialDone({Dial:"true"}, {}, {})
   ).toEqual( DIAL_DONE );
 });
 
 test('[FORWARD-INPUT-CALL-STATUS-0] Read No Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {})
+    funlet.input.getCallStatus({}, {}, {})
   ).toEqual( NO_CALL_STATUS );
 });
 
 test('[FORWARD-INPUT-CALL-STATUS-1] Read Answered Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {DialStatus:CALL_ANSWERED})
+    funlet.input.getCallStatus({DialStatus:CALL_ANSWERED}, {}, {})
   ).toEqual( CALL_ANSWERED );
 });
 
 test('[FORWARD-INPUT-CALL-STATUS-2] Read Completed Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {DialCallStatus:CALL_COMPLETED})
+    funlet.input.getCallStatus({DialCallStatus:CALL_COMPLETED}, {}, {})
   ).toEqual( CALL_COMPLETED );
 });
 
 test('[FORWARD-INPUT-CALL-STATUS-3] Read Busy Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {DialCallStatus:CALL_BUSY})
+    funlet.input.getCallStatus({DialCallStatus:CALL_BUSY}, {}, {})
   ).toEqual( CALL_BUSY );
 });
 

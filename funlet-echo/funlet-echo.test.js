@@ -5,20 +5,24 @@ const DEFAULT_TWIML = '<Response><Say>echo</Say></Response>';
 
 test('[ECHO-INPUT-TWIML-1] Read Twiml from Event', () => {
   expect(
-    funlet.input.getTwiml({}, {Twiml:TWIML})
+    funlet.input.getTwiml({Twiml:TWIML}, {}, {})
   ).toBe( TWIML );
 });
 
 test('[ECHO-INPUT-TWIML-2] Read Twiml from Context', () => {
   expect(
-    funlet.input.getTwiml({FUNLET_ECHO_TWIML:TWIML}, {})
+    funlet.input.getTwiml({}, {FUNLET_ECHO_TWIML:TWIML}, {})
   ).toBe( TWIML );
 });
 
-test('[ECHO-INPUT-TWIML-3] Read Default Twiml from Script', () => {
+test('[ECHO-INPUT-TWIML-3] Read Twiml from Script Config', () => {
   expect(
-    funlet.input.getTwiml({}, {})
-  ).toBe( DEFAULT_TWIML );
+    funlet.input.getTwiml({}, {}, {twiml: TWIML})
+  ).toBe( TWIML );
+});
+
+test('[ECHO-INPUT-TWIML-4] Read Default Twiml from Script Config', () => {
+  expect( funlet.config.twiml ).toBe( DEFAULT_TWIML );
 });
 
 test('[ECHO-OUTPUT-ECHO-1] echo() shall return its input', () => {

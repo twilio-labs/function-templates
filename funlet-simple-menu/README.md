@@ -9,12 +9,12 @@ of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
 environment. GET and POST parameters are considered first, if provided,
-then environment properties, then default values declared in the script.
+then environment properties, then config properties declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values in the script parameter
-constants at the top of the script.
+the recommended way is to modify the script parameters in the config object,
+directly in the script.
 
 ## Stages
 
@@ -39,7 +39,7 @@ Text string, a recording URL or a text to say.
 
 1. Event: `Message` parameter
 2. Environment: `FUNLET_MENU_MESSAGE` environment property
-3. Script: `MY_MESSAGE` constant
+3. Script: `message` config property
 
 ### Error Message (Stage 2)
 
@@ -49,7 +49,7 @@ will be used as for the message in stage 1.
 
 1. Event: `ErrorMessage` parameter
 2. Environment: `FUNLET_MENU_ERROR_MESSAGE` environment property
-3. Script: `MY_ERROR_MESSAGE` constant
+3. Script: `errorMessage` config property
 
 ### Language
 
@@ -58,7 +58,7 @@ Defaults to 'en': English with an American accent.
 
 1. Event: `Language` parameter
 2. Environment: `FUNLET_MENU_LANGUAGE` environment property
-3. Script: `MY_LANGUAGE` constant
+3. Script: `language` config property
 
 ### Voice
 
@@ -67,7 +67,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 1. Event: `Voice` parameter
 2. Environment: `FUNLET_MENU_VOICE` environment property
-3. Script: `MY_VOICE` constant
+3. Script: `voice` config property
 
 ### Options
 
@@ -92,7 +92,7 @@ sequence of digits starting with 0, not 1, will be associated with each option.
   If the environment property for an option URL is set without the
   environment property for the matching digits, the digits default
   to the number of the option: 1, 2, ..., 9, 0.
-3. Script: `MY_OPTIONS` constant with key/values for digits/URLs
+3. Script: `options` config property with key/values for digits/URLs
 
 ### Digits (Stage 2)
 

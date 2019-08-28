@@ -37,6 +37,8 @@ const WOMAN="woman";
 const ALICE="alice";
 const DEFAULT_VOICE=ALICE;
 
+const DEFAULT_HUMAN_CHECK = true;
+
 const NO_DIGITS = null;
 const EMPTY_DIGITS="";
 const NON_EMPTY_DIGITS="5";
@@ -113,20 +115,20 @@ const FULL_RESPONSE_FIND_ME_4_3=
 test('[FINDME-INPUT-PHONE-NUMBERS-1] Read Single Phone Number from Event',
 () => {
   expect(
-    funlet.input.getPhoneNumbers({}, {PhoneNumbers:PHONE_NUMBER1})
+    funlet.input.getPhoneNumbers({PhoneNumbers:PHONE_NUMBER1}, {}, {})
   ).toEqual( [PHONE_NUMBER1] );
 });
 
 test('[FINDME-INPUT-PHONE-NUMBERS-2] Read List of Phone Numbers from Event',
 () => {
   expect(
-    funlet.input.getPhoneNumbers({}, {
+    funlet.input.getPhoneNumbers({
       PhoneNumbers:[
         PHONE_NUMBER1,
         PHONE_NUMBER2,
         PHONE_NUMBER3
       ]
-    })
+    }, {}, {})
   ).toEqual( [
     PHONE_NUMBER1,
     PHONE_NUMBER2,
@@ -138,7 +140,7 @@ test('[FINDME-INPUT-PHONE-NUMBERS-3] '+
      'Read Single Phone Number from Environment',
 () => {
   expect(
-    funlet.input.getPhoneNumbers({
+    funlet.input.getPhoneNumbers({}, {
       FUNLET_FINDME_PHONE_NUMBER1:PHONE_NUMBER1
     }, {})
   ).toEqual( [PHONE_NUMBER1] );
@@ -148,7 +150,7 @@ test('[FINDME-INPUT-PHONE-NUMBERS-4] '+
      'Read Five Phone Numbers from Environment',
 () => {
   expect(
-    funlet.input.getPhoneNumbers({
+    funlet.input.getPhoneNumbers({}, {
       FUNLET_FINDME_PHONE_NUMBER1:PHONE_NUMBER1,
       FUNLET_FINDME_PHONE_NUMBER2:PHONE_NUMBER2,
       FUNLET_FINDME_PHONE_NUMBER3:PHONE_NUMBER3,
@@ -165,17 +167,33 @@ test('[FINDME-INPUT-PHONE-NUMBERS-4] '+
 });
 
 test('[FINDME-INPUT-PHONE-NUMBERS-5] '+
-     'Read Default Phone Numbers from Script',
+     'Read Phone Numbers from Script Config',
 () => {
   expect(
-    funlet.input.getPhoneNumbers({}, {})
-  ).toEqual( DEFAULT_PHONE_NUMBERS );
+    funlet.input.getPhoneNumbers({}, {}, {
+      phoneNumbers: [
+        PHONE_NUMBER1,
+        PHONE_NUMBER2,
+        PHONE_NUMBER3
+      ]
+    })
+  ).toEqual([
+    PHONE_NUMBER1,
+    PHONE_NUMBER2,
+    PHONE_NUMBER3
+  ]);
 });
 
-test('[FINDME-INPUT-PHONE_NUMBERS-6] Skip empty values',
+test('[FINDME-INPUT-PHONE-NUMBERS-6] '+
+     'Read Default Phone Numbers from Script Config',
+() => {
+  expect( funlet.config.phoneNumbers ).toEqual( DEFAULT_PHONE_NUMBERS );
+});
+
+test('[FINDME-INPUT-PHONE_NUMBERS-7] Skip empty values',
 () => {
   expect(
-    funlet.input.getPhoneNumbers({
+    funlet.input.getPhoneNumbers({}, {
       FUNLET_FINDME_PHONE_NUMBER1:PHONE_NUMBER1,
       FUNLET_FINDME_PHONE_NUMBER2:"",
       FUNLET_FINDME_PHONE_NUMBER3:PHONE_NUMBER3,
@@ -192,221 +210,248 @@ test('[FINDME-INPUT-PHONE_NUMBERS-6] Skip empty values',
 test('[FINDME-INPUT-TIMEOUT-1] Read Timeout from Event',
 () => {
   expect(
-    funlet.input.getTimeout({}, {Timeout:TIMEOUT_STRING})
+    funlet.input.getTimeout({Timeout:TIMEOUT_STRING}, {}, {})
   ).toEqual( TIMEOUT );
 });
 
 test('[FINDME-INPUT-TIMEOUT-2] Read Timeout from Environment',
 () => {
   expect(
-    funlet.input.getTimeout({FUNLET_FINDME_TIMEOUT:TIMEOUT_STRING}, {})
+    funlet.input.getTimeout({}, {FUNLET_FINDME_TIMEOUT:TIMEOUT_STRING}, {})
   ).toEqual( TIMEOUT );
 });
 
-test('[FINDME-INPUT-TIMEOUT-3] Read Default Timeout from Script',
+test('[FINDME-INPUT-TIMEOUT-3] Read Timeout from Script Config',
 () => {
   expect(
-    funlet.input.getTimeout({}, {})
-  ).toEqual( DEFAULT_TIMEOUT );
+    funlet.input.getTimeout({}, {}, {timeout: TIMEOUT})
+  ).toEqual( TIMEOUT );
+});
+
+test('[FINDME-INPUT-TIMEOUT-4] Read Default Timeout from Script Config',
+() => {
+  expect( funlet.config.timeout ).toEqual( DEFAULT_TIMEOUT );
 });
 
 test('[FINDME-INPUT-DIAL-0] Read No Whisper from Event',
 () => {
   expect(
-    funlet.input.isWhisper({}, {})
+    funlet.input.isWhisper({}, {}, {})
   ).toEqual( NO_WHISPER );
 });
 
 test('[FINDME-INPUT-DIAL-1] Read Whisper from Event',
 () => {
   expect(
-    funlet.input.isWhisper({}, {Whisper:"true"})
+    funlet.input.isWhisper({Whisper:"true"}, {}, {})
   ).toEqual( WHISPER );
 });
 
 test('[FINDME-INPUT-MESSAGE-1] Read Message from Event',
 () => {
   expect(
-    funlet.input.getMessage({}, {Message:MESSAGE})
+    funlet.input.getMessage({Message:MESSAGE}, {}, {})
   ).toEqual( MESSAGE );
 });
 
 test('[FINDME-INPUT-MESSAGE-2] Read Message from Environment',
 () => {
   expect(
-    funlet.input.getMessage({FUNLET_FINDME_MESSAGE:MESSAGE}, {})
+    funlet.input.getMessage({}, {FUNLET_FINDME_MESSAGE:MESSAGE}, {})
   ).toEqual( MESSAGE );
 });
 
-test('[FINDME-INPUT-MESSAGE-3] '+
-     'Read Default Message from Script (with number in From parameter)',
+test('[FINDME-INPUT-MESSAGE-3] Read Message from Script Config',
 () => {
   expect(
-    funlet.input.getMessage({}, {From:FROM_NUMBER})
-  ).toEqual( DEFAULT_MESSAGE );
+    funlet.input.getMessage({}, {}, {message: MESSAGE})
+  ).toEqual( MESSAGE );
 });
 
-test('[FINDME-INPUT-MESSAGE-4] '+
-     'Read Default Message from Script (with number in Caller parameter)',
+test('[FINDME-INPUT-MESSAGE-4] Read Default Message from Script Config',
 () => {
   expect(
-    funlet.input.getMessage({}, {Caller:FROM_NUMBER})
+    funlet.config.message( SPELLED_FROM_NUMBER )
   ).toEqual( DEFAULT_MESSAGE );
 });
 
 test('[FINDME-INPUT-LANGUAGE-1] Read Language from Event',
 () => {
   expect(
-    funlet.input.getLanguage({}, {Language:FRENCH})
+    funlet.input.getLanguage({Language:FRENCH}, {}, {})
   ).toEqual( FRENCH );
 });
 
 test('[FINDME-INPUT-LANGUAGE-2] Read Language from Environment',
 () => {
   expect(
-    funlet.input.getLanguage({FUNLET_FINDME_LANGUAGE:FRENCH}, {})
+    funlet.input.getLanguage({}, {FUNLET_FINDME_LANGUAGE:FRENCH}, {})
   ).toEqual( FRENCH );
 });
 
-test('[FINDME-INPUT-LANGUAGE-3] Read Default Language from Script',
+test('[FINDME-INPUT-LANGUAGE-3] Read Language from Script Config',
 () => {
   expect(
-    funlet.input.getLanguage({}, {})
-  ).toEqual( DEFAULT_LANGUAGE );
+    funlet.input.getLanguage({}, {}, {language: FRENCH})
+  ).toEqual( FRENCH );
+});
+
+test('[FINDME-INPUT-LANGUAGE-4] Read Default Language from Script Config',
+() => {
+  expect( funlet.config.language ).toEqual( DEFAULT_LANGUAGE );
 });
 
 test('[FINDME-INPUT-VOICE-1] Read Voice from Event',
 () => {
   expect(
-    funlet.input.getVoice({}, {Voice:MAN})
+    funlet.input.getVoice({Voice:MAN}, {}, {})
   ).toEqual( MAN );
 });
 
 test('[FINDME-INPUT-VOICE-2] Read Voice from Environment',
 () => {
   expect(
-    funlet.input.getVoice({FUNLET_FINDME_VOICE:WOMAN}, {})
+    funlet.input.getVoice({}, {FUNLET_FINDME_VOICE:WOMAN}, {})
   ).toEqual( WOMAN );
 });
 
-test('[FINDME-INPUT-VOICE-3] Read Default Voice from Script',
+test('[FINDME-INPUT-VOICE-3] Read Voice from Script Config',
 () => {
   expect(
-    funlet.input.getVoice({}, {})
-  ).toEqual( DEFAULT_VOICE );
+    funlet.input.getVoice({}, {}, {voice: WOMAN})
+  ).toEqual( WOMAN );
+});
+
+test('[FINDME-INPUT-VOICE-4] Read Default Voice from Script Config',
+() => {
+  expect( funlet.config.voice ).toEqual( DEFAULT_VOICE );
 });
 
 test('[WHISPER-INPUT-HUMAN-CHECK-0] Read Human Check "1" from Event',
 () => {
   expect(
-    funlet.input.isHumanCheckRequired({}, {HumanCheck:"1"})
+    funlet.input.isHumanCheckRequired({HumanCheck:"1"}, {}, {})
   ).toEqual( true );
 });
 
 test('[FINDME-INPUT-HUMAN-CHECK-1] Read Human Check from Event',
 () => {
   expect(
-    funlet.input.isHumanCheckRequired({}, {HumanCheck:"true"})
+    funlet.input.isHumanCheckRequired({HumanCheck:"true"}, {}, {})
   ).toEqual( true );
 });
 
 test('[FINDME-INPUT-HUMAN-CHECK-2] Read Human Check from Environment',
 () => {
   expect(
-    funlet.input.isHumanCheckRequired({FUNLET_FINDME_HUMAN_CHECK:"true"}, {})
+    funlet.input.isHumanCheckRequired(
+      {}, {FUNLET_FINDME_HUMAN_CHECK:"true"}, {}
+    )
   ).toEqual( true );
 });
 
-test('[FINDME-INPUT-HUMAN-CHECK-3] Read Default Human Check from Script',
+test('[FINDME-INPUT-HUMAN-CHECK-3] Read Human Check from Script Config',
 () => {
-  const DEFAULT_HUMAN_CHECK = true;
   expect(
-    funlet.input.isHumanCheckRequired({}, {})
-  ).toEqual( DEFAULT_HUMAN_CHECK );
+    funlet.input.isHumanCheckRequired({}, {}, {humanCheck: true})
+  ).toEqual( true );
+});
+
+test('[FINDME-INPUT-HUMAN-CHECK-4] '+
+     'Read Default Human Check from Script Config',
+() => {
+  expect( funlet.config.humanCheck ).toEqual( DEFAULT_HUMAN_CHECK );
 });
 
 test('[FINDME-INPUT-DIGITS-0] Read No Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{})
+    funlet.input.getDigits({},{},{})
   ).toEqual( NO_DIGITS );
 });
 
 test('[FINDME-INPUT-DIGITS-1] Read Empty Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{Digits:EMPTY_DIGITS})
+    funlet.input.getDigits({Digits:EMPTY_DIGITS}, {}, {})
   ).toEqual( EMPTY_DIGITS );
 });
 
 test('[FINDME-INPUT-DIGITS-2] Read Non-Empty Digits from Event',
 () => {
   expect(
-    funlet.input.getDigits({},{Digits:NON_EMPTY_DIGITS})
+    funlet.input.getDigits({Digits:NON_EMPTY_DIGITS}, {}, {})
   ).toEqual( NON_EMPTY_DIGITS );
 });
 
 test('[FINDME-INPUT-DIAL-0] Read No Dial from Event',
 () => {
   expect(
-    funlet.input.isDialDone({}, {})
+    funlet.input.isDialDone({}, {}, {})
   ).toEqual( DIAL_NOT_DONE );
 });
 
 test('[FINDME-INPUT-DIAL-1] Read Dial from Event',
 () => {
   expect(
-    funlet.input.isDialDone({}, {Dial:"true"})
+    funlet.input.isDialDone({Dial:"true"}, {}, {})
   ).toEqual( DIAL_DONE );
 });
 
 test('[FINDME-INPUT-CALL-STATUS-0] Read No Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {})
+    funlet.input.getCallStatus({}, {}, {})
   ).toEqual( NO_CALL_STATUS );
 });
 
 test('[FINDME-INPUT-CALL-STATUS-1] Read Answered Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {DialStatus:CALL_ANSWERED})
+    funlet.input.getCallStatus({DialStatus:CALL_ANSWERED}, {}, {})
   ).toEqual( CALL_ANSWERED );
 });
 
 test('[FINDME-INPUT-CALL-STATUS-2] Read Completed Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {DialCallStatus:CALL_COMPLETED})
+    funlet.input.getCallStatus({DialCallStatus:CALL_COMPLETED}, {}, {})
   ).toEqual( CALL_COMPLETED );
 });
 
 test('[FINDME-INPUT-CALL-STATUS-3] Read Busy Call Status from Event',
 () => {
   expect(
-    funlet.input.getCallStatus({}, {DialCallStatus:CALL_BUSY})
+    funlet.input.getCallStatus({DialCallStatus:CALL_BUSY}, {}, {})
   ).toEqual( CALL_BUSY );
 });
 
 test('[FINDME-INPUT-FALLBACK-URL-1] Read Fallback URL from Event',
 () => {
   expect(
-    funlet.input.getFallbackUrl({}, {FailUrl:FALLBACK_URL})
+    funlet.input.getFallbackUrl({FailUrl:FALLBACK_URL}, {}, {})
   ).toEqual( FALLBACK_URL );
 });
 
 test('[FINDME-INPUT-FALLBACK-URL-2] Read Fallback URL from Environment',
 () => {
   expect(
-    funlet.input.getFallbackUrl({FUNLET_FINDME_FALLBACK_URL:FALLBACK_URL}, {})
+    funlet.input.getFallbackUrl(
+      {}, {FUNLET_FINDME_FALLBACK_URL:FALLBACK_URL}, {}
+    )
   ).toEqual( FALLBACK_URL );
 });
 
-test('[FINDME-INPUT-FALLBACK-URL-3] Read Default Fallback URL from Script',
+test('[FINDME-INPUT-FALLBACK-URL-3] Read Fallback URL from Script Config',
 () => {
   expect(
-    funlet.input.getFallbackUrl({}, {})
-  ).toEqual( DEFAULT_FALLBACK_URL );
+    funlet.input.getFallbackUrl({}, {}, {fallbackUrl: FALLBACK_URL})
+  ).toEqual( FALLBACK_URL );
+});
+
+test('[FINDME-INPUT-FALLBACK-URL-4] Read Default Fallback URL from Script',
+() => {
+  expect( funlet.config.fallbackUrl ).toEqual( DEFAULT_FALLBACK_URL );
 });
 
 test('[FINDME-OUTPUT-FINDME-1-1] Find Me with 3 Phone Numbers',

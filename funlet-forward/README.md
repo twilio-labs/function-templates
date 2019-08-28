@@ -9,12 +9,12 @@ of the Twilio Function as a webhook with the same GET parameters.
 
 Alternatively, it can be customized by setting properties in the
 environment. GET and POST parameters are considered first, if provided,
-then environment properties, then default values declared in the script.
+then environment properties, then config properties declared in the script.
 
 Environment properties are most convenient when you are using a single
 instance of this script in your account. To customize multiple instances,
-the recommended way is to modify the default values in the script parameter
-constants at the top of the script.
+the recommended way is to modify the script parameters in the config object,
+directly in the script.
 
 ## Stages
 
@@ -38,7 +38,7 @@ Text string, the forwarding number.
 
 1. Event: `PhoneNumber` parameter
 2. Environment: `FUNLET_FORWARD_PHONE_NUMBER` environment property
-3. Script: `MY_PHONE_NUMBER` constant
+3. Script: `phoneNumber` config property
 
 ### Caller ID
 
@@ -47,7 +47,7 @@ that you want to appear as caller ID for the forwarded call.
 
 1. Event: `CallerId` parameter
 2. Environment: `FUNLET_FORWARD_CALLER_ID` environment property
-3. Script: `MY_CALLER_ID` constant
+3. Script: `callerId` config property
 
 ### Fallback Url
 
@@ -56,7 +56,7 @@ when the forwarding call fails.
 
 1. Event: `FailUrl` parameter
 2. Environment: `FUNLET_FORWARD_FALLBACK_URL` environment property
-3. Script: `MY_FALLBACK_URL` constant
+3. Script: `fallbackUrl` config property
 
 ### Timeout
 
@@ -64,7 +64,7 @@ Number, duration in seconds to let the call ring before the recipient picks up.
 
 1. Event: `Timeout` parameter
 2. Environment: `FUNLET_FORWARD_TIMEOUT` environment property
-3. Script: `MY_TIMEOUT` constant
+3. Script: `timeout` config property
 
 ### Allowed Callers
 
@@ -79,7 +79,7 @@ allowed to be forwarded.
   - `FUNLET_FORWARD_ALLOWED_CALLER3`,
   - `FUNLET_FORWARD_ALLOWED_CALLER4`,
   - `FUNLET_FORWARD_ALLOWED_CALLER5`
-3. Script: `MY_ALLOWED_CALLERS` array of string values
+3. Script: `allowedCallers` config property with an array of string values
 
 ### Access Restricted Error Message
 
@@ -88,7 +88,7 @@ is not one of the allowed callers configured.
 
 1. Event: `AccessRestricted`
 2. Environment: `FUNLET_FORWARD_ACCESS_RESTRICTED` environment property
-3. Script: `MY_ACCESS_RESTRICTED` constant
+3. Script: `accessRestricted` config property
 
 ### Language
 
@@ -97,7 +97,7 @@ Defaults to 'en': English with an American accent.
 
 1. Event: `Language` parameter
 2. Environment: `FUNLET_FORWARD_LANGUAGE` environment property
-3. Script: `MY_LANGUAGE` constant
+3. Script: `language` config property
 
 ### Voice
 
@@ -106,7 +106,7 @@ Defaults to 'alice', who speaks in a large selection languages.
 
 1. Event: `Voice` parameter
 2. Environment: `FUNLET_FORWARD_VOICE` environment property
-3. Script: `MY_VOICE` constant
+3. Script: `voice` config property
 
 ### Caller
 
