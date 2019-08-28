@@ -10,13 +10,13 @@
  *  - You need to include the following npm modules: pdfmake, fs, pdf-to-base64, request, node-cmd
  */
 
+var pdfPrinter = require('pdfmake');
+var fs = require('fs');
+var cmd = require('node-cmd');
+const got = require('got');
+const pdf2base64 = require('pdf-to-base64');
+
 exports.handler = function(context, event, callback) {
-  
-  var pdfPrinter = require('pdfmake');
-  var fs = require('fs');
-  var cmd = require('node-cmd');
-  const request = require('request');
-  const pdf2base64 = require('pdf-to-base64');
   
   /*Details to be passed. Here they are passed statically, in real scenario you pass it as parameters in the Twilio Function*/
   let description = event.Body || 'Content of the pdf';
@@ -48,13 +48,13 @@ exports.handler = function(context, event, callback) {
   pdfDoc.end();
 
   /*Find the file in the /tmp/ folder and provide the appropriate permissions*/
-  cmd.get('chmod +r /tmp/' + fileName, function(err, data, stderr) {
+  cmd.get('chmod +r /tmp/' + fileName, function(error, data, stderr) {
     /*Show the contents. This is just for you to see the file, not really affecting the end result, you can remove it*/
-    cmd.get('ls -l /tmp/', function(err, data, stderr) {
+    cmd.get('ls -l /tmp/', function(error, data, stderr) {
       /*Prepare the file. Twilio Sendgrid requires the file to be on base64 format*/
       pdf2base64(path)
         .then(response => {
-          let data = {
+          const data = {
             personalizations: [
               {
                 to: [
@@ -86,26 +86,30 @@ exports.handler = function(context, event, callback) {
           };
 
           /*Send the request*/
-          request(
-            {
-              url: 'https://api.sendgrid.com/v3/mail/send',
-              method: 'POST',
+          got
+            .post('https://api.sendgrid.com/v3/mail/send', {
               headers: {
-                'Content-Type': 'application/json'
+                Authorization: `Bearer ${context.SENDGRID_API_KEY}`,
+                'Content-Type': 'application/json',
               },
-              auth: {
-                bearer: context.SENDGRID_API_KEY
-              },
-              json: data
-            },
-            function(error, response, body) {
-              callback();
-            }
-          );
+              body: JSON.stringify(data),
+            })
+            .then(response => {
+              callback(null, "OK"); 
+            })
+            .catch(error => {
+              callback(error);
+            });
         })
         .catch(error => {
           callback(error);
         });
+    })
+    .catch(error => {
+      callback(error);
     });
+  })
+  .catch(error => {
+    callback(error);
   });
 };
