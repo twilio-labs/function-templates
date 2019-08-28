@@ -11,21 +11,24 @@
  */
 
 exports.handler = function(context, event, callback) {
+  
+  var pdfPrinter = require('pdfmake');
+  var fs = require('fs');
+  var cmd = require('node-cmd');
+  const request = require('request');
+  const pdf2base64 = require('pdf-to-base64');
+  
   /*Details to be passed. Here they are passed statically, in real scenario you pass it as parameters in the Twilio Function*/
   let description = event.Body || 'Content of the pdf';
 
   /* change this to a dynamic value if needed*/
   const recipientEmailAddress = context.TO_EMAIL_ADDRESS;
 
-  var pdfPrinter = require('pdfmake');
-  var fs = require('fs');
-
   /*Prepare the body of the pdf. For more info on options, look at pdfmake doc
       http://pdfmake.org/#/
       */
   var docDefinition = {
     content: [
-      { text: '\n' + title, fontSize: 18 },
       { text: '\n' + description, fontSize: 14 }
     ]
   };
@@ -45,13 +48,10 @@ exports.handler = function(context, event, callback) {
   pdfDoc.end();
 
   /*Find the file in the /tmp/ folder and provide the appropriate permissions*/
-  var cmd = require('node-cmd');
   cmd.get('chmod +r /tmp/' + fileName, function(err, data, stderr) {
     /*Show the contents. This is just for you to see the file, not really affecting the end result, you can remove it*/
     cmd.get('ls -l /tmp/', function(err, data, stderr) {
       /*Prepare the file. Twilio Sendgrid requires the file to be on base64 format*/
-      const request = require('request');
-      const pdf2base64 = require('pdf-to-base64');
       pdf2base64(path)
         .then(response => {
           let data = {
