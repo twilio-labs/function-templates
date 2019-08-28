@@ -1,4 +1,4 @@
-const funlet = require('./funlet-simple-menu');
+const funlet = require('../functions/funlet-simple-menu');
 const Twilio = require('twilio');
 
 const TEXT_MESSAGE="Text message";

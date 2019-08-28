@@ -1,4 +1,4 @@
-const funlet = require('./funlet-whisper');
+const funlet = require('../functions/funlet-whisper');
 const Twilio = require('twilio');
 
 const FROM_NUMBER="+19165550123";

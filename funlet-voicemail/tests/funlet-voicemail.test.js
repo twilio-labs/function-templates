@@ -1,4 +1,4 @@
-const funlet = require('./funlet-hold-music').handler;
+const funlet = require('../functions/funlet-voicemail').handler;
 
 test.skip('Missing Tests', done => {
   const callback = (err, result) => {

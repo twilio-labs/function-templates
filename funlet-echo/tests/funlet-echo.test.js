@@ -1,4 +1,4 @@
-const funlet = require('./funlet-echo');
+const funlet = require('../functions/funlet-echo');
 const Twilio = require('twilio');
 const TWIML = '<Response><Say>echo okay</Say></Response>';
 const DEFAULT_TWIML = '<Response><Say>echo</Say></Response>';

@@ -1,4 +1,4 @@
-const funlet = require('./funlet-call-me');
+const funlet = require('../functions/funlet-call-me');
 const Twilio = require('twilio');
 
 const PHONE_NUMBER="415-555-1212";

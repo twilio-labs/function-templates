@@ -1,4 +1,4 @@
-const funlet = require('./funlet-voicemail').handler;
+const funlet = require('../functions/funlet-conference').handler;
 
 test.skip('Missing Tests', done => {
   const callback = (err, result) => {
