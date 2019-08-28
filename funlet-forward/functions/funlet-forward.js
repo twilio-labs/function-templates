@@ -155,9 +155,6 @@ function getCallStatus(params, env, config) {
 }
 exports.input.getCallStatus = getCallStatus;
 
-// ## Dependencies
-const Twilio = require('twilio');
-
 // ## Utilities
 exports.utils = {};
 

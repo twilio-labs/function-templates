@@ -1,4 +1,5 @@
 const funlet = require('../functions/funlet-whisper');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
 const FROM_NUMBER="+19165550123";
@@ -27,6 +28,10 @@ const EMPTY_DIGITS="";
 const NON_EMPTY_DIGITS="5";
 
 const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[WHISPER-INPUT-MESSAGE-1] Read Message from Event',
 () => {
@@ -296,3 +301,7 @@ test('[WHISPER-2-1] Full Response: A Digit was Pressed', done => {
   };
   funlet.handler({}, {Digits:NON_EMPTY_DIGITS}, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

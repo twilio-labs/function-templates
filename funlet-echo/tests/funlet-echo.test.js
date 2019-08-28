@@ -1,7 +1,12 @@
 const funlet = require('../functions/funlet-echo');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 const TWIML = '<Response><Say>echo okay</Say></Response>';
 const DEFAULT_TWIML = '<Response><Say>echo</Say></Response>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[ECHO-INPUT-TWIML-1] Read Twiml from Event', () => {
   expect(
@@ -31,13 +36,17 @@ test('[ECHO-OUTPUT-ECHO-1] echo() shall return its input', () => {
   ).toBe( TWIML );
 });
 
-test.skip('[ECHO-1] Full Response', done => {
+test('[ECHO-1] Full Response', done => {
   const callback = (err, result) => {
+    expect( err ).toBe( null );
     expect( result ).toBeInstanceOf( Twilio.Response );
-    expect( result.statusCode ).toBe( 200 );
-    expect( result.body ).toBe( TWIML );
-    expect( result.headers['Content-Type'] ).toBe( 'text/xml' );
+    expect( result._body ).toBe( TWIML );
+    expect( result._headers['Content-Type'] ).toBe( 'text/xml' );
     done();
   };
   funlet.handler({}, {Twiml:TWIML}, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

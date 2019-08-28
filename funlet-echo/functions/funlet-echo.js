@@ -22,9 +22,6 @@ function getTwiml(params, env, config) {
 }
 exports.input.getTwiml = getTwiml;
 
-// ## Dependencies
-const Twilio = require('twilio');
-
 // ## Output
 exports.output = {};
 

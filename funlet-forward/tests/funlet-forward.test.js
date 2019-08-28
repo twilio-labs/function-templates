@@ -1,4 +1,5 @@
 const funlet = require('../functions/funlet-forward');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
 const PHONE_NUMBER="415-555-1212";
@@ -123,6 +124,10 @@ const FULL_RESPONSE_FORWARD_2_4 =
   '<Response>'+
     '<Redirect>'+FALLBACK_URL+'</Redirect>'+
   '</Response>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[FORWARD-INPUT-PHONE-NUMBER-1] Read Phone Number from Event',
 () => {
@@ -676,3 +681,7 @@ test('[FORWARD-2-4] Failure with Fallback URL', done => {
     Dial:"true", DialCallStatus:"busy", FailUrl:FALLBACK_URL
   }, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

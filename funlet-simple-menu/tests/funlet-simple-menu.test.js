@@ -1,4 +1,5 @@
 const funlet = require('../functions/funlet-simple-menu');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
 const TEXT_MESSAGE="Text message";
@@ -32,6 +33,10 @@ const ERROR_MESSAGE="https://example.com/simple-menu/error.mp3";
 const DEFAULT_ERROR_MESSAGE="I'm sorry, that wasn't a valid option."
 
 const XML_DECLARATION='<?xml version="1.0" encoding="UTF-8"?>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[SIMPLE-MENU-INPUT-MESSAGE-1] Read Message from Event',
 () => {
@@ -386,3 +391,7 @@ done => {
   };
   funlet.handler({}, {Digits:"12345", "Options[12345]":ACTION12345}, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

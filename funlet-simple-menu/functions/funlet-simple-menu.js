@@ -91,9 +91,6 @@ function getDigits(params, env, config) {
 }
 exports.input.getDigits = getDigits;
 
-// ## Dependencies
-const Twilio = require('twilio');
-
 // ## Output
 exports.output = {};
 

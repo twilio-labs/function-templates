@@ -6,9 +6,6 @@
 // ## Input
 exports.input = {};
 
-// ## Dependencies
-const Twilio = require('twilio');
-
 // ## Output
 exports.output = {};
 

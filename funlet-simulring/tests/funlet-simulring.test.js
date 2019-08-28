@@ -1,4 +1,5 @@
 const funlet = require('../functions/funlet-simulring');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
 const PHONE_NUMBER1='415-555-1212';
@@ -111,6 +112,10 @@ const FULL_RESPONSE_SIMULRING_4_3=
   '<Response>'+
     '<Redirect>'+FALLBACK_URL+'</Redirect>'+
   '</Response>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[SIMULRING-INPUT-PHONE-NUMBERS-1] Read Single Phone Number from Event',
 () => {
@@ -504,3 +509,7 @@ test('[SIMULRING-4-3] Failure with Fallback URL', done => {
     Dial:"true", DialCallStatus:"busy", FailUrl:FALLBACK_URL
   }, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

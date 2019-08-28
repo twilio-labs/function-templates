@@ -1,4 +1,5 @@
 const funlet = require('../functions/funlet-find-me');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
 const PHONE_NUMBER1='415-555-1212';
@@ -111,6 +112,10 @@ const FULL_RESPONSE_FIND_ME_4_3=
   '<Response>'+
     '<Redirect>'+FALLBACK_URL+'</Redirect>'+
   '</Response>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[FINDME-INPUT-PHONE-NUMBERS-1] Read Single Phone Number from Event',
 () => {
@@ -505,3 +510,7 @@ test('[FINDME-4-3] Failure with Fallback URL', done => {
     Dial:"true", DialCallStatus:"busy", FailUrl:FALLBACK_URL
   }, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

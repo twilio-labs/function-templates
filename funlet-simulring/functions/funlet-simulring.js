@@ -143,9 +143,6 @@ function getFallbackUrl(params, env, config) {
 }
 exports.input.getFallbackUrl = getFallbackUrl;
 
-// ## Dependencies
-const Twilio = require('twilio');
-
 // ## Output
 exports.output = {};
 

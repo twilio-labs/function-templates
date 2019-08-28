@@ -1,4 +1,5 @@
 const funlet = require('../functions/funlet-simple-message');
+const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
 const MESSAGE1="Message #1";
@@ -50,6 +51,10 @@ const PLAY_AND_SAY_MESSAGES =
     '<Play>'+MESSAGE2+'</Play>'+
     '<Say language="'+ENGLISH+'" voice="'+ALICE+'">'+MESSAGE3+'</Say>'+
   '</Response>';
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-1] Read Single Message from Event',
 () => {
@@ -222,3 +227,7 @@ test('[SIMPLE-MESSAGE-3] Full Response: Multiple Messages', done => {
   };
   funlet.handler({}, {Message:MULTIPLE_MESSAGES}, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

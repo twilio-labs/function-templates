@@ -1,9 +1,19 @@
-const funlet = require('../functions/funlet-conference').handler;
+const funlet = require('../functions/funlet-conference');
+const runtime = require('../../test/test-helper');
+const Twilio = require('twilio');
+
+beforeAll( () =>
+  runtime.setup()
+);
 
 test.skip('Missing Tests', done => {
   const callback = (err, result) => {
     expect(result).toBe('...');
     done();
   };
-  funlet({}, {}, callback);
+  funlet.handler({}, {}, callback);
 });
+
+afterAll( () =>
+  runtime.teardown()
+);

@@ -57,9 +57,6 @@ function getVoice(params, env, config) {
 }
 exports.input.getVoice = getVoice;
 
-// ## Dependencies
-const Twilio = require('twilio');
-
 // ## Output
 exports.output = {};
 
