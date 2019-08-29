@@ -16,7 +16,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -46,7 +47,6 @@ let config = {
   // whether to request the recipient to press a key to accept the call
   humanCheck: false
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -64,7 +64,6 @@ exports.config = config;
   The HTTP parameters are considered first, then environment properties,
   then the script parameters. This can be customized in the functions below.
 */
-exports.input = {};
 
 function getMessage(params, env, config) {
   const caller = params.From || params.Caller || "";
@@ -75,17 +74,14 @@ function getMessage(params, env, config) {
         config.message
     );
 }
-exports.input.getMessage = getMessage;
 
 function getLanguage(params, env, config) {
   return params.Language || env.FUNLET_WHISPER_LANGUAGE || config.language;
 }
-exports.input.getLanguage = getLanguage;
 
 function getVoice(params, env, config) {
   return params.Voice || env.FUNLET_WHISPER_VOICE || config.voice;
 }
-exports.input.getVoice = getVoice;
 
 function isHumanCheckRequired(params, env, config) {
   if ( typeof params.HumanCheck === "string" ) {
@@ -96,7 +92,6 @@ function isHumanCheckRequired(params, env, config) {
   }
   return config.humanCheck;
 }
-exports.input.isHumanCheckRequired = isHumanCheckRequired;
 
 function getDigits(params, env, config) {
   if ( typeof params.Digits === "string" ) {
@@ -104,7 +99,6 @@ function getDigits(params, env, config) {
   }
   return null;
 }
-exports.input.getDigits = getDigits;
 
 /*
   3. Output Helpers
@@ -114,7 +108,6 @@ exports.input.getDigits = getDigits;
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-exports.output = {};
 
 /*
   Function: spell()
@@ -131,7 +124,6 @@ function spell( numberString ) {
   const PAUSE = '. ';
   return numberString.split('').join(PAUSE)+PAUSE;
 }
-exports.output.spell = spell;
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
@@ -144,7 +136,6 @@ function simpleMessage(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.simpleMessage = simpleMessage;
 
 // Copied from Simple Menu Funlet
 function gatherDigits(response, maxDigits, message, language, voice) {
@@ -155,7 +146,6 @@ function gatherDigits(response, maxDigits, message, language, voice) {
     voice
   );
 }
-exports.output.gatherDigits = gatherDigits;
 
 /*
   Function: whisperStage1()
@@ -183,7 +173,6 @@ function whisperStage1(response, humanCheck, message, language, voice) {
     response.hangup();
   }
 }
-exports.output.whisperStage1 = whisperStage1;
 
 /*
   Function: whisperStage2()
@@ -212,7 +201,6 @@ function whisperStage2(response, digits) {
   }
   return true;
 }
-exports.output.whisperStage2 = whisperStage2;
 
 /*
   4. Main Handler
@@ -240,7 +228,31 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+  getMessage: getMessage,
+  getLanguage: getLanguage,
+  getVoice: getVoice,
+  isHumanCheckRequired: isHumanCheckRequired,
+  getDigits: getDigits
+};
+
+exports.output = {
+  spell: spell,
+  simpleMessage: simpleMessage,
+  gatherDigits: gatherDigits,
+  whisperStage1: whisperStage1,
+  whisperStage2: whisperStage2
+};
+
+/*
+  6. References
 
     [1] Whisper Funlet
     https://github.com/twilio-labs/function-templates

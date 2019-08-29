@@ -14,7 +14,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -40,7 +41,6 @@ let config = {
   // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
   voice: "alice"
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -58,7 +58,6 @@ exports.config = config;
   The HTTP parameters are considered first, then environment properties,
   then the script parameters. This can be customized in the functions below.
 */
-exports.input = {};
 
 function getMessages(params, env, config) {
   if ( params.hasOwnProperty("Message") ) {
@@ -84,17 +83,14 @@ function getMessages(params, env, config) {
   }
   return config.messages;
 }
-exports.input.getMessages = getMessages;
 
 function getLanguage(params, env, config) {
   return params.Language || env.FUNLET_MESSAGE_LANGUAGE || config.language;
 }
-exports.input.getLanguage = getLanguage;
 
 function getVoice(params, env, config) {
   return params.Voice || env.FUNLET_MESSAGE_VOICE || config.voice;
 }
-exports.input.getVoice = getVoice;
 
 /*
   3. Output Helpers
@@ -104,7 +100,6 @@ exports.input.getVoice = getVoice;
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-exports.output = {};
 
 /*
   Function: simpleMessage()
@@ -135,7 +130,6 @@ function simpleMessage(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.simpleMessage = simpleMessage;
 
 /*
   Function: simpleMessages()
@@ -161,7 +155,6 @@ function simpleMessages(response, messages, language, voice) {
     message => simpleMessage(response, message, language, voice)
   );
 }
-exports.output.simpleMessages = simpleMessages;
 
 /*
   4. Main Handler
@@ -184,7 +177,26 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+  getMessages: getMessages,
+  getLanguage: getLanguage,
+  getVoice: getVoice
+};
+
+exports.output = {
+  simpleMessage: simpleMessage,
+  simpleMessages: simpleMessages
+};
+
+/*
+  6. References
 
     [1] Simple Message Twimlet
     https://www.twilio.com/labs/twimlets/message

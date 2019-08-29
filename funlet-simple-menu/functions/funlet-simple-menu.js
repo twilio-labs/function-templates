@@ -14,7 +14,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -53,7 +54,6 @@ let config = {
   // }
   options: {}
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -71,29 +71,24 @@ exports.config = config;
   The HTTP parameters are considered first, then environment properties,
   then the script parameters. This can be customized in the functions below.
 */
-exports.input = {};
 
 function getMessage(params, env, config) {
   return params.Message || env.FUNLET_MENU_MESSAGE || config.message;
 }
-exports.input.getMessage = getMessage;
 
 function getErrorMessage(params, env, config) {
   return params.ErrorMessage ||
          env.FUNLET_MENU_ERROR_MESSAGE ||
          config.errorMessage;
 }
-exports.input.getErrorMessage = getErrorMessage;
 
 function getLanguage(params, env, config) {
   return params.Language || env.FUNLET_MENU_LANGUAGE || config.language;
 }
-exports.input.getLanguage = getLanguage;
 
 function getVoice(params, env, config) {
   return params.Voice || env.FUNLET_MENU_VOICE || config.voice;
 }
-exports.input.getVoice = getVoice;
 
 function getOptions(params, env, config) {
   let options = Object.assign({},config.options);
@@ -123,12 +118,10 @@ function getOptions(params, env, config) {
   }
   return options;
 }
-exports.input.getOptions = getOptions;
 
 function getDigits(params, env, config) {
   return params.Digits || "";
 }
-exports.input.getDigits = getDigits;
 
 /*
   3. Output Helpers
@@ -138,7 +131,6 @@ exports.input.getDigits = getDigits;
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-exports.output = {};
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
@@ -151,7 +143,6 @@ function simpleMessage(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.simpleMessage = simpleMessage;
 
 /*
   Function: gatherDigits()
@@ -180,7 +171,6 @@ function gatherDigits(response, maxDigits, message, language, voice) {
     voice
   );
 }
-exports.output.gatherDigits = gatherDigits;
 
 /*
   Function: simpleMenuStage1()
@@ -211,7 +201,6 @@ function simpleMenuStage1(response, message, language, voice, options) {
   gatherDigits(response, maxDigits, message, language, voice);
   response.redirect({},"");
 }
-exports.output.simpleMenuStage1 = simpleMenuStage1;
 
 /*
   Function: simpleMenuStage2()
@@ -253,7 +242,6 @@ function simpleMenuStage2(
   response.redirect({}, optionUrl);
   return true;
 }
-exports.output.simpleMenuStage2 = simpleMenuStage2;
 
 /*
   4. Main Handler
@@ -286,7 +274,31 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+  getMessage: getMessage,
+  getErrorMessage: getErrorMessage,
+  getLanguage: getLanguage,
+  getVoice: getVoice,
+  getOptions: getOptions,
+  getDigits: getDigits
+};
+
+exports.output = {
+  simpleMessage: simpleMessage,
+  gatherDigits: gatherDigits,
+  simpleMenuStage1: simpleMenuStage1,
+  simpleMenuStage2: simpleMenuStage2
+};
+
+/*
+  6. References
 
     [1] Simple Menu Twimlet
     https://www.twilio.com/labs/twimlets/menu

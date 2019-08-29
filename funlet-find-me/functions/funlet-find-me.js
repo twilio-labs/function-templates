@@ -17,7 +17,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -57,7 +58,6 @@ let config = {
   // when the forwarding call fails
   fallbackUrl: ""
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -75,7 +75,6 @@ exports.config = config;
   The HTTP parameters are considered first, then environment properties,
   then the script parameters. This can be customized in the functions below.
 */
-exports.input = {};
 
 function getPhoneNumbers(params, env, config) {
   let phoneNumbers = [];
@@ -108,7 +107,6 @@ function getPhoneNumbers(params, env, config) {
 
   return phoneNumbers;
 }
-exports.input.getPhoneNumbers = getPhoneNumbers;
 
 function getTimeout(params, env, config) {
   let timeout = params.Timeout || env.FUNLET_FINDME_TIMEOUT;
@@ -117,12 +115,10 @@ function getTimeout(params, env, config) {
   }
   return config.timeout;
 }
-exports.input.getTimeout = getTimeout;
 
 function isWhisper(params, env, config) {
   return ( typeof params.Whisper === "string" );
 }
-exports.input.isWhisper = isWhisper;
 
 function getMessage(params, env, config) {
   const caller = params.From || params.Caller || "";
@@ -133,17 +129,14 @@ function getMessage(params, env, config) {
         config.message
     );
 }
-exports.input.getMessage = getMessage;
 
 function getLanguage(params, env, config) {
   return params.Language || env.FUNLET_FINDME_LANGUAGE || config.language;
 }
-exports.input.getLanguage = getLanguage;
 
 function getVoice(params, env, config) {
   return params.Voice || env.FUNLET_FINDME_VOICE || config.voice;
 }
-exports.input.getVoice = getVoice;
 
 function isHumanCheckRequired(params, env, config) {
   if ( typeof params.HumanCheck === "string" ) {
@@ -154,7 +147,6 @@ function isHumanCheckRequired(params, env, config) {
   }
   return config.humanCheck;
 }
-exports.input.isHumanCheckRequired = isHumanCheckRequired;
 
 function getDigits(params, env, config) {
   if ( typeof params.Digits === "string" ) {
@@ -162,26 +154,22 @@ function getDigits(params, env, config) {
   }
   return null;
 }
-exports.input.getDigits = getDigits;
 
 function isDialDone(params, env, config) {
   return (typeof params.Dial === "string" );
 }
-exports.input.isDialDone = isDialDone;
 
 // Copied from Forward Funlet
 function getCallStatus(params, env, config) {
   const NO_CALL_STATUS = "";
   return params.DialStatus || params.DialCallStatus || NO_CALL_STATUS;
 }
-exports.input.getCallStatus = getCallStatus;
 
 function getFallbackUrl(params, env, config) {
   return params.FailUrl ||
     env.FUNLET_FINDME_FALLBACK_URL ||
     config.fallbackUrl;
 }
-exports.input.getFallbackUrl = getFallbackUrl;
 
 /*
   3. Output Helpers
@@ -191,14 +179,12 @@ exports.input.getFallbackUrl = getFallbackUrl;
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-exports.output = {};
 
 // Copied from Whisper Funlet
 function spell( numberString ) {
   const PAUSE = '. ';
   return numberString.split('').join(PAUSE)+PAUSE;
 }
-exports.output.spell = spell;
 
 // Copied from Forward Funlet
 function getForwardActionUrl( fallbackUrl ) {
@@ -209,7 +195,6 @@ function getForwardActionUrl( fallbackUrl ) {
   }
   return actionUrl;
 }
-exports.output.getForwardActionUrl = getForwardActionUrl;
 
 // Copied from Call Me Funlet
 function getWhisperUrl( params ) {
@@ -233,7 +218,6 @@ function getWhisperUrl( params ) {
 
   return whisperUrl;
 }
-exports.output.getWhisperUrl = getWhisperUrl;
 
 /*
   Function: findMeStage1()
@@ -278,7 +262,6 @@ function findMeStage1(
   });
   dial.number( {url:whisperUrl}, firstForwardingNumber );
 }
-exports.output.findMeStage1 = findMeStage1;
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
@@ -291,7 +274,6 @@ function simpleMessage(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.simpleMessage = simpleMessage;
 
 // Copied from Simple Menu Funlet
 function gatherDigits(response, maxDigits, message, language, voice) {
@@ -302,7 +284,6 @@ function gatherDigits(response, maxDigits, message, language, voice) {
     voice
   );
 }
-exports.output.gatherDigits = gatherDigits;
 
 // Copied from Whisper Funlet
 function whisperStage1(response, humanCheck, message, language, voice) {
@@ -312,7 +293,6 @@ function whisperStage1(response, humanCheck, message, language, voice) {
   }
 }
 let findMeStage2 = whisperStage1;
-exports.output.findMeStage2 = findMeStage2;
 
 // Copied from Whisper Funlet
 function whisperStage2(response, digits) {
@@ -325,7 +305,6 @@ function whisperStage2(response, digits) {
   return true;
 }
 let findMeStage3 = whisperStage2;
-exports.output.findMeStage3 = findMeStage3;
 
 // Copied from Forward Funlet
 function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
@@ -343,7 +322,6 @@ function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
   return isDialDone;
 }
 let findMeStage4 = forwardStage2;
-exports.output.findMeStage4 = findMeStage4;
 
 /*
   4. Main Handler
@@ -383,7 +361,41 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+  getPhoneNumbers: getPhoneNumbers,
+  getTimeout: getTimeout,
+  isWhisper: isWhisper,
+  getMessage: getMessage,
+  getLanguage: getLanguage,
+  getVoice: getVoice,
+  isHumanCheckRequired: isHumanCheckRequired,
+  getDigits: getDigits,
+  isDialDone: isDialDone,
+  getCallStatus: getCallStatus,
+  getFallbackUrl: getFallbackUrl
+};
+
+exports.output = {
+  spell: spell,
+  getForwardActionUrl: getForwardActionUrl,
+  getWhisperUrl: getWhisperUrl,
+  simpleMessage: simpleMessage,
+  gatherDigits: gatherDigits,
+  findMeStage1: findMeStage1,
+  findMeStage2: findMeStage2,
+  findMeStage3: findMeStage3,
+  findMeStage4: findMeStage4
+};
+
+/*
+  6. References
 
     [1] Find Me Twimlet
     https://www.twilio.com/labs/twimlets/findme

@@ -16,7 +16,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -60,7 +61,6 @@ let config = {
   // voice for text messages, one of 'man', 'woman' or 'alice'
   voice: "alice"
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -78,28 +78,24 @@ exports.config = config;
   The HTTP parameters are considered first, then environment properties,
   then the script parameters. This can be customized in the functions below.
 */
-exports.input = {};
 
 function getPhoneNumber(params, env, config) {
   return params.PhoneNumber ||
     env.FUNLET_FORWARD_PHONE_NUMBER ||
     config.phoneNumber;
 }
-exports.input.getPhoneNumber = getPhoneNumber;
 
 function getCallerId(params, env, config) {
   return params.CallerId ||
     env.FUNLET_FORWARD_CALLER_ID ||
     config.callerId;
 }
-exports.input.getCallerId = getCallerId;
 
 function getFallbackUrl(params, env, config) {
   return params.FailUrl ||
     env.FUNLET_FORWARD_FALLBACK_URL ||
     config.fallbackUrl;
 }
-exports.input.getFallbackUrl = getFallbackUrl;
 
 function getTimeout(params, env, config) {
   let timeout = params.Timeout || env.FUNLET_FORWARD_TIMEOUT;
@@ -108,7 +104,6 @@ function getTimeout(params, env, config) {
   }
   return config.timeout;
 }
-exports.input.getTimeout = getTimeout;
 
 function getAllowedCallers(params, env, config) {
   let allowedCallers = [];
@@ -153,49 +148,37 @@ function getAllowedCallers(params, env, config) {
 
   return allowedCallers;
 }
-exports.input.getAllowedCallers = getAllowedCallers;
 
 function getAccessRestrictedErrorMessage(params, env, config) {
   return params.AccessRestricted ||
     env.FUNLET_FORWARD_ACCESS_RESTRICTED ||
     config.accessRestricted;
 }
-exports.input.getAccessRestrictedErrorMessage =
-  getAccessRestrictedErrorMessage;
 
 function getLanguage(params, env, config) {
   return params.Language || env.FUNLET_FORWARD_LANGUAGE || config.language;
 }
-exports.input.getLanguage = getLanguage;
 
 function getVoice(params, env, config) {
   return params.Voice || env.FUNLET_FORWARD_VOICE || config.voice;
 }
-exports.input.getVoice = getVoice;
 
 function getCaller(params, env, config) {
   return params.From || params.Caller;
 }
-exports.input.getCaller = getCaller;
 
 function getPhoneNumberCalled(params, env, config) {
   return params.To || params.Called;
 }
-exports.input.getPhoneNumberCalled = getPhoneNumberCalled;
 
 function isDialDone(params, env, config) {
   return (typeof params.Dial === "string" );
 }
-exports.input.isDialDone = isDialDone;
 
 function getCallStatus(params, env, config) {
   const NO_CALL_STATUS = "";
   return params.DialStatus || params.DialCallStatus || NO_CALL_STATUS;
 }
-exports.input.getCallStatus = getCallStatus;
-
-// ## Utilities
-exports.utils = {};
 
 /*
   Function: isForwardingAllowed()
@@ -220,7 +203,6 @@ function isForwardingAllowed(caller, called, allowedCallers) {
   }
   return allowedCallers.includes(caller) || allowedCallers.includes(called);
 }
-exports.utils.isForwardingAllowed = isForwardingAllowed;
 
 /*
   3. Output Helpers
@@ -230,7 +212,6 @@ exports.utils.isForwardingAllowed = isForwardingAllowed;
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-exports.output = {};
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
@@ -243,7 +224,6 @@ function simpleMessage(response, message, language, voice) {
     response.say({language:language, voice:voice}, message);
   }
 }
-exports.output.simpleMessage = simpleMessage;
 
 /*
   Function: getForwardActionUrl()
@@ -264,7 +244,6 @@ function getForwardActionUrl( fallbackUrl ) {
   }
   return actionUrl;
 }
-exports.output.getForwardActionUrl = getForwardActionUrl;
 
 /*
   Function: forwardStage1()
@@ -315,7 +294,6 @@ function forwardStage1(
   dialOptions.timeout = timeout;
   response.dial( dialOptions, forwardingNumber );
 }
-exports.output.forwardStage1 = forwardStage1;
 
 /*
   Function: forwardStage2()
@@ -350,7 +328,6 @@ function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
   }
   return isDialDone;
 }
-exports.output.forwardStage2 = forwardStage2;
 
 /*
   4. Main Handler
@@ -394,7 +371,41 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+  getPhoneNumber: getPhoneNumber,
+  getCallerId: getCallerId,
+  getFallbackUrl: getFallbackUrl,
+  getTimeout: getTimeout,
+  getAllowedCallers: getAllowedCallers,
+  getAccessRestrictedErrorMessage: getAccessRestrictedErrorMessage,
+  getLanguage: getLanguage,
+  getVoice: getVoice,
+  getCaller: getCaller,
+  getPhoneNumberCalled: getPhoneNumberCalled,
+  isDialDone: isDialDone,
+  getCallStatus: getCallStatus
+};
+
+exports.utils = {
+  isForwardingAllowed: isForwardingAllowed
+};
+
+exports.output = {
+  simpleMessage: simpleMessage,
+  getForwardActionUrl: getForwardActionUrl,
+  forwardStage1: forwardStage1,
+  forwardStage2: forwardStage2
+};
+
+/*
+  6. References
 
     [1] Forward Twimlet
     https://www.twilio.com/labs/twimlets/forward

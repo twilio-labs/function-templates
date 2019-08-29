@@ -17,7 +17,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -34,7 +35,6 @@
 let config = {
 
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -53,8 +53,6 @@ exports.config = config;
   then the script parameters. This can be customized in the functions below.
 */
 
-exports.input = {};
-
 /*
   3. Output Helpers
 
@@ -63,8 +61,6 @@ exports.input = {};
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-
-exports.output = {};
 
 /*
   4. Main Handler
@@ -81,7 +77,21 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+};
+
+exports.output = {
+};
+
+/*
+  6. References
 
     [1] Conference Twimlet
     https://www.twilio.com/labs/twimlets/conference

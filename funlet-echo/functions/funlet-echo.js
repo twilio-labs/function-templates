@@ -14,7 +14,8 @@
     2. Input Parameters
     3. Output Helpers
     4. Main Handler
-    5. References
+    5. Other Exports
+    6. References
 */
 
 /*
@@ -35,7 +36,6 @@ let config = {
       '<Say>echo</Say>'+
     '</Response>'
 };
-exports.config = config;
 
 /*
   2. Input Parameters
@@ -53,12 +53,10 @@ exports.config = config;
   The HTTP parameters are considered first, then environment properties,
   then the script parameters. This can be customized in the functions below.
 */
-exports.input = {};
 
 function getTwiml(params, env, config) {
   return params.Twiml || env.FUNLET_ECHO_TWIML || config.twiml;
 }
-exports.input.getTwiml = getTwiml;
 
 /*
   3. Output Helpers
@@ -68,7 +66,6 @@ exports.input.getTwiml = getTwiml;
   This is where you can fine-tune the TwiML elements and attributes
   produced in response to each stage of the Funlet.
 */
-exports.output = {};
 
 /*
   Function: echo()
@@ -82,7 +79,6 @@ exports.output = {};
 function echo( twiml ) {
   return twiml;
 }
-exports.output.echo = echo;
 
 /*
   4. Main Handler
@@ -108,7 +104,23 @@ exports.handler = function(env, params, reply) {
 };
 
 /*
-  5. References
+  5. Other Exports
+
+  These internal features are exported too, for the purpose of unit tests.
+*/
+
+exports.config = config;
+
+exports.input = {
+  getTwiml: getTwiml
+};
+
+exports.output = {
+  echo: echo
+};
+
+/*
+  6. References
 
     [1] Echo Twimlet
     https://www.twilio.com/labs/twimlets/echo
