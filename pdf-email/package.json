@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "fs": "0.0.1-security",
-    "node-cmd": "^3.0.0",
-    "pdf-to-base64": "^1.0.2",
-    "pdfmake": "^0.1.58",
-    "request": "^2.88.0"
-  }
-}
