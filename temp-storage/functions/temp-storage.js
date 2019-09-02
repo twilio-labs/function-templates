@@ -11,19 +11,18 @@
  */
 var fs = require('fs');
 var path = require('path');
-var tmp_dir = require('os').tmpdir();
+var os = require('os');
 
 exports.handler = function(context, event, callback) {
+    /*We create a text file and we put some data in it*/
+    fs.writeFile(path.join(os.tmpdir(), 'test_file.txt'), 'Contents of created file in OS temp directory', function(err) {
+        if (err) return callback(err);
 
-   /*We create a text file and we put some data in it*/
-   fs.writeFile(path.join(tmp_dir, 'test_file.txt'), 'Contents of created file in OS temp directory', function(err) {
-       if (err) callback(err);
+        /*We read the contents of the temporary directory to check that the file was created. For multiple files you can create a loop*/
+        fs.readdir(os.tmpdir(), function(err, files) {
+            if (err) return callback(err);
 
-       /*We read the contents of the temporary directory to check that the file was created. For multiple files you can create a loop*/
-       fs.readdir(tmp_dir, function(err, files) {
-           if (err) callback(err);
-
-           callback(null, "File created in temporary directory: " + files);
-       });
-   });
+            callback(null, "File created in temporary directory: " + files.join(", "));
+        });
+    });
 };

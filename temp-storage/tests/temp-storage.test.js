@@ -1,38 +1,45 @@
-const helpers = require('../../test/test-helper');
-jest.mock('fs');
-const temp_storage = require('../functions/temp-storage').handler;
-
 const context = {};
 const event = {};
+const mockFns = {};
 
-let file_path = "/path/to/";
-let filename = "test_file.txt";
-let data = "Test data in the test file";
-
-const MOCK_FILE_INFO = {
-    '/path/to/test_file.txt': 'Sample data of the test file'
+jest.mock('fs', () => {
+  return {
+    writeFile: (path, content, callback) =>  mockFns.writeFile(path, content, callback),
+    readdir: (directoryPath, callback) => mockFns.readdir(directoryPath, callback)
   };
-
-beforeAll(() => {
-  helpers.setup(context);
-  require('fs').__setMockFiles(MOCK_FILE_INFO);
 });
-
-afterAll(() => {
-  helpers.teardown();
-});
-
 
 test('returns a response that file was created with the file name', done => {
+  mockFns.writeFile = (path, content, callback) => callback(null);
+  mockFns.readdir = (directoryPath, callback) => callback(null, ["test_file.txt"]);
+
+  const temp_storage = require('../functions/temp-storage').handler;
   const callback = (err, result) => {
-    expect(result).toMatchObject("File created in temporary directory: test_file.txt");
+    expect(err).toBe(null);
+    expect(result).toMatch("File created in temporary directory: test_file.txt");
     done();
   };
 
   temp_storage(context, event, callback);
 });
 
-test('returns an error when file creation or reading temp directory fails', done => {
+test('returns an error when file creation fails', done => {
+  mockFns.writeFile = (path, content, callback) => callback(new Error("Write failed"));
+
+  const temp_storage = require('../functions/temp-storage').handler;
+  const callback = (err, result) => {
+    expect(err).toBeInstanceOf(Error);
+    done();
+  };
+
+  temp_storage(context, event, callback);
+});
+
+test('returns an error when file read fails', done => {
+  mockFns.writeFile = (path, content, callback) => callback(null);
+  mockFns.readdir = (directoryPath, callback) => callback(new Error("Read failed"));
+
+  const temp_storage = require('../functions/temp-storage').handler;
   const callback = (err, result) => {
     expect(err).toBeInstanceOf(Error);
     done();
