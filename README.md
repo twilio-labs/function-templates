@@ -32,6 +32,7 @@ This is the list of Functions available in this repo:
 - [Conference line](conference) - Simple TwiML to drop callers into a conference call called "Snowy Owl"
 - [Simple play](never-gonna-give-you-up) - TwiML to `<Play>` an mp3
 - [HTTP Redirect](http-redirect) - Redirects a request from Twilio Functions to another URL by setting the Location header to the respective URL
+- [Temp Storage](temp-storage) - Function that shows you have to use the temporary storage under the Functions layer for one-off activities
 
 ### Todo
 
