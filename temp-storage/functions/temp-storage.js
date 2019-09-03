@@ -6,9 +6,8 @@
  *  IMPORTANT: Do NOT treat this storage as long term storage or for personal data that need to persist.
  *  The contents get deleted whenever the associated container is brought down, so this function is useful for one time actions
  *
- *  Pre-requisites
- *  - You need to include the following npm modules: fs, path, os
  */
+ 
 var fs = require('fs');
 var path = require('path');
 var os = require('os');

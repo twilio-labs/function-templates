@@ -6,10 +6,6 @@ For example, on each invocation we can create a file based on user data and use 
 IMPORTANT: Do NOT treat this storage as long term storage or for personal data that need to persist.
 The contents get deleted whenever the associated container is brought down, so this function is useful for one time actions
 
-Pre-requisites
-- You need to include the following npm modules: fs, path, os
-
-
 ## Environment variables
 
 This Function does not require any environment variables to be set                                                  
