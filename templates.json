@@ -21,6 +21,46 @@
       "description": "Function to get you started with Twilio Prog. Messaging"
     },
     {
+      "id": "funlet-echo",
+      "name": "Echo Funlet",
+      "description": "Send Static TwiML — Compatible with Echo Twimlet"
+    },
+    {
+      "id": "funlet-simple-message",
+      "name": "Simple Message Funlet",
+      "description": "Read/Play Messages — Compatible with Simple Message Twimlet"
+    },
+    {
+      "id": "funlet-simple-menu",
+      "name": "Simple Menu Funlet",
+      "description": "Interactive Menu — Compatible with Simple Menu Twimlet"
+    },
+    {
+      "id": "funlet-whisper",
+      "name": "Whisper Funlet",
+      "description": "Inform the Recipient of a Call — Compatible with Whisper Twimlet"
+    },
+    {
+      "id": "funlet-forward",
+      "name": "Forward Funlet",
+      "description": "Forward the Call — Compatible with Forward Twimlet"
+    },
+    {
+      "id": "funlet-call-me",
+      "name": "Call Me Funlet",
+      "description": "Forward Call When Available — Compatible with Call Me Twimlet"
+    },
+    {
+      "id": "funlet-simulring",
+      "name": "Simulring Funlet",
+      "description": "Forward Call to Fastest Recipient — Compatible with Simulring Twimlet"
+    },
+    {
+      "id": "funlet-find-me",
+      "name": "Find Me Funlet",
+      "description": "Try Different Numbers in Turn — Compatible with Find Me Twimlet"
+    },
+    {
       "id": "never-gonna-give-you-up",
       "name": "Never gonna give you up",
       "description": "Never gonna let you down. Plays a song to a phone call"
