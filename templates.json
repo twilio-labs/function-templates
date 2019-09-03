@@ -79,6 +79,11 @@
       "id": "http-redirect",
       "name": "HTTP Redirect",
       "description": "Redirects a Function call to another URL"
+    },
+    {
+      "id": "temp-storage",
+      "name": "Functions Temporary Storage",
+      "description": "Utilises the temp folder of the OS for one-off operations"
     }
   ]
 }
