@@ -58,3 +58,21 @@ message1='Message%20one'
 message2='https%3A%2F%2Fexample.com%2Fmessage-two.mp3'
 message3='Message%20three'
 query "$message=$message1" "$message=$message2" "$message=$message3"
+echo
+echo '[SIMPLE-MESSAGE-4] Play a greeting then say some text (Example 1)'
+key0='Message%5B0%5D'
+key1='Message%5B1%5D'
+value0='http%3A%2F%2Fmyserver.com%2Fhello.mp3'
+value1='Thank%20You%20For%20Calling'
+query "$key0=$value0" "$key1=$value1"
+echo
+echo '[SIMPLE-MESSAGE-5] Play two greetings then say two text blurbs (Example 2)'
+key0='Message%5B0%5D'
+key1='Message%5B1%5D'
+key2='Message%5B2%5D'
+key3='Message%5B3%5D'
+value0='http%3A%2F%2Fmyserver.com%2F1.mp3'
+value1='http%3A%2F%2Fmyserver.com%2F2.mp3'
+value2='I%20Just%20Played%20A%20File'
+value3='I%20Just%20Said%20Some%20Text'
+query "$key0=$value0" "$key1=$value1" "$key2=$value2" "$key3=$value3"
