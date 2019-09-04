@@ -315,7 +315,7 @@ exports.handler = function(context, event, callback) {
     timeout = getTimeout(event, context, config),
     whisperUrl = getWhisperUrl(event);
 
-  callMeStage4( response, isDial, callStatus, fallbackUrl ) ||
+  callMeStage4(response, isDial, callStatus, fallbackUrl) ||
   callMeStage3(response, digits) ||
   (isWhisper(event, context, config)?
     callMeStage2(response, humanCheckRequired, message, language, voice):
