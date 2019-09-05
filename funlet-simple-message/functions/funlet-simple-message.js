@@ -110,20 +110,16 @@ function getMessages(params, env, config) {
     return messages;
   }
 
-  if (
-    env.hasOwnProperty("FUNLET_MESSAGE1") ||
-    env.hasOwnProperty("FUNLET_MESSAGE2") ||
-    env.hasOwnProperty("FUNLET_MESSAGE3") ||
-    env.hasOwnProperty("FUNLET_MESSAGE4") ||
-    env.hasOwnProperty("FUNLET_MESSAGE5")
-  ) {
-    return [
-      env.FUNLET_MESSAGE1,
-      env.FUNLET_MESSAGE2,
-      env.FUNLET_MESSAGE3,
-      env.FUNLET_MESSAGE4,
-      env.FUNLET_MESSAGE5
-    ].filter( message => typeof message === "string" );
+  for ( let i=1; i<=5; i++ ) {
+    let
+      name = "FUNLET_MESSAGE" + i,
+      value = env[ name ];
+    if ( typeof value === "string" ) {
+      messages.push( value );
+    }
+  }
+  if ( messages.length > 0 ) {
+    return messages;
   }
 
   return config.messages;
