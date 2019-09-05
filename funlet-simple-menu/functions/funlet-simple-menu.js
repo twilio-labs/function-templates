@@ -90,8 +90,34 @@ function getVoice(params, env, config) {
   return params.Voice || env.FUNLET_MENU_VOICE || config.voice;
 }
 
+// Copied from Simple Message Funlet
+function readListParam( name, params ) {
+  let array = [];
+
+  const INDEXED_PARAM_REGEX = new RegExp( '^' + name + '\\[([0-9]+)\\]$' );
+  for( let property of Object.keys(params) ) {
+    let matches = INDEXED_PARAM_REGEX.exec( property );
+    if( matches !== null ) {
+      let index = matches[1];
+      array[ index ] = params[ property ];
+    }
+  }
+
+  if ( params.hasOwnProperty( name ) ) {
+    let value = params[ name ];
+    if ( typeof value === "string" ) {
+      array.push( value );
+    } else if ( Array.isArray( value ) ) {
+      array = array.concat( value );
+    }
+  }
+
+  return array;
+}
+
 function getOptions(params, env, config) {
   let options = Object.assign({},config.options);
+
   for( let name of Object.keys(env) ) {
     let matches = /^FUNLET_MENU_OPTION([0-9]+)_URL$/.exec( name );
     if( matches !== null ) {
@@ -101,21 +127,8 @@ function getOptions(params, env, config) {
       options[ digits ] = env[ name ];
     }
   }
-  switch( typeof params.Options ) {
-    case "string":
-      options["0"] = params.Options;
-      break;
-    case "object":
-      options = Object.assign(options,params.Options);
-      break;
-  }
-  for( let name of Object.keys(params) ) {
-    let matches = /^Options\[([0-9]+)\]$/.exec( name );
-    if( matches !== null ) {
-      let digits = matches[1];
-      options[ digits ] = params[ name ];
-    }
-  }
+
+  Object.assign(options, readListParam("Options",params) );
   return options;
 }
 
@@ -286,6 +299,7 @@ exports.input = {
   getErrorMessage: getErrorMessage,
   getLanguage: getLanguage,
   getVoice: getVoice,
+  readListParam: readListParam,
   getOptions: getOptions,
   getDigits: getDigits
 };
