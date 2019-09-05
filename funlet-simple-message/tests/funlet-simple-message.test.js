@@ -146,6 +146,50 @@ test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-5] '+
   ).toEqual( array );
 });
 
+test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-0] Read Empty List',
+() => {
+  let empty = [];
+  expect(
+    funlet.input.readEnvList("FUNLET_PARAM", 1, 3, {})
+  ).toEqual( empty );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-1] Read List from 0 to 2',
+() => {
+  let array = ["zero", "one", "two"];
+  expect(
+    funlet.input.readEnvList("FUNLET_PARAM", 0, 2, {
+      FUNLET_PARAM0: array[0],
+      FUNLET_PARAM1: array[1],
+      FUNLET_PARAM2: array[2]
+    })
+  ).toEqual( array );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-2] Read List from 3 to 5',
+() => {
+  let array = ["three", "four", "five"];
+  expect(
+    funlet.input.readEnvList("FUNLET_PARAM", 3, 5, {
+      FUNLET_PARAM3: array[0],
+      FUNLET_PARAM4: array[1],
+      FUNLET_PARAM5: array[2]
+    })
+  ).toEqual( array );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-3] Read Partial List',
+() => {
+  let array = ["one", "three", "five"];
+  expect(
+    funlet.input.readEnvList("FUNLET_PARAM", 0, 10, {
+      FUNLET_PARAM1: array[0],
+      FUNLET_PARAM3: array[1],
+      FUNLET_PARAM5: array[2]
+    })
+  ).toEqual( array );
+});
+
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-1] Read Single Message from Event',
 () => {
   expect(

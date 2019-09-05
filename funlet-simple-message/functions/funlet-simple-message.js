@@ -104,20 +104,44 @@ function readListParam( name, params ) {
   return array;
 }
 
+/*
+  Function: readEnvList()
+  Read a list of values from sequential parameters in the environment,
+  e.g. 'FUNLET_MESSAGE1', 'FUNLET_MESSAGE2', ...
+
+  Parameters:
+    * name - string, base parameter name
+    * start - number, start index, usually 1
+    * end - number, end index, e.g. 5 or 10
+    * env - object, hash of environment properties
+
+  Returns:
+    array, the list of string values found under the sequential
+    property names with given base name, from start to end index.
+    An empty array is returned when none of the properties are present.
+*/
+function readEnvList( name, start, end, env ) {
+  let array = [];
+
+  for ( let i=start; i<=end; i++ ) {
+    let
+      key = name + i,
+      value = env[ key ];
+    if ( typeof value === "string" ) {
+      array.push( value );
+    }
+  }
+
+  return array;
+}
+
 function getMessages(params, env, config) {
   let messages = readListParam( "Message", params );
   if ( messages.length > 0 ) {
     return messages;
   }
 
-  for ( let i=1; i<=5; i++ ) {
-    let
-      name = "FUNLET_MESSAGE" + i,
-      value = env[ name ];
-    if ( typeof value === "string" ) {
-      messages.push( value );
-    }
-  }
+  messages = readEnvList( "FUNLET_MESSAGE", 1, 5, env );
   if ( messages.length > 0 ) {
     return messages;
   }
@@ -227,6 +251,7 @@ exports.config = config;
 
 exports.input = {
   readListParam: readListParam,
+  readEnvList: readEnvList,
   getMessages: getMessages,
   getLanguage: getLanguage,
   getVoice: getVoice
