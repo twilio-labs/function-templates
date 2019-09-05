@@ -160,14 +160,26 @@ test('[SIMPLE-MESSAGE-INPUT-MESSAGES-2] Read List of Messages from Event',
   ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGES-3] Read Single Message from Environment',
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-3] '+
+     'Read Indexed List of Messages from Event',
+() => {
+  expect(
+    funlet.input.getMessages({
+      "Message[0]": MESSAGE1,
+      "Message[1]": MESSAGE2,
+      "Message[2]": MESSAGE3
+    }, {}, {})
+  ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3] );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-4] Read Single Message from Environment',
 () => {
   expect(
     funlet.input.getMessages({}, {FUNLET_MESSAGE1:MESSAGE1}, {})
   ).toEqual( [MESSAGE1] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGES-4] Read Five Messages from Environment',
+test('[SIMPLE-MESSAGE-INPUT-MESSAGES-5] Read Five Messages from Environment',
 () => {
   expect(
     funlet.input.getMessages({},
@@ -182,14 +194,14 @@ test('[SIMPLE-MESSAGE-INPUT-MESSAGES-4] Read Five Messages from Environment',
   ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3,MESSAGE4,MESSAGE5] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGE-5] Read Default Message from Script',
+test('[SIMPLE-MESSAGE-INPUT-MESSAGE-6] Read Default Message from Script',
 () => {
   expect(
     funlet.input.getMessages({}, {}, {messages: [MESSAGE1,MESSAGE2,MESSAGE3]})
   ).toEqual( [MESSAGE1,MESSAGE2,MESSAGE3] );
 });
 
-test('[SIMPLE-MESSAGE-INPUT-MESSAGE-6] '+
+test('[SIMPLE-MESSAGE-INPUT-MESSAGE-7] '+
      'Read Default Message from Script Config',
 () => {
   expect( funlet.config.messages ).toEqual( [DEFAULT_MESSAGE] );

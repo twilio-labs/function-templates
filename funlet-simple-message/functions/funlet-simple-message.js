@@ -100,16 +100,16 @@ function readListParam( name, params ) {
       array = array.concat( value );
     }
   }
+
   return array;
 }
 
 function getMessages(params, env, config) {
-  if ( params.hasOwnProperty("Message") ) {
-    if ( typeof params.Message === "string" ) {
-      return [params.Message];
-    }
-    return params.Message;
+  let messages = readListParam( "Message", params );
+  if ( messages.length > 0 ) {
+    return messages;
   }
+
   if (
     env.hasOwnProperty("FUNLET_MESSAGE1") ||
     env.hasOwnProperty("FUNLET_MESSAGE2") ||
@@ -125,6 +125,7 @@ function getMessages(params, env, config) {
       env.FUNLET_MESSAGE5
     ].filter( message => typeof message === "string" );
   }
+
   return config.messages;
 }
 
