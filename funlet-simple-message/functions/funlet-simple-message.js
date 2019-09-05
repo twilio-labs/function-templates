@@ -59,6 +59,50 @@ let config = {
   then the script parameters. This can be customized in the functions below.
 */
 
+/*
+  Function: readListParam()
+  Read a list parameter split between a string or array under the base name,
+  e.g. 'Message', and a list of separate values under the same name followed
+  with an index, e.g. 'Message[0]', 'Message[1]', 'Message[2]'.
+
+  Indexes are generally expected to start at 0 and grow sequentially,
+  but this is not necessary and non-sequential indexes are also supported.
+
+  Parameters:
+    * name - string, name of the list parameter
+    * params - object, hash of parameters
+
+  Returns:
+    array, the list of values found for the parameter,
+    starting with values of indexed parameters, which may be
+    sparse when indexes do not start at zero or are not sequential,
+    followed with the string value or the list of values
+    found under the base name.
+    An empty array is returned when no value is found.
+*/
+function readListParam( name, params ) {
+  let array = [];
+
+  const INDEXED_PARAM_REGEX = new RegExp( '^' + name + '\\[([0-9]+)\\]$' );
+  for( let property of Object.keys(params) ) {
+    let matches = INDEXED_PARAM_REGEX.exec( property );
+    if( matches !== null ) {
+      let index = matches[1];
+      array[ index ] = params[ property ];
+    }
+  }
+
+  if ( params.hasOwnProperty( name ) ) {
+    let value = params[ name ];
+    if ( typeof value === "string" ) {
+      array.push( value );
+    } else if ( Array.isArray( value ) ) {
+      array = array.concat( value );
+    }
+  }
+  return array;
+}
+
 function getMessages(params, env, config) {
   if ( params.hasOwnProperty("Message") ) {
     if ( typeof params.Message === "string" ) {
@@ -185,6 +229,7 @@ exports.handler = function(context, event, callback) {
 exports.config = config;
 
 exports.input = {
+  readListParam: readListParam,
   getMessages: getMessages,
   getLanguage: getLanguage,
   getVoice: getVoice

@@ -56,6 +56,96 @@ beforeAll( () =>
   runtime.setup()
 );
 
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-0] Read Empty List',
+() => {
+  let empty = [];
+  expect(
+    funlet.input.readListParam("Param", {})
+  ).toEqual( empty );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-1] Read Single String',
+() => {
+  let string = "one";
+  expect(
+    funlet.input.readListParam("Param", {Param:string})
+  ).toEqual( [string] );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-2] Read Array',
+() => {
+  let array = ["one", "two", "three"];
+  expect(
+    funlet.input.readListParam("Param", {Param:array})
+  ).toEqual( array );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-3] Read Sequential Indexed Values',
+() => {
+  let array = ["zero", "one", "two"];
+  expect(
+    funlet.input.readListParam("Param", {
+      "Param[0]": array[0],
+      "Param[1]": array[1],
+      "Param[2]": array[2]
+    })
+  ).toEqual( array );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-4] '+
+     'Read Non-Sequential Indexed Values',
+() => {
+  let array = [];
+  array[1] = "the one";
+  array[42] = "the answer";
+  array[99] = "bottles of beer";
+  expect(
+    funlet.input.readListParam("Param", {
+      "Param[1]": array[1],
+      "Param[42]": array[42],
+      "Param[99]": array[99]
+    })
+  ).toEqual( array );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-5] '+
+     'Mix of String and Non-Sequential Indexed Values',
+() => {
+  let array = [];
+  array[1] = "the one";
+  array[42] = "the answer";
+  array[99] = "bottles of beer";
+  array[100] = "the end";
+  expect(
+    funlet.input.readListParam("Param", {
+      "Param": array[100],
+      "Param[1]": array[1],
+      "Param[42]": array[42],
+      "Param[99]": array[99]
+    })
+  ).toEqual( array );
+});
+
+test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-5] '+
+     'Mix of Array and Non-Sequential Indexed Values',
+() => {
+  let array = [];
+  array[1] = "the one";
+  array[42] = "the answer";
+  array[99] = "bottles of beer";
+  array[100] = "the end";
+  array[101] = "the basics";
+  array[102] = "a new hope";
+  expect(
+    funlet.input.readListParam("Param", {
+      "Param": [ array[100], array[101], array[102] ],
+      "Param[1]": array[1],
+      "Param[42]": array[42],
+      "Param[99]": array[99]
+    })
+  ).toEqual( array );
+});
+
 test('[SIMPLE-MESSAGE-INPUT-MESSAGES-1] Read Single Message from Event',
 () => {
   expect(
