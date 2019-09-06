@@ -57,29 +57,32 @@ then
 fi
 
 echo '[FIND-ME-1-1] Find Me with 3 Numbers (from Example 1)'
-phoneNumber='PhoneNumbers%5B%5D'
-phoneNumber1='415-555-1212'
-phoneNumber2='415-555-1313'
-phoneNumber3='415-555-1414'
+phoneNumber1='PhoneNumbers%5B0%5D'
+phoneNumber2='PhoneNumbers%5B1%5D'
+phoneNumber3='PhoneNumbers%5B2%5D'
+number1='415-555-1212'
+number2='415-555-1313'
+number3='415-555-1414'
 query \
-  "$phoneNumber"="$phoneNumber1" \
-  "$phoneNumber"="$phoneNumber2" \
-  "$phoneNumber"="$phoneNumber3"
+  "$phoneNumber1"="$number1" \
+  "$phoneNumber2"="$number2" \
+  "$phoneNumber3"="$number3"
 echo
 echo '[FIND-ME-1-2] Find Me with 3 Numbers and Fallback URL (from Example 2)'
+phoneNumber='PhoneNumbers%5B%5D'
 fallbackUrl='https%3A%2F%2Fexample.com%2Fplease-try-later.mp3'
 query \
-  "$phoneNumber"="$phoneNumber1" \
-  "$phoneNumber"="$phoneNumber2" \
-  "$phoneNumber"="$phoneNumber3" \
+  "$phoneNumber"="$number1" \
+  "$phoneNumber"="$number2" \
+  "$phoneNumber"="$number3" \
   FailUrl="$fallbackUrl"
 echo
 echo '[FIND-ME-1-3] Find Me with Custom Timeout and Message'
 message='Custom%20message'
 query \
-  "$phoneNumber"="$phoneNumber1" \
-  "$phoneNumber"="$phoneNumber2" \
-  "$phoneNumber"="$phoneNumber3" \
+  "$phoneNumber"="$number1" \
+  "$phoneNumber"="$number2" \
+  "$phoneNumber"="$number3" \
   Timeout=42 \
   Message="$message"
 echo

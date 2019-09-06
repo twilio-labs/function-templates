@@ -142,6 +142,22 @@ test('[FINDME-INPUT-PHONE-NUMBERS-2] Read List of Phone Numbers from Event',
 });
 
 test('[FINDME-INPUT-PHONE-NUMBERS-3] '+
+     'Read Indexed List of Phone Numbers from Event',
+() => {
+  expect(
+    funlet.input.getPhoneNumbers({
+      "PhoneNumbers[0]":PHONE_NUMBER1,
+      "PhoneNumbers[1]":PHONE_NUMBER2,
+      "PhoneNumbers[2]":PHONE_NUMBER3
+    }, {}, {})
+  ).toEqual( [
+    PHONE_NUMBER1,
+    PHONE_NUMBER2,
+    PHONE_NUMBER3
+  ] );
+});
+
+test('[FINDME-INPUT-PHONE-NUMBERS-4] '+
      'Read Single Phone Number from Environment',
 () => {
   expect(
@@ -151,7 +167,7 @@ test('[FINDME-INPUT-PHONE-NUMBERS-3] '+
   ).toEqual( [PHONE_NUMBER1] );
 });
 
-test('[FINDME-INPUT-PHONE-NUMBERS-4] '+
+test('[FINDME-INPUT-PHONE-NUMBERS-5] '+
      'Read Five Phone Numbers from Environment',
 () => {
   expect(
@@ -171,7 +187,7 @@ test('[FINDME-INPUT-PHONE-NUMBERS-4] '+
   ] );
 });
 
-test('[FINDME-INPUT-PHONE-NUMBERS-5] '+
+test('[FINDME-INPUT-PHONE-NUMBERS-6] '+
      'Read Phone Numbers from Script Config',
 () => {
   expect(
@@ -189,8 +205,8 @@ test('[FINDME-INPUT-PHONE-NUMBERS-5] '+
   ]);
 });
 
-test('[FINDME-INPUT-PHONE-NUMBERS-6] '+
-     'Read Default Phone Numbers from Script Config',
+test('[FINDME-INPUT-PHONE-NUMBERS-7] '+
+     'Read Default Phone Numbers from Script',
 () => {
   expect( funlet.config.phoneNumbers ).toEqual( DEFAULT_PHONE_NUMBERS );
 });
