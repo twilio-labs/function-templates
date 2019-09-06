@@ -417,34 +417,6 @@ test('[SIMULRING-INPUT-DIAL-1] Read Dial from Event',
   ).toEqual( DIAL_DONE );
 });
 
-test('[SIMULRING-INPUT-CALL-STATUS-0] Read No Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({}, {}, {})
-  ).toEqual( NO_CALL_STATUS );
-});
-
-test('[SIMULRING-INPUT-CALL-STATUS-1] Read Answered Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({DialStatus:CALL_ANSWERED}, {}, {})
-  ).toEqual( CALL_ANSWERED );
-});
-
-test('[SIMULRING-INPUT-CALL-STATUS-2] Read Completed Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({DialCallStatus:CALL_COMPLETED}, {}, {})
-  ).toEqual( CALL_COMPLETED );
-});
-
-test('[SIMULRING-INPUT-CALL-STATUS-3] Read Busy Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({DialCallStatus:CALL_BUSY}, {}, {})
-  ).toEqual( CALL_BUSY );
-});
-
 test('[SIMULRING-INPUT-FALLBACK-URL-1] Read Fallback URL from Event',
 () => {
   expect(

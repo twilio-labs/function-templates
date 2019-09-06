@@ -404,16 +404,10 @@ exports.input = {
   isHumanCheckRequired: isHumanCheckRequired,
   getDigits: getDigits,
   isDialDone: isDialDone,
-  getCallStatus: getCallStatus,
   getFallbackUrl: getFallbackUrl
 };
 
 exports.output = {
-  spell: spell,
-  getForwardActionUrl: getForwardActionUrl,
-  getWhisperUrl: getWhisperUrl,
-  simpleMessage: simpleMessage,
-  gatherDigits: gatherDigits,
   simulringStage1: simulringStage1,
   simulringStage2: simulringStage2,
   simulringStage3: simulringStage3,
