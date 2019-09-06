@@ -306,13 +306,11 @@ exports.input = {
   getErrorMessage: getErrorMessage,
   getLanguage: getLanguage,
   getVoice: getVoice,
-  readListParam: readListParam,
   getOptions: getOptions,
   getDigits: getDigits
 };
 
 exports.output = {
-  simpleMessage: simpleMessage,
   gatherDigits: gatherDigits,
   simpleMenuStage1: simpleMenuStage1,
   simpleMenuStage2: simpleMenuStage2
