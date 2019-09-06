@@ -11,11 +11,12 @@
 
   Contents:
     1. Configuration
-    2. Input Parameters
-    3. Output Helpers
-    4. Main Handler
-    5. Other Exports
-    6. References
+    2. Input Utilities
+    3. Input Parameters
+    4. Output Helpers
+    5. Main Handler
+    6. Other Exports
+    7. References
 */
 
 /*
@@ -43,20 +44,9 @@ let config = {
 };
 
 /*
-  2. Input Parameters
+  2. Input Utilities
 
-  Each input parameter Foo is read by a separate function getFoo()
-  which takes one parameter for each source:
-
-    * params - object, the set of HTTP parameters
-               from the URL (GET) or the body (POST) of the query
-    * env - object, the set of environment properties
-            defined in the Twilio account
-    * config - object, the configuration object
-               defined above in this script
-
-  The HTTP parameters are considered first, then environment properties,
-  then the script parameters. This can be customized in the functions below.
+  These utility functions help in reading input parameters.
 */
 
 /*
@@ -135,6 +125,23 @@ function readEnvList( name, start, end, env ) {
   return array;
 }
 
+/*
+  3. Input Parameters
+
+  Each input parameter Foo is read by a separate function getFoo()
+  which takes one parameter for each source:
+
+    * params - object, the set of HTTP parameters
+               from the URL (GET) or the body (POST) of the query
+    * env - object, the set of environment properties
+            defined in the Twilio account
+    * config - object, the configuration object
+               defined above in this script
+
+  The HTTP parameters are considered first, then environment properties,
+  then the script parameters. This can be customized in the functions below.
+*/
+
 function getMessages(params, env, config) {
   let messages = readListParam( "Message", params );
   if ( messages.length > 0 ) {
@@ -158,7 +165,7 @@ function getVoice(params, env, config) {
 }
 
 /*
-  3. Output Helpers
+  4. Output Helpers
 
   These helper functions build part of the output.
 
@@ -222,7 +229,7 @@ function simpleMessages(response, messages, language, voice) {
 }
 
 /*
-  4. Main Handler
+  5. Main Handler
 
   This is the entry point to your Twilio Function,
   which will run to process an incoming HTTP request
@@ -242,7 +249,7 @@ exports.handler = function(context, event, callback) {
 };
 
 /*
-  5. Other Exports
+  6. Other Exports
 
   These internal features are exported too, for the purpose of unit tests.
 */
@@ -263,7 +270,7 @@ exports.output = {
 };
 
 /*
-  6. References
+  7. References
 
     [1] Simple Message Twimlet
     https://www.twilio.com/labs/twimlets/message
