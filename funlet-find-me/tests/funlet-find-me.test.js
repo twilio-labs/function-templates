@@ -94,6 +94,18 @@ const FULL_RESPONSE_FIND_ME_1_3=
     '</Dial>'+
   '</Response>';
 
+const FULL_RESPONSE_FIND_ME_1_6=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Hangup/>'+
+  '</Response>';
+
+const FULL_RESPONSE_FIND_ME_1_7=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Redirect>'+FALLBACK_URL+'</Redirect>'+
+  '</Response>';
+
 const FULL_RESPONSE_FIND_ME_2_1=
   XML_DECLARATION+
   '<Response>'+
@@ -456,6 +468,28 @@ test('[FINDME-OUTPUT-FINDME-1-1] Find Me with 3 Phone Numbers',
     DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
   );
   expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_1 );
+});
+
+test('[FINDME-OUTPUT-FINDME-1-6] No More Numbers, Without Fallback URL',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.findMeStage1(
+    response,
+    [],
+    DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
+  );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_6 );
+});
+
+test('[FINDME-OUTPUT-FINDME-1-7] No More Numbers, With Fallback URL',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.findMeStage1(
+    response,
+    [],
+    DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, FALLBACK_URL
+  );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_7 );
 });
 
 test('[FINDME-1-3] Find Me with Custom Timeout and Message', done => {
