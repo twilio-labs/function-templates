@@ -2,11 +2,18 @@ const funlet = require('../functions/funlet-find-me');
 const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 
-const PHONE_NUMBER1='415-555-1212';
-const PHONE_NUMBER2='415-555-1313';
-const PHONE_NUMBER3='415-555-1414';
-const PHONE_NUMBER4='415-555-1515';
-const PHONE_NUMBER5='415-555-1616';
+const PHONE_NUMBER1='415-555-5501';
+const PHONE_NUMBER2='415-555-5502';
+const PHONE_NUMBER3='415-555-5503';
+const PHONE_NUMBER4='415-555-5504';
+const PHONE_NUMBER5='415-555-5505';
+const PHONE_NUMBER6='415-555-5506';
+const PHONE_NUMBER7='415-555-5507';
+const PHONE_NUMBER8='415-555-5508';
+const PHONE_NUMBER9='415-555-5509';
+const PHONE_NUMBER10='415-555-5510';
+const PHONE_NUMBER11='415-555-5511';
+const PHONE_NUMBER12='415-555-5512';
 const DEFAULT_PHONE_NUMBERS=[];
 
 const TIMEOUT_STRING="42";
@@ -93,6 +100,29 @@ const FULL_RESPONSE_FIND_ME_1_3=
       '</Number>'+
     '</Dial>'+
   '</Response>';
+
+const FULL_RESPONSE_FIND_ME_1_4=
+  XML_DECLARATION+
+  '<Response>'+
+    '<Dial '+
+      'action=".?Dial=true'+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER2+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER3+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER4+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER5+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER6+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER7+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER8+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER9+
+        '&amp;PhoneNumbers%5B%5D='+PHONE_NUMBER10+
+      '" '+
+      'timeout="'+DEFAULT_TIMEOUT+'"'+
+    '>'+
+      '<Number url="'+XML_DEFAULT_WHISPER_URL+'">'+PHONE_NUMBER1+'</Number>'+
+    '</Dial>'+
+  '</Response>';
+
+const FULL_RESPONSE_FIND_ME_1_5=FULL_RESPONSE_FIND_ME_1_4;
 
 const FULL_RESPONSE_FIND_ME_1_6=
   XML_DECLARATION+
@@ -468,6 +498,35 @@ test('[FINDME-OUTPUT-FINDME-1-1] Find Me with 3 Phone Numbers',
     DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
   );
   expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_1 );
+});
+
+test('[FINDME-OUTPUT-FINDME-1-4] Allow up to 10 numbers',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.findMeStage1(
+    response,
+    [
+      PHONE_NUMBER1,PHONE_NUMBER2,PHONE_NUMBER3,PHONE_NUMBER4,PHONE_NUMBER5,
+      PHONE_NUMBER6,PHONE_NUMBER7,PHONE_NUMBER8,PHONE_NUMBER9,PHONE_NUMBER10
+    ],
+    DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
+  );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_4 );
+});
+
+test('[FINDME-OUTPUT-FINDME-1-5] Discard Extra Numbers Above 10',
+() => {
+  let response = new Twilio.twiml.VoiceResponse();
+  funlet.output.findMeStage1(
+    response,
+    [
+      PHONE_NUMBER1,PHONE_NUMBER2,PHONE_NUMBER3,PHONE_NUMBER4,PHONE_NUMBER5,
+      PHONE_NUMBER6,PHONE_NUMBER7,PHONE_NUMBER8,PHONE_NUMBER9,PHONE_NUMBER10,
+      PHONE_NUMBER11,PHONE_NUMBER12
+    ],
+    DEFAULT_TIMEOUT, DEFAULT_WHISPER_URL, NO_FALLBACK_URL
+  );
+  expect( response.toString() ).toEqual( FULL_RESPONSE_FIND_ME_1_5 );
 });
 
 test('[FINDME-OUTPUT-FINDME-1-6] No More Numbers, Without Fallback URL',

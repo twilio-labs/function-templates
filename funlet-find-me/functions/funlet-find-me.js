@@ -275,13 +275,15 @@ function getWhisperUrl( params ) {
         with given timeout,
       - to play a message asking the recipient to accept
         the call by pressing a key,
-      - and to try again with the next forwarding number,
+      - and to try again with the next of up to 10 forwarding numbers,
         if the forwarding call fails, or to redirect to the given
         fallback URL when the last forwarding number has been tried.
 */
 function findMeStage1(
   response, forwardingNumbers, timeout, whisperUrl, fallbackUrl
 ) {
+  const MAX_FORWARDING_NUMBERS = 10;
+
   if ( forwardingNumbers.length === 0 ) {
     if ( fallbackUrl !== "" ) {
       response.redirect( fallbackUrl );
@@ -289,6 +291,10 @@ function findMeStage1(
       response.hangup();
     }
     return;
+  }
+
+  if ( forwardingNumbers.length > MAX_FORWARDING_NUMBERS ) {
+    forwardingNumbers.length = MAX_FORWARDING_NUMBERS;
   }
 
   let otherForwardingNumbers = Array.from(forwardingNumbers);
