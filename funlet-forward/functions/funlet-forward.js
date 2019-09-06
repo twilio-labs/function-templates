@@ -13,11 +13,12 @@
 
   Contents:
     1. Configuration
-    2. Input Parameters
-    3. Output Helpers
-    4. Main Handler
-    5. Other Exports
-    6. References
+    2. Input Utilities
+    3. Input Parameters
+    4. Output Helpers
+    5. Main Handler
+    6. Other Exports
+    7. References
 */
 
 /*
@@ -63,7 +64,38 @@ let config = {
 };
 
 /*
-  2. Input Parameters
+  2. Input Utilities
+
+  These utility functions help in reading input parameters.
+*/
+
+// Copied from Simple Message Funlet
+function readListParam( name, params ) {
+  let array = [];
+
+  const INDEXED_PARAM_REGEX = new RegExp( '^' + name + '\\[([0-9]+)\\]$' );
+  for( let property of Object.keys(params) ) {
+    let matches = INDEXED_PARAM_REGEX.exec( property );
+    if( matches !== null ) {
+      let index = matches[1];
+      array[ index ] = params[ property ];
+    }
+  }
+
+  if ( params.hasOwnProperty( name ) ) {
+    let value = params[ name ];
+    if ( typeof value === "string" ) {
+      array.push( value );
+    } else if ( Array.isArray( value ) ) {
+      array = array.concat( value );
+    }
+  }
+
+  return array;
+}
+
+/*
+  3. Input Parameters
 
   Each input parameter Foo is read by a separate function getFoo()
   which takes one parameter for each source:
@@ -126,13 +158,7 @@ function getAllowedCallers(params, env, config) {
     }
   }
 
-  if ( Array.isArray(params.AllowedCallers) ) {
-    params.AllowedCallers.forEach(
-      phoneNumber => addIfNotEmpty(phoneNumber)
-    );
-  } else {
-    addIfNotEmpty( params.AllowedCallers );
-  }
+  readListParam( "AllowedCallers", params ).forEach( addIfNotEmpty );
 
   addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER1 );
   addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER2 );
@@ -205,7 +231,7 @@ function isForwardingAllowed(caller, called, allowedCallers) {
 }
 
 /*
-  3. Output Helpers
+  4. Output Helpers
 
   These helper functions build part of the output.
 
@@ -330,7 +356,7 @@ function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
 }
 
 /*
-  4. Main Handler
+  5. Main Handler
 
   This is the entry point to your Twilio Function,
   which will run to process an incoming HTTP request
@@ -371,7 +397,7 @@ exports.handler = function(context, event, callback) {
 };
 
 /*
-  5. Other Exports
+  6. Other Exports
 
   These internal features are exported too, for the purpose of unit tests.
 */
@@ -405,7 +431,7 @@ exports.output = {
 };
 
 /*
-  6. References
+  7. References
 
     [1] Forward Twimlet
     https://www.twilio.com/labs/twimlets/forward

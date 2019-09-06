@@ -265,6 +265,22 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-2] '+
 });
 
 test('[FORWARD-INPUT-ALLOWED-CALLERS-3] '+
+     'Read Indexed List of Allowed Callers from Event',
+() => {
+  expect(
+    funlet.input.getAllowedCallers({
+      "AllowedCallers[0]": ALLOWED_CALLER1,
+      "AllowedCallers[1]": ALLOWED_CALLER2,
+      "AllowedCallers[2]": ALLOWED_CALLER3
+    }, {}, {})
+  ).toEqual( [
+    ALLOWED_CALLER1_DIGITS,
+    ALLOWED_CALLER2_DIGITS,
+    ALLOWED_CALLER3_DIGITS
+  ] );
+});
+
+test('[FORWARD-INPUT-ALLOWED-CALLERS-4] '+
      'Read Single Allowed Caller from Environment',
 () => {
   expect(
@@ -274,7 +290,7 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-3] '+
   ).toEqual( [ALLOWED_CALLER1_DIGITS] );
 });
 
-test('[FORWARD-INPUT-ALLOWED-CALLERS-4] '+
+test('[FORWARD-INPUT-ALLOWED-CALLERS-5] '+
      'Read Five Allowed Callers from Environment',
 () => {
   expect(
@@ -294,7 +310,7 @@ test('[FORWARD-INPUT-ALLOWED-CALLERS-4] '+
   ] );
 });
 
-test('[FORWARD-INPUT-ALLOWED_CALLERS-5] '+
+test('[FORWARD-INPUT-ALLOWED-CALLERS-6] '+
      'Read Allowed Callers from Script Config',
 () => {
   expect(
@@ -310,13 +326,13 @@ test('[FORWARD-INPUT-ALLOWED_CALLERS-5] '+
   ]);
 });
 
-test('[FORWARD-INPUT-ALLOWED_CALLERS-6] '+
+test('[FORWARD-INPUT-ALLOWED-CALLERS-7] '+
      'Read Default Allowed Callers from Script Config',
 () => {
   expect( funlet.config.allowedCallers ).toEqual( DEFAULT_ALLOWED_CALLERS );
 });
 
-test('[FORWARD-INPUT-ALLOWED_CALLERS-7] Skip empty values',
+test('[FORWARD-INPUT-ALLOWED-CALLERS-8] Skip empty values',
 () => {
   expect(
     funlet.input.getAllowedCallers({}, {
@@ -333,7 +349,7 @@ test('[FORWARD-INPUT-ALLOWED_CALLERS-7] Skip empty values',
   ] );
 });
 
-test('[FORWARD-INPUT-ALLOWED-CALLERS-8] Use local US number in API 2008-08-01',
+test('[FORWARD-INPUT-ALLOWED-CALLERS-9] Use local US number in API 2008-08-01',
 () => {
   expect(
     funlet.input.getAllowedCallers({
