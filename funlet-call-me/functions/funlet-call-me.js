@@ -343,16 +343,11 @@ exports.input = {
   isHumanCheckRequired: isHumanCheckRequired,
   getDigits: getDigits,
   isDialDone: isDialDone,
-  getCallStatus: getCallStatus,
   getFallbackUrl: getFallbackUrl
 };
 
 exports.output = {
-  spell: spell,
-  getForwardActionUrl: getForwardActionUrl,
   getWhisperUrl: getWhisperUrl,
-  simpleMessage: simpleMessage,
-  gatherDigits: gatherDigits,
   callMeStage1: callMeStage1,
   callMeStage2: callMeStage2,
   callMeStage3: callMeStage3,

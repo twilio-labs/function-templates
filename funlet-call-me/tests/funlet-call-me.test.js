@@ -325,34 +325,6 @@ test('[CALLME-INPUT-DIAL-1] Read Dial from Event',
   ).toEqual( DIAL_DONE );
 });
 
-test('[CALLME-INPUT-CALL-STATUS-0] Read No Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({}, {}, {})
-  ).toEqual( NO_CALL_STATUS );
-});
-
-test('[CALLME-INPUT-CALL-STATUS-1] Read Answered Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({DialStatus:CALL_ANSWERED}, {}, {})
-  ).toEqual( CALL_ANSWERED );
-});
-
-test('[CALLME-INPUT-CALL-STATUS-2] Read Completed Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({DialCallStatus:CALL_COMPLETED}, {}, {})
-  ).toEqual( CALL_COMPLETED );
-});
-
-test('[CALLME-INPUT-CALL-STATUS-3] Read Busy Call Status from Event',
-() => {
-  expect(
-    funlet.input.getCallStatus({DialCallStatus:CALL_BUSY}, {}, {})
-  ).toEqual( CALL_BUSY );
-});
-
 test('[CALLME-INPUT-FALLBACK-URL-1] Read Fallback URL from Event',
 () => {
   expect(
