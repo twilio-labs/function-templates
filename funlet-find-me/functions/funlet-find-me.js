@@ -282,6 +282,15 @@ function getWhisperUrl( params ) {
 function findMeStage1(
   response, forwardingNumbers, timeout, whisperUrl, fallbackUrl
 ) {
+  if ( forwardingNumbers.length === 0 ) {
+    if ( fallbackUrl !== "" ) {
+      response.redirect( fallbackUrl );
+    } else {
+      response.hangup();
+    }
+    return;
+  }
+
   let otherForwardingNumbers = Array.from(forwardingNumbers);
   let firstForwardingNumber = otherForwardingNumbers.shift();
   let actionUrl = getForwardActionUrl( fallbackUrl );
