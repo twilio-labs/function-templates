@@ -435,7 +435,6 @@ exports.utils = {
 };
 
 exports.output = {
-  simpleMessage: simpleMessage,
   getForwardActionUrl: getForwardActionUrl,
   forwardStage1: forwardStage1,
   forwardStage2: forwardStage2
