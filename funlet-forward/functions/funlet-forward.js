@@ -94,6 +94,22 @@ function readListParam( name, params ) {
   return array;
 }
 
+// Copied from Simple Message Funlet
+function readEnvList( name, start, end, env ) {
+  let array = [];
+
+  for ( let i=start; i<=end; i++ ) {
+    let
+      key = name + i,
+      value = env[ key ];
+    if ( typeof value === "string" ) {
+      array.push( value );
+    }
+  }
+
+  return array;
+}
+
 /*
   3. Input Parameters
 
@@ -158,13 +174,10 @@ function getAllowedCallers(params, env, config) {
     }
   }
 
-  readListParam( "AllowedCallers", params ).forEach( addIfNotEmpty );
-
-  addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER1 );
-  addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER2 );
-  addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER3 );
-  addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER4 );
-  addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER5 );
+  readListParam( "AllowedCallers", params )
+    .forEach( addIfNotEmpty );
+  readEnvList( "FUNLET_FORWARD_ALLOWED_CALLER", 1, 5, env )
+    .forEach( addIfNotEmpty );
 
   if ( Array.isArray(config.allowedCallers) ) {
     config.allowedCallers.forEach( addIfNotEmpty );
