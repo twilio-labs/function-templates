@@ -167,9 +167,7 @@ function getAllowedCallers(params, env, config) {
   addIfNotEmpty( env.FUNLET_FORWARD_ALLOWED_CALLER5 );
 
   if ( Array.isArray(config.allowedCallers) ) {
-    config.allowedCallers.forEach(
-      phoneNumber => addIfNotEmpty(phoneNumber)
-    );
+    config.allowedCallers.forEach( addIfNotEmpty );
   }
 
   return allowedCallers;
