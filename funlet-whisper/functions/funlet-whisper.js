@@ -245,8 +245,6 @@ exports.input = {
 
 exports.output = {
   spell: spell,
-  simpleMessage: simpleMessage,
-  gatherDigits: gatherDigits,
   whisperStage1: whisperStage1,
   whisperStage2: whisperStage2
 };
