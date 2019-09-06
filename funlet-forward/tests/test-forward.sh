@@ -65,41 +65,43 @@ fallbackUrl='https%3A%2F%2Fexample.com%2Fplease-try-later.mp3'
 query PhoneNumber="$phoneNumber" FailUrl="$fallbackUrl"
 echo
 echo '[FORWARD-1-3] Calling Number Allowed (from Example 3)'
-allowed='AllowedCallers%5B%5D'
-allowed1='650-555-1212'
-allowed2='510-555-1212'
+allowed1='AllowedCallers%5B0%5D'
+allowed2='AllowedCallers%5B1%5D'
+number1='650-555-1212'
+number2='510-555-1212'
 from2='5105551212'
 query \
   PhoneNumber="$phoneNumber" \
-  "$allowed"="$allowed1" \
-  "$allowed"="$allowed2" \
+  "$allowed1"="$number1" \
+  "$allowed2"="$number2" \
   From="$from2"
 echo
 echo '[FORWARD-1-4] Calling Number Not Allowed (from Example 3)'
 from3='9165550123'
+allowed='AllowedCallers%5B%5D'
 query \
   PhoneNumber="$phoneNumber" \
-  "$allowed"="$allowed1" \
-  "$allowed"="$allowed2" \
+  "$allowed"="$number1" \
+  "$allowed"="$number2" \
   From="$from3"
 echo
 echo '[FORWARD-1-5] In API version "2008-08-01", convert AllowedCallers to local US number'
-allowed2ext='%2B1-510-555-1212'
+number2ext='%2B1-510-555-1212'
 query \
   PhoneNumber="$phoneNumber" \
-  "$allowed"="$allowed2ext" \
+  "$allowed"="$number2ext" \
   ApiVersion=2008-08-01 \
   From="$from2"
 echo
 echo '[FORWARD-1-6] When recipient is an "allowed caller" (sic), not the caller'
 query \
   PhoneNumber="$phoneNumber" \
-  "$allowed"="$allowed2" \
+  "$allowed"="$number2" \
   From="$from3" \
   To="$from2"
 echo
 echo '[FORWARD-1-7] Custom timeout and caller id'
-query PhoneNumber="$phoneNumber" Timeout=42 CallerId="$allowed2"
+query PhoneNumber="$phoneNumber" Timeout=42 CallerId="$number2"
 echo
 echo '[FORWARD-2-1] Call Completed'
 query Dial=true DialCallStatus=completed FailUrl="$fallbackUrl"
