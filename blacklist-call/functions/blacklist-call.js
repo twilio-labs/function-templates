@@ -1,10 +1,11 @@
 exports.handler = function(context, event, callback) {
-    // List all blocked phone numbers in quotes and E.164 formatting, separated by a comma
-    let blacklist = event.blacklist;  
+    let blacklist = event.blacklist || context.BLACKLIST || '';
+    const blacklistArray = blacklist.toString().split(',').map(num => num.trim());
+
     let twiml = new Twilio.twiml.VoiceResponse();
     let blocked = true;
-    if (blacklist.length > 0) {
-      if (blacklist.indexOf(event.From) === -1) {
+    if (blacklistArray.length) {
+      if (!blacklistArray.includes(event.From)) {
         blocked = false;
       }
     }
@@ -12,8 +13,8 @@ exports.handler = function(context, event, callback) {
       twiml.reject();
     }
     else {
-    // if the caller's number is not blocked, redirect to your existing webhook
-    twiml.redirect(context.HTTP_REDIRECT_URL);
+    // Update this line to your response.
+    twiml.redirect('https://demo.twilio.com/docs/voice.xml');
     }
     callback(null, twiml);
   };
