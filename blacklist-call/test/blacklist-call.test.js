@@ -2,14 +2,15 @@ const helpers = require('../../test/test-helper');
 const blacklistCall = require('../functions/blacklist-call').handler;
 
 const context = {
-  MY_PHONE_NUMBER: 'TwilioNumber'
+
 };
-const event = {
+
+const rejectEvent = {
   blacklist: [ "+12125551234", "+17025556789" ],
   From: "+12125551234"
 };
 
-const successEvent = {
+const redirectEvent = {
   blacklist: [ "+12125551234", "+17025556789" ],
   From: "+9999999999"
 }
@@ -27,7 +28,7 @@ test('rejects the call', done => {
     expect(result.toString()).toMatch(/Reject/);
     done();
   };
-  blacklistCall(context, event, callback)
+  blacklistCall(context, rejectEvent, callback)
 });
 
 
@@ -36,5 +37,5 @@ test('redirects the call', done => {
     expect(result.toString()).toMatch(/Redirect/);
     done();
   };
-  blacklistCall(context, successEvent, callback)
+  blacklistCall(context, redirectEvent, callback)
 });
