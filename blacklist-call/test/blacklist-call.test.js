@@ -15,6 +15,11 @@ const redirectEvent = {
   From: "+9999999999"
 }
 
+const emptyBlacklistEvent = {
+  blacklist: '',
+  From: "+9999999999"
+}
+
 beforeAll(() => {
   helpers.setup(context);
 });
@@ -38,4 +43,12 @@ test('redirects the call', done => {
     done();
   };
   blacklistCall(context, redirectEvent, callback)
+});
+
+test('redirects the call with empty Blacklist', done => {
+  const callback = (err, result) => {
+    expect(result.toString()).toMatch(/Redirect/);
+    done();
+  };
+  blacklistCall(context, emptyBlacklistEvent, callback)
 });
