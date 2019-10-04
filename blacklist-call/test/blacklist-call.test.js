@@ -6,12 +6,12 @@ const context = {
 };
 
 const rejectEvent = {
-  blacklist: [ "+12125551234", "+17025556789" ],
+  blacklist: '+12125551234,+17025556789',
   From: "+12125551234"
 };
 
 const redirectEvent = {
-  blacklist: [ "+12125551234", "+17025556789" ],
+  blacklist: '+12125551234,+17025556789',
   From: "+9999999999"
 }
 
