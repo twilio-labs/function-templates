@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const tokenFunction = require('../functions/token').handler;
+const tokenFunction = require('../functions/video-token').handler;
 const helpers = require('../../test/test-helper');
 
 const baseContext = {
