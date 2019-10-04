@@ -84,6 +84,11 @@
       "id": "temp-storage",
       "name": "Functions Temporary Storage",
       "description": "Utilises the temp folder of the OS for one-off operations"
+    },
+    {
+      "id": "blacklist-call",
+      "name": "Blacklist Call Function",
+      "description": "Blacklists an array of numbers"
     }
   ]
 }
