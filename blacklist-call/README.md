@@ -8,10 +8,10 @@ This function in `blacklist-call.js` allows users to setup a blacklist to reject
 
 This Function expects one environment variable to be set.
 
-| Variable          | Meaning                                                                                                                                                              |
-| :---------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Variable    | Meaning                                                                                                                                                 |
+| :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `BLACKLIST` | The list of numbers you want to reject [in E.164 format](https://support.twilio.com/hc/en-us/articles/223183008-Formatting-International-Phone-Numbers) |
 
 ### Parameters
 
-This Function expects the incoming request to be a messaging webhook. The parameters that will be used are `From` and `blacklist`.
+This Function expects the incoming request to be a voice webhook. The parameters that will be used are `From` and `blacklist`.
