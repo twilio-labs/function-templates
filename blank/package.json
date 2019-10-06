@@ -1,3 +1,10 @@
 {
-  "dependencies": {}
+  "keywords": [
+    "twilio",
+    "sms",
+    "rest",
+    "api"
+  ],
+  "dependencies": {},
+   "license": "MIT"
 }
