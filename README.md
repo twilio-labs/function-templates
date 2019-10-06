@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.org/twilio-labs/function-templates.svg?branch=master)](https://travis-ci.org/twilio-labs/function-templates)
 
-[Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
+[Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it.Runtime consists of a set of tools including a [CLI](https://www.twilio.com/docs/twilio-cli/quickstart), [helper libraries](https://www.twilio.com/docs/libraries),
+[API keys](https://www.twilio.com/docs/iam/keys/api-key), debugging tools(https://www.twilio.com/docs/usage/troubleshooting/debugging-your-application), a visual workflow designer called Studio, and a serverless hosting environment for Node.js code and static assets: Twilio Functions & Assets. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
 
 ## This repo
 
@@ -17,6 +18,7 @@ Each Function lives in its own directory within this repo. To use the code, copy
 This is the list of Functions available in this repo:
 
 - [Blank Template](blank) - Barebones template to get started
+- [Hunt/Find me](hunt) - Call a list of numbers in order until one answers
 - [Hello World](hello-world) - A very basic Function to get this repo started
 - [Hello Voice](hello-voice) - Function to get you started with Twilio Prog. Voice
 - [Hello Messaging](hello-messaging) - Function to get you started with Twilio Prog. Messaging
@@ -41,6 +43,10 @@ This is the list of Functions available in this repo:
 - [ ] Voicemail
 - [ ] Inbound calls for SIP registration
 - [ ] Outbound calls for SIP registration
+- [ ] Generate Video access token
+- [ ] Generate Sync access token
+- [ ] Generate Chat access token
+- [ ] Conference line
 - [ ] Translate webhook from `application/x-www-form-urlencoded` into `application/json` and forward on to another service
 
 Please add ideas if you have them.
