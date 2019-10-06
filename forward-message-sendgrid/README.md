@@ -1,6 +1,6 @@
 # Forward SMS message as an email (SendGrid)
 
-The SendGrid Function will forward incoming SMS messages to an email address using the [SendGrid API](http://sendgrid.com/).
+The SendGrid Function will forward incoming SMS messages to an email address using the [SendGrid API](https://sendgrid.com/).
 
 You will need a SendGrid account and an [API key](https://app.sendgrid.com/settings/api_keys) to use this Function.
 
