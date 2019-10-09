@@ -16,23 +16,23 @@ Each Function lives in its own directory within this repo. To use the code, copy
 
 This is the list of Functions available in this repo:
 
-- [Blank Template](blank) - Barebones template to get started
-- [Hello World](hello-world) - A very basic Function to get this repo started
+- [Blank Template](blank) - Barebones template to get started.
+- [Hello World](hello-world) - A very basic Function to get this repo started.
 - [Hello Voice](hello-voice) - Function to get you started with Twilio Prog. Voice
 - [Hello Messaging](hello-messaging) - Function to get you started with Twilio Prog. Messaging
-- [Forward Call](forward-call) - Forwards an incoming call to another number
-- [Forward Message](forward-message) - Forward incoming SMS messages to another number
-- [Forward Message to Multiple Numbers](forward-message-multiple) - Forwards incoming messages to a set of numbers
-- [Forward Message to Email via SendGrid](forward-message-sendgrid) - Uses SendGrid to forward incoming messages via email
-- [Forward Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email
-- [Hunt/Find me](hunt) - Call a list of numbers in order until one answers
-- [Generate Video access token](video-token) - Generates a Video Access Token for client-side applications
-- [Generate Sync access token](sync-token) - Generates a Sync Access Token for client-side applications
-- [Generate Chat access token](chat-token) - Generates a Chat Access Token for client-side applications
-- [Conference line](conference) - Simple TwiML to drop callers into a conference call called "Snowy Owl"
-- [Simple play](never-gonna-give-you-up) - TwiML to `<Play>` an mp3
-- [HTTP Redirect](http-redirect) - Redirects a request from Twilio Functions to another URL by setting the Location header to the respective URL
-- [Temp Storage](temp-storage) - Function that shows you where files created in a Twilio Function go and how to manage them for one-off activities
+- [Forward Call](forward-call) - Forwards an incoming call to another number.
+- [Forward Message](forward-message) - Forward incoming SMS messages to another number.
+- [Forward Message to Multiple Numbers](forward-message-multiple) - Forwards incoming messages to a set of numbers.
+- [Forward Message to Email via SendGrid](forward-message-sendgrid) - Uses SendGrid to forward incoming messages via email.
+- [Forward Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email.
+- [Hunt/Find me](hunt) - Call a list of numbers in order until one answers.
+- [Generate Video access token](video-token) - Generates a Video Access Token for client-side applications.
+- [Generate Sync access token](sync-token) - Generates a Sync Access Token for client-side applications.
+- [Generate Chat access token](chat-token) - Generates a Chat Access Token for client-side applications.
+- [Conference line](conference) - Simple TwiML to drop callers into a conference call called "Snowy Owl".
+- [Simple play](never-gonna-give-you-up) - TwiML to `<Play>` an mp3.
+- [HTTP Redirect](http-redirect) - Redirects a request from Twilio Functions to another URL by setting the Location header to the respective URL.
+- [Temp Storage](temp-storage) - Function that shows you the location where files created in a Twilio Function go and how to manage them for one-off activities.
 
 ### Todo
 
@@ -49,13 +49,13 @@ Please add ideas if you have them.
 
 Pull requests and new Functions are accepted. To make a contribution, follow these steps:
 
-1. Fork this repository ( https://github.com/twilio-labs/function-templates/fork )
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a new Pull Request
+1. Fork this repository. ( https://github.com/twilio-labs/function-templates/fork )
+2. Create your feature branch. (git checkout -b my-new-feature)
+3. Commit your changes. (git commit -am 'Add some feature')
+4. Push to the branch. (git push origin my-new-feature)
+5. Create a new Pull Request.
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT). By participating in this project you agree to abide by it's terms.
 
 ### Install
 
