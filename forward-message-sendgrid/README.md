@@ -20,7 +20,7 @@ This Function depends on one npm module. You should add the following dependenci
 
 | Dependency | Version |
 | :--------- | :------ |
-| `got`      | ^6.7.1  |
+| `got`      | 6.7.1  |
 
 ### Parameters
 
