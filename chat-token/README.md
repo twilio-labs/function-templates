@@ -12,9 +12,9 @@ This Function expects the following environment variables set:
 
 | Variable           | Meaning                                                                           | Required |
 | :----------------- | :-------------------------------------------------------------------------------- | :------- |
-| `API_KEY`          | Twilio API Key. Create one here (https://www.twilio.com/console/runtime/api-keys) | Yes      |
+| `API_KEY`          | Twilio API Key. Create one [here](https://www.twilio.com/console/runtime/api-keys). | Yes      |
 | `API_SECRET`       | Twilio API Secret corresponding to your API Key                                   | Yes      |
-| `CHAT_SERVICE_SID` | Twilio Chat Service SID. https://www.twilio.com/docs/api/chat/rest/services       | Yes      |
+| `CHAT_SERVICE_SID` | Twilio Chat [Service SID](https://www.twilio.com/docs/api/chat/rest/services).       | Yes      |
 
 ## Parameters
 
