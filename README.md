@@ -6,7 +6,7 @@
 
 ## This repo
 
-This repo is intended to be a collection of useful Twilio Functions that are tested and documented. The intention is that you can take any of these Functions and drop them into a project, confident they will work, whether you are a developer looking for a particular building block or a builder who just needs a particular Function. These templates are also available through `twilio-run new` inside the [`twilio-run`](https://npm.im/twilio-run) CLI.
+This repository is intended to be a collection of useful Twilio Functions that are tested and documented. The intention is that you can take any of these Functions and drop them into a project, confident they will work, whether you are a developer looking for a particular building block or a builder who just needs a particular Function. These templates are also available through `twilio-run new` inside the [`twilio-run`](https://npm.im/twilio-run) CLI.
 
 ## Usage
 
@@ -47,7 +47,7 @@ Please add ideas if you have them.
 
 ## Contribute
 
-Pull requests and new Functions are accepted. To make a contribution, follow these steps:
+Pull requests and new functions are accepted. To make a contribution, follow these steps:
 
 1. Fork this repository ( https://github.com/twilio-labs/function-templates/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
@@ -55,7 +55,7 @@ Pull requests and new Functions are accepted. To make a contribution, follow the
 4. Push to the branch (git push origin my-new-feature)
 5. Create a new Pull Request
 
-Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT). By participating in this project you agree to abide by its terms and conditions.
 
 ### Install
 
