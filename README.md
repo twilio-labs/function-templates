@@ -1,6 +1,6 @@
 # Twilio Function Templates
 
-[![Build Status](https://travis-ci.org/twilio-labs/function-templates.svg?branch=master)](https://travis-ci.org/twilio-labs/function-templates)
+[![Build Status](https://travis-ci.org/twilio-labs/function-templates.svg?branch=master)](https://travis-ci.org/twilio-labs/function-templates) [![License](https://img.shields.io/github/license/twilio-labs/function-templates)](https://github.com/twilio-labs/function-templates/blob/master/LICENSE)  [![Issues](https://img.shields.io/github/issues/twilio-labs/function-templates)](https://github.com/twilio-labs/function-templates/issues) [![Fork](https://img.shields.io/github/forks/twilio-labs/function-templates?style=social)](https://github.com/twilio-labs/function-templates/network/members) [![Start](https://img.shields.io/github/stars/twilio-labs/function-templates?style=social)](https://github.com/twilio-labs/function-templates/stargazers) [![Twitter](https://img.shields.io/twitter/follow/twilio?style=social)](https://twitter.com/twilio)
 
 [Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
 
