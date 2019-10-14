@@ -4,7 +4,7 @@ This Function shows you how to mint [Access Token](https://www.twilio.com/docs/i
 
 ## IMPORTANT!
 
-Make sure you to change the `IDENTITY` and `ROOM` variables in the Function to your needs and verify the identity of the user you are generating the access token for.
+Make sure you change the `IDENTITY` and `ROOM` variables in the Function to your needs and verify the identity of the user you are generating the access token for.
 
 ## Environment variables
 
