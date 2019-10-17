@@ -55,7 +55,7 @@ Pull requests and new Functions are accepted. To make a contribution, follow the
 4. Push to the branch (git push origin my-new-feature)
 5. Create a new Pull Request
 
-Please note that this project is released with a [Contributor Code of Conduct](#CODE_OF_CONDUCT). By participating in this project you agree to abide by its terms.
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ### Install
 
