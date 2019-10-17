@@ -10,7 +10,7 @@ This Function expects one environment variable to be set.
 
 | Variable    | Meaning                                                                                                                                                 |
 | :---------- | :------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `BLACKLIST` | The list of numbers you want to reject [in E.164 format](https://support.twilio.com/hc/en-us/articles/223183008-Formatting-International-Phone-Numbers) |
+| `BLACKLIST` | The comma-separated list of numbers you want to reject [in E.164 format](https://support.twilio.com/hc/en-us/articles/223183008-Formatting-International-Phone-Numbers) |
 
 ### Parameters
 
