@@ -59,7 +59,7 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ### Install
 
-This project and Twilio Functions use Node.js version 8.10. I recommend using [nvm](https://github.com/creationix/nvm) if you need to install multiple versions of Node.js. Clone or download the project, use the correct version of Node.js and install the dependencies:
+This project and Twilio Functions use Node.js version 8.10. I recommend using [nvm](https://github.com/creationix/nvm) if you need to install multiple versions of Node.js. First clone or download the project, then run the following lines to specify the correct version of Node.js and install the dependencies:
 
 ```bash
 nvm use
