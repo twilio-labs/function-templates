@@ -77,3 +77,4 @@ npm test
 ## License
 
 MIT © Phil Nash
+Cambridge, MA
