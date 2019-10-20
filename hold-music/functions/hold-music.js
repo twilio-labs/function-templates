@@ -5,20 +5,22 @@ const parser = require('fast-xml-parser');
 
 const FETCH_TIMEOUT = 5000;
 
+const VALID_MUSIC_REGEX = /\.(mp3|wav|ul)$/i;
+
 function shuffle(arr) {
-    arr = arr.slice();
+  arr = arr.slice();
 
-    let len = arr.length;
+  let len = arr.length;
 
-    while (len) {
-        let random = Math.floor(Math.random() * len);
-        len -= 1;
-        let temp = arr[len];
-        arr[len] = arr[random];
-        arr[random] = temp;
-    }
+  while (len) {
+    let random = Math.floor(Math.random() * len);
+    len -= 1;
+    let temp = arr[len];
+    arr[len] = arr[random];
+    arr[random] = temp;
+  }
 
-    return arr;
+  return arr;
 }
 
 function getBucketURL(bucket, path) {
@@ -26,25 +28,6 @@ function getBucketURL(bucket, path) {
   path = path || '/';
 
   return new URL(path, base).toString();
-}
-
-function getBucketMusic(bucket) {
-  const bucketURL = getBucketURL(bucket);
-
-  return fetch(bucketURL, { timeout: FETCH_TIMEOUT })
-      .then(res => res.text())
-      .then(text => parser.parse(text))
-      .then(result => {
-          if (!result || !result['ListBucketResult'] || !result['ListBucketResult']['Contents']) {
-              return [];
-          }
-
-          let contents = result['ListBucketResult']['Contents'];
-
-          return Array.isArray(contents) ? contents : [contents];
-      })
-      .then(contents => contents.map(c => getBucketURL(bucket, c['Key'])).filter(c => c.match(/\.(mp3|wav|ul)$/i)))
-      .catch(() => []);
 }
 
 function isURL(input) {
@@ -56,40 +39,70 @@ function isURL(input) {
   return true;
 }
 
-exports.handler = function(context, event, callback) {
-  const twiml = new Twilio.twiml.VoiceResponse();
+async function getBucketMusic(bucket) {
+  const bucketURL = getBucketURL(bucket);
 
-  const bucketName = context.BUCKET || null;
-  const message = context.MESSAGE || null;
+  try {
+    let res = await fetch(bucketURL, {timeout: FETCH_TIMEOUT});
+
+    let result = parser.parse(await res.text());
+
+    if (!result || !result['ListBucketResult'] || !result['ListBucketResult']['Contents']) {
+      return [];
+    }
+
+    let contents = result['ListBucketResult']['Contents'];
+
+    contents = Array.isArray(contents) ? contents : [contents];
+    return contents
+        .map(c => getBucketURL(bucket, c['Key']))
+        .filter(c => c.match(VALID_MUSIC_REGEX));
+  } catch (err) {
+    return [];
+  }
+}
+
+async function getHoldMusicTwiml(bucketName, message) {
+  const twiml = new Twilio.twiml.VoiceResponse();
 
   if (!bucketName) {
     twiml.say('An S 3 bucket is required.');
-    callback(null, twiml);
-
-    return
+    return twiml;
   }
 
-  return getBucketMusic(bucketName)
-      .then(playlist => {
-        if (!playlist || playlist.length === 0) {
-          twiml.say('Failed to fetch the hold music.');
-          return twiml;
-        }
+  let playlist = await getBucketMusic(bucketName);
 
-        playlist = shuffle(playlist);
+  if (!playlist || playlist.length === 0) {
+    twiml.say('Failed to fetch the hold music.');
 
-        for (let songURL of playlist) {
-            twiml.play(songURL);
+    return twiml;
+  }
 
-            if (isURL(message)) {
-                twiml.play(message);
-            } else if (message) {
-                twiml.say(message);
-            }
-        }
+  playlist = shuffle(playlist);
 
-        twiml.redirect();
-        return twiml;
-      })
-      .then(twiml => callback(null, twiml));
+  for (let songURL of playlist) {
+    twiml.play(songURL);
+
+    if (isURL(message)) {
+      twiml.play(message);
+    } else if (message) {
+      twiml.say(message);
+    }
+  }
+
+  twiml.redirect();
+
+  return twiml;
+}
+
+exports.handler = async function(context, event, callback) {
+  const bucketName = context.BUCKET || null;
+  const message = context.MESSAGE || null;
+
+  try {
+    let twiml = await getHoldMusicTwiml(bucketName, message);
+    callback(null, twiml);
+  } catch(err) {
+    callback(err, null);
+  }
 };
