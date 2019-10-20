@@ -41,7 +41,7 @@ beforeEach(() => fetch.mockReset());
 
 // HOLD-MUSIC-1
 describe('a missing S3 Bucket parameter', () => {
-  test('says that the bucket is required when missing', done => {
+  it('says that the bucket is required when missing', done => {
     const callback = (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
@@ -53,7 +53,7 @@ describe('a missing S3 Bucket parameter', () => {
     holdMusicHandler({}, {}, callback);
   });
 
-  test('says that the bucket is required when null', done => {
+  it('says that the bucket is required when null', done => {
     const callback = (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
@@ -65,7 +65,7 @@ describe('a missing S3 Bucket parameter', () => {
     holdMusicHandler({BUCKET: null}, {}, callback);
   });
 
-  test('says that the bucket is required when empty', done => {
+  it('says that the bucket is required when empty', done => {
     const callback = (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
@@ -81,7 +81,7 @@ describe('a missing S3 Bucket parameter', () => {
 
 // Test Case HOLD-MUSIC-2
 describe('a failed S3 bucket download', () => {
-  test('handles bucket timeout', done => {
+  it('handles bucket timeout', done => {
     fetch.mockReturnValue(
         Promise.reject(new FetchError('network timeout at: http://mock.url/', 'request-timeout'))
     );
@@ -99,7 +99,7 @@ describe('a failed S3 bucket download', () => {
     holdMusicHandler({BUCKET: 'example'}, {}, callback);
   });
 
-  test('handles bucket not found', done => {
+  it('handles bucket not found', done => {
     fetch.mockReturnValue(
         Promise.resolve(new FetchResponse(
             '<Error>' +
@@ -128,7 +128,7 @@ describe('a failed S3 bucket download', () => {
 
 // Test Case HOLD-MUSIC-3
 describe('download successful but no available songs', () => {
-  test('handles bucket empty', done => {
+  it('handles bucket empty', done => {
     fetch.mockReturnValue(Promise.resolve(new FetchResponse('<ListBucketResult><Prefix/></ListBucketResult>')));
 
     const callback = callbackHelper(done, (err, result) => {
@@ -144,7 +144,7 @@ describe('download successful but no available songs', () => {
     holdMusicHandler({BUCKET: 'example'}, {}, callback);
   });
 
-  test('handles bucket without music', done => {
+  it('handles bucket without music', done => {
     fetch.mockReturnValue(Promise.resolve(new FetchResponse('<ListBucketResult><Prefix/><Contents><Key>license.txt</Key></Contents></ListBucketResult>')));
 
     const callback = callbackHelper(done, (err, result) => {
@@ -163,8 +163,8 @@ describe('download successful but no available songs', () => {
 
 
 // Test Case HOLD-MUSIC-4
-describe('when fetching songs without a message', () => {
-  test('then fetches items from the bucket and shuffles', done => {
+describe('fetching songs without a message', () => {
+  it('fetches items from the bucket and shuffles', done => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -194,7 +194,7 @@ describe('when fetching songs without a message', () => {
     holdMusicHandler({BUCKET: 'example'}, {}, callback);
   });
 
-  test('then fetches items from the bucket and shuffles with a different seed', done => {
+  it('fetches items from the bucket and shuffles with a different seed', done => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -229,8 +229,8 @@ describe('when fetching songs without a message', () => {
 
 
 // Test Case HOLD-MUSIC-5
-describe('when fetching songs with a message', () => {
-  test('then includes the message as Say if not URL', done => {
+describe('fetching songs with a message', () => {
+  it('includes the message as Say if not URL', done => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -252,7 +252,7 @@ describe('when fetching songs with a message', () => {
     holdMusicHandler({BUCKET: 'example', MESSAGE: 'hello world'}, {}, callback);
   });
 
-  test('then includes the includes message as Play if URL', done => {
+  it('includes the includes message as Play if URL', done => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
