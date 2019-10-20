@@ -21,7 +21,9 @@
     ]
   },
   "dependencies": {
+    "fast-xml-parser": "^3.13.0",
     "got": "^6.7.1",
+    "node-fetch": "^2.6.0",
     "twilio": "^3.33.2"
   }
 }
