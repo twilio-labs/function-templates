@@ -274,3 +274,29 @@ describe('fetching songs with a message', () => {
     holdMusicHandler({BUCKET: 'example', MESSAGE: 'https://example.com/testing'}, {}, callback);
   });
 });
+
+
+describe('an uncaught exception occurs in the handler', () => {
+  afterEach(() => {
+    if (Twilio.twiml.VoiceResponse.mockRestore) {
+      Twilio.twiml.VoiceResponse.mockRestore();
+    }
+  });
+
+  it('passes the error to the callback', done => {
+    let expected = new Error('testing');
+
+    let mockVoiceResponse = jest.spyOn(Twilio.twiml, 'VoiceResponse');
+
+    mockVoiceResponse.mockImplementation(() => { throw expected; });
+
+    const callback = callbackHelper(done, (err, result) => {
+      expect(result).toBeNull();
+
+      expect(err).not.toBeNull();
+      expect(err).toEqual(expected);
+    });
+
+    holdMusicHandler({BUCKET: 'example'}, {}, callback);
+  });
+});
