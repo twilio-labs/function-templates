@@ -42,24 +42,33 @@ function isURL(input) {
 async function getBucketMusic(bucket) {
   const bucketURL = getBucketURL(bucket);
 
-  try {
-    let res = await fetch(bucketURL, {timeout: FETCH_TIMEOUT});
+  let res = await fetch(bucketURL, {timeout: FETCH_TIMEOUT});
 
-    let result = parser.parse(await res.text());
+  // If S3 responds with a response outside of 200 level / 300 level then
+  // let's throw an exception because something's real wrong here.
+  if (!res.ok) {
+    throw new Error('Invalid Response from S3');
+  }
 
-    if (!result || !result['ListBucketResult'] || !result['ListBucketResult']['Contents']) {
-      return [];
-    }
+  let doc = parser.parse(await res.text());
 
-    let contents = result['ListBucketResult']['Contents'];
-
-    contents = Array.isArray(contents) ? contents : [contents];
-    return contents
-        .map(c => getBucketURL(bucket, c['Key']))
-        .filter(c => c.match(VALID_MUSIC_REGEX));
-  } catch (err) {
+  // In various cases the response message will be `ok` but the response won't
+  // have any contents.  This is no good and we should assume no records.
+  if (!doc || !doc['ListBucketResult'] || !doc['ListBucketResult']['Contents']) {
     return [];
   }
+
+  let contents = doc['ListBucketResult']['Contents'];
+
+  // `Contents` are an XML element, and the response can be One or Many.
+  // As such, the XML parser doesn't know that we want an array, so
+  // let's coerce our results if they aren't an array.
+  contents = Array.isArray(contents) ? contents : [contents];
+
+  return contents
+      .map(c => getBucketURL(bucket, c['Key']))
+      .filter(c => isURL(c) && c.match(VALID_MUSIC_REGEX));
+
 }
 
 async function getHoldMusicTwiml(bucketName, message) {
@@ -70,11 +79,20 @@ async function getHoldMusicTwiml(bucketName, message) {
     return twiml;
   }
 
-  let playlist = await getBucketMusic(bucketName);
+  let playlist;
+
+  try {
+    playlist = await getBucketMusic(bucketName);
+  } catch (err) {
+    // In case of an error, to match the Twimlet we're going to respond as if
+    // there was no hold music found.
+    playlist = [];
+  }
 
   if (!playlist || playlist.length === 0) {
+    // There are various reasons why we wouldn't be able to get the bucket music.
+    // In these cases we need to inform the caller.
     twiml.say('Failed to fetch the hold music.');
-
     return twiml;
   }
 
@@ -84,6 +102,7 @@ async function getHoldMusicTwiml(bucketName, message) {
     twiml.play(songURL);
 
     if (isURL(message)) {
+      // If the message is a URL we're support to play it as music
       twiml.play(message);
     } else if (message) {
       twiml.say(message);
@@ -101,6 +120,8 @@ function getParameter(key, context, event) {
   }
 
   if (event) {
+    // It's unclear the casing that can be brought into the `event` object - as such,
+    // let's search throw the event keys until we find something that matches..
     let eventKey = Object.keys(event).find(k => k.toLowerCase() === key.toLowerCase());
 
     if (eventKey) {
