@@ -14,13 +14,13 @@ global.Math = mockMath;
 function callbackHelper(done, callback) {
   let callCount = 0;
 
-  return function(err, result) {
+  return async function(err, result) {
     callCount += 1;
 
     try {
       expect(callCount).toEqual(1);
 
-      callback(err, result);
+      await callback(err, result);
       done();
     } catch(e) {
       done(e);
@@ -42,39 +42,42 @@ beforeEach(() => fetch.mockReset());
 // HOLD-MUSIC-1
 describe('a missing S3 Bucket parameter', () => {
   it('says that the bucket is required when missing', done => {
-    const callback = (err, result) => {
+    const callback = callbackHelper(done, (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
         '<Response><Say>An S 3 bucket is required.</Say></Response>'
       );
-      done();
-    };
+    });
 
     holdMusicHandler({}, {}, callback);
   });
 
-  it('says that the bucket is required when null', done => {
-    const callback = (err, result) => {
+  it.each([
+      ['environment', {BUCKET: null}, {}],
+      ['parameter', {}, {Bucket: null}],
+  ])('says that the bucket from %s is required when null', (parameter, handlerContext, handlerEvent, done) => {
+    const callback = callbackHelper(done, (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
           '<Response><Say>An S 3 bucket is required.</Say></Response>'
       );
-      done();
-    };
+    });
 
-    holdMusicHandler({BUCKET: null}, {}, callback);
+    holdMusicHandler(handlerContext, handlerEvent, callback);
   });
 
-  it('says that the bucket is required when empty', done => {
-    const callback = (err, result) => {
+  it.each([
+    ['environment', {BUCKET: ''}, {}],
+    ['parameter', {}, {Bucket: ''}],
+  ])('says that the bucket from %s is required when empty', (parameter, handlerContext, handlerEvent, done) => {
+    const callback = callbackHelper(done, (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
           '<Response><Say>An S 3 bucket is required.</Say></Response>'
       );
-      done();
-    };
+    });
 
-    holdMusicHandler({BUCKET: ''}, {}, callback);
+    holdMusicHandler(handlerContext, handlerEvent, callback);
   });
 });
 
@@ -164,7 +167,11 @@ describe('download successful but no available songs', () => {
 
 // Test Case HOLD-MUSIC-4
 describe('fetching songs without a message', () => {
-  it('fetches items from the bucket and shuffles', done => {
+
+  it.each([
+    ['environment', {BUCKET: 'example'}, {}],
+    ['parameter', {}, {Bucket: 'example'}],
+  ])('fetches items from the bucket from %s and shuffles', (parameter, handlerContext, handlerEvent, done) => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -191,10 +198,14 @@ describe('fetching songs without a message', () => {
 
     });
 
-    holdMusicHandler({BUCKET: 'example'}, {}, callback);
+    holdMusicHandler(handlerContext, handlerEvent, callback);
   });
 
-  it('fetches items from the bucket and shuffles with a different seed', done => {
+
+  it.each([
+    ['environment', {BUCKET: 'example'}, {}],
+    ['parameter', {}, {Bucket: 'example'}],
+  ])('fetches items from the bucket from %s and shuffles with a different seed', (parameter, handlerContext, handlerEvent, done) => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -223,14 +234,17 @@ describe('fetching songs without a message', () => {
 
     });
 
-    holdMusicHandler({BUCKET: 'example'}, {}, callback);
+    holdMusicHandler(handlerContext, handlerEvent, callback);
   });
 });
 
 
 // Test Case HOLD-MUSIC-5
 describe('fetching songs with a message', () => {
-  it('includes the message as Say if not URL', done => {
+  it.each([
+    ['environment', {BUCKET: 'example', MESSAGE: 'hello world'}, {}],
+    ['parameter', {}, {Bucket: 'example', Message: 'hello world'}],
+  ])('includes the message from %s as Say if not URL', (parameter, handlerContext, handlerEvent, done) => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -249,10 +263,13 @@ describe('fetching songs with a message', () => {
       );
     });
 
-    holdMusicHandler({BUCKET: 'example', MESSAGE: 'hello world'}, {}, callback);
+    holdMusicHandler(handlerContext, handlerEvent, callback);
   });
 
-  it('includes the includes message as Play if URL', done => {
+  it.each([
+    ['environment', {BUCKET: 'example', MESSAGE: 'https://example.com/testing'}, {}],
+    ['parameter', {}, {Bucket: 'example', Message: 'https://example.com/testing'}],
+  ])('includes the message from %s as Pay if URL', (parameter, handlerContext, handlerEvent, done) => {
     fetch.mockReturnValue(Promise.resolve(
         new FetchResponse(
             '<ListBucketResult><Prefix/>' +
@@ -271,7 +288,7 @@ describe('fetching songs with a message', () => {
       );
     });
 
-    holdMusicHandler({BUCKET: 'example', MESSAGE: 'https://example.com/testing'}, {}, callback);
+    holdMusicHandler(handlerContext, handlerEvent, callback);
   });
 });
 
@@ -298,5 +315,52 @@ describe('an uncaught exception occurs in the handler', () => {
     });
 
     holdMusicHandler({BUCKET: 'example'}, {}, callback);
+  });
+});
+
+
+describe('support for both environment and parameters', () => {
+  it('allows mixing environments and parameters', done => {
+    fetch.mockReturnValue(Promise.resolve(
+        new FetchResponse(
+            '<ListBucketResult><Prefix/>' +
+            '<Contents><Key>foo.mp3</Key></Contents>' +
+            '</ListBucketResult>'
+        )
+    ));
+
+    const callback = callbackHelper(done, (err, result) => {
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalledWith('http://example.s3.amazonaws.com/', {timeout: 5000});
+
+      expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
+      expect(result.toString()).toMatch(
+          '<Response><Play>http://example.s3.amazonaws.com/foo.mp3</Play><Say>hello</Say><Redirect/></Response>'
+      );
+    });
+
+    holdMusicHandler({BUCKET: 'example'}, {message: 'hello'}, callback);
+  });
+
+  it('prefers environments over parameters', done => {
+    fetch.mockReturnValue(Promise.resolve(
+        new FetchResponse(
+            '<ListBucketResult><Prefix/>' +
+            '<Contents><Key>foo.mp3</Key></Contents>' +
+            '</ListBucketResult>'
+        )
+    ));
+
+    const callback = callbackHelper(done, (err, result) => {
+      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalledWith('http://example.s3.amazonaws.com/', {timeout: 5000});
+
+      expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
+      expect(result.toString()).toMatch(
+          '<Response><Play>http://example.s3.amazonaws.com/foo.mp3</Play><Say>hello</Say><Redirect/></Response>'
+      );
+    });
+
+    holdMusicHandler({BUCKET: 'example', MESSAGE: 'hello'}, {bucket: 'test', message: 'world'}, callback);
   });
 });

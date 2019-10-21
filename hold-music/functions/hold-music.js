@@ -95,9 +95,25 @@ async function getHoldMusicTwiml(bucketName, message) {
   return twiml;
 }
 
+function getParameter(key, context, event) {
+  if (context && context[key.toUpperCase()]) {
+    return context[key.toUpperCase()];
+  }
+
+  if (event) {
+    let eventKey = Object.keys(event).find(k => k.toLowerCase() === key.toLowerCase());
+
+    if (eventKey) {
+      return event[eventKey];
+    }
+  }
+
+  return null;
+}
+
 exports.handler = async function(context, event, callback) {
-  const bucketName = context.BUCKET || null;
-  const message = context.MESSAGE || null;
+  const bucketName = getParameter('bucket', context, event);
+  const message = getParameter('message', context, event);
 
   try {
     let twiml = await getHoldMusicTwiml(bucketName, message);
