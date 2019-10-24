@@ -148,7 +148,7 @@ function gatherDigits(response, maxDigits, message, language, voice) {
 }
 
 /*
-  Function: whisperStage1()
+  Function: sendWhisperMessage()
 
   Parameters:
     * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
@@ -167,7 +167,7 @@ function gatherDigits(response, maxDigits, message, language, voice) {
     The input response is modified with instructions to gather one digit and,
     when a human check is requested, to hang up if no digits have been pressed.
 */
-function whisperStage1(response, humanCheck, message, language, voice) {
+function sendWhisperMessage(response, humanCheck, message, language, voice) {
   gatherDigits(response, 1, message, language, voice);
   if ( humanCheck ) {
     response.hangup();
@@ -175,7 +175,7 @@ function whisperStage1(response, humanCheck, message, language, voice) {
 }
 
 /*
-  Function: whisperStage2()
+  Function: checkDigitsEntered()
 
   Parameters:
     * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
@@ -192,7 +192,7 @@ function whisperStage1(response, humanCheck, message, language, voice) {
   Returns:
     boolean, whether digits have been set
 */
-function whisperStage2(response, digits) {
+function checkDigitsEntered(response, digits) {
   if ( digits === null ) {
     return false;
   }
@@ -221,8 +221,10 @@ exports.handler = function(context, event, callback) {
     language = getLanguage(event, context, config),
     voice = getVoice(event, context, config);
 
-  if ( !whisperStage2(response, digits) ) {
-    whisperStage1(response, humanCheckRequired, message, language, voice);
+  if (digits === null) {
+    sendWhisperMessage(response, humanCheckRequired, message, language, voice);
+  } else {
+    checkDigitsEntered(response, digits);
   }
   callback(NO_ERROR, response);
 };
@@ -245,8 +247,8 @@ exports.input = {
 
 exports.output = {
   spell: spell,
-  whisperStage1: whisperStage1,
-  whisperStage2: whisperStage2
+  sendWhisperMessage: sendWhisperMessage,
+  checkDigitsEntered: checkDigitsEntered
 };
 
 /*

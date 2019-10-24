@@ -190,7 +190,7 @@ test('[WHISPER-OUTPUT-WHISPER-1-2] Recorded Message',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.whisperStage1(
+  funlet.output.sendWhisperMessage(
     response, NO_HUMAN_CHECK, TEXT_MESSAGE, FRENCH, WOMAN
   );
   expect( response.toString() ).toEqual( WHISPER_TEXT_MESSAGE );
@@ -209,7 +209,7 @@ test('[WHISPER-OUTPUT-WHISPER-1-4] Human Check',
     '</Response>';
 
   let response = new Twilio.twiml.VoiceResponse();
-  funlet.output.whisperStage1(
+  funlet.output.sendWhisperMessage(
     response, HUMAN_CHECK, RECORDED_MESSAGE, DEFAULT_LANGUAGE, DEFAULT_VOICE
   );
   expect( response.toString() ).toEqual(
@@ -223,7 +223,7 @@ test('[WHISPER-OUTPUT-WHISPER-2-0] No Digits Provided',
     XML_DECLARATION+
     '<Response/>';
   let response = new Twilio.twiml.VoiceResponse();
-  let hasDigits = funlet.output.whisperStage2( response, NO_DIGITS );
+  let hasDigits = funlet.output.checkDigitsEntered( response, NO_DIGITS );
   expect( hasDigits ).toBe( false );
   expect( response.toString() ).toEqual( EMPTY_RESPONSE );
 });
@@ -234,7 +234,7 @@ test('[WHISPER-OUTPUT-WHISPER-2-1] A Digit was Pressed',
     XML_DECLARATION+
     '<Response/>';
   let response = new Twilio.twiml.VoiceResponse();
-  let hasDigits = funlet.output.whisperStage2( response, NON_EMPTY_DIGITS );
+  let hasDigits = funlet.output.checkDigitsEntered( response, NON_EMPTY_DIGITS );
   expect( hasDigits ).toBe( true );
   expect( response.toString() ).toEqual( EMPTY_RESPONSE );
 });
@@ -247,7 +247,7 @@ test('[WHISPER-OUTPUT-WHISPER-2-2] No Digits were Pressed, Empty Digits Set',
       '<Hangup/>'+
     '</Response>';
   let response = new Twilio.twiml.VoiceResponse();
-  let hasDigits = funlet.output.whisperStage2( response, EMPTY_DIGITS );
+  let hasDigits = funlet.output.checkDigitsEntered( response, EMPTY_DIGITS );
   expect( hasDigits ).toBe( true );
   expect( response.toString() ).toEqual( HANG_UP );
 });
