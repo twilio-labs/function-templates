@@ -1,6 +1,6 @@
-# Twilio Verify - Start Verification
+# Twilio Verify - Check Verification
 
-This Function shows you how to send a verification token for [Twilio Verify](https://www.twilio.com/docs/verify/api/verification).
+This Function shows you how to check a verification token for [Twilio Verify](https://www.twilio.com/docs/verify/api/verification-check).
 
 ## Pre-requisites
 
@@ -20,7 +20,7 @@ This Function expects the following environment variables set in [function confi
 
 This Function expects the following parameters:
 
-| Parameter            | Description     | Required |
-| :------------------- | :---------------| :------- |
-| `phone_number`       | E.164 formatted | Yes      |
-| `channel`            | 'sms' or 'call' | No       |
+| Parameter            | Description       | Required |
+| :------------------- | :-----------------| :------- |
+| `phone_number`       | E.164 formatted   | Yes      |
+| `verification_code`  | Collect from user | Yes      |
