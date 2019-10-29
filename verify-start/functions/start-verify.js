@@ -18,16 +18,19 @@ exports.handler = function(context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
+  if (typeof event.phone_number === 'undefined') {
+    response.setBody({
+      "status": false,
+      "message": "Please provide a phone number."
+    })
+    response.setStatusCode(400);
+    return callback(null, response);
+  }
+
   const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID
-
-  // strip special characters, construct E.164 number
-  // see: https://www.twilio.com/docs/glossary/what-e164
-  let cc = `${event.country_code.replace(/\W/g, '')}`;
-  let pn = `${event.phone_number.replace(/\W/g, '')}`;
-  let to = `+${cc + pn}`
-
-  let channel = (typeof event.channel === 'undefined') ? "sms" : x;
+  const service = context.VERIFY_SERVICE_SID;
+  const to = event.phone_number;
+  const channel = (typeof event.channel === 'undefined') ? "sms" : event.channel;
           
   client.verify.services(service)
     .verifications

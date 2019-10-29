@@ -4,10 +4,15 @@ class Response {
   constructor() {
     this._body = {};
     this._headers = {};
+    this._statusCode = 200;
   }
 
   setBody(body) {
     this._body = body;
+  }
+
+  setStatusCode(code) {
+    this._statusCode = code;
   }
 
   appendHeader(key, value) {
