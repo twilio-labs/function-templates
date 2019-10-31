@@ -89,6 +89,11 @@
       "id": "verify",
       "name": "Phone Verification",
       "description": "Start and check one-time passcodes sent via SMS or Voice"
+    },
+    {
+      "id": "blacklist-call",
+      "name": "Blacklist Call Function",
+      "description": "Blacklists an array of numbers"
     }
   ]
 }

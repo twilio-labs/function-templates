@@ -1,15 +1,15 @@
 const jwt = require('jsonwebtoken');
-const tokenFunction = require('../functions/token').handler;
+const tokenFunction = require('../functions/sync-token').handler;
 const helpers = require('../../test/test-helper');
 
 const baseContext = {
   ACCOUNT_SID: 'ACxxx',
   API_KEY: 'api-key',
   API_SECRET: 'api-secret',
-  CHAT_SERVICE_SID: 'default',
+  SYNC_SERVICE_SID: 'default',
 };
 
-describe('chat-token/token', () => {
+describe('sync-token/token', () => {
   beforeAll(() => {
     helpers.setup({});
   });
@@ -17,7 +17,7 @@ describe('chat-token/token', () => {
     helpers.teardown();
   });
 
-  test('returns a valid token if service available in context', done => {
+  test('returns a valid token with defined sync service sid', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
@@ -27,8 +27,8 @@ describe('chat-token/token', () => {
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
         expect(decoded.grants).toEqual({
           identity: 'testing-username',
-          chat: {
-            service_sid: baseContext.CHAT_SERVICE_SID,
+          data_sync: {
+            service_sid: baseContext.SYNC_SERVICE_SID,
           },
         });
         done();
@@ -37,7 +37,7 @@ describe('chat-token/token', () => {
     tokenFunction(baseContext, {}, callback);
   });
 
-  test('returns a valid token if service available inline', done => {
+  test('returns a valid token with fallback inline service sid', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
@@ -47,15 +47,15 @@ describe('chat-token/token', () => {
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
         expect(decoded.grants).toEqual({
           identity: 'testing-username',
-          chat: {
-            service_sid: 'enter Chat Service Sid',
+          data_sync: {
+            service_sid: 'enter Sync Service Sid',
           },
         });
         done();
       });
     };
     tokenFunction(
-      { ...baseContext, CHAT_SERVICE_SID: undefined },
+      { ...baseContext, SYNC_SERVICE_SID: undefined },
       {},
       callback
     );
