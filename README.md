@@ -33,6 +33,7 @@ This is the list of Functions available in this repo:
 - [Simple play](never-gonna-give-you-up) - TwiML to `<Play>` an mp3
 - [HTTP Redirect](http-redirect) - Redirects a request from Twilio Functions to another URL by setting the Location header to the respective URL
 - [Temp Storage](temp-storage) - Function that shows you where files created in a Twilio Function go and how to manage them for one-off activities
+- [Verify](verify) - Functions to send and check one-time passwords via SMS or Voice for phone verification
 
 ### Todo
 
