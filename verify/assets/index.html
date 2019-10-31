@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Login with SMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Twilio Verify</h2>
+      <p>This example shows how to deploy <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> and Twilio functions for serverless phone verification.</p>
+      <div class="content">
+        <p>
+          <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> SMS login.
+          Enter your phone number using <a href="https://www.twilio.com/docs/glossary/what-e164">E.164 format.</a>
+        </p>
+        <form id="sms-login" class="form-inline">
+          <input
+            placeholder="+1212xxx1234"
+            id="phone_number"
+            class="form-control" />
+          <input
+            type="submit"
+            class="btn btn-primary"
+            value="Login via SMS" />
+        </form>
+      </div>
+      <div class="modal" id="verification_modal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="result-message"></div>
+                  <div>
+                    <form id="sms-verification" class="input-group input-group-lg">
+                      <input
+                        type="text"
+                        class="form-control input-lg"
+                        id="verification_code"
+                        placeholder="Enter the token sent to your device"
+                        required/>
+                      <span class="input-group-btn">
+                        <button 
+                          class="btn btn-primary btn-lg" 
+                          type="submit">Verify
+                        </button>
+                      </span>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+    </div><!-- /.container -->
+  </body>
+  <script>
+    function flashStatus(alertType, message) {
+      var content = $(".result-message");
+      content.empty();
+      content.append(`<div class="alert alert-${alertType}" role="alert">${message}</div>`);
+    }
+
+    document.getElementById("sms-login").addEventListener("submit", event => {
+      event.preventDefault();
+      const phoneNumber = $("#phone_number").val();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("phone_number", phoneNumber);
+
+      // Create your own Twilio Function 
+      // https://www.twilio.com/console/functions/manage
+      fetch("./start-verify", {
+          method: "POST",
+          body: data
+        })
+        .then(response => {
+          const content = $(".result-message");
+          content.empty();
+          return response.json()
+        })
+        .then((json) => {
+          console.log(json);
+          if (json.success) {
+            showModal(phoneNumber);
+            console.log("Successfully sent token.")
+          } else {
+            console.log("Error sending token.")
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+
+    function showModal(phoneNumber) {
+      $(".modal").modal("show");
+
+      document
+        .getElementById("sms-verification")
+        .addEventListener("submit", event => {
+          event.preventDefault();
+          const code = $("#verification_code").val();
+
+          // Twilio functions do not accept multipart/form-data
+          const data = new URLSearchParams();
+          data.append("phone_number", phoneNumber);
+          data.append("verification_code", code);
+
+          // Create your own Twilio Function 
+          // https://www.twilio.com/console/functions/manage
+          fetch("./check-verify", {
+              method: 'POST',
+              body: data
+            })
+            .then(response => response.json())
+            .then((json) => {
+              if (json.success) {
+                flashStatus("success", "Success!");
+                console.log("Successfully verified the token.");
+              } else {
+                flashStatus("danger", "Incorrect token.");
+                $("#verification_code").val("");
+                console.log("Incorrect token.")
+              }
+            })
+            .catch((err) => {
+              var content = $(".result-message");
+              console.log(err);
+            });
+        });
+    }
+  </script>
+</html>
