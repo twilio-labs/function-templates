@@ -84,6 +84,11 @@
       "id": "temp-storage",
       "name": "Functions Temporary Storage",
       "description": "Utilises the temp folder of the OS for one-off operations"
+    },
+    {
+      "id": "verify",
+      "name": "Phone Verification",
+      "description": "Start and check one-time passcodes sent via SMS or Voice"
     }
   ]
 }
