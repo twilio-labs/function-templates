@@ -39,20 +39,20 @@ To deploy this project with the Functions API, this Function expects the followi
 ## Create a new project with the template
 
 1. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-2. Initiate a new project
+2. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+3. Initiate a new project
 
 ```
 twilio serverless:init verify-sample --template=verify && cd verify-sample
 ```
 
-3. Start the server:
+4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 
-With the Twilio CLI
 ```
 twilio serverless:start
 ```
 
-4. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
@@ -60,7 +60,7 @@ twilio serverless:start
 
 Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
 
-With the Twilio CLI
+With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
