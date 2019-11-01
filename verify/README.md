@@ -10,7 +10,7 @@ These function show you how to send and check verification tokens for [Twilio Ve
  *  Add `VERIFY_SERVICE_SID` from above to your [Environment Variables](https://www.twilio.com/console/functions/configure)
  *  Enable `ACCOUNT_SID` and `AUTH_TOKEN` in your [functions configuration](https://www.twilio.com/console/functions/configure)
 
-## Environment variables
+### Environment variables
 
 To deploy this project with the Functions API, this Function expects the following environment variables set in your `.env` file:
 
@@ -20,7 +20,7 @@ To deploy this project with the Functions API, this Function expects the followi
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)              | Yes      |
 | `VERIFY_SERVICE_SID` | Create one [here](https://www.twilio.com/console/verify/services)  | Yes      |
 
-## Parameters
+### Function Parameters
 
 `start-verify.js` expects the following parameters:
 
@@ -36,14 +36,13 @@ To deploy this project with the Functions API, this Function expects the followi
 | `phone_number`       | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
 | `verification_code`  | Collect from user                                                 | Yes      |
 
-## Testing locally
+## Create a new project with the template
 
 1. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-2. Clone this repo, navigate to the verify project
+2. Initiate a new project
 
 ```
-git clone git@github.com:twilio-labs/function-templates.git
-cd verify/
+twilio serverless:init verify-sample --template=verify && cd verify-sample
 ```
 
 3. Start the server:
@@ -55,7 +54,7 @@ twilio serverless:start
 
 4. Open the web page at https://localhost:3000/index.html and enter your phone number to test
 
-ℹ️ Check the console and terminal for any errors, make sure you've set your environment variables.
+ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
 ## Deploying
 
