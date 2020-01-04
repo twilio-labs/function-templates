@@ -1,3 +1,4 @@
 node_modules/
 coverage/
 .twilio-functions
+.DS_Store
