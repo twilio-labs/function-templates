@@ -6,10 +6,10 @@ newIssueWelcomeComment: |
 firstPRMergeComment: >
   Congratulations on your first contribution to the Twilio Function Templates!
 
-  We'd love to say thank you and send you some swag. If you are interested please fill out this form at https://twil.io/hacktoberfest-swag
-
   If you are on the look out for more ways to contribute to open-source,
   check out a list of some of our repositories at https://github.com/twilio/opensource.
+  
+  To stay up-to-date with Twilio open source related updates, sign up here: https://twil.io/oss-updates
 
   And if you love Twilio as much as we do, make sure to check out our
   [Twilio Champions program](https://www.twilio.com/champions)!
