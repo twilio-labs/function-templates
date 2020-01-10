@@ -134,6 +134,11 @@
       "id": "funlet-find-me",
       "name": "Find Me Funlet",
       "description": "Try Different Numbers in Turn — Compatible with Find Me Twimlet"
+    },
+    {
+      "id": "voice-client-javascript",
+      "name": "Voice Client JavaScript Sample Application",
+      "description": "Set up a sample client-side Twilio web application"
     }
   ]
 }
