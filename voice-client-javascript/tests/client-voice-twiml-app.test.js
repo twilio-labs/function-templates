@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const twimlAppFunction = require("../functions/client-voice-twiml-app").handler;
 const helpers = require("../../test/test-helper");
 
