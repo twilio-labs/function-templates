@@ -44,8 +44,13 @@ In your newly created `.env` file set the values below:
 
 ## Create a new project with the template
 
-1. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-2. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
+
+```shell
+twilio plugins:install @twilio-labs/plugin-serverless
+```
+
 3. Initiate a new project
 
 ```
