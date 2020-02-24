@@ -1,0 +1,6 @@
+{
+  "name": "stripe-sms-receipt",
+  "dependencies": {
+    "stripe": "^8.20.0"
+  }
+}
