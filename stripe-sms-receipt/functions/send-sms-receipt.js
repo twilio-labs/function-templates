@@ -37,14 +37,14 @@ exports.handler = async function(context, event, callback) {
       const customer = charge.customer;
       // Look for phone number on the customer otherwise use phone number from the
       // billing details of the charge.
-      const cust_phone = customer
+      const customerPhone = customer
         ? customer.phone
         : charge.billing_details.phone;
-      if (cust_phone) {
+      if (customerPhone) {
         // Send receipt URL to customer.
         const client = context.getTwilioClient();
         const message = await client.messages.create({
-          to: cust_phone,
+          to: customerPhone,
           from: context.FROM_PHONE || "STRIPEDEMO",
           body: `Thanks for your payment ❤️ Here is your receipt: ${charge.receipt_url}`
         });
