@@ -29,13 +29,9 @@ npm install
 
 ### Environment variables
 
-This project requires some environment variables to be set. To keep your tokens and secrets secure, the `.env` file is not tracked in git. To create your `.env` file locally run:
+This project requires some environment variables to be set. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
-```shell
-cp .env.example .env
-```
-
-In your newly created `.env` file set the values below:
+In your `.env` file, set the following values:
 
 | Variable            | Meaning                                                                                | Required                     |
 | :------------------ | :------------------------------------------------------------------------------------- | :--------------------------- |

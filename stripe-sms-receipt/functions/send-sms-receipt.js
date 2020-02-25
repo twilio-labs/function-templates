@@ -9,6 +9,7 @@
  *  - Add STRIPE_SECRET_KEY to your environment variables (https://www.twilio.com/console/functions/configure)
  *  - Add stripe to your NPM package dependencies (https://www.twilio.com/console/functions/configure)
  */
+const Stripe = require("stripe");
 
 exports.handler = async function(context, event, callback) {
   const response = new Twilio.Response();
@@ -28,7 +29,7 @@ exports.handler = async function(context, event, callback) {
     try {
       // To use stripe in your Twilio function you need to add it in the dependencies
       // section of your functions config: https://www.twilio.com/console/functions/configure.
-      const stripe = require("stripe")(context.STRIPE_SECRET_KEY);
+      const stripe = Stripe(context.STRIPE_SECRET_KEY);
       const stripeEvent = await stripe.events.retrieve(event.id);
       const charge = await stripe.charges.retrieve(stripeEvent.data.object.id, {
         expand: ["customer"]
