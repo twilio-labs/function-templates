@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "got": "^6.7.1",
-    "twilio": "^3.33.2"
+    "twilio": "^3.33.2",
+    "stripe": "^8.20.0"
   }
 }
