@@ -61,7 +61,7 @@ stripe listen --forward-to http://localhost:3000/send-sms-receipt
 5. In a third terminal window, trigger the Stripe fixtures:
 
 ```shell
-stripe fixtures stripe_fixtures/create_customer_and_payment.json
+stripe fixtures assets/stripe_fixtures/create_customer_and_payment.private.json
 ```
 
 6. Monitor the Twilio CLI logs for errors, otherwise monitor your phone for incoming messages 🎉
