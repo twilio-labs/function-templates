@@ -6,40 +6,47 @@ These function show you how to send and check verification tokens for [Twilio Ve
 
 ## Pre-requisites
 
- *  [Create a Verify Service](https://www.twilio.com/console/verify/services)
- *  Add `VERIFY_SERVICE_SID` from above to your [Environment Variables](https://www.twilio.com/console/functions/configure)
- *  Enable `ACCOUNT_SID` and `AUTH_TOKEN` in your [functions configuration](https://www.twilio.com/console/functions/configure)
+- [Create a Verify Service](https://www.twilio.com/console/verify/services)
+- Add `VERIFY_SERVICE_SID` from above to your [Environment Variables](https://www.twilio.com/console/functions/configure)
+- Enable `ACCOUNT_SID` and `AUTH_TOKEN` in your [functions configuration](https://www.twilio.com/console/functions/configure)
 
 ### Environment variables
 
-To deploy this project with the Functions API, this Function expects the following environment variables set in your `.env` file:
+This project requires some environment variables to be set. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
-| Variable             | Meaning                                                            | Required |
-| :------------------- | :----------------------------------------------------------------- | :------- |
-| `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console)              | Yes      |
-| `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)              | Yes      |
-| `VERIFY_SERVICE_SID` | Create one [here](https://www.twilio.com/console/verify/services)  | Yes      |
+In your `.env` file, set the following values:
+
+| Variable             | Meaning                                                           | Required |
+| :------------------- | :---------------------------------------------------------------- | :------- |
+| `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console)             | Yes      |
+| `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)             | Yes      |
+| `VERIFY_SERVICE_SID` | Create one [here](https://www.twilio.com/console/verify/services) | Yes      |
 
 ### Function Parameters
 
 `start-verify.js` expects the following parameters:
 
-| Parameter            | Description                                                       | Required |
-| :------------------- | :-----------------------------------------------------------------| :------- |
-| `phone_number`       | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
-| `channel`            | 'sms' or 'call'. Default is 'sms'                                 | No       |
+| Parameter      | Description                                                       | Required |
+| :------------- | :---------------------------------------------------------------- | :------- |
+| `phone_number` | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
+| `channel`      | 'sms' or 'call'. Default is 'sms'                                 | No       |
 
 `check-verify.js` expects the following parameters:
 
-| Parameter            | Description                                                       | Required |
-| :------------------- | :-----------------------------------------------------------------| :------- |
-| `phone_number`       | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
-| `verification_code`  | Collect from user                                                 | Yes      |
+| Parameter           | Description                                                       | Required |
+| :------------------ | :---------------------------------------------------------------- | :------- |
+| `phone_number`      | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
+| `verification_code` | Collect from user                                                 | Yes      |
 
 ## Create a new project with the template
 
-1. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-2. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
+
+```shell
+twilio plugins:install @twilio-labs/plugin-serverless
+```
+
 3. Initiate a new project
 
 ```
@@ -61,6 +68,7 @@ twilio serverless:start
 Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
 
 With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
+
 ```
 twilio serverless:deploy
 ```

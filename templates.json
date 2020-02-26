@@ -66,6 +66,11 @@
       "description": "Generates a Chat Access Token for client-side applications"
     },
     {
+      "id": "stripe-sms-receipt",
+      "name": "Stripe SMS Receipt Webhook Handler Function",
+      "description": "Send an SMS receipt to your Stripe customers"
+    },
+    {
       "id": "sync-token",
       "name": "Sync Token Function",
       "description": "Generates a Sync Access Token for client-side applications"

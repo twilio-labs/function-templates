@@ -27,6 +27,7 @@ This is the list of Functions available in this repo:
 - [Forward Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email
 - [Hunt/Find me](hunt) - Call a list of numbers in order until one answers
 - [Generate Video access token](video-token) - Generates a Video Access Token for client-side applications
+- [Stripe SMS Receipt](stripe-sms-receipt) - Send an SMS receipt to your Stripe customers based on webhook events.
 - [Generate Sync access token](sync-token) - Generates a Sync Access Token for client-side applications
 - [Generate Chat access token](chat-token) - Generates a Chat Access Token for client-side applications
 - [Conference line](conference) - Simple TwiML to drop callers into a conference call called "Snowy Owl"

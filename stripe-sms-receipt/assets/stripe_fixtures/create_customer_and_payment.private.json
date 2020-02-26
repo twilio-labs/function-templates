@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "template_version": 0
+  },
+  "fixtures": [
+    {
+      "name": "test_customer",
+      "path": "/v1/customers",
+      "method": "post",
+      "params": {
+        "name": "Jenny Rosen",
+        "email": "jenny.rosen@example.com",
+        "phone": "+12025551212"
+      }
+    },
+    {
+      "name": "test_payment",
+      "path": "/v1/payment_intents",
+      "method": "post",
+      "params": {
+        "amount": 1099,
+        "currency": "usd",
+        "customer": "${test_customer:id}",
+        "payment_method": "pm_card_visa",
+        "off_session": true,
+        "confirm": true
+      }
+    }
+  ]
+}
