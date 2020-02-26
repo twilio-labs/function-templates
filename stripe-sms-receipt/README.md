@@ -42,10 +42,10 @@ In your `.env` file, set the following values:
 
 ### Using the Stripe CLI
 
-Using the [Stripe CLI](https://github.com/stripe/stripe-cli#stripe-cli) we can execute [predefined fixtures](stripe_fixtures/create_customer_and_payment.json) to run a sequence of requests (in this case create a customer and then create a payment), and also we can [forward](https://github.com/stripe/stripe-cli/wiki/listen-command) Stripe webhook events to our local server running the Twilio function.
+Using the [Stripe CLI](https://github.com/stripe/stripe-cli#stripe-cli) we can execute [predefined fixtures](assets/stripe_fixtures/create_customer_and_payment.private.json) to run a sequence of requests (in this case create a customer and then create a payment), and also we can [forward](https://github.com/stripe/stripe-cli/wiki/listen-command) Stripe webhook events to our local server running the Twilio function.
 
 1. Install the [Stripe CLI](https://github.com/stripe/stripe-cli#installation) & [login](https://github.com/stripe/stripe-cli/wiki/login-command) with your Stripe account.
-2. Replace `+12025551212` with your phone number for testing in the [stripe_fixtures/create_customer_and_payment.json](stripe_fixtures/create_customer_and_payment.json) file. Be sure to follow the [E.164 format](https://www.twilio.com/docs/glossary/what-e164).
+2. Replace `+12025551212` with your phone number for testing in the [assets/stripe_fixtures/create_customer_and_payment.private.json](assets/stripe_fixtures/create_customer_and_payment.private.json) file. Be sure to follow the [E.164 format](https://www.twilio.com/docs/glossary/what-e164).
 3. Start the server with the Twilio CLI:
 
 ```shell
