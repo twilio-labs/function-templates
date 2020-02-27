@@ -4,14 +4,21 @@
   "private": true,
   "description": "A set of useful Twilio Functions.",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "new-template": "node _helpers/add-template.js",
+    "add-dependency": "npm install $npm_config_package --no-package-lock --prefix $npm_config_template && npm install --save-dev $npm_config_package"
   },
   "author": "Phil Nash <philnash@twilio.com>",
   "license": "MIT",
   "devDependencies": {
+    "copy-template-dir": "^1.4.0",
     "eslint": "^5.4.0",
+    "inquirer": "^7.0.4",
     "jest-cli": "^24.8.0",
-    "moment": "^2.24.0"
+    "listr": "^0.14.3",
+    "log-symbols": "^3.0.0",
+    "moment": "^2.24.0",
+    "stripe": "^8.20.0"
   },
   "jest": {
     "testEnvironment": "node",
@@ -23,7 +30,6 @@
   },
   "dependencies": {
     "got": "^6.7.1",
-    "twilio": "^3.33.2",
-    "stripe": "^8.20.0"
+    "twilio": "^3.33.2"
   }
 }
