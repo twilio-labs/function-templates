@@ -2,6 +2,10 @@
 
 This Function will forward incoming calls to another number during business hours (by default Monday to Friday 8:00-18:59 UTC) and will otherwise direct to a voicemail. The voicemail will record a message and send a link of the recording via SMS to the configured phone number.
 
+## How to use the template
+
+The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
+
 ## Pre-requisites
 
 - A Twilio account - [sign up here](https://www.twilio.com/try-twilio)

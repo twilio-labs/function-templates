@@ -4,6 +4,10 @@ This function shows you how to programmatically send a payment receipt URL to yo
 
 ![Stripe SMS receipt demo gif](https://github.com/thorsten-stripe/demo-gifs/blob/master/twilio-stripe-sms-receipt.gif?raw=true)
 
+## How to use the template
+
+The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
+
 ## Create a new project with this template
 
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)

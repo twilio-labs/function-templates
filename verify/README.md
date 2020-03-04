@@ -4,6 +4,10 @@ These function show you how to send and check verification tokens for [Twilio Ve
 
 ![phone-verification-gif](https://github.com/robinske/serverless-phone-verification/blob/master/phone-verification.gif?raw=true)
 
+## How to use the template
+
+The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
+
 ## Pre-requisites
 
 - [Create a Verify Service](https://www.twilio.com/console/verify/services)
