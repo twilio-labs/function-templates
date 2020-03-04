@@ -26,6 +26,10 @@
     "coveragePathIgnorePatterns": [
       "/node_modules/",
       "/test/"
+    ],
+    "testPathIgnorePatterns": [
+      "/_helpers/",
+      "/node_modules/"
     ]
   },
   "dependencies": {
