@@ -10,7 +10,7 @@ This repo is intended to be a collection of useful Twilio Functions that are tes
 
 ## Usage
 
-Each Function lives in its own directory within this repo. To use the code, copy the contents of the main Function file to your Twilio Function. Make sure you read the Function README so that you know which environment variables to set and the parameters the Function takes when you make HTTP requests to it.
+Each Function lives in its own directory within this repo. The easiest way to use the templates is through the Twilio CLI. [Check out our docs for the different ways you can use these templates](docs/USING_FUNCTIONS.md).
 
 ## Available Functions
 
@@ -40,7 +40,6 @@ This is the list of Functions available in this repo:
 
 - [ ] Forward message to email with other API providers
 - [ ] Generate Twilio Client access token
-- [ ] Voicemail
 - [ ] Inbound calls for SIP registration
 - [ ] Outbound calls for SIP registration
 - [ ] Translate webhook from `application/x-www-form-urlencoded` into `application/json` and forward on to another service
