@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/10.0.0/markdown-it.min.js"></script>
+<link rel="stylesheet" href="./admin.css"></link>
+  </head>
+  <body>
+    <div id="app">
+      <h1>Quickstart</h1>
+      <div class="initialization" v-if="!environment.valid">
+        <h2>{{ environment.title }}</h2>
+        {{ md.render(environment.description) }}
+        <ul v-if="environment.actions" class="actions">
+          <li v-for="action in environment.actions">
+            <form @submit.prevent="performAction(action)">
+              <button type="submit">{{ action.title }}</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+      <!-- Initialized environment -->
+      <div class="checklist" v-else>
+        <h2>Configuration Checklist</h2>
+        <ul>
+          <li v-for="status in statuses">
+            <div 
+              v-bind:class="status.valid ? 'valid': 'invalid'" 
+              v-html="md.render(status.title)" class="title"></div>
+            <p v-if="status.description" 
+  
+              v-html="md.render(status.description)" ></p>
+            <ul v-if="status.actions" class="actions">
+              <li v-for="action in status.actions">
+                <form @submit.prevent="performAction(action)">
+                  <button type="submit">{{ action.title }}</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data: {
+          statuses: [],
+          environment: {},
+        },
+        methods: {
+          async refreshStatus() {
+            const response = await fetch(
+              `./check-status?virtualHost=${document.location.host}`
+            );
+            const result = await response.json();
+            this.environment = result.environment;
+            this.statuses = result.statuses;
+          },
+          async performAction(action) {
+            const response = await fetch("./perform-action", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(action)
+            });
+            const message = await response.json();
+            if (message.logs) {
+              message.logs.forEach(log => console.log(log));
+            }
+            this.refreshStatus();
+          }
+        },
+        created() {
+          this.md = window.markdownit();
+          this.refreshStatus();
+        }
+      });
+    </script>
+  </body>
+</html>
