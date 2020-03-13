@@ -1,4 +1,7 @@
 async function getCurrentEnvironment(context) {
+  if (context.DOMAIN_NAME === 'localhost' || context.DOMAIN_NAME === '127.0.0.1') {
+    return;
+  }
   const client = context.getTwilioClient();
   const services = await client.serverless.services.list();
   for (let service of services) {

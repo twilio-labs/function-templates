@@ -4,14 +4,25 @@ const {getCurrentEnvironment} = require(assets["/admin/environment.js"].path);
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
   const status = {
-    title: `Environment \`${environment.uniqueName}\` has been initialized`,
+    title: `Environment has been initialized`,
     valid: false
   };
   // domainName: environment.domainName,
   // uniqueName: environment.uniqueName,
   // suffix: environment.domainSuffix,
+  if (!environment) {
+    status.description = `This application is required to be deployed. 
 
-  if (!process.env.INITIALIZED) {
+
+To deploy this function, use the following command.
+
+\`\`\`bash
+twilio serverless:deploy
+\`\`\`
+
+After it has been deployed, revisit this page in your deployed application.
+`;
+  } else if (!process.env.INITIALIZED) {
     status.description = `The Twilio Client JavaScript Quickstart requires that you setup a few things on your account. 
 We've written some tools that will initialize the various parts to use this tool. To initialize your environment, click the button below.
 We'll explain what each of these parts are after we get started.`;
@@ -23,40 +34,6 @@ We'll explain what each of these parts are after we get started.`;
     ];
   } else {
     status.valid = true;
-  }
-  return status;
-}
-
-async function getTwilioCredentialsFromEnvStatus(context) {
-  const status = {
-    title: "Your Twilio Credentials are present in your `.env` file",
-    valid: false
-  };
-  // Unset
-  if (!(process.env.ACCOUNT_SID && process.env.AUTH_TOKEN)) {
-    status.description = `Please edit this environment to include your Account SID and and Auth Token.  These can be found in the [console](https://twilio.com/console).
-
-\`\`\`bash
-# Your Account SID beginning with AC
-ACCOUNT_SID=ACxxxxx
-# Your Auth Token
-AUTH_TOKEN=your-auth-token
-\`\`\`
-      `;
-    // Using the default function template API Key, starts with SK
-  } else if (!process.env.ACCOUNT_SID.startsWith("AC")) {
-    status.description = `The currently stored account information in your \`.env\` file needs to use your official Twilio Account SID (it should start with an \`AC\`). You can find these in the [console](https://twilio.com/console).
-
-  \`\`\`bash
-# Your Account SID beginning with AC
-ACCOUNT_SID=ACxxxxx
-# Your Auth Token
-AUTH_TOKEN=your-auth-token
-
-\`\`\``;
-  } else {
-    status.valid = true;
-    status.description = `Current Account SID: \`${process.env.ACCOUNT_SID}\``;
   }
   return status;
 }
@@ -95,12 +72,27 @@ async function getTwiMLApplicationStatus(context) {
     const results = await client.applications.list({ friendlyName });
     if (results.length === 1) {
       const app = results[0];
-      status.description = `Make sure you add your TwiML Application SID to your environment
+      status.description = `We found an existing [TwiML Application](https://www.twilio.com/console/voice/twiml/apps/${app.sid}) with the name of \`${friendlyName}\.
 
-\`\`\`bash
-TWIML_APPLICATION_SID=${app.sid}
-\`\`\`        
+Would you like to use this app?
 `;
+      status.actions = [
+        {
+          title: "Use existing TwiML application",
+          name: "useExistingTwimlApp",
+          params: {
+            twimlApplicationSid: app.sid
+          }
+        },
+        {
+          title: "Do not use existing TwiML application, create a new one",
+          name: "createTwimlApp",
+          params: {
+            friendlyName
+          }
+        }
+      ];
+
     } else {
       status.description = `We need to create a new TwiML Application. You can do this by clicking the button below. 
           
@@ -115,44 +107,6 @@ You can do this [via the API or CLI](https://www.twilio.com/docs/usage/api/appli
         }
       ];
     }
-  }
-  return status;
-}
-
-function getHost(context) {
-  if (context.VIRTUAL_HOST !== context.DOMAIN_NAME) {
-    return context.VIRTUAL_HOST;
-  }
-  const actualHost = context.DOMAIN_NAME.split(":")[0];
-  return actualHost;
-}
-
-function isHostAccessible(context) {
-  const host = getHost(context);
-  return host !== "localhost" && host !== "127.0.0.1";
-}
-
-async function getHostIsAccessibleStatus(context) {
-  const host = getHost(context);
-  const status = {
-    title: "Host is accessible to the public Internet",
-    valid: false
-  };
-  if (!isHostAccessible(context)) {
-    status.description = `Your application hosted at \`${host}\` is not accessible to the public Internet. 
-  Deploy your function by using the following command at the console:
-  
-  \`\`\`bash
-  twilio serverless:deploy
-  \`\`\`\
-  
-  Optionally, you can use a tunneling service like [ngrok](https://ngrok.com) to expose your server to the public Internet.
-  
-  After your correct this, revisit this admin page on your public facing host.
-  `;
-  } else {
-    status.valid = true;
-    status.description = "Twilio can now access your hosted functions";
   }
   return status;
 }
@@ -212,9 +166,6 @@ async function getTwiMLApplicationIsWiredUp(context) {
   if (!twimlApplicationSid) {
     status.description =
       "After you update your environment, you can wire up your TwiML Application safely.";
-  } else if (!isHostAccessible(context)) {
-    status.description =
-      "In order for Twilio to reach your application, it must be publicly accessible on the Internet.";
   } else {
     try {
       const app = await client.applications(twimlApplicationSid).fetch();
@@ -262,12 +213,21 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
       status.description = `Your web application will mint AccessTokens using your [${key.friendlyName} API Key](https://www.twilio.com/console/voice/settings/api-keys/${process.env.API_KEY})`;
     } catch (err) {
       status.description = `Uh oh, unable to find your API Key \`${process.env.API_KEY}\`.
-  Please [double check your key](https://www.twilio.com/console/voice/settings/api-keys/) or create a new one by removing it from your \`.env\` file.`;
+  Please [double check your key](https://www.twilio.com/console/voice/settings/api-keys/) or create a new one.`;
+      status.actions = [
+        {
+          title: "Generate a new REST API Key and Secret",
+          name: "generateNewKey",
+          params: {
+            friendlyName: process.env.APP_NAME
+          }
+        }
+      ];
     }
   } else {
     status.description = `This application uses a REST API Key and Secret to mint AccessTokens.
 
-If you already have an API Key created for this purpose you can set the environment properties, \`API_KEY\` and \`API_SECRET\`.
+If you already have an API Key created for this purpose you can set the environment values, \`API_KEY\` and \`API_SECRET\`.
 
 Alternatively you can generate a new key by clicking the button below. 
     `;

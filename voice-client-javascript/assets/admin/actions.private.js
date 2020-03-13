@@ -69,6 +69,12 @@ class Actions {
       CALLER_ID: number
     };
   }
+
+  async useExistingTwimlApp({ twimlApplicationSid }) {
+    return {
+      TWIML_APPLICATION_SID: twimlApplicationSid
+    };
+  }
 }
 
 module.exports = Actions;
