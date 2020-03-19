@@ -3,7 +3,6 @@ const status = require(assets["/admin/statuses.js"].path);
 const environmentFunction = status.environment;
 const statusFunctions = status.statuses;
 
-
 async function getStatuses(context) {
   // This should be `Promise.allSettled` with a filter, but the node version is off
   const promises = statusFunctions.map(async fn => {
@@ -16,7 +15,6 @@ async function getStatuses(context) {
   const results = await Promise.all(promises);
   return results.filter(result => result !== undefined);
 }
-
 
 exports.handler = async function(context, event, callback) {
   context.VIRTUAL_HOST = event.virtualHost;

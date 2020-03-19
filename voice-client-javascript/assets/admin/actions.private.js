@@ -11,15 +11,18 @@ class Actions {
     env = Object.assign(env, results);
     const voiceUrl = `https://${this.options.DOMAIN_NAME}/client-voice-twiml-app`;
     console.dir(env);
-    console.log(`Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`);
+    console.log(
+      `Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`
+    );
     await this.updateTwimlAppVoiceUrl({
-      twimlApplicationSid: env.TWIML_APPLICATION_SID, 
-      voiceUrl});
+      twimlApplicationSid: env.TWIML_APPLICATION_SID,
+      voiceUrl
+    });
     console.log("Generating new REST API Key");
     results = await this.generateNewKey(this.options);
     env = Object.assign(env, results);
     const number = this.chooseLogicalCallerId();
-    results = await this.setCallerId(number);
+    results = await this.setCallerId({ number });
     env = Object.assign(env, results);
     env.INITIALIZED = "voice-client-quickstart";
     env.INITIALIZATION_DATE = new Date().toISOString();
