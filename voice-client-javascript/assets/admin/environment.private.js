@@ -1,5 +1,5 @@
 async function getCurrentEnvironment(context) {
-  if (context.DOMAIN_NAME === 'localhost' || context.DOMAIN_NAME === '127.0.0.1') {
+  if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith("localhost")) {
     return;
   }
   const client = context.getTwilioClient();
@@ -36,7 +36,11 @@ async function getEnvironmentVariable(context, environment, key) {
 async function setEnvironmentVariable(context, environment, key, value) {
   const client = context.getTwilioClient();
   try {
-    const currentVariable = await getEnvironmentVariable(context, environment, key);
+    const currentVariable = await getEnvironmentVariable(
+      context,
+      environment,
+      key
+    );
     if (currentVariable) {
       if (currentVariable.value !== value) {
         console.log(`Updating ${key}...`);

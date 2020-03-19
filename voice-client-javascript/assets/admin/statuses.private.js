@@ -1,20 +1,17 @@
 const assets = Runtime.getAssets();
-const {getCurrentEnvironment} = require(assets["/admin/environment.js"].path);
+const { getCurrentEnvironment } = require(assets["/admin/environment.js"].path);
 
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
   const status = {
-    title: `Environment has been initialized`,
+    title: `Environmental Checks`,
     valid: false
   };
-  // domainName: environment.domainName,
-  // uniqueName: environment.uniqueName,
-  // suffix: environment.domainSuffix,
   if (!environment) {
-    status.description = `This application is required to be deployed. 
+    status.description = `This application is **must be** deployed. 
 
 
-To deploy this function, use the following command.
+To deploy this function, use the following command:
 
 \`\`\`bash
 twilio serverless:deploy
@@ -24,16 +21,21 @@ After it has been deployed, revisit this page in your deployed application.
 `;
   } else if (!process.env.INITIALIZED) {
     status.description = `The Twilio Client JavaScript Quickstart requires that you setup a few things on your account. 
-We've written some tools that will initialize the various parts to use this tool. To initialize your environment, click the button below.
+
+We've written some tools that will initialize the various parts to use this tool.
+
+To initialize your environment, click the button below.
+
 We'll explain what each of these parts are after we get started.`;
     status.actions = [
       {
         title: `Initialize your application for your environment, ${environment.uniqueName}`,
-        name: "initialize",
+        name: "initialize"
       }
     ];
   } else {
     status.valid = true;
+    status.description = `Your application is initialized! View your [running application](/index.html)`;
   }
   return status;
 }
@@ -92,7 +94,6 @@ Would you like to use this app?
           }
         }
       ];
-
     } else {
       status.description = `We need to create a new TwiML Application. You can do this by clicking the button below. 
           
@@ -157,7 +158,7 @@ You can [verify it via the console](https://www.twilio.com/console/phone-numbers
 
 async function getTwiMLApplicationIsWiredUp(context) {
   const client = context.getTwilioClient();
-  const expectedFn = `https://${getHost(context)}/client-voice-twiml-app`;
+  const expectedFn = `https://${context.DOMAIN_NAME}/client-voice-twiml-app`;
   twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
   const status = {
     title: "TwiML Application is configured to use incoming call function",
@@ -247,9 +248,7 @@ Alternatively you can generate a new key by clicking the button below.
 module.exports = {
   environment: checkEnvironmentInitialization,
   statuses: [
-    getTwilioCredentialsFromEnvStatus,
     getTwiMLApplicationStatus,
-    getHostIsAccessibleStatus,
     getTwiMLApplicationIsWiredUp,
     getAPIKeyAndSecretFromEnvStatus,
     getCallerIdStatus

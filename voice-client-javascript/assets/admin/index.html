@@ -8,7 +8,7 @@
       <h1>Quickstart</h1>
       <div class="initialization" v-if="!environment.valid">
         <h2>{{ environment.title }}</h2>
-        {{ md.render(environment.description) }}
+        <div v-html="md.render(environment.description)"></div>
         <ul v-if="environment.actions" class="actions">
           <li v-for="action in environment.actions">
             <form @submit.prevent="performAction(action)">
@@ -19,6 +19,8 @@
       </div>
       <!-- Initialized environment -->
       <div class="checklist" v-else>
+        <h2>{{ environment.title }}</h2>
+        <div v-html="md.render(environment.description)"></div>
         <h2>Configuration Checklist</h2>
         <ul>
           <li v-for="status in statuses">
