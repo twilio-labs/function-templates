@@ -1,4 +1,4 @@
-let mockedTimeString = 'Thu, 13 Feb 2020 10:00:00 +0000';
+let mockedTimeString = '2020-02-13T10:00:00.000Z';
 jest.mock('moment', () => {
   const actualMoment = jest.requireActual('moment');
   return () => {
@@ -58,7 +58,7 @@ test('allows to configure business week start', done => {
     WORK_WEEK_START: 2,
   };
 
-  mockedTimeString = 'Mon, 10 Feb 2020 18:59:00 +0000';
+  mockedTimeString = '2020-02-10T18:59:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -77,7 +77,7 @@ test('allows to configure business hours start', done => {
     WORK_HOUR_START: 9,
   };
 
-  mockedTimeString = 'Thu, 13 Feb 2020 8:01:00 +0000';
+  mockedTimeString = '2020-02-13T08:01:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -96,7 +96,7 @@ test('allows to configure business week end', done => {
     WORK_WEEK_END: 4,
   };
 
-  mockedTimeString = 'Fri, 14 Feb 2020 10:00:00 +0000';
+  mockedTimeString = '2020-02-14T10:00:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -115,7 +115,7 @@ test('allows to configure business hours end', done => {
     WORK_HOUR_END: 16,
   };
 
-  mockedTimeString = 'Thu, 13 Feb 2020 17:01:00 +0000';
+  mockedTimeString = '2020-02-13T17:01:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -134,7 +134,7 @@ test('handles timezone offset', done => {
     TIMEZONE_OFFSET: '-1',
   };
 
-  mockedTimeString = 'Thu, 13 Feb 2020 18:59:00 +0000';
+  mockedTimeString = '2020-02-13T18:59:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -153,7 +153,7 @@ test('handles timezone offset outside business hours', done => {
     TIMEZONE_OFFSET: '-1',
   };
 
-  mockedTimeString = 'Thu, 13 Feb 2020 8:01:00 +0000';
+  mockedTimeString = '2020-02-13T08:01:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -171,7 +171,7 @@ test('sends default message outside of business hours', done => {
     MY_PHONE_NUMBER: '+1112223333',
   };
 
-  mockedTimeString = 'Thu, 13 Feb 2020 19:00:00 +0000';
+  mockedTimeString = '2020-02-13T19:00:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
@@ -193,7 +193,7 @@ test('sends translated message outside of business hours', done => {
     FromCountry: 'DE',
   };
 
-  mockedTimeString = 'Thu, 13 Feb 2020 19:00:00 +0000';
+  mockedTimeString = '2020-02-13T19:00:00.000Z';
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
