@@ -21,7 +21,7 @@ class Actions {
     console.log("Generating new REST API Key");
     results = await this.generateNewKey(this.options);
     env = Object.assign(env, results);
-    const number = this.chooseLogicalCallerId();
+    const number = await this.chooseLogicalCallerId();
     results = await this.setCallerId({ number });
     env = Object.assign(env, results);
     env.INITIALIZED = "voice-client-quickstart";
