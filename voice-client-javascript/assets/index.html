@@ -1,22 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Twilio Client Quickstart</title>
   <link rel="stylesheet" href="site.css">
 </head>
 <body>
   <div id="controls">
-    <div id="info">
-      <p class="instructions">Twilio Client</p>
-      <div id="client-name"></div>
-      <div id="output-selection">
-        <label>Ringtone Devices</label>
-        <select id="ringtone-devices" multiple></select>
-        <label>Speaker Devices</label>
-        <select id="speaker-devices" multiple></select><br/>
-        <a id="get-devices">Seeing unknown devices?</a>
-      </div>
-    </div>
     <div id="call-controls">
       <p class="instructions">Make a Call:</p>
       <input id="phone-number" type="text" placeholder="Enter a phone # or client name" />
@@ -29,7 +19,21 @@
         <div id="output-volume"></div>
       </div>
     </div>
-    <div id="log"></div>
+    <div id="info">
+      <p class="instructions">Twilio Client</p>
+      <div id="client-name"></div>
+      <div id="output-selection">
+        <label>Ringtone Devices</label>
+        <select id="ringtone-devices" multiple></select>
+        <label>Speaker Devices</label>
+        <select id="speaker-devices" multiple></select><br/>
+        <a id="get-devices">Seeing unknown devices?</a>
+      </div>
+    </div>
+    <div id="log-container">
+      <p class="instructions">Log</p>
+      <div id="log"></div>
+    </div>
   </div>
 
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
