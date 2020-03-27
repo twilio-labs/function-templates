@@ -1,7 +1,12 @@
-# Forward Call
+# Save SMS
 
-This Function in `airtable-sms-save.js` will save the contents of an inbound
+This Function in `save-sms.js` will save the details of an inbound
 SMS message to an Airtable base.
+
+# Broadcast SMS
+
+This Function in `boardcast-sms.js` will broadcast a message to a list
+of phone numbers stored in an Airtable base.
 
 ### Parameters
 
