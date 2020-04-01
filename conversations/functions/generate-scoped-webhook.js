@@ -9,7 +9,6 @@ exports.handler = function(context, event, callback) {
       target: "studio"
     })
     .then(webhook => {
-      console.log("webhook", webhook);
       const response = `webhook ${webhook.sid} successfully created`;
       callback(null, response);
     })

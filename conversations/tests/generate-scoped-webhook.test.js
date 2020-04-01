@@ -8,9 +8,9 @@ const WebhookSid = "WHxxxxxxxxx";
 const ConversationSid = "CHxxxxxxxxx";
 
 const getMockTwilioClient = function(createWebhook) {
-  const createConversationsService = jest.fn(ConversationSid => {
+  const createConversationsService = ConversationSid => {
     sid: conversationSid;
-  });
+  };
 
   const mockConversationsService = {
     conversations: {
@@ -22,7 +22,7 @@ const getMockTwilioClient = function(createWebhook) {
   };
   return {
     conversations: {
-      conversations: jest.fn(ConversationSid => mockConversationsService)
+      conversations: ConversationSid => mockConversationsService
     }
   };
 };
@@ -56,7 +56,6 @@ test("returns success response", done => {
 });
 
 test("returns error response", done => {
-  // const createWebhook = jest.fn(() => Promise.reject("nope"));
   const createWebhook = () => Promise.reject("nope");
   const context = {
     STUDIO_FLOW_SID: StudioFlowSid,
