@@ -5,6 +5,10 @@ To learn more, visit https://www.twilio.com/blog/using-twilio-studio-conversatio
 
 ## Pre-requisites
 
+Follow the instructions in the blog post to configure Conversations to create a new Conversation when SMS messages come in, and configure the `onConversationAdded` webhook URL to point to the URL of this Function.
+
+Check the box in your [Functions configuration dashboard](https://www.twilio.com/console/functions/configure) to enable `ACCOUNT_SID` and `AUTH_TOKEN`. If not, you'll need to add those environment variables manually.
+
 ### Environment variables
 
 This project requires some environment variables to be set. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
@@ -17,7 +21,7 @@ In your `.env` file, set the following values:
 
 ### Function Parameters
 
-`/blank` expects the following parameters:
+`/generate-scoped-webhook` expects the following parameters:
 
 | Parameter         | Description                                                                                                                                         | Required |
 | :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
