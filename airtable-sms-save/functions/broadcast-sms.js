@@ -4,7 +4,7 @@ exports.handler = function(context, event, callback) {
     var Airtable = require('airtable');
     var base = new Airtable({apiKey: context.AIRTABLE_APIKEY}).base(context.AIRTABLE_BASEID);
 
-    base(context.AIRTABLE_TABLENAME)
+    base.table(context.AIRTABLE_TABLENAME)
       .select()
       .all().then(records => {
         const sendingMessages = records.map(record => {

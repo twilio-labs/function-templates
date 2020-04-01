@@ -1,9 +1,11 @@
+const Airtable = require('airtable');
+
 exports.handler = function(context, event, callback) {
   let twiml = new Twilio.twiml.MessagingResponse();
-  var Airtable = require('airtable');
+
   var base = new Airtable({apiKey: context.AIRTABLE_APIKEY}).base(context.AIRTABLE_BASEID);
 
-  base(context.AIRTABLE_TABLENAME).create({
+  base.table(context.AIRTABLE_TABLENAME).create({
     'Sid':event.Sid,
     'From': event.From,
     'Body': event.Body
