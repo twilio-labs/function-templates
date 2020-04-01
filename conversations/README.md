@@ -1,6 +1,7 @@
 # conversations
 
 These Functions generate a Conversations-scoped webhook so that you can integrate Twilio Studio with Twilio Conversations.
+To learn more, visit https://www.twilio.com/blog/using-twilio-studio-conversations-sms
 
 ## Pre-requisites
 
@@ -10,55 +11,14 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-
+| Variable          | Meaning                                                  | Required |
+| :---------------- | :------------------------------------------------------- | :------- |
+| `STUDIO_FLOW_SID` | Create one [here](https://www.twilio.com/console/studio) | Yes      |
 
 ### Function Parameters
 
 `/blank` expects the following parameters:
 
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-## Create a new project with the template
-
-1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
-2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-
-```shell
-twilio plugins:install @twilio-labs/plugin-serverless
-```
-
-3. Initiate a new project
-
-```
-twilio serverless:init example --template=conversations && cd verify-sample
-```
-
-4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:start
-```
-
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
-
-ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
-
-## Deploying
-
-Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
-
-With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:deploy
-```
+| Parameter         | Description                                                                                                                                         | Required |
+| :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
+| `ConversationSid` | The SID of the Conversation, which should be automatically created when a new Conversation is added if you follow the instructions in the blogpost. | Yes      |
