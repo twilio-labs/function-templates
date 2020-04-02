@@ -1,3 +1,4 @@
+const path = require("path");
 const assets = Runtime.getAssets();
 const { stripIndent } = require("common-tags");
 const { getCurrentEnvironment } = require(assets["/admin/environment.js"].path);
@@ -32,7 +33,7 @@ async function checkEnvironmentInitialization(context) {
     ];
   } else {
     status.valid = true;
-    status.description = `Your application is initialized! View your [running application](/index.html)`;
+    status.description = `Your application is initialized! View your [running application](../index.html)`;
   }
   return status;
 }
@@ -155,7 +156,7 @@ async function getCallerIdStatus(context) {
 
 async function getTwiMLApplicationIsWiredUp(context) {
   const client = context.getTwilioClient();
-  const expectedFn = `https://${context.DOMAIN_NAME}/client-voice-twiml-app`;
+  const expectedFn = `https://${context.DOMAIN_NAME}${path.join(path.dirname(context.PATH, 'client-voice-twiml-app'))};
   twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
   const status = {
     title: "TwiML Application is configured to use incoming call function",
