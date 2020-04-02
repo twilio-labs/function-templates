@@ -9,7 +9,8 @@ exports.handler = async function(context, event, callback) {
   const environment = await getCurrentEnvironment(context);
   const actions = new Actions(client, {
     friendlyName: process.env.APP_NAME,
-    DOMAIN_NAME: context.DOMAIN_NAME
+    DOMAIN_NAME: context.DOMAIN_NAME,
+    PATH: context.PATH,
   });
   const logs = [];
   try {
