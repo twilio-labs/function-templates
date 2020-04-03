@@ -4,7 +4,7 @@ class Actions {
     this.options = options;
   }
 
-  function _url_replace(url, newPage) {
+  _url_replace(url, newPage) {
     const parts = url.split("/");
     parts.pop();
     parts.push(newPage);
