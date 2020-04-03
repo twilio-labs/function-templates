@@ -21,7 +21,9 @@ exports.handler = async function(context, event, callback) {
           context,
           environment,
           key,
-          value
+          value,
+          // Do not override if we are in initialization
+          envVars.INITIALIZED === undefined
         );
         logs.push(`${result ? "Successfully set" : "Did not set"} "${key}"`);
       }

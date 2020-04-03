@@ -33,7 +33,7 @@ async function getEnvironmentVariable(context, environment, key) {
   return envVars.find(variable => variable.key === key);
 }
 
-async function setEnvironmentVariable(context, environment, key, value) {
+async function setEnvironmentVariable(context, environment, key, value, override=true) {
   const client = context.getTwilioClient();
   try {
     const currentVariable = await getEnvironmentVariable(
@@ -43,9 +43,14 @@ async function setEnvironmentVariable(context, environment, key, value) {
     );
     if (currentVariable) {
       if (currentVariable.value !== value) {
-        console.log(`Updating ${key}...`);
-        await currentVariable.update({ value });
-        return true;
+        if (override) {
+          console.log(`Updating ${key}...`);
+          await currentVariable.update({ value });
+          return true;
+        } else {
+          console.log(`Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`);
+          return false;
+        }
       } else {
         console.warn(`Variable '${key}' was already set to '${value}'`);
         return false;
