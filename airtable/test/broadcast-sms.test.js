@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const broadcastSms = require('../functions/save-sms').handler;
+const broadcastSms = require('../functions/broadcast-sms').handler;
 const Twilio = require('twilio');
 
 const event = {};
@@ -9,6 +9,11 @@ jest.mock("airtable", () => {
     return mockAirtableClient;
   });
 });
+
+const mockRecord = {
+  get: jest.fn(() => '+1234567890')
+}
+const mockAllRecords = [mockRecord];
 
 const mockAirtableClient = {
   base: jest.fn().mockImplementation(() => {
@@ -21,14 +26,32 @@ const mockAirtableBase = {
 }
 
 const mockAirtableTable = {
-  create: jest.fn(() =>
-    Promise.resolve({
-      err: "This is an error message"
-    })
+  select: jest.fn(() => { return mockAirtableQuery; })
+}
+
+const mockAirtableQuery = {
+  all: jest.fn(() =>
+    Promise.resolve(mockAllRecords)
   )
 }
 
+let shouldFail = false;
+const mockClient = {
+  messages: {
+    create: jest.fn( async () => {
+      if (shouldFail) {
+        throw new Error('failed to send mock sms');
+      } else {
+        return {
+          sid: 'MGxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        };
+      }
+    }),
+  },
+};
+
 const context = {
+  getTwilioClient: () => mockClient,
   AIRTABLE_APIKEY: 'keyAbcD12efG3HijK',
   AIRTABLE_BASEID: 'appAbcD12efG3HijK',
   AIRTABLE_TABLENAME: 'Table 1',
@@ -45,6 +68,16 @@ afterAll(() => {
 
 test('returns a Response', done => {
   const callback = (err, result) => {
+    expect(result).toBeDefined();
+    done();
+  };
+
+  broadcastSms(context, event, callback);
+});
+
+test('returns a Response', done => {
+  const callback = (err, result) => {
+    console.log(err);
     expect(result).toBeDefined();
     done();
   };
