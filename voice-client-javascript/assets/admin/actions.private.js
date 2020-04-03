@@ -1,9 +1,14 @@
-const path = require("path");
-
 class Actions {
   constructor(client, options) {
     this.client = client;
     this.options = options;
+  }
+
+  function _url_replace(url, newPage) {
+    const parts = url.split("/");
+    parts.pop();
+    parts.push(newPage);
+    return parts.join("/");
   }
 
   async initialize() {
@@ -11,7 +16,7 @@ class Actions {
     console.log("Creating TwiML Application");
     let results = await this.createTwimlApp(this.options);
     env = Object.assign(env, results);
-    const voiceUrl = `https://${this.options.DOMAIN_NAME}${path.join(path.dirname(this.options.PATH, "client-voice-twiml-app"))}`;
+    const voiceUrl = `https://${this.options.DOMAIN_NAME}${this._url_replace(this.options.PATH, "client-voice-twiml-app")}`;
     console.log(
       `Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`
     );
