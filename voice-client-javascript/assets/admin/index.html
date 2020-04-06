@@ -12,7 +12,9 @@
         </p>
         <form @submit.prevent="login">
           <div>
+            <label for="password">Password:
             <input type="password" name="password" v-model="password">
+          </label>
           </div>
           <button>Let me in</button>
         </form>
