@@ -112,6 +112,22 @@ or alternatively:
 npx jest --watch
 ```
 
+## Testing your template
+
+If you want to test how your new template works with the Twilio CLI, make sure you have the latest version of [`@twilio-labs/plugin-serverless`](https://npm.im/@twilio-labs/plugin-serverless) installed.
+
+Afterwards make sure you push your changes to a different branch or fork of the repository. Your changes have to be uploaded to GitHub for you to be able to test them.
+
+For example if I'm working on the `verify` template, I might push my changes to a new branch called `update-verify` under my personal fork of the `function-templates` repository, located at: https://github.com/**dkundel/function-templates**.
+
+In order to test if my changes are working, I can invoke the `twilio serverless:init` command with the following flags:
+
+```bash
+TWILIO_SERVERLESS_TEMPLATE_BRANCH="update-verify" \
+TWILIO_SERVERLESS_TEMPLATE_REPO="dkundel/function-templates" \
+twilio serverless:init example --template="verify"
+```
+
 ## Creating a pull request
 
 Please open a pull request on the [function-templates](https://github.com/twilio-labs/function-templates/pulls) repository from your fork and fill out the pull request template.
