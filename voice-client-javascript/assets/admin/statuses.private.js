@@ -245,6 +245,29 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
   return status;
 }
 
+async function getDefaultPasswordChanged(context) {
+  const status = {
+    title: "Default admin password has been changed",
+    valid: false
+  };
+  if (process.env.ADMIN_PASSWORD === "default") {
+    status.description = stripIndents`Please take a moment to change your admin password from the provided default password. 
+    
+    You can do this by editing the \`ADMIN_PASSWORD\` value in the \`.env\` in the root of this project.
+    
+    After you have saved that file, please redeploy.
+
+    \`\`\`bash
+    twilio serverless:deploy
+    \`\`\`
+    `;
+  } else {
+    status.valid = true;
+    status.description = "You're all set. You can change this value in your `.env` file at anytime.";
+  }
+  return status;
+}
+
 module.exports = {
   environment: checkEnvironmentInitialization,
   statuses: [
@@ -252,5 +275,6 @@ module.exports = {
     getTwiMLApplicationIsWiredUp,
     getAPIKeyAndSecretFromEnvStatus,
     getCallerIdStatus,
+    getDefaultPasswordChanged,
   ],
 };
