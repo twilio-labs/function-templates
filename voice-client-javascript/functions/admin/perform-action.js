@@ -1,10 +1,13 @@
 const assets = Runtime.getAssets();
 const Actions = require(assets["/admin/actions.js"].path);
-const { getCurrentEnvironment, setEnvironmentVariable } = require(assets[
-  "/admin/environment.js"
-].path);
+const {
+  getCurrentEnvironment,
+  setEnvironmentVariable,
+  checkAuthorization,
+} = require(assets["/admin/shared.js"].path);
 
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
+  checkAuthorization(context, event, callback);
   const client = context.getTwilioClient();
   const environment = await getCurrentEnvironment(context);
   const actions = new Actions(client, {
@@ -14,7 +17,7 @@ exports.handler = async function(context, event, callback) {
   });
   const logs = [];
   try {
-    const envVars = await actions[event.name](event.params);
+    const envVars = await actions[event.action.name](event.action.params);
     if (envVars) {
       for (let [key, value] of Object.entries(envVars)) {
         const result = await setEnvironmentVariable(

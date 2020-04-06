@@ -1,14 +1,11 @@
+const assets = Runtime.getAssets();
+const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
+
+
 class Actions {
   constructor(client, options) {
     this.client = client;
     this.options = options;
-  }
-
-  _url_replace(url, newPage) {
-    const parts = url.split("/");
-    parts.pop();
-    parts.push(newPage);
-    return parts.join("/");
   }
 
   async initialize() {
@@ -16,7 +13,7 @@ class Actions {
     console.log("Creating TwiML Application");
     let results = await this.createTwimlApp(this.options);
     env = Object.assign(env, results);
-    const voiceUrl = `https://${this.options.DOMAIN_NAME}${this._url_replace(this.options.PATH, "client-voice-twiml-app")}`;
+    const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(this.options.PATH, "client-voice-twiml-app")}`;
     console.log(
       `Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`
     );

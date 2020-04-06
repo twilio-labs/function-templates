@@ -1,5 +1,6 @@
 const assets = Runtime.getAssets();
 const status = require(assets["/admin/statuses.js"].path);
+const { checkAuthorization } = require(assets["/admin/shared.js"].path);
 const environmentFunction = status.environment;
 const statusFunctions = status.statuses;
 
@@ -17,6 +18,7 @@ async function getStatuses(context) {
 }
 
 exports.handler = async function(context, event, callback) {
+  checkAuthorization(context, event, callback);
   context.VIRTUAL_HOST = event.virtualHost;
   const environment = await environmentFunction(context);
   const statuses = await getStatuses(context);

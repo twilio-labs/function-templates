@@ -1,23 +1,17 @@
 const assets = Runtime.getAssets();
-const { stripIndent } = require("common-tags");
-const { getCurrentEnvironment } = require(assets["/admin/environment.js"].path);
-
-function _url_replace(url, newPage) {
-  const parts = url.split("/");
-  parts.pop();
-  parts.push(newPage);
-  return parts.join("/");
-}
-
+const { stripIndents } = require("common-tags");
+const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
+  "/admin/shared.js"
+].path);
 
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
   const status = {
     title: `Environmental Checks`,
-    valid: false
+    valid: false,
   };
   if (!environment) {
-    status.description = stripIndent`This application is **must be** deployed. 
+    status.description = stripIndents`This application is **must be** deployed. 
     To deploy this function, use the following command:
     
     \`\`\`bash
@@ -26,7 +20,7 @@ async function checkEnvironmentInitialization(context) {
     After it has been deployed, revisit this page in your deployed application.
     `;
   } else if (!process.env.INITIALIZED) {
-    status.description = stripIndent`The Twilio Client JavaScript Quickstart requires that you setup a few things on your account. 
+    status.description = stripIndents`The Twilio Client JavaScript Quickstart requires that you setup a few things on your account. 
     We've written some tools that will initialize the various parts to use this tool.
     
     To initialize your environment, click the button below.
@@ -35,8 +29,8 @@ async function checkEnvironmentInitialization(context) {
     status.actions = [
       {
         title: `Initialize your application for your environment, ${environment.uniqueName}`,
-        name: "initialize"
-      }
+        name: "initialize",
+      },
     ];
   } else {
     status.valid = true;
@@ -54,7 +48,7 @@ async function getTwiMLApplicationStatus(context) {
   const friendlyName = process.env.APP_NAME;
   const status = {
     valid: false,
-    title: `TwiML Application is created and defined in the environment`
+    title: `TwiML Application is created and defined in the environment`,
   };
   if (process.env.TWIML_APPLICATION_SID) {
     try {
@@ -70,16 +64,16 @@ async function getTwiMLApplicationStatus(context) {
           title: "Recreate a new TwiML Application",
           name: "createTwimlApp",
           params: {
-            friendlyName
-          }
-        }
+            friendlyName,
+          },
+        },
       ];
     }
   } else {
     const results = await client.applications.list({ friendlyName });
     if (results.length === 1) {
       const app = results[0];
-      status.description = stripIndent`We found an existing [TwiML Application](https://www.twilio.com/console/voice/twiml/apps/${app.sid}) with the name of \`${friendlyName}\.
+      status.description = stripIndents`We found an existing [TwiML Application](https://www.twilio.com/console/voice/twiml/apps/${app.sid}) with the name of \`${friendlyName}\.
       Would you like to use this app?
       `;
       status.actions = [
@@ -87,19 +81,19 @@ async function getTwiMLApplicationStatus(context) {
           title: "Use existing TwiML application",
           name: "useExistingTwimlApp",
           params: {
-            twimlApplicationSid: app.sid
-          }
+            twimlApplicationSid: app.sid,
+          },
         },
         {
           title: "Do not use existing TwiML application, create a new one",
           name: "createTwimlApp",
           params: {
-            friendlyName
-          }
-        }
+            friendlyName,
+          },
+        },
       ];
     } else {
-      status.description = stripIndent`We need to create a new TwiML Application. You can do this by clicking the button below.
+      status.description = stripIndents`We need to create a new TwiML Application. You can do this by clicking the button below.
       
       You can do this [via the API or CLI](https://www.twilio.com/docs/usage/api/applications?code-sample=code-create-a-new-application-within-your-account&code-language=curl&code-sdk-version=json).`;
       status.actions = [
@@ -107,9 +101,9 @@ async function getTwiMLApplicationStatus(context) {
           title: "Create a new TwiML Application",
           name: "createTwimlApp",
           params: {
-            friendlyName
-          }
-        }
+            friendlyName,
+          },
+        },
       ];
     }
   }
@@ -121,7 +115,7 @@ async function getCallerIdStatus(context) {
   const callerId = process.env.CALLER_ID;
   const status = {
     valid: false,
-    title: "Caller ID is set to a valid number"
+    title: "Caller ID is set to a valid number",
   };
   // Get All Owned Numbers and Verified Numbers
   const incomingNumbers = await client.incomingPhoneNumbers.list();
@@ -134,27 +128,27 @@ async function getCallerIdStatus(context) {
       status.valid = true;
       status.description = `Your CallerID is set to ${process.env.CALLER_ID}`;
     } else {
-      status.description = stripIndent`Your CallerID is set to ${process.env.CALLER_ID}, but that number is not yet verified.
+      status.description = stripIndents`Your CallerID is set to ${process.env.CALLER_ID}, but that number is not yet verified.
       
       You can [verify it via the console](https://www.twilio.com/console/phone-numbers/verified), [CLI or API](https://www.twilio.com/docs/voice/api/outgoing-caller-ids).
       `;
     }
   } else {
     status.description = `Your outgoing caller ID can be set to any Twilio number that you've purchased or any numbers that are verified on your account. `;
-    status.actions = incomingNumbers.map(num => ({
+    status.actions = incomingNumbers.map((num) => ({
       title: `Choose Twilio # ${num.friendlyName}`,
       name: "setCallerId",
       params: {
-        number: num.phoneNumber
-      }
+        number: num.phoneNumber,
+      },
     }));
     status.actions = status.actions.concat(
-      outgoingCallerIds.map(num => ({
+      outgoingCallerIds.map((num) => ({
         title: `Choose Verified # ${num.friendlyName}`,
         name: "setCallerId",
         params: {
-          number: num.phoneNumber
-        }
+          number: num.phoneNumber,
+        },
       }))
     );
   }
@@ -163,11 +157,14 @@ async function getCallerIdStatus(context) {
 
 async function getTwiMLApplicationIsWiredUp(context) {
   const client = context.getTwilioClient();
-  const expectedFn = `https://${context.DOMAIN_NAME}${_url_replace(context.PATH, 'client-voice-twiml-app')}`;
+  const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
+    context.PATH,
+    "client-voice-twiml-app"
+  )}`;
   twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
   const status = {
     title: "TwiML Application is configured to use incoming call function",
-    valid: false
+    valid: false,
   };
   if (!twimlApplicationSid) {
     status.description =
@@ -179,7 +176,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
         status.valid = true;
         status.description = `TwiML Application Voice URL: \`${expectedFn}\``;
       } else {
-        status.description = stripIndent`Your TwiML Application's ( [${app.friendlyName}](https://www.twilio.com/console/voice/twiml/apps/${app.sid}) ) current Incoming Voice Url is \`${app.voiceUrl}\`. 
+        status.description = stripIndents`Your TwiML Application's ( [${app.friendlyName}](https://www.twilio.com/console/voice/twiml/apps/${app.sid}) ) current Incoming Voice Url is \`${app.voiceUrl}\`. 
         To work in this environment the Incoming Voice Url should be set to \`${expectedFn}\`. 
         
         You can update this by clicking the button below.`;
@@ -189,9 +186,9 @@ async function getTwiMLApplicationIsWiredUp(context) {
             name: "updateTwimlAppVoiceUrl",
             params: {
               twimlApplicationSid,
-              voiceUrl: expectedFn
-            }
-          }
+              voiceUrl: expectedFn,
+            },
+          },
         ];
       }
     } catch (err) {
@@ -206,7 +203,7 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
   const status = {
     title:
       "The API Key and Secret for minting Access Tokens is accessible from the current environment",
-    valid: false
+    valid: false,
   };
 
   // Set
@@ -216,7 +213,7 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
       status.valid = true;
       status.description = `Your web application will mint AccessTokens using your [${key.friendlyName} API Key](https://www.twilio.com/console/voice/settings/api-keys/${process.env.API_KEY})`;
     } catch (err) {
-      status.description = stripIndent`Uh oh, unable to find your API Key \`${process.env.API_KEY}\`.
+      status.description = stripIndents`Uh oh, unable to find your API Key \`${process.env.API_KEY}\`.
       
       Please [double check your key](https://www.twilio.com/console/voice/settings/api-keys/) or create a new one.`;
       status.actions = [
@@ -224,13 +221,13 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
           title: "Generate a new REST API Key and Secret",
           name: "generateNewKey",
           params: {
-            friendlyName: process.env.APP_NAME
-          }
-        }
+            friendlyName: process.env.APP_NAME,
+          },
+        },
       ];
     }
   } else {
-    status.description = stripIndent`This application uses a REST API Key and Secret to mint AccessTokens.
+    status.description = stripIndents`This application uses a REST API Key and Secret to mint AccessTokens.
     
     If you already have an API Key created for this purpose you can set the environment values, \`API_KEY\` and \`API_SECRET\`.
     
@@ -240,9 +237,9 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
         title: "Generate a new REST API Key and Secret",
         name: "generateNewKey",
         params: {
-          friendlyName: process.env.APP_NAME
-        }
-      }
+          friendlyName: process.env.APP_NAME,
+        },
+      },
     ];
   }
   return status;
@@ -254,6 +251,6 @@ module.exports = {
     getTwiMLApplicationStatus,
     getTwiMLApplicationIsWiredUp,
     getAPIKeyAndSecretFromEnvStatus,
-    getCallerIdStatus
-  ]
+    getCallerIdStatus,
+  ],
 };
