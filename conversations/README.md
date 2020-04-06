@@ -39,7 +39,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init verify-sample --template=verify && cd verify-sample
+twilio serverless:init sample --template=conversations && cd sample 
 ```
 
 4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
