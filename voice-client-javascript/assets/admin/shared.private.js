@@ -27,6 +27,7 @@ function checkAuthorization(context, event, callback) {
     response.setBody("Not authorized");
     return callback(null, response);
   }
+  return true;
 }
 
 async function getCurrentEnvironment(context) {

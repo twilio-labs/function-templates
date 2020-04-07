@@ -3,6 +3,7 @@ const { fsHelpers } = require("@twilio-labs/serverless-api");
 
 // Heavily lifted from Twilio Run
 // Added instance cache, for test purposes
+// Note: This is very lazy. You must call `global.Runtime.load()` to populate the assets and functions 
 class RuntimeInstance {
   constructor(context) {
     this.context = context;
