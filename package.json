@@ -11,6 +11,7 @@
   "author": "Phil Nash <philnash@twilio.com>",
   "license": "MIT",
   "devDependencies": {
+    "@twilio-labs/serverless-api": "^1.1.0",
     "copy-template-dir": "^1.4.0",
     "eslint": "^5.4.0",
     "inquirer": "^7.0.4",
