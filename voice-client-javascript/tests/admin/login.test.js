@@ -1,6 +1,4 @@
-const path = require("path");
 const helpers = require("../../../test/test-helper");
-const baseDir = path.resolve("./voice-client-javascript/");
 
 // Defined after Runtime is available
 let loginFunction;
@@ -8,19 +6,13 @@ let createToken;
 
 describe("voice-client-javascript/admin/login", () => {
   beforeAll(() => {
-    helpers.setup({
-      baseDir,
-    });
     process.env.ADMIN_PASSWORD = "supersekret";
-    return Runtime.load().then(() => {
-      try {
-        loginFunction = require("../../functions/admin/login").handler;
-        shared = require(Runtime.getAssets()['/admin/shared.js'].path);
-        createToken = shared.createToken;
-      } catch (err) {
-        console.error(`Error: ${err}`);
-      }
-    });
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset("/admin/shared.js", "../../assets/admin/shared.private.js");
+    helpers.setup({}, runtime);
+    loginFunction = require("../../functions/admin/login").handler;
+    shared = require(Runtime.getAssets()['/admin/shared.js'].path);
+    createToken = shared.createToken;
   });
   afterAll(() => {
     helpers.teardown();
