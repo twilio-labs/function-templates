@@ -5,8 +5,7 @@ exports.handler = function (context, event, callback) {
   // Create a token from the password, and use it to check by setting it
   const token = event.token = createToken(context, event.password);
   // Short-circuits
-  const isAuthorized = checkAuthorization(context, event, callback);
-  if (isAuthorized === true) {
+  if (checkAuthorization(context, event, callback)) {
     return callback(null, { token });
   }
 };

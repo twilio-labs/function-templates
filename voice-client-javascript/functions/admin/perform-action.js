@@ -7,7 +7,9 @@ const {
 } = require(assets["/admin/shared.js"].path);
 
 exports.handler = async function (context, event, callback) {
-  checkAuthorization(context, event, callback);
+  if (!checkAuthorization(context, event, callback)) {
+    return;
+  }
   const client = context.getTwilioClient();
   const environment = await getCurrentEnvironment(context);
   const actions = new Actions(client, {

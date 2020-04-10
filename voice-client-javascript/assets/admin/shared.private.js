@@ -25,7 +25,8 @@ function checkAuthorization(context, event, callback) {
     const response = new Twilio.Response();
     response.setStatusCode(403);
     response.setBody("Not authorized");
-    return callback(null, response);
+    callback(null, response);
+    return false;
   }
   return true;
 }
