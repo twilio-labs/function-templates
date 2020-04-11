@@ -18,8 +18,9 @@ async function getStatuses(context) {
 }
 
 exports.handler = async function(context, event, callback) {
-  checkAuthorization(context, event, callback);
-  context.VIRTUAL_HOST = event.virtualHost;
+  if (!checkAuthorization(context, event, callback)) {
+    return;
+  }
   const environment = await environmentFunction(context);
   const statuses = await getStatuses(context);
   callback(null, {
