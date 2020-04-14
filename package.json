@@ -34,6 +34,7 @@
     ]
   },
   "dependencies": {
+    "common-tags": "^1.8.0",
     "got": "^6.7.1",
     "twilio": "^3.33.2"
   }
