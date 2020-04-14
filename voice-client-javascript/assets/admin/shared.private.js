@@ -61,7 +61,7 @@ async function getEnvironmentVariables(context, environment) {
 
 async function getEnvironmentVariable(context, environment, key) {
   const client = context.getTwilioClient();
-  // The list method isn't implemented.
+  // The list filter method isn't implemented yet.
   const envVars = await getEnvironmentVariables(context, environment);
   return envVars.find(variable => variable.key === key);
 }
