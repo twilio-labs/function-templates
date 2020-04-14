@@ -45,7 +45,7 @@ const CONTEXT = {
   getTwilioClient: jest.fn(() => mockTwilioClient),
 };
 
-const origEnv = {};
+let backupEnv;
 
 describe("voice-client-javascript/admin/private/statuses", () => {
   beforeAll(() => {
@@ -67,22 +67,11 @@ describe("voice-client-javascript/admin/private/statuses", () => {
     const mod = require("../../../assets/admin/statuses.private");
     mod.statuses.forEach((fn) => (statusFunctions[fn.name] = fn));
     environmentFunction = mod.environment;
-
-    for (let key of Object.keys(process.env)) {
-      origEnv[key] = process.env[key];
-    }
+    backupEnv = helpers.backupEnv();
   });
 
   afterEach(() => {
-    // Reset the process.env
-    for (let key of Object.keys(process.env)) {
-      if (origEnv[key] === undefined) {
-        delete process.env[key];
-      }
-    }
-    for (let key of Object.keys(origEnv)) {
-      process.env[key] = origEnv[key];
-    }
+    helpers.restoreEnv(backupEnv);
   });
 
   beforeEach(() => {
