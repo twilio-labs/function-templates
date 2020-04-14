@@ -48,7 +48,7 @@ Please add ideas if you have them.
 
 ## Contributing
 
-This project welcomes contributions. Pleae check out our [Contributing guide](docs/CONTRIBUTING.md) to learn more on how to get started.
+This project welcomes contributions. Please check out our [Contributing guide](docs/CONTRIBUTING.md) to learn more on how to get started.
 
 ## License
 
