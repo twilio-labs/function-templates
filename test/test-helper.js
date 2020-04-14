@@ -73,8 +73,25 @@ const teardown = () => {
   if (global.Runtime) delete global.Runtime;
 };
 
+const backupEnv = () => {
+  return {...process.env};
+};
+
+const restoreEnv = (backupEnv) => {
+  for (let key of Object.keys(process.env)) {
+    if (backupEnv[key] === undefined) {
+      delete process.env[key];
+    }
+  }
+  for (let key of Object.keys(backupEnv)) {
+    process.env[key] = backupEnv[key];
+  }
+};
+
 module.exports = {
   setup: setup,
   teardown: teardown,
-  MockRuntime
+  MockRuntime,
+  backupEnv,
+  restoreEnv
 };
