@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/10.0.0/markdown-it.min.js"></script>
+<link rel="stylesheet" href="./admin.css"></link>
+  </head>
+  <body>
+    <div id="app">
+      <div class="login" v-if="!adminClient.isReady">
+        <h1>Password required</h1>
+        <p>
+          A password is required to update your environment. This can be found in the <code>.env</code>file in the root of your application. 
+        </p>
+        <form @submit.prevent="login">
+          <div>
+            <label for="password">Password:
+            <input type="password" name="password" v-model="password">
+          </label>
+          </div>
+          <button>Let me in</button>
+        </form>
+      </div>
+      <div class="quickstart" v-if="adminClient.isReady">
+        <h1>Quickstart</h1>
+        <div class="initialization" v-if="!environment.valid">
+          <h2>{{ environment.title }}</h2>
+          <div v-html="md.render(environment.description)"></div>
+          <ul v-if="environment.actions" class="actions">
+            <li v-for="action in environment.actions">
+              <form @submit.prevent="performAction(action)">
+                <button type="submit">{{ action.title }}</button>
+              </form>
+            </li>
+          </ul>
+        </div>
+        <!-- Initialized environment -->
+        <div class="checklist" v-else>
+          <h2>{{ environment.title }}</h2>
+          <div v-html="md.render(environment.description)"></div>
+          <h2>Configuration Checklist</h2>
+          <ul>
+            <li v-for="status in statuses">
+              <div 
+                v-bind:class="status.valid ? 'valid': 'invalid'" 
+                v-html="md.render(status.title)" class="title"></div>
+              <p v-if="status.description" 
+    
+                v-html="md.render(status.description)" ></p>
+              <ul v-if="status.actions" class="actions">
+                <li v-for="action in status.actions">
+                  <form @submit.prevent="performAction(action)">
+                    <button type="submit">{{ action.title }}</button>
+                  </form>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>  
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="./admin-client.js"></script>
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data: {
+          adminClient: new AdminClient(),
+          statuses: [],
+          environment: {},
+          password: null
+        },
+        methods: {
+          async refreshStatus() {
+            const result = await this.adminClient.fetchState();
+            this.environment = result.environment;
+            this.statuses = result.statuses;
+          },
+          async performAction(action) {
+            const message = await this.adminClient.postAction(action);
+            if (message.logs) {
+              message.logs.forEach(log => console.log(log));
+            }
+            this.refreshStatus();
+          },
+          async login() {
+            await this.adminClient.login(this.password);
+            await this.refreshStatus();
+            this.$forceUpdate();
+          }
+        },
+        created() {
+          this.md = window.markdownit();
+          this.refreshStatus();
+        }
+      });
+    </script>
+  </body>
+</html>

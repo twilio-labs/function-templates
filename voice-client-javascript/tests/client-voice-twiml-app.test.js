@@ -1,17 +1,17 @@
 const twimlAppFunction = require("../functions/client-voice-twiml-app").handler;
 const helpers = require("../../test/test-helper");
 
-const baseContext = {
-  ACCOUNT_SID: "ACxxx",
-  API_KEY: "api-key",
-  API_SECRET: "api-secret",
-  TWIML_APPLICATION_SID: "APxxx",
-  CALLER_ID: "+15551234567"
-};
+const baseContext = {};
 
+let backupEnv;
 describe("voice-client-javascript/client-voice-twiml-app", () => {
   beforeAll(() => {
     helpers.setup({});
+    backupEnv = helpers.backupEnv();
+  });
+  beforeEach(() => {
+    helpers.restoreEnv(backupEnv);
+    process.env.CALLER_ID = "+18004567890";
   });
   afterAll(() => {
     helpers.teardown();
@@ -30,23 +30,23 @@ describe("voice-client-javascript/client-voice-twiml-app", () => {
   });
 
   test("returns TwiML for `<Dial>` a `<Number>` when number provided", done => {
-      const callback =(err, result) => {
+      const callback = (err, result) => {
         const twiml = result.toString();
         expect(typeof twiml).toBe("string");
         expect(twiml).toContain('<Number>');
         done();
-      }
+      };
       twimlAppFunction(baseContext, { To: '+15558675309' }, callback);
   });
 
   test("returns TwiML for `<Dial>` a `<Client>` when name is provided", done => {
-    const callback =(err, result) => {
+    const callback = (err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe("string");
       expect(twiml).toContain('<Client>');
       done();
-    }
+    };
     twimlAppFunction(baseContext, { To: 'alice' }, callback);
-})
+});
 
 });

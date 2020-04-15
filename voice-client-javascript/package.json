@@ -1,4 +1,6 @@
 {
-    "dependencies": {}
+    "dependencies": {
+        "common-tags": "^1.8.0",
+        "twilio": "^3.41.1"
+    }
 }
-  
