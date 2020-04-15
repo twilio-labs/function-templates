@@ -1,17 +1,17 @@
 const twimlAppFunction = require("../functions/client-voice-twiml-app").handler;
 const helpers = require("../../test/test-helper");
 
-const baseContext = {
-  ACCOUNT_SID: "ACxxx",
-  API_KEY: "api-key",
-  API_SECRET: "api-secret",
-  TWIML_APPLICATION_SID: "APxxx",
-  CALLER_ID: "+15551234567"
-};
+const baseContext = {};
 
+let backupEnv;
 describe("voice-client-javascript/client-voice-twiml-app", () => {
   beforeAll(() => {
     helpers.setup({});
+    backupEnv = helpers.backupEnv();
+  });
+  beforeEach(() => {
+    helpers.restoreEnv(backupEnv);
+    process.env.CALLER_ID = "+18004567890";
   });
   afterAll(() => {
     helpers.teardown();
