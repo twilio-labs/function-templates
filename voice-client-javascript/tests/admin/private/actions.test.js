@@ -142,7 +142,7 @@ describe("voice-client-javascript/admin/private/actions", () => {
       // Updates the new TwiML App with the function
       expect(mockTwilioClient.applications).toHaveBeenCalledWith("AP123");
       expect(mockApplicationsUpdate).toHaveBeenCalledWith({
-        voiceUrl: "https://blargh-duck-123.com/admin/client-voice-twiml-app"
+        voiceUrl: "https://blargh-duck-123.com/client-voice-twiml-app"
       });
       // API Key is created with the friendly name
       expect(results.API_KEY).toBe("SK123");

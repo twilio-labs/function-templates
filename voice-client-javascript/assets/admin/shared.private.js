@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const path = require("path");
 
 // Change the salt to invalidate tokens
 const SALT = "salty";
@@ -105,7 +106,8 @@ async function setEnvironmentVariable(context, environment, key, value, override
   return true;
 }
 
-function urlForSiblingPage(url, newPage) {
+function urlForSiblingPage(newPage, ...paths) {
+  const url = path.resolve(...paths);
   const parts = url.split("/");
   parts.pop();
   parts.push(newPage);

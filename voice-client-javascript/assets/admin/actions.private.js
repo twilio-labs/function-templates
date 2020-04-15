@@ -13,7 +13,10 @@ class Actions {
     console.log("Creating TwiML Application");
     let results = await this.createTwimlApp(this.options);
     env = Object.assign(env, results);
-    const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(this.options.PATH, "client-voice-twiml-app")}`;
+    const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
+      "client-voice-twiml-app",
+      this.options.PATH, 
+      "..")}`;
     console.log(
       `Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`
     );

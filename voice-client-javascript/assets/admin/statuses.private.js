@@ -168,8 +168,9 @@ async function getCallerIdStatus(context) {
 async function getTwiMLApplicationIsWiredUp(context) {
   const client = context.getTwilioClient();
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
+    "client-voice-twiml-app",
     context.PATH,
-    "client-voice-twiml-app"
+    ".."
   )}`;
   twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
   const status = {

@@ -75,22 +75,21 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
   test("urlForSiblingPage replaces page in relative urls", () => {
     // Act
-    const url = shared.urlForSiblingPage("/first/second/page", "third");
+    const url = shared.urlForSiblingPage("third", "/first/second/page");
 
     // Assert
     expect(url).toBe("/first/second/third");
   });
 
-  test("urlForSiblingPage works with just fully qualified URLs", () => {
+  test("urlForSiblingPage replaces page in with multiple paths", () => {
     // Act
-    const url = shared.urlForSiblingPage(
-      "https://example.com/index.html",
-      "about.html"
-    );
+    const url = shared.urlForSiblingPage("third", "/first/second/page", "..");
 
     // Assert
-    expect(url).toBe("https://example.com/about.html");
+    expect(url).toBe("/first/third");
   });
+
+
 
   test("checkAuthorization passes thru on success", () => {
     //Arrange
