@@ -1,6 +1,6 @@
 # Send Stripe Payment Link SMS
 
-This project shows you how to create an invoice payment link when your customer sends you an SMS and reply with an invoice payment link URL.
+This template shows you how to create an invoice in Stripe based on an SMS prompt (in this case `DONATE <AMOUNT>`). Once the invoice is finalized, it will reply with a payment link.
 
 It is divided up into two functions:
 
