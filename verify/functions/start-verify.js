@@ -43,7 +43,7 @@ exports.handler = function(context, event, callback) {
         "sid": verification.sid
       });
       response.setStatusCode(200);
-      console.log(response); 
+      console.log(`Sent verification to **********${to.slice(-2)}`);
       callback(null, response);
     })
     .catch(error => {
