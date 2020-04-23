@@ -75,10 +75,9 @@ test('returns a Response', done => {
   broadcastSms(context, event, callback);
 });
 
-test('returns a Response', done => {
+test('sends an SMS message', done => {
   const callback = (err, result) => {
-    console.log(err);
-    expect(result).toBeDefined();
+    expect(mockClient.messages.create).toHaveBeenCalledWith({ from: 'TwilioNumber', to:'+1234567890', body:'This is a broadcast message from Twilio.' });
     done();
   };
 
