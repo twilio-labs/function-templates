@@ -37,7 +37,7 @@
         <p>
           Enter your phone number below:
         </p>
-        <form id="sms-login">
+        <form id="sms-login" style="display: flex; align-items: center;">
           <input
             type="tel"
             id="phone_number"
@@ -45,7 +45,8 @@
           <input
             type="submit"
             class="btn btn-primary"
-            value="Login via SMS" />
+            value="Login via SMS"
+            style="margin-left: 8px;"/>
         </form>
       </div>
       <div class="modal" id="verification_modal">
@@ -80,7 +81,9 @@
     </div><!-- /.container -->
   </body>
   <script>
-    const phoneInput = window.intlTelInput($("#phone_number"), {
+    // Format phone number input field
+    const phoneInputField = document.querySelector("#phone_number");
+    const phoneInput = window.intlTelInput(phoneInputField, {
       separateDialCode: true,
       utilsScript:
         "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js"
