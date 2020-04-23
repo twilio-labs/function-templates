@@ -48,6 +48,7 @@
             value="Login via SMS"
             style="margin-left: 8px;"/>
         </form>
+        <span id="form-error" class="text-danger"></span>
       </div>
       <div class="modal" id="verification_modal">
         <div class="modal-dialog" role="document">
@@ -95,6 +96,12 @@
       content.append(`<div class="alert alert-${alertType}" role="alert">${message}</div>`);
     }
 
+    function startError(error) {
+      var content = $("#form-error");
+      content.empty();
+      content.append(`Error: ${error}`);
+    }
+
     document.getElementById("sms-login").addEventListener("submit", event => {
       event.preventDefault();
       const phoneNumber = phoneInput.getNumber();
@@ -115,15 +122,17 @@
           return response.json()
         })
         .then((json) => {
-          console.log(json);
           if (json.success) {
+            $("#form-error").empty();
             showModal(phoneNumber);
-            console.log("Successfully sent token.")
+            console.log("Successfully sent token.");
           } else {
-            console.log("Error sending token.")
+            console.log(json.message);
+            startError(`${json.message.message}. <a href="${json.message.moreInfo}">[more info]</a>`);
           }
         })
         .catch((err) => {
+          startError("Error starting verification. Check console.");
           console.log(err);
         });
     });
@@ -153,10 +162,13 @@
               if (json.success) {
                 flashStatus("success", "Success!");
                 console.log("Successfully verified the token.");
-              } else {
+              } else if (!json.success && json.message == "Incorrect code.") {
                 flashStatus("danger", "Incorrect token.");
                 $("#verification_code").val("");
-                console.log("Incorrect token.")
+              } else {
+                flashStatus("danger", `Something went wrong! ${json.message.message}`);
+                $("#verification_code").val("");
+                console.log(json.message);
               }
             })
             .catch((err) => {
