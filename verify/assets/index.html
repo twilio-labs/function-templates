@@ -9,6 +9,11 @@
       integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
     <script
       src="https://code.jquery.com/jquery-3.4.1.min.js"
       integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -23,22 +28,27 @@
   <body>
     <div class="container">
       <h2>Twilio Verify</h2>
-      <p>This example shows how to deploy <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> and Twilio functions for serverless phone verification.</p>
+      <p>
+        This example shows how to deploy 
+        <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> 
+        and Twilio functions for serverless phone verification.
+      </p>
       <div class="content">
         <p>
-          <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> SMS login.
-          Enter your phone number using <a href="https://www.twilio.com/docs/glossary/what-e164">E.164 format.</a>
+          Enter your phone number below:
         </p>
-        <form id="sms-login" class="form-inline">
+        <form id="sms-login" style="display: flex; align-items: center;">
           <input
-            placeholder="+1212xxx1234"
+            type="tel"
             id="phone_number"
             class="form-control" />
           <input
             type="submit"
             class="btn btn-primary"
-            value="Login via SMS" />
+            value="Login via SMS"
+            style="margin-left: 8px;"/>
         </form>
+        <span id="form-error" class="text-danger"></span>
       </div>
       <div class="modal" id="verification_modal">
         <div class="modal-dialog" role="document">
@@ -72,15 +82,29 @@
     </div><!-- /.container -->
   </body>
   <script>
+    // Format phone number input field
+    const phoneInputField = document.querySelector("#phone_number");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      separateDialCode: true,
+      utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js"
+    });
+
     function flashStatus(alertType, message) {
       var content = $(".result-message");
       content.empty();
       content.append(`<div class="alert alert-${alertType}" role="alert">${message}</div>`);
     }
 
+    function startError(error) {
+      var content = $("#form-error");
+      content.empty();
+      content.append(`Error: ${error}`);
+    }
+
     document.getElementById("sms-login").addEventListener("submit", event => {
       event.preventDefault();
-      const phoneNumber = $("#phone_number").val();
+      const phoneNumber = phoneInput.getNumber();
 
       // Twilio functions do not accept multipart/form-data
       const data = new URLSearchParams();
@@ -98,15 +122,17 @@
           return response.json()
         })
         .then((json) => {
-          console.log(json);
           if (json.success) {
+            $("#form-error").empty();
             showModal(phoneNumber);
-            console.log("Successfully sent token.")
+            console.log("Successfully sent token.");
           } else {
-            console.log("Error sending token.")
+            console.log(json.message);
+            startError(`${json.message.message}. <a href="${json.message.moreInfo}">[more info]</a>`);
           }
         })
         .catch((err) => {
+          startError("Error starting verification. Check console.");
           console.log(err);
         });
     });
@@ -136,10 +162,13 @@
               if (json.success) {
                 flashStatus("success", "Success!");
                 console.log("Successfully verified the token.");
-              } else {
+              } else if (!json.success && json.message == "Incorrect code.") {
                 flashStatus("danger", "Incorrect token.");
                 $("#verification_code").val("");
-                console.log("Incorrect token.")
+              } else {
+                flashStatus("danger", `Something went wrong! ${json.message.message}`);
+                $("#verification_code").val("");
+                console.log(json.message);
               }
             })
             .catch((err) => {

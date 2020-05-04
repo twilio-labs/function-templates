@@ -1,0 +1,6 @@
+{
+  "name": "stripe-payment-link-sms",
+  "dependencies": {
+    "stripe": "^8.20.0"
+  }
+}

@@ -56,19 +56,29 @@
       "description": "Uses Sparkpost to forward incoming messages via email"
     },
     {
+      "id": "airtable",
+      "name": "Airtable SMS Broadcast",
+      "description": "Read and write data from an Airtable table to broadcast messages"
+    },
+    {
       "id": "conference",
       "name": "Simple Conference",
       "description": "Drops all incoming calls into a conference room"
     },
     {
-      "id": "chat-token",
-      "name": "Chat Token Function",
-      "description": "Generates a Chat Access Token for client-side applications"
+      "id": "stripe-payment-link-sms",
+      "name": "Stripe payments via SMS",
+      "description": "Send payment links via SMS using Stripe"
     },
     {
       "id": "stripe-sms-receipt",
       "name": "Stripe SMS Receipt Webhook Handler Function",
       "description": "Send an SMS receipt to your Stripe customers"
+    },
+    {
+      "id": "chat-token",
+      "name": "Chat Token Function",
+      "description": "Generates a Chat Access Token for client-side applications"
     },
     {
       "id": "sync-token",
