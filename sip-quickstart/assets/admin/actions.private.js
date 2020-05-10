@@ -33,8 +33,6 @@ class Actions {
     //Create and map credential list to the domain
     results = await this.createDefaultCredentialListForDomain({ sipDomainSid: env.SIP_DOMAIN_SID });
     env = Object.assign(env, results);
-    // Add default credentials
-    await this.addDefaultCredentials({credentialListSid: env.CREDENTIAL_LIST_SID});
     const number = await this.chooseLogicalCallerId();
     results = await this.setCallerId({ number });
     env = Object.assign(env, results);
@@ -70,7 +68,7 @@ class Actions {
 
   async createDefaultCredentialListForDomain({ sipDomainSid }) {
     const friendlyName = `${this.options.friendlyName} Demo Credentials`;
-    const results = await this.createDefaultCredentialListForDomain({friendlyName, sipDomainSid});
+    const results = await this.createMappedCredentialList({friendlyName, sipDomainSid});
     await this.addDefaultCredentials({ credentialListSid: results.CREDENTIAL_LIST_SID });
     return results;
   }
