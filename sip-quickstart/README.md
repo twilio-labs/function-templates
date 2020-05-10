@@ -66,8 +66,8 @@ twilio serverless:deploy
 
 ## TODO
 
-[ ] Create SIP Domain based on function name ()
-[ ] Create SIP Credentials
+[X] Create SIP Domain based on function name ()
+[X] Create SIP Credentials
 [ ] Create a Function that routes to SIP Based on extension
 [ ] Create a Function that dials out and chooses outbound caller id from a menu
 [ ] Build a Zoiper config

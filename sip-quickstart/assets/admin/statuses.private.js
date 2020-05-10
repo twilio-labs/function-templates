@@ -51,7 +51,7 @@ function missingSipDomainError(error) {
 async function getSipDomainStatus(context) {
   const client = context.getTwilioClient();
   const friendlyName = process.env.APP_NAME;
-  const domainName = "TODO";
+  const domainName = context.DOMAIN_NAME;
   const status = {
     valid: false,
     title: `SIP Domain is created and defined in the environment`,
@@ -107,7 +107,7 @@ async function getSipDomainStatus(context) {
       status.description = stripIndents`
       We need to create a new SIP Domain. You can do this by clicking the button below.
       
-      You can do this [via the API or CLI](https://www.twilio.com/docs/usage/api/applications?code-sample=code-create-a-new-application-within-your-account&code-language=curl&code-sdk-version=json).
+      You can do this [via the API or CLI](https://www.twilio.com/docs/voice/sip/api/sip-domain-resource?code-sample=code-create-a-sipdomain-resource&code-language=Node.js&code-sdk-version=3.x).
       `;
       status.actions = [
         {
@@ -120,6 +120,41 @@ async function getSipDomainStatus(context) {
         },
       ];
     }
+  }
+  return status;
+}
+
+async function getCredentialListStatus(context) {
+  const client = context.getTwilioClient();  
+  const sipDomainSid = process.env.SIP_DOMAIN_SID;
+  const status = {
+    valid: false,
+    title: "Credential List is created, loaded and mapped to your SIP Domain"
+  };
+  const createAction = {
+    title: "Create new default credential list",
+    name: "createDefaultCredentialListForDomain",
+    params: {
+      sipDomainSid
+    },
+  };
+  // Exists
+  if (process.env.CREDENTIAL_LIST_SID) {
+    status.valid = true;
+    try {
+      const credentialList = await client.sip.credentialLists(process.env.CREDENTIAL_LIST_SID).fetch();
+      const credentials = await credentialList.credentials.list();
+      // Ensure mapped?
+      // TODO: checks that it's still mapped
+      status.description = `Your default credential list [${credentialList.friendlyName}](https://www.twilio.com/console/voice/sip/cls/${credentialList.sid}) contains the following demo accounts:`;
+      status.description += credentials.map(cred => `* ${cred.username}`).join("\n");
+    } catch(err) {
+      status.description = `Uh oh. We were unable to find your default credential list defined in your environment. Let's build a new one.`;
+      status.actions = [createAction];
+    }
+  } else {
+    status.description = "You currently haven't defined the Default Credential List.";
+    status.actions = [createAction];
   }
   return status;
 }
@@ -173,7 +208,7 @@ async function getCallerIdStatus(context) {
 async function getSipDomainIsWiredUp(context) {
   const client = context.getTwilioClient();
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
-    "extension-menu",
+    "outgoing-calls",
     context.PATH,
     ".."
   )}`;
