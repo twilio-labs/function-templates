@@ -129,7 +129,7 @@ async function getCredentialListStatus(context) {
   const sipDomainSid = process.env.SIP_DOMAIN_SID;
   const status = {
     valid: false,
-    title: "Credential List is created, loaded and mapped to your SIP Domain"
+    title: "Default Credential List is created, loaded and mapped to your SIP Domain"
   };
   const createAction = {
     title: "Create new default credential list",
@@ -281,6 +281,7 @@ module.exports = {
   statuses: [
     getSipDomainStatus,
     getSipDomainIsWiredUp,
+    getCredentialListStatus,
     getCallerIdStatus,
     getDefaultPasswordChanged,
   ],
