@@ -1,10 +1,8 @@
 const assets = Runtime.getAssets();
 const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
 
-
 function sipDomainNameFromDomainName(domainName) {
-  // TODO: Should this check availability?
-  return domainName;
+  return domainName.replace('.twil.io', '.sip.twilio.com');
 }
 
 class Actions {
@@ -17,8 +15,8 @@ class Actions {
     let env = {};
     console.log("Creating SIP Domain");
     const friendlyName = this.options.friendlyName;
-    const sipDomainName = sipDomainNameFromDomainName(options.DOMAIN_NAME);
-    let results = await this.createSipDomain({ friendlyName, sipDomainName });
+    const sipDomainName = sipDomainNameFromDomainName(this.options.DOMAIN_NAME);
+    let results = await this.createSipDomain({ friendlyName, domainName: sipDomainName });
     env = Object.assign(env, results);
     const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
       "outbound-calls",
@@ -33,7 +31,7 @@ class Actions {
       voiceUrl,
     });
     //Create and map credential list to the domain
-    results = this.createDefaultCredentialListForDomain({ friendlyName: `${friendlyName} Demo Credentials`, sipDomainSid: env.SIP_DOMAIN_SID });
+    results = await this.createDefaultCredentialListForDomain({ sipDomainSid: env.SIP_DOMAIN_SID });
     env = Object.assign(env, results);
     // Add default credentials
     await this.addDefaultCredentials({credentialListSid: env.CREDENTIAL_LIST_SID});
@@ -72,7 +70,7 @@ class Actions {
 
   async createDefaultCredentialListForDomain({ sipDomainSid }) {
     const friendlyName = `${this.options.friendlyName} Demo Credentials`;
-    const results = this.createDefaultCredentialListForDomain({friendlyName, sipDomainSid});
+    const results = await this.createDefaultCredentialListForDomain({friendlyName, sipDomainSid});
     await this.addDefaultCredentials({ credentialListSid: results.CREDENTIAL_LIST_SID });
     return results;
   }

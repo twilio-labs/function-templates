@@ -140,12 +140,12 @@ async function getCredentialListStatus(context) {
   };
   // Exists
   if (process.env.CREDENTIAL_LIST_SID) {
-    status.valid = true;
     try {
       const credentialList = await client.sip.credentialLists(process.env.CREDENTIAL_LIST_SID).fetch();
       const credentials = await credentialList.credentials.list();
       // Ensure mapped?
       // TODO: checks that it's still mapped
+      status.valid = true;
       status.description = `Your default credential list [${credentialList.friendlyName}](https://www.twilio.com/console/voice/sip/cls/${credentialList.sid}) contains the following demo accounts:`;
       status.description += credentials.map(cred => `* ${cred.username}`).join("\n");
     } catch(err) {
