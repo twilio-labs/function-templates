@@ -2,7 +2,7 @@ const assets = Runtime.getAssets();
 const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
 
 function sipDomainNameFromDomainName(domainName) {
-  return domainName.replace('.twil.io', '.sip.twilio.com');
+  return domainName.replace(".twil.io", ".sip.twilio.com");
 }
 
 class Actions {
@@ -16,7 +16,10 @@ class Actions {
     console.log("Creating SIP Domain");
     const friendlyName = this.options.friendlyName;
     const sipDomainName = sipDomainNameFromDomainName(this.options.DOMAIN_NAME);
-    let results = await this.createSipDomain({ friendlyName, domainName: sipDomainName });
+    let results = await this.createSipDomain({
+      friendlyName,
+      domainName: sipDomainName,
+    });
     env = Object.assign(env, results);
     const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
       "outbound-calls",
@@ -31,7 +34,9 @@ class Actions {
       voiceUrl,
     });
     //Create and map credential list to the domain
-    results = await this.createDefaultCredentialListForDomain({ sipDomainSid: env.SIP_DOMAIN_SID });
+    results = await this.createDefaultCredentialListForDomain({
+      sipDomainSid: env.SIP_DOMAIN_SID,
+    });
     env = Object.assign(env, results);
     const number = await this.chooseLogicalCallerId();
     results = await this.setCallerId({ number });
@@ -53,9 +58,10 @@ class Actions {
   }
 
   async createMappedCredentialList({ friendlyName, sipDomainSid }) {
-    const credentialList = await this.client.sip.credentialList({
+    const credentialList = await this.client.sip.credentialLists.create({
       friendlyName,
     });
+
     const mapping = await this.client.sip
       .domains(sipDomainSid)
       .auth.calls.credentialListMappings.create({
@@ -68,8 +74,13 @@ class Actions {
 
   async createDefaultCredentialListForDomain({ sipDomainSid }) {
     const friendlyName = `${this.options.friendlyName} Demo Credentials`;
-    const results = await this.createMappedCredentialList({friendlyName, sipDomainSid});
-    await this.addDefaultCredentials({ credentialListSid: results.CREDENTIAL_LIST_SID });
+    const results = await this.createMappedCredentialList({
+      friendlyName,
+      sipDomainSid,
+    });
+    await this.addDefaultCredentials({
+      credentialListSid: results.CREDENTIAL_LIST_SID,
+    });
     return results;
   }
 
