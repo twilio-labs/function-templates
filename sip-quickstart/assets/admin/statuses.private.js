@@ -40,7 +40,11 @@ async function checkEnvironmentInitialization(context) {
     ];
   } else {
     status.valid = true;
-    status.description = `Your application is initialized! View your [running application](../index.html)`;
+    status.description = stripIndents`
+    Your application is initialized! View your [running application](../index.html)
+
+    The *default* password for the credentials that were created is \`${context.DEFAULT_SIP_USER_PASSWORD}\`.
+    `;
   }
   return status;
 }
@@ -201,6 +205,15 @@ async function getCallerIdStatus(context) {
     if (incomingNumbers.find(finder) || outgoingCallerIds.find(finder)) {
       status.valid = true;
       status.description = `Your CallerID is set to ${process.env.CALLER_ID}`;
+      status.actions = [
+        {
+          name: "setCallerId",
+          title: "Change Caller ID",
+          params: {
+            number: undefined
+          }
+        }
+      ];
     } else {
       status.description = stripIndents`
       Your CallerID is set to ${process.env.CALLER_ID}, but that number is not yet verified.

@@ -2,8 +2,6 @@ const assets = Runtime.getAssets();
 const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
 const extensions = require(assets["/extensions.js"].path);
 
-const SIP_USER_PASSWORD = "ThisIs1Password!";
-
 function sipDomainNameFromDomainName(domainName) {
   return domainName.replace(".twil.io", ".sip.twilio.com");
 }
@@ -114,8 +112,11 @@ class Actions {
   async addNewCredential({
     credentialListSid,
     username,
-    password = SIP_USER_PASSWORD,
+    password,
   }) {
+    if (password === undefined) {
+      password = process.env.DEFAULT_SIP_USER_PASSWORD;
+    }
     await this.client.sip
       .credentialLists(credentialListSid)
       .credentials.create({ username, password });
@@ -125,8 +126,7 @@ class Actions {
     const promises = usernames.map((username) =>
       this.addNewCredential({
         credentialListSid,
-        username,
-        SIP_USER_PASSWORD,
+        username
       })
     );
     await Promise.all(promises);

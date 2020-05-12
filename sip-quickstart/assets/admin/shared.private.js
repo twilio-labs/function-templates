@@ -78,8 +78,13 @@ async function setEnvironmentVariable(context, environment, key, value, override
     if (currentVariable) {
       if (currentVariable.value !== value) {
         if (override) {
-          console.log(`Updating ${key}...`);
-          await currentVariable.update({ value });
+          if (value === undefined) {
+            console.log(`Removing ${key}...`);
+            await currentVariable.remove();
+          } else {
+            console.log(`Updating ${key}...`);
+            await currentVariable.update({ value });
+          }
           return true;
         } else {
           console.log(`Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`);
