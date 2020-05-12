@@ -1,5 +1,8 @@
 const assets = Runtime.getAssets();
 const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
+const extensions = require(assets["/extensions.js"].path);
+
+const SIP_USER_PASSWORD = "ThisIs1Password!";
 
 function sipDomainNameFromDomainName(domainName) {
   return domainName.replace(".twil.io", ".sip.twilio.com");
@@ -47,24 +50,39 @@ class Actions {
   }
 
   async createSipDomain({ friendlyName, domainName }) {
-    // TODO: Should this check that it was created successfully
-    const result = await this.client.sip.domains.create({
-      friendlyName,
-      domainName,
-    });
-    return {
-      SIP_DOMAIN_SID: result.sid,
-    };
+    try {
+      const result = await this.client.sip.domains.create({
+        friendlyName,
+        domainName,
+      });
+      return {
+        SIP_DOMAIN_SID: result.sid,
+      };
+    } catch (err) {
+      console.error(`Ran into issue creating domain: ${err}`);
+      const domains = await this.client.sip.domains.list();
+      const domain = domains.find((d) => d.domainName.startsWith(domainName));
+      if (domain) {
+        console.log(`Found matching domain ${domainName} assigning...`);
+        return {
+          SIP_DOMAIN_SID: domain.sid,
+        };
+      }
+    }
   }
 
   async createMappedCredentialList({ friendlyName, sipDomainSid }) {
     const credentialList = await this.client.sip.credentialLists.create({
       friendlyName,
     });
-
-    const mapping = await this.client.sip
+    const authCallsMapping = await this.client.sip
       .domains(sipDomainSid)
       .auth.calls.credentialListMappings.create({
+        credentialListSid: credentialList.sid,
+      });
+    const domainRegistrationMapping = await this.client.sip
+      .domains(sipDomainSid)
+      .auth.registrations.credentialListMappings.create({
         credentialListSid: credentialList.sid,
       });
     return {
@@ -85,22 +103,29 @@ class Actions {
   }
 
   async addDefaultCredentials({ credentialListSid }) {
-    const usernames = ["alice", "bob", "charlie"];
-    const password = "ThisIs1Password!";
+    const usernames = extensions.map((ext) => ext.username);
+    await this.addNewCredentials({ credentialListSid, usernames });
+  }
+
+  async addNewCredential({
+    credentialListSid,
+    username,
+    password = SIP_USER_PASSWORD,
+  }) {
+    await this.client.sip
+      .credentialLists(credentialListSid)
+      .credentials.create({ username, password });
+  }
+
+  async addNewCredentials({ credentialListSid, usernames }) {
     const promises = usernames.map((username) =>
       this.addNewCredential({
         credentialListSid,
         username,
-        password,
+        SIP_USER_PASSWORD,
       })
     );
     await Promise.all(promises);
-  }
-
-  async addNewCredential({ credentialListSid, username, password }) {
-    await this.client
-      .credentialLists(credentialListSid)
-      .credentials.create({ username, password });
   }
 
   async updateSipDomainVoiceUrl({ sipDomainSid, voiceUrl }) {

@@ -3,6 +3,7 @@ const assets = Runtime.getAssets();
 const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
   "/admin/shared.js"
 ].path);
+const extensions = require(assets["/extensions.js"].path);
 
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
@@ -77,7 +78,7 @@ async function getSipDomainStatus(context) {
       ];
     }
   } else {
-    // TODO: Does this work?
+    // TODO: Does this work? NO!
     const results = await client.sip.domains.list({ friendlyName });
     if (results.length >= 1) {
       const domain = results[0];
@@ -138,16 +139,40 @@ async function getCredentialListStatus(context) {
       sipDomainSid
     },
   };
+
+  const credentialListSid = process.env.CREDENTIAL_LIST_SID;
   // Exists
-  if (process.env.CREDENTIAL_LIST_SID) {
+  if (credentialListSid) {
     try {
-      const credentialList = await client.sip.credentialLists(process.env.CREDENTIAL_LIST_SID).fetch();
-      const credentials = await credentialList.credentials.list();
-      // Ensure mapped?
-      // TODO: checks that it's still mapped
-      status.valid = true;
-      status.description = `Your default credential list [${credentialList.friendlyName}](https://www.twilio.com/console/voice/sip/cls/${credentialList.sid}) contains the following demo accounts:`;
-      status.description += credentials.map(cred => `* ${cred.username}`).join("\n");
+      const credentialList = await client.sip.credentialLists(credentialListSid).fetch();
+      const credentials = await client.sip.credentialLists(credentialListSid).credentials.list();
+      const actualUsernames = new Set(credentials.map(cred => cred.username));
+      const expectedUsernames = extensions.map(ext => ext.username);
+      // expectedUsernames - actualUsernames :( Sets in JS
+      const missing = expectedUsernames.filter(u => !actualUsernames.has(u));
+      if (missing.length === 0) {
+        status.valid = true;
+        status.description = stripIndents`
+          Your default credential list [${credentialList.friendlyName}](https://www.twilio.com/console/voice/sip/cls/${credentialList.sid}) contains the ${expectedUsernames.length} expected accounts.
+        `;
+      } else {
+        status.description = stripIndents`
+          Your default credential list [${credentialList.friendlyName}](https://www.twilio.com/console/voice/sip/cls/${credentialList.sid}) is missing the following accounts:
+
+          ${missing.join(", ")}
+        `;
+        
+        status.actions = [
+          {
+            "name": "addNewCredentials",
+            "title": "Add missing credentials",
+            "params": {
+              credentialListSid,
+              usernames: missing 
+            }
+          }
+        ];
+      }
     } catch(err) {
       status.description = `Uh oh. We were unable to find your default credential list defined in your environment. Let's build a new one.`;
       status.actions = [createAction];
@@ -208,7 +233,7 @@ async function getCallerIdStatus(context) {
 async function getSipDomainIsWiredUp(context) {
   const client = context.getTwilioClient();
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
-    "outgoing-calls",
+    "outbound-calls",
     context.PATH,
     ".."
   )}`;
