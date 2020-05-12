@@ -75,16 +75,20 @@ class Actions {
     const credentialList = await this.client.sip.credentialLists.create({
       friendlyName,
     });
-    const authCallsMapping = await this.client.sip
+    const authCallsMapping = this.client.sip
       .domains(sipDomainSid)
       .auth.calls.credentialListMappings.create({
         credentialListSid: credentialList.sid,
       });
-    const domainRegistrationMapping = await this.client.sip
+    const domainRegistrationMapping = this.client.sip
       .domains(sipDomainSid)
       .auth.registrations.credentialListMappings.create({
         credentialListSid: credentialList.sid,
       });
+    await Promise.all([authCallsMapping, domainRegistrationMapping]);
+    await this.client.sip.domains(sipDomainSid).update({
+      sipRegistration: true
+    });
     return {
       CREDENTIAL_LIST_SID: credentialList.sid,
     };
