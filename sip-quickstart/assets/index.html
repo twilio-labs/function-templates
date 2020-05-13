@@ -2,9 +2,33 @@
 <html>
   <head>
     <title>SIP Quickstart</title>
+    <link rel="stylesheet" href="./site.css"></link>
   </head>
   <body>
-    <h1>SIP Quickstart</h1>
-    <p>Feel free to modify this file or add any additional static files to the assets folder</p>
+    <div id="#app">
+      <h1>{{ configuration.appName }}</h1>
+      <p>Call <a href="tel:{{ configuration.incomingNumber }}">{{ configuration.incomingNumber }}</a> to connect</p>
+      <h2>Setup SIP Clients</h2>
+      <p>Your domain <strong>{{ configuration.sipDomain }}</strong> is ready to accept SIP registrations</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data: {
+          configuration: {},
+        },
+        methods: {
+          async refreshConfiguration() {
+            const response = await fetch("./sip-configuration");
+            this.configuration = await response.json();
+          }
+        },
+        created() {
+          this.refreshConfiguration();
+        }
+      });
+
+    </script>
   </body>
 </html>
