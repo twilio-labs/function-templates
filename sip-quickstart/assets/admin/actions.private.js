@@ -24,19 +24,18 @@ class Actions {
       domainName: sipDomainName,
     });
     env = Object.assign(env, results);
-    const outboundVoiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
-      "outbound-calls",
-      this.options.PATH,
-      ".."
-    )}`;
+    const outboundVoiceUrl = `https://${
+      this.options.DOMAIN_NAME
+    }${urlForSiblingPage("outbound-calls", this.options.PATH, "..")}`;
     console.log(
-      `Wiring up SIP Domain ${env.SIP_DOMAIN_SID} to the function: ${voiceUrl}`
+      `Wiring up SIP Domain ${env.SIP_DOMAIN_SID} to the function: ${outboundVoiceUrl}`
     );
     await this.updateSipDomainVoiceUrl({
       sipDomainSid: env.SIP_DOMAIN_SID,
       voiceUrl: outboundVoiceUrl,
     });
     //Create and map credential list to the domain
+    console.log("Building and wiring up default credential list");
     results = await this.createDefaultCredentialListForDomain({
       sipDomainSid: env.SIP_DOMAIN_SID,
     });
@@ -44,13 +43,16 @@ class Actions {
     const incomingNumber = await this.chooseLogicalIncomingNumber();
     let outgoingCallerId;
     if (incomingNumber) {
-      const incomingVoiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
-        "extension-menu",
-        this.options.PATH,
-        ".."
-      )}`;
-  
-      results = await this.updateIncomingNumber({ sid: incomingNumber.sid, voiceUrl: incomingVoiceUrl });
+      const incomingVoiceUrl = `https://${
+        this.options.DOMAIN_NAME
+      }${urlForSiblingPage("extension-menu", this.options.PATH, "..")}`;
+      console.log(
+        `Wiring up your number ${incomingNumber.phoneNumber} to the function: ${incomingVoiceUrl}`
+      );
+      results = await this.updateIncomingNumber({
+        sid: incomingNumber.sid,
+        voiceUrl: incomingVoiceUrl,
+      });
       env = Object.assign(env, results);
       outgoingCallerId = incomingNumber.phoneNumber;
     } else {
@@ -174,10 +176,10 @@ class Actions {
   }
 
   async updateIncomingNumber({ sid, voiceUrl }) {
-    const incomingNumber = await this.client.incomingNumbers(sid).fetch();
+    const incomingNumber = await this.client.incomingPhoneNumbers(sid).fetch();
     await incomingNumber.update({ voiceUrl });
     return {
-      INCOMING_NUMBER: incomingNumber.phoneNumber
+      INCOMING_NUMBER: incomingNumber.phoneNumber,
     };
   }
 

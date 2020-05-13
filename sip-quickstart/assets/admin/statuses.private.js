@@ -201,6 +201,11 @@ async function getCredentialListStatus(context) {
 async function getIncomingNumberStatus(context) {
   const client = context.getTwilioClient();
   const incomingNumber = process.env.INCOMING_NUMBER;
+  const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
+    "extension-menu",
+    context.PATH,
+    ".."
+  )}`;
   const status = {
     valid: false,
     title: "Incoming Number is defined and wired up",
@@ -217,6 +222,12 @@ async function getIncomingNumberStatus(context) {
       if (numberObject.voiceUrl === expectedFn) {
         status.valid = true;
         status.description = `Your incoming number is set to ${incomingNumber} and the incoming Webhook is set to \`${numberObject.voiceUrl}\``;
+        status.actions = [
+          {
+            title: "Choose a new incoming number",
+            name: "clearIncomingNumber",
+          },
+        ];
       } else {
         status.description = stripIndents`
         Your currently defined incoming number ${incomingNumber} has a Webhook set to \`${numberObject.voiceUrl}\` when it should be \`${expectedFn}\`
@@ -238,20 +249,21 @@ async function getIncomingNumberStatus(context) {
           },
         ];
       }
-    } else {
-      status.description =
-        "Choose from your existing Twilio numbers or [buy a new one](https://www.twilio.com/console/phone-numbers/search)";
-      status.actions = allIncomingNumbers.map((number) => {
-        return {
-          title: `Choose ${number.friendlyName}`,
-          name: "updateIncomingNumber",
-          params: {
-            sid: number.sid,
-            voiceUrl: expectedFn,
-          },
-        };
-      });
     }
+  } else {
+    status.description = stripIndents`
+    Choose from your existing Twilio numbers or [buy a new one](https://www.twilio.com/console/phone-numbers/search)
+    `;
+    status.actions = allIncomingNumbers.map((number) => {
+      return {
+        title: `Choose ${number.friendlyName}`,
+        name: "updateIncomingNumber",
+        params: {
+          sid: number.sid,
+          voiceUrl: expectedFn,
+        },
+      };
+    });
   }
   return status;
 }
@@ -276,7 +288,7 @@ async function getCallerIdStatus(context) {
       status.actions = [
         {
           name: "setCallerId",
-          title: "Change Caller ID",
+          title: "Choose a new Caller ID",
           params: {
             number: undefined,
           },
@@ -388,6 +400,7 @@ module.exports = {
     getSipDomainStatus,
     getSipDomainIsWiredUp,
     getCredentialListStatus,
+    getIncomingNumberStatus,
     getCallerIdStatus,
     getDefaultPasswordChanged,
   ],
