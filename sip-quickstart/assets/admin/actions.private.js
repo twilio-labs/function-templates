@@ -109,7 +109,8 @@ class Actions {
   }
 
   async createDefaultCredentialListForDomain({ sipDomainSid }) {
-    const friendlyName = `${this.options.friendlyName} Demo Credentials`;
+    const serviceName = this.options.DOMAIN_NAME.replace(".twil.io", "");
+    const friendlyName = `${this.options.friendlyName} (${serviceName})`;
     const results = await this.createMappedCredentialList({
       friendlyName,
       sipDomainSid,
