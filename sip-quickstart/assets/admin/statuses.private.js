@@ -63,8 +63,8 @@ async function getSipDomainStatus(context) {
   };
   if (process.env.SIP_DOMAIN_SID) {
     try {
-      const domain = await client
-        .sip.domains(process.env.SIP_DOMAIN_SID)
+      const domain = await client.sip
+        .domains(process.env.SIP_DOMAIN_SID)
         .fetch();
       status.valid = true;
       status.description = `SIP Domain: [${domain.friendlyName}](https://www.twilio.com/console/voice/sip/endpoints/${domain.sid})`;
@@ -76,7 +76,7 @@ async function getSipDomainStatus(context) {
           name: "createSipDomain",
           params: {
             friendlyName,
-            domainName
+            domainName,
           },
         },
       ];
@@ -104,7 +104,7 @@ async function getSipDomainStatus(context) {
           name: "createSipDomain",
           params: {
             friendlyName,
-            domainName
+            domainName,
           },
         },
       ];
@@ -120,7 +120,7 @@ async function getSipDomainStatus(context) {
           name: "createSipDomain",
           params: {
             friendlyName,
-            domainName
+            domainName,
           },
         },
       ];
@@ -130,17 +130,18 @@ async function getSipDomainStatus(context) {
 }
 
 async function getCredentialListStatus(context) {
-  const client = context.getTwilioClient();  
+  const client = context.getTwilioClient();
   const sipDomainSid = process.env.SIP_DOMAIN_SID;
   const status = {
     valid: false,
-    title: "Default Credential List is created, loaded and mapped to your SIP Domain"
+    title:
+      "Default Credential List is created, loaded and mapped to your SIP Domain",
   };
   const createAction = {
     title: "Create new default credential list",
     name: "createDefaultCredentialListForDomain",
     params: {
-      sipDomainSid
+      sipDomainSid,
     },
   };
 
@@ -148,12 +149,16 @@ async function getCredentialListStatus(context) {
   // Exists
   if (credentialListSid) {
     try {
-      const credentialList = await client.sip.credentialLists(credentialListSid).fetch();
-      const credentials = await client.sip.credentialLists(credentialListSid).credentials.list();
-      const actualUsernames = new Set(credentials.map(cred => cred.username));
-      const expectedUsernames = extensions.map(ext => ext.username);
+      const credentialList = await client.sip
+        .credentialLists(credentialListSid)
+        .fetch();
+      const credentials = await client.sip
+        .credentialLists(credentialListSid)
+        .credentials.list();
+      const actualUsernames = new Set(credentials.map((cred) => cred.username));
+      const expectedUsernames = extensions.map((ext) => ext.username);
       // expectedUsernames - actualUsernames :( Sets in JS
-      const missing = expectedUsernames.filter(u => !actualUsernames.has(u));
+      const missing = expectedUsernames.filter((u) => !actualUsernames.has(u));
       if (missing.length === 0) {
         status.valid = true;
         status.description = stripIndents`
@@ -161,29 +166,92 @@ async function getCredentialListStatus(context) {
         `;
       } else {
         status.description = stripIndents`
-          Your default credential list [${credentialList.friendlyName}](https://www.twilio.com/console/voice/sip/cls/${credentialList.sid}) is missing the following accounts:
+          Your default credential list [${
+            credentialList.friendlyName
+          }](https://www.twilio.com/console/voice/sip/cls/${
+          credentialList.sid
+        }) is missing the following accounts:
 
           ${missing.join(", ")}
         `;
-        
+
         status.actions = [
           {
-            "name": "addNewCredentials",
-            "title": "Add missing credentials",
-            "params": {
+            name: "addNewCredentials",
+            title: "Add missing credentials",
+            params: {
               credentialListSid,
-              usernames: missing 
-            }
-          }
+              usernames: missing,
+            },
+          },
         ];
       }
-    } catch(err) {
+    } catch (err) {
       status.description = `Uh oh. We were unable to find your default credential list defined in your environment. Let's build a new one.`;
       status.actions = [createAction];
     }
   } else {
-    status.description = "You currently haven't defined the Default Credential List.";
+    status.description =
+      "You currently haven't defined the Default Credential List.";
     status.actions = [createAction];
+  }
+  return status;
+}
+
+async function getIncomingNumberStatus(context) {
+  const client = context.getTwilioClient();
+  const incomingNumber = process.env.INCOMING_NUMBER;
+  const status = {
+    valid: false,
+    title: "Incoming Number is defined and wired up",
+  };
+  // Is Set
+  const allIncomingNumbers = await client.incomingPhoneNumbers.list();
+  if (incomingNumber) {
+    const numberObject = allIncomingNumbers.find(
+      (n) => n.phoneNumber === incomingNumber
+    );
+    // Exists
+    if (numberObject) {
+      // Wired up
+      if (numberObject.voiceUrl === expectedFn) {
+        status.valid = true;
+        status.description = `Your incoming number is set to ${incomingNumber} and the incoming Webhook is set to \`${numberObject.voiceUrl}\``;
+      } else {
+        status.description = stripIndents`
+        Your currently defined incoming number ${incomingNumber} has a Webhook set to \`${numberObject.voiceUrl}\` when it should be \`${expectedFn}\`
+
+        Update this by choosing the action below.
+        `;
+        status.actions = [
+          {
+            title: `Update ${incomingNumber} incoming webhook`,
+            name: "updateIncomingNumberVoiceUrl",
+            params: {
+              sid: numberObject.sid,
+              voiceUrl: expectedFn,
+            },
+          },
+          {
+            title: "Choose a new incoming number",
+            name: "clearIncomingNumber",
+          },
+        ];
+      }
+    } else {
+      status.description =
+        "Choose from your existing Twilio numbers or [buy a new one](https://www.twilio.com/console/phone-numbers/search)";
+      status.actions = allIncomingNumbers.map((number) => {
+        return {
+          title: `Choose ${number.friendlyName}`,
+          name: "updateIncomingNumber",
+          params: {
+            sid: number.sid,
+            voiceUrl: expectedFn,
+          },
+        };
+      });
+    }
   }
   return status;
 }
@@ -204,15 +272,15 @@ async function getCallerIdStatus(context) {
   if (process.env.CALLER_ID) {
     if (incomingNumbers.find(finder) || outgoingCallerIds.find(finder)) {
       status.valid = true;
-      status.description = `Your CallerID is set to ${process.env.CALLER_ID}`;
+      status.description = `Your Caller ID is set to ${process.env.CALLER_ID}`;
       status.actions = [
         {
           name: "setCallerId",
           title: "Change Caller ID",
           params: {
-            number: undefined
-          }
-        }
+            number: undefined,
+          },
+        },
       ];
     } else {
       status.description = stripIndents`

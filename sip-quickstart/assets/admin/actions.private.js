@@ -2,6 +2,8 @@ const assets = Runtime.getAssets();
 const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
 const extensions = require(assets["/extensions.js"].path);
 
+const DEFAULT_TWILIO_WEBHOOK = "https://demo.twilio.com/welcome/voice/";
+
 function sipDomainNameFromDomainName(domainName) {
   return domainName.replace(".twil.io", ".sip.twilio.com");
 }
@@ -22,7 +24,7 @@ class Actions {
       domainName: sipDomainName,
     });
     env = Object.assign(env, results);
-    const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
+    const outboundVoiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
       "outbound-calls",
       this.options.PATH,
       ".."
@@ -32,15 +34,29 @@ class Actions {
     );
     await this.updateSipDomainVoiceUrl({
       sipDomainSid: env.SIP_DOMAIN_SID,
-      voiceUrl,
+      voiceUrl: outboundVoiceUrl,
     });
     //Create and map credential list to the domain
     results = await this.createDefaultCredentialListForDomain({
       sipDomainSid: env.SIP_DOMAIN_SID,
     });
     env = Object.assign(env, results);
-    const number = await this.chooseLogicalCallerId();
-    results = await this.setCallerId({ number });
+    const incomingNumber = await this.chooseLogicalIncomingNumber();
+    let outgoingCallerId;
+    if (incomingNumber) {
+      const incomingVoiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
+        "extension-menu",
+        this.options.PATH,
+        ".."
+      )}`;
+  
+      results = await this.updateIncomingNumber({ sid: incomingNumber.sid, voiceUrl: incomingVoiceUrl });
+      env = Object.assign(env, results);
+      outgoingCallerId = incomingNumber.phoneNumber;
+    } else {
+      outgoingCallerId = await this.chooseLogicalCallerId();
+    }
+    results = await this.setCallerId({ outgoingCallerId });
     env = Object.assign(env, results);
     env.INITIALIZED = "sip-quickstart";
     env.INITIALIZATION_DATE = new Date().toISOString();
@@ -85,7 +101,7 @@ class Actions {
       });
     await Promise.all([authCallsMapping, domainRegistrationMapping]);
     await this.client.sip.domains(sipDomainSid).update({
-      sipRegistration: true
+      sipRegistration: true,
     });
     return {
       CREDENTIAL_LIST_SID: credentialList.sid,
@@ -109,11 +125,7 @@ class Actions {
     await this.addNewCredentials({ credentialListSid, usernames });
   }
 
-  async addNewCredential({
-    credentialListSid,
-    username,
-    password,
-  }) {
+  async addNewCredential({ credentialListSid, username, password }) {
     if (password === undefined) {
       password = process.env.DEFAULT_SIP_USER_PASSWORD;
     }
@@ -126,7 +138,7 @@ class Actions {
     const promises = usernames.map((username) =>
       this.addNewCredential({
         credentialListSid,
-        username
+        username,
       })
     );
     await Promise.all(promises);
@@ -134,6 +146,13 @@ class Actions {
 
   async updateSipDomainVoiceUrl({ sipDomainSid, voiceUrl }) {
     await this.client.sip.domains(sipDomainSid).update({ voiceUrl });
+  }
+
+  async chooseLogicalIncomingNumber() {
+    const incomingNumbers = await this.client.incomingPhoneNumbers.list();
+    return incomingNumbers.find(
+      (number) => number.voiceUrl === DEFAULT_TWILIO_WEBHOOK
+    );
   }
 
   async chooseLogicalCallerId() {
@@ -151,6 +170,20 @@ class Actions {
       number = outgoingCallerIds[0].phoneNumber;
     }
     return number;
+  }
+
+  async updateIncomingNumber({ sid, voiceUrl }) {
+    const incomingNumber = await this.client.incomingNumbers(sid).fetch();
+    await incomingNumber.update({ voiceUrl });
+    return {
+      INCOMING_NUMBER: incomingNumber.phoneNumber
+    };
+  }
+
+  async clearIncomingNumber() {
+    return {
+      INCOMING_NUMBER: undefined,
+    };
   }
 
   async setCallerId({ number }) {
