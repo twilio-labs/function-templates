@@ -58,7 +58,7 @@ class Actions {
     } else {
       outgoingCallerId = await this.chooseLogicalCallerId();
     }
-    results = await this.setCallerId({ outgoingCallerId });
+    results = await this.setCallerId({ number: outgoingCallerId });
     env = Object.assign(env, results);
     env.INITIALIZED = "sip-quickstart";
     env.INITIALIZATION_DATE = new Date().toISOString();

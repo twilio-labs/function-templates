@@ -5,11 +5,33 @@
     <link rel="stylesheet" href="./site.css"></link>
   </head>
   <body>
-    <div id="#app">
+    <div id="app">
       <h1>{{ configuration.appName }}</h1>
-      <p>Call <a href="tel:{{ configuration.incomingNumber }}">{{ configuration.incomingNumber }}</a> to connect</p>
+      <p>Call <strong>{{ configuration.incomingNumber }}</strong> to connect.</p>
+      <p>Calls made from SIP clients out to the PSTN will come from <strong>{{ configuration.callerId }}</strong></p>
       <h2>Setup SIP Clients</h2>
-      <p>Your domain <strong>{{ configuration.sipDomain }}</strong> is ready to accept SIP registrations</p>
+      <p>Your domain <strong>{{ configuration.sipDomainName }}</strong> is ready to accept SIP registrations</p>
+      <p>The following SIP credentials have been created. (Default password found on <a href="./admin/index.html">admin page</a>)</p>
+      <table>
+        <thead>
+          <tr>
+            <th>SIP Username</th>
+            <th>SIP Registration Domain</th>
+            <th>Extension</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="extension in configuration.extensions">
+            <td>{{ extension.username }}</td>
+            <td>{{ configuration.localizedSipDomainName }}</td>
+            <td>{{ extension.extension }}</td>
+          </tr>
+        </tbody>
+        
+      </table>
+      <footer>
+        <p><a href="./admin/index.html">Admin</a></p>
+      </footer>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
