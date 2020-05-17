@@ -187,6 +187,7 @@ async function getCredentialListStatus(context) {
         ];
       }
     } catch (err) {
+      console.log(`Error: ${err}`);
       status.description = `Uh oh. We were unable to find your default credential list defined in your environment. Let's build a new one.`;
       status.actions = [createAction];
     }
@@ -210,13 +211,23 @@ async function getIncomingNumberStatus(context) {
     valid: false,
     title: "Incoming Number is defined and wired up",
   };
-  // Is Set
   const allIncomingNumbers = await client.incomingPhoneNumbers.list();
+  chooseNumberActions = allIncomingNumbers.map((number) => {
+    return {
+      title: `Choose ${number.friendlyName}`,
+      name: "updateIncomingNumber",
+      params: {
+        sid: number.sid,
+        voiceUrl: expectedFn,
+      },
+    };
+  });
+  // Is Set
   if (incomingNumber) {
     const numberObject = allIncomingNumbers.find(
       (n) => n.phoneNumber === incomingNumber
     );
-    // Exists
+    // Was found
     if (numberObject) {
       // Wired up
       if (numberObject.voiceUrl === expectedFn) {
@@ -224,7 +235,7 @@ async function getIncomingNumberStatus(context) {
         status.description = `Your incoming number is set to ${incomingNumber} and the incoming Webhook is set to \`${numberObject.voiceUrl}\``;
         status.actions = [
           {
-            title: "Choose a new incoming number",
+            title: "Choose a different incoming number",
             name: "clearIncomingNumber",
           },
         ];
@@ -244,26 +255,26 @@ async function getIncomingNumberStatus(context) {
             },
           },
           {
-            title: "Choose a new incoming number",
+            title: "Choose a different incoming number",
             name: "clearIncomingNumber",
           },
         ];
       }
+      // Not found
+    } else {
+      status.description = stripIndents`
+      Uh oh. Your incoming number ${process.env.INCOMING_NUMBER} is no longer found.
+
+      Choose from an existing number or [buy a new one](https://www.twilio.com/console/phone-numbers/search).
+
+      `;
+      status.actions = chooseNumberActions;
     }
   } else {
     status.description = stripIndents`
     Choose from your existing Twilio numbers or [buy a new one](https://www.twilio.com/console/phone-numbers/search)
     `;
-    status.actions = allIncomingNumbers.map((number) => {
-      return {
-        title: `Choose ${number.friendlyName}`,
-        name: "updateIncomingNumber",
-        params: {
-          sid: number.sid,
-          voiceUrl: expectedFn,
-        },
-      };
-    });
+    status.actions = chooseNumberActions;
   }
   return status;
 }

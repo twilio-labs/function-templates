@@ -1,4 +1,5 @@
 const helpers = require("../../../../test/test-helper");
+const extensions = require("../../../assets/extensions.private");
 
 const statusFunctions = {};
 let environmentFunction;
@@ -12,20 +13,30 @@ const mockKeys = {
   fetch: jest.fn(),
 };
 
+const mockCredentialLists = {
+  fetch: jest.fn(),
+  credentials: {
+    list: jest.fn(() => Promise.resolve([])),
+  },
+};
+
 const mockTwilioClient = {
-  sip: {}
+  sip: {},
 };
 mockTwilioClient.sip.domains = jest.fn(() => mockDomains);
 mockTwilioClient.sip.domains.list = jest.fn(() => Promise.resolve([]));
+mockTwilioClient.sip.credentialLists = jest.fn(() => mockCredentialLists);
 mockTwilioClient.incomingPhoneNumbers = {
   list: jest.fn(() => [
     {
       phoneNumber: "+15551234567",
       friendlyName: "(555) 123-4567",
+      voiceUrl: "https://spacejam.com/twiml",
     },
     {
       phoneNumber: "+15557654321",
       friendlyName: "My Business line",
+      voiceUrl: "https://spacejam.com/twiml",
     },
   ]),
 };
@@ -52,6 +63,10 @@ describe("sip-quickstart/admin/private/statuses", () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(
+      "/extensions.js",
+      "../../../assets/extensions.private.js"
+    );
+    runtime._addAsset(
       "/admin/shared.js",
       "../../../assets/admin/shared.private.js"
     );
@@ -59,10 +74,12 @@ describe("sip-quickstart/admin/private/statuses", () => {
     // Mock out shared
     mockGetCurrentEnvironment = jest.fn();
     const mockShared = jest.mock("../../../assets/admin/shared.private", () => {
-      const actualShared = jest.requireActual("../../../assets/admin/shared.private");
+      const actualShared = jest.requireActual(
+        "../../../assets/admin/shared.private"
+      );
       return {
         urlForSiblingPage: actualShared.urlForSiblingPage,
-        getCurrentEnvironment: mockGetCurrentEnvironment
+        getCurrentEnvironment: mockGetCurrentEnvironment,
       };
     });
     const mod = require("../../../assets/admin/statuses.private");
@@ -94,7 +111,9 @@ describe("sip-quickstart/admin/private/statuses", () => {
 
   test("checkEnvironmentInitialization prompts to initialize if not yet initialized", async () => {
     // Arrange
-    mockGetCurrentEnvironment.mockReturnValueOnce(Promise.resolve({uniqueName: "devtown"}));
+    mockGetCurrentEnvironment.mockReturnValueOnce(
+      Promise.resolve({ uniqueName: "devtown" })
+    );
 
     // Act
     const status = await environmentFunction(CONTEXT);
@@ -109,7 +128,9 @@ describe("sip-quickstart/admin/private/statuses", () => {
   test("checkEnvironmentInitialization is valid when initialized and deployed", async () => {
     // Arrange
     process.env.INITIALIZED = "sip-quickstart";
-    mockGetCurrentEnvironment.mockReturnValueOnce(Promise.resolve({uniqueName: "devtown"}));
+    mockGetCurrentEnvironment.mockReturnValueOnce(
+      Promise.resolve({ uniqueName: "devtown" })
+    );
 
     // Act
     const status = await environmentFunction(CONTEXT);
@@ -119,7 +140,6 @@ describe("sip-quickstart/admin/private/statuses", () => {
     expect(status.valid).toBeTruthy();
     expect(status.description).toContain("initialized");
   });
-
 
   test("getSipDomainStatus suggests to create if not found", async () => {
     // Act
@@ -216,7 +236,7 @@ describe("sip-quickstart/admin/private/statuses", () => {
     //Arrange
     process.env.CALLER_ID = "+13334445555";
 
-    // Act 
+    // Act
     const status = await statusFunctions.getCallerIdStatus(CONTEXT);
 
     // Assert
@@ -242,7 +262,9 @@ describe("sip-quickstart/admin/private/statuses", () => {
   test("getSipDomainIsWiredUp is invalid when SIP Domain is missing", async () => {
     // Arrange
     process.env.SIP_DOMAIN_SID = "SIP_DOMAIN_NOT_FOUND_EVER";
-    mockDomains.fetch.mockImplementationOnce(() => {throw new Error("Not found");});
+    mockDomains.fetch.mockImplementationOnce(() => {
+      throw new Error("Not found");
+    });
 
     // Act
     const status = await statusFunctions.getSipDomainIsWiredUp(CONTEXT);
@@ -266,12 +288,14 @@ describe("sip-quickstart/admin/private/statuses", () => {
   test("getSipDomainIsWiredUp is invalid when voiceUrl doesn't match", async () => {
     // Arrange
     process.env.SIP_DOMAIN_SID = "SD123";
-    const expectedUrl = `https://${CONTEXT.DOMAIN_NAME}/outgoing-calls`;
+    const expectedUrl = `https://${CONTEXT.DOMAIN_NAME}/outbound-calls`;
     const intentionallyWrongUrl = "https://spacejam.com/twiml";
-    mockDomains.fetch.mockReturnValueOnce(Promise.resolve({
-      sid: process.env.SIP_DOMAIN_SID,
-      voiceUrl: intentionallyWrongUrl
-    }));
+    mockDomains.fetch.mockReturnValueOnce(
+      Promise.resolve({
+        sid: process.env.SIP_DOMAIN_SID,
+        voiceUrl: intentionallyWrongUrl,
+      })
+    );
 
     // Act
     const status = await statusFunctions.getSipDomainIsWiredUp(CONTEXT);
@@ -283,19 +307,22 @@ describe("sip-quickstart/admin/private/statuses", () => {
     expect(status.description).toContain(intentionallyWrongUrl);
     expect(status.description).toContain(expectedUrl);
     expect(status.actions[0].name).toBe("updateSipDomainVoiceUrl");
-    expect(status.actions[0].params.sipDomainSid).toBe(process.env.SIP_DOMAIN_SID);
+    expect(status.actions[0].params.sipDomainSid).toBe(
+      process.env.SIP_DOMAIN_SID
+    );
     expect(status.actions[0].params.voiceUrl).toBe(expectedUrl);
   });
-
 
   test("getSipDomainIsWiredUp is valid when voiceUrl matches", async () => {
     // Arrange
     process.env.SIP_DOMAIN_SID = "SD123";
-    const expectedUrl = `https://${CONTEXT.DOMAIN_NAME}/outgoing-calls`;
-    mockDomains.fetch.mockReturnValueOnce(Promise.resolve({
-      sid: process.env.SIP_DOMAIN_SID,
-      voiceUrl: expectedUrl
-    }));
+    const expectedUrl = `https://${CONTEXT.DOMAIN_NAME}/outbound-calls`;
+    mockDomains.fetch.mockReturnValueOnce(
+      Promise.resolve({
+        sid: process.env.SIP_DOMAIN_SID,
+        voiceUrl: expectedUrl,
+      })
+    );
 
     // Act
     const status = await statusFunctions.getSipDomainIsWiredUp(CONTEXT);
@@ -320,6 +347,158 @@ describe("sip-quickstart/admin/private/statuses", () => {
     expect(status.description).toContain("`.env`");
   });
 
+  // getIncomingNumberStatus,
+  // getCallerIdStatus,
+
+  test("getCredentialListStatus is invalid and asks to create if missing", async () => {
+    // Act
+    const status = await statusFunctions.getCredentialListStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    expect(status.actions[0].name).toBe("createDefaultCredentialListForDomain");
+  });
+
+  test("getCredentialListStatus is invalid when credentialList fetch fails", async () => {
+    process.env.CREDENTIAL_LIST_SID = "CLNEVERGONNAGETIT";
+    
+    // Arrange
+    mockCredentialLists.fetch.mockImplementationOnce(() => {
+      throw new Error("Not found :(");
+    });
+
+    // Act
+    const status = await statusFunctions.getCredentialListStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    expect(status.description).toContain("Uh oh");
+    expect(status.actions[0].name).toBe("createDefaultCredentialListForDomain");
+  });
+
+  test("getCredentialListStatus is invalid when credentials are missing", async () => {
+    // Arrange
+    process.env.CREDENTIAL_LIST_SID = "CLJKLOL";
+    mockCredentialLists.fetch.mockReturnValueOnce(
+      Promise.resolve({
+        sid: "CLJKLOL",
+        friendlyName: "Mock list",
+      })
+    );
+
+    // Act
+    const status = await statusFunctions.getCredentialListStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    // Verify all the extensions are there
+    extensions.forEach((ext) =>
+      expect(status.description).toContain(ext.username)
+    );
+    expect(status.actions[0].name).toBe("addNewCredentials");
+    expect(status.actions[0].params.usernames.length).toBe(extensions.length);
+  });
+
+  test("getCredentialListStatus is valid when credentials are in place", async () => {
+    // Arrange
+    process.env.CREDENTIAL_LIST_SID = "CLJKLOL";
+    mockCredentialLists.fetch.mockReturnValueOnce(
+      Promise.resolve({
+        sid: "CLJKLOL",
+        friendlyName: "Mock list",
+      })
+    );
+    const mockCredentials = extensions.map((ext) => {
+      return { sid: "CRJKLOL", username: ext.username };
+    });
+    mockCredentialLists.credentials.list.mockReturnValueOnce(
+      Promise.resolve(mockCredentials)
+    );
+
+    // Act
+    const status = await statusFunctions.getCredentialListStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeTruthy();
+    expect(status.description).toContain(extensions.length);
+  });
+
+  test("getIncomingNumberStatus is invalid when not set in environment", async () => {
+    // Act
+    const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    expect(status.actions[0].name).toBe("updateIncomingNumber");
+    expect(status.actions[0].title).toContain("Choose");
+    expect(status.actions[0].params.voiceUrl).toBe(
+      "https://testing-domain-123.com/extension-menu"
+    );
+  });
+
+  test("getIncomingNumberStatus is invalid when not found", async () => {
+    process.env.INCOMING_NUMBER = "+1800NOTREAL";
+
+    // Act
+    const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    expect(status.actions[0].name).toBe("updateIncomingNumber");
+    expect(status.actions[0].title).toContain("Choose");
+    expect(status.actions[0].params.voiceUrl).toBe(
+      "https://testing-domain-123.com/extension-menu"
+    );
+  });
+
+  test("getIncomingNumberStatus is invalid when voiceUrl is wrong", async () => {
+    const mockNumbers = mockTwilioClient.incomingPhoneNumbers.list();
+    process.env.INCOMING_NUMBER = mockNumbers[0].phoneNumber;
+
+    // Act
+    const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    // Displays the incorrect voiceUrl
+    expect(status.description).toContain("spacejam.com/twiml");
+
+    expect(status.actions[0].name).toBe("updateIncomingNumberVoiceUrl");
+    expect(status.actions[0].title).toContain("incoming webhook");
+    expect(status.actions[1].name).toBe("clearIncomingNumber");
+    expect(status.actions[1].title).toContain("Choose a different");
+  });
+
+  test("getIncomingNumberStatus is valid when voiceUrl is correct", async () => {
+    // Arrange
+    process.env.INCOMING_NUMBER = "+1555FOUNDME";
+    mockTwilioClient.incomingPhoneNumbers.list.mockReturnValueOnce(
+      Promise.resolve([
+        {
+          phoneNumber: "+1555FOUNDME",
+          voiceUrl: `https://${CONTEXT.DOMAIN_NAME}/extension-menu`,
+        },
+      ])
+    );
+
+    // Act
+    const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
+
+    //Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeTruthy();
+    // Allows for changing
+    expect(status.actions[0].name).toBe("clearIncomingNumber");
+    expect(status.actions[0].title).toContain("Choose a different");
+  });
+
   test("getDefaultPasswordChanged is valid with different password", async () => {
     // Arrange
     process.env.ADMIN_PASSWORD = "ch@ng3d";
@@ -332,5 +511,4 @@ describe("sip-quickstart/admin/private/statuses", () => {
     expect(status.valid).toBeTruthy();
     expect(status.description).toContain("all set");
   });
-
 });
