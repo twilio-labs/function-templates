@@ -78,7 +78,7 @@ class Actions {
       console.error(`Ran into issue creating domain: ${err}`);
       const domains = await this.client.sip.domains.list();
       const domain = domains.find((d) => d.domainName.startsWith(domainName));
-      if (domain) {
+      if (domain !== undefined) {
         console.log(`Found matching domain ${domainName} assigning...`);
         return {
           SIP_DOMAIN_SID: domain.sid,
