@@ -12,27 +12,30 @@
       <h2>Connect your SIP Clients</h2>
       <p>If you do not already have a SIP Client we suggest the following:</p>
       <ul>
-        <li><a href="https://www.zoiper.com/en/voip-softphone/download/current" target="_blank">Zoiper</a> Soft Phone</li>
+        <li><a href="https://twil.io/zoiper-download" target="_blank">Zoiper</a> Soft Phone</li>
         <li><a href="https://www.obitalk.com/info/products" target="_blank">OBiTalk</a> VoIP OBi devices</li>
       </ul>
       <p>Your domain <strong>{{ configuration.sipDomainName }}</strong> is ready to accept SIP registrations</p>
       <p>The following SIP credentials have been created. (Default password found on <a href="./admin/index.html">admin page</a>)</p>
-      <table>
-        <thead>
-          <tr>
-            <th>SIP Username</th>
-            <th>SIP Registration Domain</th>
-            <th>Extension</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="extension in configuration.extensions">
-            <td>{{ extension.username }}</td>
-            <td>{{ configuration.localizedSipDomainName }}</td>
-            <td>{{ extension.extension }}</td>
-          </tr>
-        </tbody> 
-      </table>
+      <div class="credentials">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SIP Username</th>
+              <th>SIP Registration Domain</th>
+              <th>Extension</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="extension in configuration.extensions">
+              <td>{{ extension.username }}</td>
+              <td>{{ configuration.localizedSipDomainName }}</td>
+              <td>{{ extension.extension }}</td>
+            </tr>
+          </tbody> 
+        </table>
+      </div>
       <footer>
         <p><a href="./admin/index.html">Admin</a></p>
       </footer>
