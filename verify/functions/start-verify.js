@@ -49,9 +49,12 @@ exports.handler = function(context, event, callback) {
     .catch(error => {
       response.setBody({
         "success": false,
-        "message": error
-      })
-      response.setStatusCode(400);
+        "message": {
+          "message": error.message,
+          "moreInfo": error.moreInfo
+        },
+      });
+      response.setStatusCode(err.status);
       console.log(response);
       callback(null, response);
     });
