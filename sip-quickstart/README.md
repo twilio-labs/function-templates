@@ -12,21 +12,10 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-
-
-### Function Parameters
-
-`/blank` expects the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
+| ACCOUNT_SID | Account SID, automatically populated at creation time | Yes |
+| AUTH_TOKEN | Auth Token, automatically populated at creation time | Yes |
+| ADMIN_PASSWORD | Password to allow administrators to access */admin/index.html* | Yes |
+| DEFAULT_SIP_PASSWORD | Password used to set SIP Credentials created by admin | Yes |
 
 ## Create a new project with the template
 
@@ -39,17 +28,17 @@ twilio plugins:install @twilio-labs/plugin-serverless
 
 3. Initiate a new project
 
-```
-twilio serverless:init example --template=sip-quickstart && cd verify-sample
-```
-
-4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:start
+```shell
+twilio serverless:init my-sip-domain --template=sip-quickstart && cd my-sip-domain
 ```
 
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+4. Deploy the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
+
+```shell
+twilio serverless:deploy
+```
+
+5. Open the hosted admin page at */admin/index.html* and enter the `ADMIN_PASSWORD` defined in your `.env` file.
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
@@ -59,11 +48,6 @@ Deploy your functions and assets with either of the following commands. Note: yo
 
 With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 
-```
+```shell
 twilio serverless:deploy
 ```
-
-
-## TODO
-
-[ ] Build a Zoiper config

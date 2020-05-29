@@ -183,19 +183,19 @@ class Actions {
     };
   }
 
-  async clearIncomingNumber() {
+  clearIncomingNumber() {
     return {
       INCOMING_NUMBER: undefined,
     };
   }
 
-  async setCallerId({ number }) {
+  setCallerId({ number }) {
     return {
       CALLER_ID: number,
     };
   }
 
-  async useExistingSipDomain({ sipDomainSid }) {
+  useExistingSipDomain({ sipDomainSid }) {
     return {
       SIP_DOMAIN_SID: sipDomainSid,
     };
