@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SIP Quickstart</title>
+    <link rel="stylesheet" href="./site.css"></link>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{ configuration.appName }}</h1>
+      <p>Dial <strong>{{ configuration.incomingNumber }}</strong> to connect</p>
+      <p>Outgoing calls made from SIP clients to the PSTN will come from caller id: <strong>{{ configuration.callerId }}</strong></p>
+      <h2>Connect your SIP Clients</h2>
+      <p>If you do not already have a SIP Client we suggest the following:</p>
+      <ul>
+        <li><a href="https://twil.io/zoiper-download" target="_blank">Zoiper</a> Soft Phone</li>
+        <li><a href="https://www.obitalk.com/info/products" target="_blank">OBiTalk</a> VoIP OBi devices</li>
+      </ul>
+      <p>Your domain <strong>{{ configuration.sipDomainName }}</strong> is ready to accept SIP registrations</p>
+      <p>The following SIP credentials have been created. (Default password found on <a href="./admin/index.html">admin page</a>)</p>
+      <div class="credentials">
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>SIP Username</th>
+              <th>SIP Registration Domain</th>
+              <th>Extension</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="extension in configuration.extensions">
+              <td>{{ extension.username }}</td>
+              <td>{{ configuration.localizedSipDomainName }}</td>
+              <td>{{ extension.extension }}</td>
+            </tr>
+          </tbody> 
+        </table>
+      </div>
+      <footer>
+        <p><a href="./admin/index.html">Admin</a></p>
+      </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      const app = new Vue({
+        el: "#app",
+        data: {
+          configuration: {},
+        },
+        methods: {
+          async refreshConfiguration() {
+            const response = await fetch("./sip-configuration");
+            this.configuration = await response.json();
+          }
+        },
+        created() {
+          this.refreshConfiguration();
+        }
+      });
+
+    </script>
+  </body>
+</html>

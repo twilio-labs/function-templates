@@ -164,6 +164,11 @@
       "id": "conversations",
       "name": "conversations",
       "description": "These Functions generate a Conversations-scoped webhook so that you can integrate Twilio Studio with Twilio Conversations."
+    },
+    {
+      "id": "sip-quickstart",
+      "name": "SIP Quickstart",
+      "description": "Creates and wires up a new SIP domain for incoming and outgoing SIP calls."
     }
   ]
 }

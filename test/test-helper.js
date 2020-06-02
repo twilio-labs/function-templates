@@ -78,6 +78,9 @@ const backupEnv = () => {
 };
 
 const restoreEnv = (backupEnv) => {
+  if (backupEnv === undefined) {
+    return;
+  }
   for (let key of Object.keys(process.env)) {
     if (backupEnv[key] === undefined) {
       delete process.env[key];
