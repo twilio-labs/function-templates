@@ -1,13 +1,13 @@
 const helpers = require('../../test/test-helper');
-const blacklistCall = require('../functions/blacklist-call').handler;
+const blocklistCall = require('../functions/blocklist-call').handler;
 
-describe('blacklist in the context', () => {
+describe('blocklist in the context', () => {
   const context = {
-    BLACKLIST: '+12125551234,+17025556789'
+    BLOCKLIST: '+12125551234,+17025556789',
   };
 
   const event = {
-    From: '+12125551234'
+    From: '+12125551234',
   };
 
   beforeAll(() => {
@@ -18,29 +18,29 @@ describe('blacklist in the context', () => {
     helpers.teardown();
   });
 
-  test('rejects the call', done => {
+  test('rejects the call', (done) => {
     const callback = (err, result) => {
       expect(result.toString()).toMatch(/Reject/);
       done();
     };
-    blacklistCall(context, event, callback);
+    blocklistCall(context, event, callback);
   });
 });
 
-describe('blacklist in the event', () => {
+describe('blocklist in the event', () => {
   const rejectEvent = {
-    blacklist: '+12125551234,+17025556789',
-    From: '+12125551234'
+    blocklist: '+12125551234,+17025556789',
+    From: '+12125551234',
   };
 
   const redirectEvent = {
-    blacklist: '+12125551234,+17025556789',
-    From: '+9999999999'
+    blocklist: '+12125551234,+17025556789',
+    From: '+9999999999',
   };
 
-  const emptyBlacklistEvent = {
-    blacklist: '',
-    From: '+9999999999'
+  const emptyBlockList = {
+    blocklist: '',
+    From: '+9999999999',
   };
 
   const emptyContext = {};
@@ -53,27 +53,27 @@ describe('blacklist in the event', () => {
     helpers.teardown();
   });
 
-  test('rejects the call', done => {
+  test('rejects the call', (done) => {
     const callback = (err, result) => {
       expect(result.toString()).toMatch(/Reject/);
       done();
     };
-    blacklistCall(emptyContext, rejectEvent, callback);
+    blocklistCall(emptyContext, rejectEvent, callback);
   });
 
-  test('redirects the call', done => {
+  test('redirects the call', (done) => {
     const callback = (err, result) => {
       expect(result.toString()).toMatch(/Redirect/);
       done();
     };
-    blacklistCall(emptyContext, redirectEvent, callback);
+    blocklistCall(emptyContext, redirectEvent, callback);
   });
 
-  test('redirects the call with empty Blacklist', done => {
+  test('redirects the call with empty Blocklist', (done) => {
     const callback = (err, result) => {
       expect(result.toString()).toMatch(/Redirect/);
       done();
     };
-    blacklistCall(emptyContext, emptyBlacklistEvent, callback);
+    blocklistCall(emptyContext, emptyBlockList, callback);
   });
 });
