@@ -111,9 +111,9 @@
       "description": "Start and check one-time passcodes sent via SMS or Voice"
     },
     {
-      "id": "blacklist-call",
-      "name": "Blacklist Call Function",
-      "description": "Blacklists an array of numbers"
+      "id": "blocklist-call",
+      "name": "Blocklist Call Function",
+      "description": "Blocklists an array of numbers"
     },
     {
       "id": "funlet-echo",
