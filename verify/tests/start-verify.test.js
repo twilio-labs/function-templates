@@ -31,7 +31,8 @@ describe('verify/start-verification', () => {
   test('returns an error response when required parameters are missing', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
-      expect(result._body.status).toEqual(false);
+      expect(result._body.success).toEqual(false);
+      expect(result._body.error.message).toEqual("Missing parameter; please provide a phone number or email.");
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(testContext.VERIFY_SERVICE_SID);
       done();
     };
@@ -39,17 +40,14 @@ describe('verify/start-verification', () => {
     startVerifyFunction(testContext, event, callback);
   });
 
-  test('channel defaults to SMS when parameter is not provided', done => {
+  test('returns success with valid request', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
-      expect(typeof result._body.channel).toBe('string');
-      expect(result._body.channel).toEqual('sms');
+      expect(result._body.success).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(testContext.VERIFY_SERVICE_SID);
       done();
     };
-    const event = {
-      "phone_number": "+17341234567"
-    }
+    const event = { "to": "+17341234567" }
     startVerifyFunction(testContext, event, callback);
   });
 });

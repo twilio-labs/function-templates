@@ -30,17 +30,18 @@ In your `.env` file, set the following values:
 
 `start-verify.js` expects the following parameters:
 
-| Parameter      | Description                                                       | Required |
-| :------------- | :---------------------------------------------------------------- | :------- |
-| `phone_number` | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
-| `channel`      | 'sms' or 'call'. Default is 'sms'                                 | No       |
+| Parameter      | Description                                 | Required |
+| :------------- | :------------------------------------------ | :------- |
+| `to`           | Either an email or phone number in [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes |
+| `channel`      | 'sms', 'call', or 'email'. Default is 'sms' | No |
+| `locale`       | Localization language. See [supported languages](https://www.twilio.com/docs/verify/supported-languages). Default is 'en' | No |
 
 `check-verify.js` expects the following parameters:
 
-| Parameter           | Description                                                       | Required |
-| :------------------ | :---------------------------------------------------------------- | :------- |
-| `phone_number`      | In [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes      |
-| `verification_code` | Collect from user                                                 | Yes      |
+| Parameter           | Description                | Required |
+| :------------------ | :------------------------- | :------- |
+| `to`                | Either an email or phone number in [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes |
+| `verification_code` | Collected from user input  | Yes      |
 
 ## Create a new project with the template
 
@@ -57,15 +58,23 @@ twilio plugins:install @twilio-labs/plugin-serverless
 twilio serverless:init verify-sample --template=verify && cd verify-sample
 ```
 
-4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
+4. Add your environment variables to `.env`:
+
+Make sure variables are populaed in your `.env` file. See [Environment variables](#environment-variables).
+
+5. Start the server :
 
 ```
-twilio serverless:start
+npm start
 ```
 
 5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
+
+6. [optional] Configure email verification
+
+[Follow the instructions in the docs](https://www.twilio.com/docs/verify/email) to set up email verification.
 
 ## Deploying
 

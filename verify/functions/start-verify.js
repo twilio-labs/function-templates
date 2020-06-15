@@ -7,6 +7,16 @@
  *  - Create a Verify Service (https://www.twilio.com/console/verify/services)
  *  - Add VERIFY_SERVICE_SID from above to your Environment Variables (https://www.twilio.com/console/functions/configure)
  *  - Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
+ *
+ *
+ *  Returns JSON
+ *  {
+ *    "success": boolean,
+ *    "error": {                // not present if success is true
+ *      "message": string,
+ *      "moreInfo": url string
+ *    }
+ *  }
  */
 
 exports.handler = function(context, event, callback) {
@@ -18,10 +28,13 @@ exports.handler = function(context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (typeof event.phone_number === 'undefined') {
+  if (typeof event.to === 'undefined') {
     response.setBody({
-      "status": false,
-      "message": "Please provide a phone number."
+      "success": false,
+      "error": {
+        "message": "Missing parameter; please provide a phone number or email.",
+        "moreInfo": "https://www.twilio.com/docs/verify/api/verification"
+      }
     })
     response.setStatusCode(400);
     return callback(null, response);
@@ -29,33 +42,35 @@ exports.handler = function(context, event, callback) {
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const to = event.phone_number;
+  const to = event.to;
   const channel = (typeof event.channel === 'undefined') ? "sms" : event.channel;
-          
+  const locale = (typeof event.locale === 'undefined') ? "en" : event.locale;
+
   client.verify.services(service)
     .verifications
-    .create({to: to, channel: channel})
+    .create({
+      to: to,
+      channel: channel,
+      locale: locale
+    })
     .then(verification => {
-      response.setBody({
-        "success": true,
-        "to": to,
-        "channel": channel,
-        "sid": verification.sid
-      });
+      console.log(`Sent verification: '${verification.sid}');
       response.setStatusCode(200);
-      console.log(`Sent verification to **********${to.slice(-2)}`);
+      response.setBody({
+        "success": true
+      });
       callback(null, response);
     })
     .catch(error => {
+      console.log(error);
+      response.setStatusCode(error.status);
       response.setBody({
         "success": false,
-        "message": {
+        "error": {
           "message": error.message,
           "moreInfo": error.moreInfo
-        },
+        }
       });
-      response.setStatusCode(err.status);
-      console.log(response);
       callback(null, response);
     });
 };
