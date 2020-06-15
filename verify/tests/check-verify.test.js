@@ -28,10 +28,10 @@ describe('verify/check-verification', () => {
     helpers.teardown();
   });
 
-  test('returns an error response when required phone_number parameter is missing', done => {
+  test('returns an error response when required to parameter is missing', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
-      expect(result._body.status).toEqual(false);
+      expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(testContext.VERIFY_SERVICE_SID);
       done();
     };
@@ -44,12 +44,12 @@ describe('verify/check-verification', () => {
   test('returns an error response when required verification_code parameter is missing', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
-      expect(result._body.status).toEqual(false);
+      expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(testContext.VERIFY_SERVICE_SID);
       done();
     };
     const event = {
-      "phone_number": "+17341234567"
+      "to": "+17341234567"
     };
     checkVerifyFunction(testContext, event, callback);
   });
@@ -57,7 +57,7 @@ describe('verify/check-verification', () => {
   test('returns an error response when required parameters are missing', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
-      expect(result._body.status).toEqual(false);
+      expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(testContext.VERIFY_SERVICE_SID);
       done();
     };
@@ -65,7 +65,7 @@ describe('verify/check-verification', () => {
     checkVerifyFunction(testContext, event, callback);
   });
 
-  test('returns a successful response with valid parameters', done => {
+  test('returns success with valid request', done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
@@ -73,7 +73,7 @@ describe('verify/check-verification', () => {
       done();
     };
     const event = {
-      "phone_number": "+17341234567",
+      "to": "+17341234567",
       "verification_code": "123456"
     }
     checkVerifyFunction(testContext, event, callback);
