@@ -21,8 +21,8 @@ To deploy this project with the Functions API, this Function expects the followi
 | `TIMEZONE_OFFSET` | Offset from the UTC timezone to determine whether a call is happening during business hours                    | no       |
 | `WORK_WEEK_START` | Day of the week where the business hours should start applying. 0-6 = Sunday - Saturday. 1 = Monday            | no       |
 | `WORK_WEEK_END`   | Day of the week after which the business hours should stop applying. 0-6 = Sunday - Saturday. 5 = Friday       | no       |
-| `WORK_WEEK_START` | Hour of the day where business hours should start. 0-23. 8 = 8:00:00 = 8:00:00AM                               | no       |
-| `WORK_WEEK_END`   | Hour of the day where business hours should stop. 0-23. 18 = 18:59:59 = 6:59:59PM                              | no       |
+| `WORK_HOUR_START` | Hour of the day where business hours should start. 0-23. 8 = 8:00:00 = 8:00:00AM                               | no       |
+| `WORK_HOUR_END`   | Hour of the day where business hours should stop. 0-23. 18 = 18:59:59 = 6:59:59PM                              | no       |
 
 Additionally, you'll have to have your `ACCOUNT_SID` and `AUTH_TOKEN` set.
 

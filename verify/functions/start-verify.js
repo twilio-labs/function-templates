@@ -46,10 +46,6 @@ exports.handler = function(context, event, callback) {
   const channel = (typeof event.channel === 'undefined') ? "sms" : event.channel;
   const locale = (typeof event.locale === 'undefined') ? "en" : event.locale;
 
-  console.log(to);
-  console.log(channel);
-  console.log(locale);
-
   client.verify.services(service)
     .verifications
     .create({
@@ -58,7 +54,7 @@ exports.handler = function(context, event, callback) {
       locale: locale
     })
     .then(verification => {
-      console.log(verification.sid);
+      console.log(`Sent verification to **********${verification.to.slice(-2)}`);
       response.setStatusCode(200);
       response.setBody({
         "success": true

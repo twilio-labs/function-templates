@@ -56,19 +56,29 @@
       "description": "Uses Sparkpost to forward incoming messages via email"
     },
     {
+      "id": "airtable",
+      "name": "Airtable SMS Broadcast",
+      "description": "Read and write data from an Airtable table to broadcast messages"
+    },
+    {
       "id": "conference",
       "name": "Simple Conference",
       "description": "Drops all incoming calls into a conference room"
     },
     {
-      "id": "chat-token",
-      "name": "Chat Token Function",
-      "description": "Generates a Chat Access Token for client-side applications"
+      "id": "stripe-payment-link-sms",
+      "name": "Stripe payments via SMS",
+      "description": "Send payment links via SMS using Stripe"
     },
     {
       "id": "stripe-sms-receipt",
       "name": "Stripe SMS Receipt Webhook Handler Function",
       "description": "Send an SMS receipt to your Stripe customers"
+    },
+    {
+      "id": "chat-token",
+      "name": "Chat Token Function",
+      "description": "Generates a Chat Access Token for client-side applications"
     },
     {
       "id": "sync-token",
@@ -101,9 +111,9 @@
       "description": "Start and check one-time passcodes sent via SMS or Voice"
     },
     {
-      "id": "blacklist-call",
-      "name": "Blacklist Call Function",
-      "description": "Blacklists an array of numbers"
+      "id": "blocklist-call",
+      "name": "Blocklist Call Function",
+      "description": "Blocklists an array of numbers"
     },
     {
       "id": "funlet-echo",
@@ -154,6 +164,11 @@
       "id": "conversations",
       "name": "conversations",
       "description": "These Functions generate a Conversations-scoped webhook so that you can integrate Twilio Studio with Twilio Conversations."
+    },
+    {
+      "id": "sip-quickstart",
+      "name": "SIP Quickstart",
+      "description": "Creates and wires up a new SIP domain for incoming and outgoing SIP calls."
     }
   ]
 }
