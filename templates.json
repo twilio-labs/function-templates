@@ -169,6 +169,11 @@
       "id": "sip-quickstart",
       "name": "SIP Quickstart",
       "description": "Creates and wires up a new SIP domain for incoming and outgoing SIP calls."
+    },
+    {
+      "id": "personal-voicemail",
+      "name": "Personal Voicemail",
+      "description": "Provides a simple voice mailbox with SMS notifications and a block list."
     }
   ]
 }
