@@ -40,150 +40,151 @@
 /*****************************/
 /******* configuration *******/
 
-const phoneNumber = '+17203089773';
-const defaultTimeout = 12;
+// const phoneNumber = '+17203089773';
+// const defaultTimeout = 12;
 
-const secureRecordingLinks = false;
+// const secureRecordingLinks = false;
 
-const voiceOpts = {
-    'voice': 'alice',
-    'language': 'en-US'
-};
+// const voiceOpts = {
+//     'voice': 'alice',
+//     'language': 'en-US'
+// };
 
-const voiceMailMessage = "Hello, I can not answer the phone right now. Please leave a message. Hang up when you're finished.";
+// const voiceMailMessage = "Hello, I can not answer the phone right now. Please leave a message. Hang up when you're finished.";
 
-const reject = [
-    // To block a caller, add the E164 formatted number here
-];
+// const reject = [
+//     // To block a caller, add the E164 formatted number here
+// ];
 
-const rejectMessage = "You are calling from a restricted number. Goodbye.";
+// const rejectMessage = "You are calling from a restricted number. Goodbye.";
+
+const options = {
+    phoneNumber: '+17203089773',
+    defaultTimeout: 12,
+    secureRecordingLinks: false,
+    voiceOpts: {
+        voice: 'alice',
+        language: 'en-US'
+    },
+    voiceMailMessage: "Hello, I can not answer the phone right now. Please leave a message. Hang up when you're finished.",
+    reject: [
+        // To block a caller, add the E164 formatted number here
+    ],
+    rejectMessage: "You are calling from a restricted number. Goodbye."
+}
 
 /***** end configuration *****/
 /*****************************/
 
-function shouldReject(event) {
-    return reject.length > 0 && event.From && reject.includes(event.From);
-}
-
-function rejectInbound() {
-    let twiml = new Twilio.twiml.VoiceResponse();
-    if (rejectMessage) {
-        twiml.say(rejectMessage, voiceOpts);
-    }
-    twiml.hangup();
-    return twiml;
-}
-
-function handleInbound(event, thisFunction, timeout) {
-    const dialParams = {
-        'action': thisFunction + '?handle-voicemail'
-    };
-
-    if (event.CallerId) {
-        dialParams.callerId = event.CallerId;
-    }
-
-    if (timeout) {
-        dialParams.timeout = timeout;
-    }
-
-    const twiml = new Twilio.twiml.VoiceResponse();
-    twiml.dial(dialParams, phoneNumber);
-
-    return twiml;
-}
-
-function startVoicemail(thisFunction) {
-    const twiml = new Twilio.twiml.VoiceResponse();
-
-    const prompt = voiceMailMessage.trim();
-
-    if (prompt.match(/^(https?:\/\/[^\s]+)$/)) {
-        twiml.play(prompt);
-    } else {
-        twiml.say(prompt, voiceOpts);
-    }
-
-    twiml.record({
-        action: thisFunction + '?notify-voicemail',
-        timeout: '10'
-    });
-
-    return twiml;
-}
-
-function notifyVoicemail(event, context, callback) {
-    const message = {
-        to: phoneNumber,
-        from: event.To,
-        body: 'New voicemail from ' + event.From
-    };
-
-    if (secureRecordingLinks) {
-        message.body += ' - https://www.twilio.com/console/voice/logs/calls/' + event.CallSid;
-    } else {
-        message.mediaUrl = event.RecordingUrl + '.mp3';
-    }
-
-    context.getTwilioClient().messages.create(message)
-        .then(msg => callback(null, msg.sid))
-        .catch(callback);
-}
-
-function redirect(thisFunction) {
-    const twiml = new Twilio.twiml.VoiceResponse();
-    twiml.redirect(thisFunction);
-    return twiml;
-}
-
 exports.handler = function(context, event, callback) {
+    const {
+        phoneNumber,
+        defaultTimeout,
+        secureRecordingLinks,
+        voiceOpts,
+        voiceMailMessage,
+        reject,
+        rejectMessage
+    } = options;
+
     const thisFunction = 'https://' + context.DOMAIN_NAME + '/personal-voicemail';
     const timeout = event.timeout || defaultTimeout;
+    
+    function shouldReject() {
+        return reject.length > 0 && event.From && reject.includes(event.From);
+    }
+
+    function rejectInbound() {
+        let twiml = new Twilio.twiml.VoiceResponse();
+        if (rejectMessage) {
+            twiml.say(rejectMessage, voiceOpts);
+        }
+        twiml.hangup();
+        return twiml;
+    }
+    
+    function handleInbound() {
+        const dialParams = {
+            'action': thisFunction + '?handle-voicemail'
+        };
+    
+        if (event.CallerId) {
+            dialParams.callerId = event.CallerId;
+        }
+    
+        if (timeout) {
+            dialParams.timeout = timeout;
+        }
+    
+        const twiml = new Twilio.twiml.VoiceResponse();
+        twiml.dial(dialParams, phoneNumber);
+    
+        return twiml;
+    }
+    
+    function startVoicemail() {
+        const twiml = new Twilio.twiml.VoiceResponse();
+    
+        const prompt = voiceMailMessage.trim();
+    
+        if (prompt.match(/^(https?:\/\/[^\s]+)$/)) {
+            twiml.play(prompt);
+        } else {
+            twiml.say(prompt, voiceOpts);
+        }
+    
+        twiml.record({
+            action: thisFunction + '?notify-voicemail',
+            timeout: '10'
+        });
+    
+        return twiml;
+    }
+    
+    function notifyVoicemail() {
+        const message = {
+            to: phoneNumber,
+            from: event.To,
+            body: 'New voicemail from ' + event.From
+        };
+    
+        if (secureRecordingLinks) {
+            message.body += ' - https://www.twilio.com/console/voice/logs/calls/' + event.CallSid;
+        } else {
+            message.mediaUrl = event.RecordingUrl + '.mp3';
+        }
+    
+        context.getTwilioClient().messages.create(message)
+            .then(msg => callback(null, msg.sid))
+            .catch(callback);
+    }
+    
+    function redirect() {
+        const twiml = new Twilio.twiml.VoiceResponse();
+        twiml.redirect(thisFunction);
+        return twiml;
+    }
 
     switch (true) {
         case event.CallStatus === 'queued':
-            callback(null, redirect(thisFunction));
+            callback(null, redirect());
             break;
         case event.CallStatus === 'ringing':
-            const rejectOrHandle = shouldReject(event) ? 
+            const rejectOrHandle = shouldReject() ? 
                                     rejectInbound() : 
-                                    handleInbound(event, thisFunction, timeout);
+                                    handleInbound();
             callback(null, rejectOrHandle);
             break;
         case ['canceled', 'busy', 'failed'].includes(event.CallStatus):
         case event.CallStatus === 'in-progress' && event.DialCallStatus === 'no-answer':
-            callback(null, startVoicemail(thisFunction));
+            callback(null, startVoicemail());
             break;
         case event.CallStatus === 'completed' && event.Digits === 'hangup':
-            notifyVoicemail(event, context, callback);
+            notifyVoicemail();
             break;
         default:
             callback();
     }
 };
 
-exports.phoneNumber = phoneNumber;
-exports.defaultTimeout = defaultTimeout;
-exports.secureRecordingLinks = secureRecordingLinks;
-exports.voiceOpts = voiceOpts;
-exports.voiceMailMessage = voiceMailMessage;
-exports.reject = reject;
-exports.rejectMessage = rejectMessage;
-
-exports.input = {
-    // actions
-    shouldReject: shouldReject,
-    rejectInbound: rejectInbound,
-    handleInbound: handleInbound,
-    startVoicemail: startVoicemail,
-    notifyVoicemail: notifyVoicemail,
-    redirect: redirect,
-    // config
-    phoneNumber: phoneNumber,
-    defaultTimeout: defaultTimeout,
-    secureRecordingLinks: secureRecordingLinks,
-    voiceOpts: voiceOpts,
-    voiceMailMessage: voiceMailMessage,
-    reject: reject,
-    rejectMessage: rejectMessage,
-};
+exports.options = options;

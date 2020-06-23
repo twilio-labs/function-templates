@@ -22,23 +22,20 @@ beforeAll(() => {
 
 afterAll(() => {
   event['CallStatus'] = '';
-  fn.reject.length = 0;
+  fn.options.reject.length = 0;
   helpers.teardown();
 });
 
 describe('Test Inbound Handler', () => {
   
-  const origRejectMessage = fn.rejectMessage;
-  const origVoiceOpts = fn.voiceOpts;
+  const origOptions = fn.options;
 
   beforeAll(() => {
     event['CallStatus'] = 'ringing';
   });
 
   afterEach(() => {
-    fn.reject.length = 0
-    fn.rejectMessage = origRejectMessage;
-    fn.voiceOpts = origVoiceOpts;
+    fn.options = origOptions;
   });
 
 
@@ -53,7 +50,7 @@ describe('Test Inbound Handler', () => {
   });
 
   it('Does not reject when no match', (done) => {
-    fn.reject.push('+10000000000');
+    fn.options.reject.push('+10000000000');
 
     const expectedVerb = '<Dial action=\"' + FN_URL + '?handle-voicemail\" timeout=\"12\">+17203089773</Dial>';
     const callback = (err, result) => {
@@ -65,7 +62,7 @@ describe('Test Inbound Handler', () => {
   });
 
   it('Does reject on match', (done) => {
-    fn.reject.push('+12223334444');
+    fn.options.reject.push('+12223334444');
 
     const expectedVerb = '<Say voice=\"alice\" language=\"en-US\">You are calling from a restricted number. Goodbye.</Say><Hangup/>';
     const callback = (err, result) => {
@@ -77,10 +74,10 @@ describe('Test Inbound Handler', () => {
   });
 
   it('Rejects with custom message, voice & language', (done) => {
-    fn.input.reject.push('+12223334444');
-    fn.input.rejectMessage = 'Shoo!';
-    fn.input.voiceOpts['voice'] = 'bob';
-    fn.input.voiceOpts['language'] = 'en-GB';
+    fn.options.reject.push('+12223334444');
+    fn.options.rejectMessage = 'Shoo!';
+    fn.options.voiceOpts['voice'] = 'bob';
+    fn.options.voiceOpts['language'] = 'en-GB';
 
     const expectedVerb = '<Say voice=\"bob\" language=\"en-GB\">Shoo!</Say>';
     const callback = (err, result) => {
@@ -107,4 +104,3 @@ describe('Test queued state handler', () => {
     fn.handler(context, event, callback);
   });
 });
-
