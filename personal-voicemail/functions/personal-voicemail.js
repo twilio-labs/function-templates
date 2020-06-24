@@ -40,26 +40,8 @@
 /*****************************/
 /******* configuration *******/
 
-// const phoneNumber = '+17203089773';
-// const defaultTimeout = 12;
-
-// const secureRecordingLinks = false;
-
-// const voiceOpts = {
-//     'voice': 'alice',
-//     'language': 'en-US'
-// };
-
-// const voiceMailMessage = "Hello, I can not answer the phone right now. Please leave a message. Hang up when you're finished.";
-
-// const reject = [
-//     // To block a caller, add the E164 formatted number here
-// ];
-
-// const rejectMessage = "You are calling from a restricted number. Goodbye.";
-
 const options = {
-    phoneNumber: '+17203089773',
+    phoneNumber: '',
     defaultTimeout: 12,
     secureRecordingLinks: false,
     voiceOpts: {
@@ -115,7 +97,7 @@ exports.handler = function(context, event, callback) {
         if (timeout) {
             dialParams.timeout = timeout;
         }
-    
+
         const twiml = new Twilio.twiml.VoiceResponse();
         twiml.dial(dialParams, phoneNumber);
     
@@ -165,6 +147,12 @@ exports.handler = function(context, event, callback) {
         return twiml;
     }
 
+    function hangup() {
+        const twiml = new Twilio.twiml.VoiceResponse();
+        twiml.hangup();
+        return twiml;
+    }
+
     switch (true) {
         case event.CallStatus === 'queued':
             callback(null, redirect());
@@ -183,7 +171,7 @@ exports.handler = function(context, event, callback) {
             notifyVoicemail();
             break;
         default:
-            callback();
+            callback(null, hangup());
     }
 };
 
