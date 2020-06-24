@@ -1,41 +1,10 @@
 /**
- * This is a fairly simple function to provide call forwarding with voicemail.
- *
- * To configure:
- *
- * - Required: Add your E164 formatted phone number to the `phoneNumber`
- *   variable. This is where incoming calls will be forwarded.
- *
- * - Optional: Alter the dial timeout. This is the amount of time that the
- *   function will allow your phone to ring before forwarding to voicemail.
- *
- * - Optional: If you have enabled authentication for your Media URLs then
- *   you will not be able to receive recordings directly via MMS. If you want
- *   to maintain your authenticated media urls then you can change the
- *   `secureRecordingLinks` value below to `false`. This will then send
- *   you voicemail notifications with a link to the Call record in the console.
- *
- * - Optional: Change the voice options for the Say verbs. See the docs for
- *   details: https://www.twilio.com/docs/voice/twiml/say#attributes-voice
- *
- * - Optional: Change the `voiceMailMessage` to something more your style.
- *   If this is a url to a recording then that recording will be played to
- *   the caller as a voicemail prompt.
- *
- * This function also contains a block list. Should you need to block a
- * caller you can add E164 formatted numbers to the list of numbers to reject.
- * For example:
- *
- *   let reject = [
- *     '+14151112222',
- *     '+14153334444'
- *   ]
- *
- *  You can optionally change the `rejectMessage` to customize what message
- *  will be delivered to a blocked caller. If you'd prefer not to notify
- *  callers when they are rejected then set the `rejectMessage` value to
- *  `false` to simply hang up on the caller.
- */
+ * Personal Voicemail.
+ * 
+ * See ReadMe for details on 
+ * the configuration options.
+ * 
+ **/
 
 /*****************************/
 /******* configuration *******/
@@ -43,7 +12,7 @@
 const options = {
     phoneNumber: '',
     defaultTimeout: 12,
-    secureRecordingLinks: false,
+    secureRecordingLinks: true,
     voiceOpts: {
         voice: 'alice',
         language: 'en-US'

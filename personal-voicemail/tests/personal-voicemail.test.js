@@ -227,6 +227,8 @@ describe('Test voicemail notifier', () => {
   });
 
   it('Sends notification SMS with recording media url', () => {
+    fn.options['secureRecordingLinks'] = false;
+
     const callback = (err, result) => {
       expect(result).toBe(dummyMsgSid);
       expect(mockTwilioClient.messages.create.mock.calls.length).toBe(1);
@@ -245,6 +247,7 @@ describe('Test voicemail notifier', () => {
 
   it('Sends notification SMS with embedded link', () => {
     fn.options['secureRecordingLinks'] = true;
+    
     const callback = (err, result) => {
       expect(result).toBe(dummyMsgSid);
       expect(mockTwilioClient.messages.create.mock.calls.length).toBe(1);

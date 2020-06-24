@@ -16,12 +16,12 @@ This function requires that you have the "Enable ACCOUNT_SID and AUTH_TOKEN" pre
 
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |
-| `phoneNumber` | The phone number to which you'd like to forward incoming calls. | yes |
-| `timeout` | How long a call should be allowed to ring before being sent to voicemail. Default: 12 | yes |
-| `secureRecordingLinks` | By default recording urls link directly to the stored message. If you have enabled authentication on your media urls then your voicemail notifications will receive a link to recordings via the Twilio Console. Default: false | yes |
-| `voiceOpts` | Control the voice and language preference for the voice prompts. | yes |
+| `phoneNumber` | The phone number to which you'd like to forward incoming calls, formatted in E164. | yes |
+| `timeout` | The dial timeout. This is the amount of time that the function will allow your phone to ring before forwarding to voicemail. Default: 12 | yes |
+| `secureRecordingLinks` | By default recording urls link directly to the stored message. If you have enabled authentication on your media urls then your voicemail notifications will receive a link to recordings via the Twilio Console. Default: true | yes |
+| `voiceOpts` | Control the voice and language preference for the voice prompts. See the docs for details: https://www.twilio.com/docs/voice/twiml/say#attributes-voice | yes |
 | `voiceMailMessage` | Control the prompt for callers to leave you a message. Optionally this can be a full url to a recording that will be played instead of using text to speech. | yes |
-| `reject` | A list of E164 formatted phone numbers that will be rejected. These callers will be informed that they are blocked. | yes |
+| `reject` | A list of E164 formatted phone numbers that will be rejected. Calls from these numbers will not be forwarded or allowed to leave a message. | yes |
 | `rejectMessage` | Control the prompt to rejected callers. Setting this value to `false` will hang up on blocked callers without informing them that they've been rejected. | yes |
 
 
@@ -37,7 +37,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init example --template=personal-voicemail && cd verify-sample
+twilio serverless:init example --template=personal-voicemail && cd personal-voicemail
 ```
 
 4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
