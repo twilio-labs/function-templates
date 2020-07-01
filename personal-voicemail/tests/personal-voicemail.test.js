@@ -45,6 +45,7 @@ const mockTwilioClient = {
 
 const context = {
   DOMAIN_NAME: TEST_DOMAIN,
+  PATH: '/personal-voicemail',
   ACCOUNT_SID: "AC00000000000000000000000000000000",
   AUTH_TOKEN: "no-a-real-token",
   getTwilioClient: () => mockTwilioClient

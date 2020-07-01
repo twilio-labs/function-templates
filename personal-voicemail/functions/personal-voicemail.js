@@ -38,7 +38,7 @@ exports.handler = function(context, event, callback) {
         rejectMessage
     } = options;
 
-    const thisFunction = 'https://' + context.DOMAIN_NAME + '/personal-voicemail';
+    const thisFunction = 'https://' + context.DOMAIN_NAME + context.PATH;
     const timeout = event.timeout || defaultTimeout;
     
     function shouldReject() {
