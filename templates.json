@@ -169,6 +169,11 @@
       "id": "sip-quickstart",
       "name": "SIP Quickstart",
       "description": "Creates and wires up a new SIP domain for incoming and outgoing SIP calls."
+    },
+    {
+      "id": "conference-verify",
+      "name": "Conference Line with Phone Verification",
+      "description": "Verifies the caller's phone number before connecting them to a conference call"
     }
   ]
 }
