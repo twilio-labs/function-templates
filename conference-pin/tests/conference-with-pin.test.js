@@ -40,7 +40,7 @@ test('returns a VoiceResponse', (done) => {
 test('prompts for PIN by default', (done) => {
   const callback = (err, result) => {
     expect(result.toString()).toContain(
-      '<Response><Gather><Say>Welcome! Please enter the PIN for this conference line.</Say></Gather></Response>'
+      '<Response><Gather><Say>Welcome! Please enter the PIN for this conference line followed by a hash.</Say></Gather></Response>'
     );
     done();
   };

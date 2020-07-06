@@ -14,7 +14,11 @@ function joinConference() {
 
 function promptForPin() {
   const twiml = new Twilio.twiml.VoiceResponse();
-  twiml.gather().say('Welcome! Please enter the PIN for this conference line.');
+  twiml
+    .gather()
+    .say(
+      'Welcome! Please enter the PIN for this conference line followed by a hash.'
+    );
   return twiml;
 }
 
