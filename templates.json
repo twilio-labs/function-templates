@@ -179,6 +179,11 @@
       "id": "conference-pin",
       "name": "PIN-protected Conference Line",
       "description": "Prompts callers for a PIN before granting them access to a conference call"
+    },
+    {
+      "id": "conference-caller-gated",
+      "name": "Caller Gated Conference Line",
+      "description": "Only allow certain numbers to join the conference call"
     }
   ]
 }
