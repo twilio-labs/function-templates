@@ -137,12 +137,12 @@ class Actions {
   }
 
   async addNewCredentials({ credentialListSid, usernames }) {
-    usernames.forEach(async (username) => {
+    for (let username of usernames) {
       await this.addNewCredential({
         credentialListSid,
         username,
       });
-    });
+    }
   }
 
   async updateSipDomainVoiceUrl({ sipDomainSid, voiceUrl }) {
