@@ -91,17 +91,16 @@ class Actions {
     const credentialList = await this.client.sip.credentialLists.create({
       friendlyName,
     });
-    const authCallsMapping = this.client.sip
+    await this.client.sip
       .domains(sipDomainSid)
       .auth.calls.credentialListMappings.create({
         credentialListSid: credentialList.sid,
       });
-    const domainRegistrationMapping = this.client.sip
+    await this.client.sip
       .domains(sipDomainSid)
       .auth.registrations.credentialListMappings.create({
         credentialListSid: credentialList.sid,
       });
-    await Promise.all([authCallsMapping, domainRegistrationMapping]);
     await this.client.sip.domains(sipDomainSid).update({
       sipRegistration: true,
     });
@@ -138,13 +137,12 @@ class Actions {
   }
 
   async addNewCredentials({ credentialListSid, usernames }) {
-    const promises = usernames.map((username) =>
-      this.addNewCredential({
+    for (let username of usernames) {
+      await this.addNewCredential({
         credentialListSid,
         username,
-      })
-    );
-    await Promise.all(promises);
+      });
+    }
   }
 
   async updateSipDomainVoiceUrl({ sipDomainSid, voiceUrl }) {
