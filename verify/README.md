@@ -11,8 +11,6 @@ The best way to use the Function templates is through the Twilio CLI as describe
 ## Pre-requisites
 
 - [Create a Verify Service](https://www.twilio.com/console/verify/services)
-- Add `VERIFY_SERVICE_SID` from above to your [Environment Variables](https://www.twilio.com/console/functions/configure)
-- Enable `ACCOUNT_SID` and `AUTH_TOKEN` in your [functions configuration](https://www.twilio.com/console/functions/configure)
 
 ### Environment variables
 
@@ -60,7 +58,7 @@ twilio serverless:init verify-sample --template=verify && cd verify-sample
 
 4. Add your environment variables to `.env`:
 
-Make sure variables are populaed in your `.env` file. See [Environment variables](#environment-variables).
+Make sure variables are populated in your `.env` file. See [Environment variables](#environment-variables).
 
 5. Start the server :
 
