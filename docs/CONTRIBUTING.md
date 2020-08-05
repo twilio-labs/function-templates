@@ -64,9 +64,13 @@ npm run add-dependency --template=video-token --package=twilio-video
 Any variable you want the user to have to set should be added to the `.env` file in your template directory and should include a commented line before that explaining what the variable is about. Example:
 
 ```bash
-# The number you want your calls to be forwarded to
+# description: The number you want your calls to be forwarded to
+# required: true
+# format: phone_number
 MY_PHONE_NUMBER=
 ```
+
+**Important**: You can find the format of the `.env` file and possible comments as part of [this Schema](https://github.com/twilio-labs/configure-env/blob/main/docs/SCHEMA.md).
 
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
 
