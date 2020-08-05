@@ -170,7 +170,7 @@
         "description": null,
         "link": null,
         "default": "appAbcD12efG3HijK",
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "AIRTABLE_TABLENAME",
@@ -179,7 +179,7 @@
         "description": null,
         "link": null,
         "default": "Table 1",
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "MY_PHONE_NUMBER",
@@ -197,7 +197,7 @@
         "key": "ACCOUNT_SID",
         "required": true,
         "format": "text",
-        "description": "Find these credentials in the Twilio console - https://www.twilio.com/console",
+        "description": "Find these credentials in the Twilio console\nhttps://www.twilio.com/console",
         "link": null,
         "default": null,
         "configurable": true
@@ -209,13 +209,13 @@
         "description": null,
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "STRIPE_SECRET_KEY",
         "required": true,
         "format": "text",
-        "description": "Stripe secret key - https://dashboard.stripe.com/test/apikeys",
+        "description": "Stripe secret key\nhttps://dashboard.stripe.com/test/apikeys",
         "link": null,
         "default": null,
         "configurable": true
@@ -224,7 +224,7 @@
         "key": "FROM_PHONE",
         "required": true,
         "format": "text",
-        "description": "[OPTIONAL] Sender phone number. Default is \"STRIPEDEMO\" - Needs to be configured: https://www.twilio.com/console/phone-numbers/getting-started",
+        "description": "[OPTIONAL] Sender phone number. Default is \"STRIPEDEMO\"\nNeeds to be configured: https://www.twilio.com/console/phone-numbers/getting-started",
         "link": null,
         "default": null,
         "configurable": true
@@ -235,7 +235,7 @@
         "key": "ACCOUNT_SID",
         "required": true,
         "format": "text",
-        "description": "Find these credentials in the Twilio console - https://www.twilio.com/console",
+        "description": "Find these credentials in the Twilio console\nhttps://www.twilio.com/console",
         "link": null,
         "default": null,
         "configurable": true
@@ -247,13 +247,13 @@
         "description": null,
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "STRIPE_SECRET_KEY",
         "required": true,
         "format": "text",
-        "description": "Stripe secret key - https://dashboard.stripe.com/test/apikeys",
+        "description": "Stripe secret key\nhttps://dashboard.stripe.com/test/apikeys",
         "link": null,
         "default": null,
         "configurable": true
@@ -262,7 +262,7 @@
         "key": "FROM_PHONE",
         "required": true,
         "format": "text",
-        "description": "[OPTIONAL] Sender phone number. Default is \"STRIPEDEMO\" - Needs to be configured: https://www.twilio.com/console/phone-numbers/getting-started",
+        "description": "[OPTIONAL] Sender phone number. Default is \"STRIPEDEMO\"\nNeeds to be configured: https://www.twilio.com/console/phone-numbers/getting-started",
         "link": null,
         "default": null,
         "configurable": true
@@ -392,7 +392,7 @@
         "key": "ACCOUNT_SID",
         "required": true,
         "format": "text",
-        "description": "Find these credentials in the Twilio console - https://www.twilio.com/console",
+        "description": "Find these credentials in the Twilio console\nhttps://www.twilio.com/console",
         "link": null,
         "default": null,
         "configurable": true
@@ -404,13 +404,13 @@
         "description": null,
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "VERIFY_SERVICE_SID",
         "required": true,
         "format": "text",
-        "description": "SID of your Twilio Verify Service - https://www.twilio.com/console/verify/services - https://www.twilio.com/docs/verify/api/service",
+        "description": "SID of your Twilio Verify Service\nhttps://www.twilio.com/console/verify/services\nhttps://www.twilio.com/docs/verify/api/service",
         "link": null,
         "default": null,
         "configurable": true
@@ -421,9 +421,9 @@
         "key": "BLOCKLIST",
         "required": true,
         "format": "text",
-        "description": "The array of numbers you want to reject - List all blocked phone numbers in quotes and E.164 formatting, separated by a comma",
+        "description": "The array of numbers you want to reject\nList all blocked phone numbers in quotes and E.164 formatting, separated by a comma",
         "link": null,
-        "default": "\"+12125551234,+17025556789\"",
+        "default": "+12125551234,+17025556789",
         "configurable": true
       }
     ],
@@ -440,7 +440,7 @@
         "key": "APP_NAME",
         "required": true,
         "format": "text",
-        "description": "This application automatically initializes a server environment. - See: /admin/index.html - Be cautious adding values to this file as they will override the environment's values.",
+        "description": "This application automatically initializes a server environment.\nSee: /admin/index.html\nBe cautious adding values to this file as they will override the environment's values.",
         "link": null,
         "default": "voice-client-javascript",
         "configurable": true
@@ -452,7 +452,7 @@
         "description": null,
         "link": null,
         "default": "default",
-        "configurable": true
+        "configurable": false
       }
     ],
     "conversations": [
@@ -460,7 +460,7 @@
         "key": "STUDIO_FLOW_SID",
         "required": true,
         "format": "text",
-        "description": "The SID of the Studio Flow you want to use Conversations with - This number is found on your Studio Dashboard at https://www.twilio.com/console/studio/dashboard",
+        "description": "The SID of the Studio Flow you want to use Conversations with\nThis number is found on your Studio Dashboard at https://www.twilio.com/console/studio/dashboard",
         "link": null,
         "default": "FWxxxxxxxxx",
         "configurable": true
@@ -474,7 +474,7 @@
         "description": null,
         "link": null,
         "default": "SIP Quickstart",
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "ADMIN_PASSWORD",
@@ -483,7 +483,7 @@
         "description": null,
         "link": null,
         "default": "default",
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "DEFAULT_SIP_USER_PASSWORD",
@@ -492,7 +492,7 @@
         "description": null,
         "link": null,
         "default": "ThisIs1Password!",
-        "configurable": true
+        "configurable": false
       }
     ],
     "conference-verify": [
@@ -500,7 +500,7 @@
         "key": "ACCOUNT_SID",
         "required": true,
         "format": "text",
-        "description": "Find these credentials in the Twilio console - https://www.twilio.com/console",
+        "description": "Find these credentials in the Twilio console\nhttps://www.twilio.com/console",
         "link": null,
         "default": null,
         "configurable": true
@@ -512,13 +512,13 @@
         "description": null,
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": false
       },
       {
         "key": "VERIFY_SERVICE_SID",
         "required": true,
         "format": "text",
-        "description": "SID of your Twilio Verify Service - https://www.twilio.com/console/verify/services - https://www.twilio.com/docs/verify/api/service",
+        "description": "SID of your Twilio Verify Service\nhttps://www.twilio.com/console/verify/services\nhttps://www.twilio.com/docs/verify/api/service",
         "link": null,
         "default": null,
         "configurable": true
