@@ -16,6 +16,7 @@
     "@twilio-labs/serverless-api": "^1.1.0",
     "airtable": "^0.8.1",
     "common-tags": "^1.8.0",
+    "configure-env": "^2.0.0-0",
     "copy-template-dir": "^1.4.0",
     "eslint": "^5.4.0",
     "husky": "^4.2.5",
