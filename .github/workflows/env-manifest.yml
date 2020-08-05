@@ -31,7 +31,8 @@ jobs:
       - name: check for changes
         id: changes
         run: |
-          echo "::set-output name=files::$(git diff --name-only --cached | xargs)"
+          git diff --name-only | xargs
+          echo "::set-output name=files::$(git diff --name-only | xargs)"
       - name: commit changes
         if: ${{ contains(steps.changes.outputs.files, 'env-variables.manifest.json') }}
         run: |
