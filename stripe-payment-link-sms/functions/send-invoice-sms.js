@@ -35,7 +35,7 @@ exports.handler = async function (context, event, callback) {
         const client = context.getTwilioClient();
         const message = await client.messages.create({
           to: invoice.customer_phone,
-          from: context.FROM_PHONE || 'STRIPEDEMO',
+          from: context.TWILIO_PHONE_NUMBER || 'STRIPEDEMO',
           body: `Thanks for your donation ❤️ Here is your payment link: ${invoice.hosted_invoice_url}`,
         });
         console.log(`Sending SMS. Message sid: ${message.sid}`);
