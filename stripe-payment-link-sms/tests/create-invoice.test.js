@@ -3,7 +3,7 @@ const createInvoice = require('../functions/create-invoice').handler;
 
 const context = {
   STRIPE_SECRET_KEY: 'StripeSecretKey',
-  MY_PHONE_NUMBER: 'TwilioNumber',
+  TWILIO_PHONE_NUMBER: 'TwilioNumber',
 };
 
 const mockStripeCustomer = {
