@@ -146,12 +146,14 @@
       content.append(`Error: ${error}`);
     }
 
+    var to;
+
     $("#login").submit(function(event) {
       event.preventDefault();
 
       const channel = $("input[name='channel']:checked").val();
-      const to = (channel === "email") ? $("#email").val() : phoneInput.getNumber();
       const locale = $("#select-locale").val();
+      to = (channel === "email") ? $("#email").val() : phoneInput.getNumber();
 
       // Twilio functions do not accept multipart/form-data
       const data = new URLSearchParams();
@@ -171,7 +173,7 @@
         .then(json => {
           if (json.success) {
             $("#form-error").empty();
-            showModal(to);
+            $(".modal").modal("show");
             console.log("Successfully sent token.");
           } else {
             console.log(json.error);
@@ -185,39 +187,35 @@
         });
     });
 
-    function showModal(to) {
-      $(".modal").modal("show");
+    $("#verification").submit(function(event) {
+      event.preventDefault();
+      const code = $("#verification_code").val();
 
-      $("#verification").submit(function(event) {
-          event.preventDefault();
-          const code = $("#verification_code").val();
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("to", to);
+      data.append("verification_code", code);
 
-          // Twilio functions do not accept multipart/form-data
-          const data = new URLSearchParams();
-          data.append("to", to);
-          data.append("verification_code", code);
-
-          fetch("./check-verify", {
-              method: 'POST',
-              body: data
-            })
-            .then(response => response.json())
-            .then(json => {
-              if (json.success) {
-                showVerificationStatus("success", json.message);
-                $("#verification_code").val("");
-              } else {
-                showVerificationStatus("danger", json.message);
-                $("#verification_code").val("");
-              }
-            })
-            .catch(err => {
-              console.log(err);
-              showVerificationStatus("danger", "Something went wrong!");
-              $("#verification_code").val("");
-            });
+      fetch("./check-verify", {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          if (json.success) {
+            showVerificationStatus("success", json.message);
+            $("#verification_code").val("");
+          } else {
+            showVerificationStatus("danger", json.message);
+            $("#verification_code").val("");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          showVerificationStatus("danger", "Something went wrong!");
+          $("#verification_code").val("");
         });
-    }
+    });
 
     const locales = [
       { text: "English", value: "en" },
