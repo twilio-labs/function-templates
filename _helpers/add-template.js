@@ -20,7 +20,7 @@ async function promptQuestions() {
       name: 'name',
       type: 'input',
       message: `What's the name of your template? This will be used as your template ID`,
-      validate: text =>
+      validate: (text) =>
         validTemplateName.test(text) ||
         'Your name can only contain lowercase characters, numbers and "-"',
     },
@@ -28,7 +28,7 @@ async function promptQuestions() {
       name: 'title',
       type: 'input',
       message: 'Enter a plain text title for the template',
-      validate: text =>
+      validate: (text) =>
         (text && text.length > 0 && text.length < 51) ||
         'Please specify a title no longer than 50 characters.',
     },
@@ -36,14 +36,8 @@ async function promptQuestions() {
       name: 'description',
       type: 'input',
       message: 'Describe what your template does',
-      validate: text =>
+      validate: (text) =>
         (text && text.length > 0) || 'Please specify a short description',
-    },
-    {
-      name: 'hasAssets',
-      type: 'confirm',
-      message: 'Do you want to have assets in this template?',
-      default: false,
     },
   ]);
 }
@@ -75,24 +69,6 @@ async function addToTemplatesJson(name, title, description) {
   await writeFile(templatesJsonPath, resultContent, 'utf8');
 }
 
-async function createSampleAsset(title, targetPath) {
-  const assetsFolderPath = path.resolve(targetPath, 'assets');
-  await mkdir(assetsFolderPath);
-  const content = `<!DOCTYPE html>
-<html>
-  <head>
-    <title>${title}</title>
-  </head>
-  <body>
-    <h1>${title}</h1>
-    <p>Feel free to modify this file or add any additional static files to the assets folder</p>
-  </body>
-</html>
-`;
-  const assetFilePath = path.join(assetsFolderPath, 'index.html');
-  await writeFile(assetFilePath, content, 'utf8');
-}
-
 async function run() {
   const { name, description, title, hasAssets } = await promptQuestions();
 
@@ -115,11 +91,6 @@ async function run() {
       title: 'Adding template to templates.json',
       task: () => addToTemplatesJson(name, title, description),
     },
-    {
-      title: 'Creating sample assets',
-      task: () => createSampleAsset(title, targetPath),
-      skip: () => !hasAssets,
-    },
   ]);
 
   await tasks.run();
@@ -137,7 +108,7 @@ ${success} Template created
   console.warn(successMessage);
 }
 
-run().catch(err => {
+run().catch((err) => {
   if (err.code && err.code === 'EEXIST') {
     console.error(
       `${error} The name you specified already exists. Please pick a name that is not currently a directory name in this project`
