@@ -74,6 +74,12 @@ MY_PHONE_NUMBER=
 
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
 
+### Updating the `index.html`
+
+If your app has a front-end component to it, you can override the existing `index.html` file in your project.
+
+In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
+
 ### Testing the functionality of your new template locally
 
 1. Make sure you have the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart) installed.

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get started with your Twilio Functions!</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
+    <link rel="stylesheet" href="https://unpkg.com/milligram/dist/milligram.min.css">
+    <style>
+      body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      div[role="main"] {
+        flex: 1;
+      }
+
+      footer {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome to your new Twilio App</h1>
+    </header>
+    <div role="main">
+      <p>Now that your code is deployed, here are the last steps you need to do to finish your app.</p>
+      <ol>
+        <li>Make sure the Twilio phone number you want your app has a messaging webhook configured to point at
+        </li>
+        <p>
+          <pre><code><span class="function-root"></span>/hello-messaging</code></pre>
+        </p>
+        <li>Text anything to your Twilio app</li>
+        <li>You should receive a response saying "Hello World"</li>
+      </ol>
+    </div>
+    <footer>
+      <p>
+        <a href="https://www.twilio.com/code-exchange">Learn about other things you can build with Twilio</a>
+      </p>
+    </footer>
+
+    <script>
+      const baseUrl = new URL(location.href);
+      baseUrl.pathname = baseUrl
+        .pathname
+        .replace(/\/index\.html$/, '');
+      delete baseUrl.hash;
+      delete baseUrl.search;
+      const fullUrl = baseUrl
+        .href
+        .substr(0, baseUrl.href.length - 1);
+      const functionRoots = document.querySelectorAll('span.function-root');
+
+      functionRoots.forEach(element => {
+        element.innerText = fullUrl
+      })
+    </script>
+  </body>
+</html>
