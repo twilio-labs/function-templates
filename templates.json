@@ -184,6 +184,11 @@
       "id": "conference-caller-gated",
       "name": "Caller Gated Conference Line",
       "description": "Only allow certain numbers to join the conference call"
+    },
+    {
+      "id": "sms-notifications",
+      "name": "SMS Notifications",
+      "description": "Send SMS messages from the browser"
     }
   ]
 }
