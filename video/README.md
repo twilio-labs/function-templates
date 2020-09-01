@@ -1,6 +1,6 @@
 # video
 
-Basic 1:1 video chat application
+Basic 1:1 video chat application. [Check out this blog post for a walkthrough of the app](https://www.twilio.com/blog/build-a-video-app-javascript-twilio-cli-quickly).
 
 ## Pre-requisites
 
