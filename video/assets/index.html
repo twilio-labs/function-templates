@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Twilio Video Serverless Demo</title>
+  </head>
+  <body>
+    <div id="room-controls">
+      <video id="video" autoplay="autoplay" muted="true" width="320" height="240"></video>
+      <div>
+        <label for="passcode">Passcode</label>
+        <input id="passcode" type="password" required="required" autocomplete="off"/>
+        <button id="button-join">Join Room</button>
+        <button id="button-leave" disabled="disabled">Leave Room</button>
+      </div>
+    </div>
+
+    <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>
