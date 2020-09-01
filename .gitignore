@@ -2,3 +2,4 @@ node_modules/
 coverage/
 .twilio-functions
 package-lock.json
+/.env
