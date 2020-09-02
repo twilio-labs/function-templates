@@ -43,6 +43,7 @@ exports.handler = function(context, event, callback) {
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
   const to = event.to;
+  const callback_url = `${context.DOMAIN}/${context.CALLBACK_PATH}`
 
   client.verify.services(service)
     .verifications
@@ -52,7 +53,7 @@ exports.handler = function(context, event, callback) {
       channelConfiguration: {
         substitutions: { // used in email template
           email: to,
-          callback_url: context.CALLBACK_URL // set in .env
+          callback_url: callback_url
         }
       }
     })

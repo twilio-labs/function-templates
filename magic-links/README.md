@@ -12,9 +12,9 @@ The best way to use the Function templates is through the Twilio CLI as describe
 
 [Follow steps 1-6 in the documentation](https://www.twilio.com/docs/verify/email) to link your SendGrid account to your Twilio Verify Service.
 
-**Important - for Step #4 [use this file as a template](./assets/email-template.html)**
+**Important - for Step #4 [use this file as a template.](./assets/email-template.html)**
 
-All steps are described in detail in the [documentation](https://www.twilio.com/docs/verify/email)
+All steps are described in detail in the [documentation.](https://www.twilio.com/docs/verify/email)
 
 ### Environment variables
 
