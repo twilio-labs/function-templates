@@ -184,6 +184,11 @@
       "id": "conference-caller-gated",
       "name": "Caller Gated Conference Line",
       "description": "Only allow certain numbers to join the conference call"
+    },
+    {
+      "id": "voice-ivr",
+      "name": "Voice IVR",
+      "description": "Navigate a IVR (phone tree) using keys or speech-to-text"
     }
   ]
 }
