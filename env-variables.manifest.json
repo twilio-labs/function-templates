@@ -728,6 +728,17 @@
         "default": "/gated-conference",
         "configurable": false
       }
+    ],
+    "voice-ivr": [
+      {
+        "key": "TWILIO_VOICE_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/voice-ivr",
+        "configurable": false
+      }
     ]
   }
 }
