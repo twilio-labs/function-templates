@@ -729,6 +729,26 @@
         "configurable": false
       }
     ],
+    "sms-notifications": [
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "The Twilio phone number to send broadcast SMS from",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "PASSCODE",
+        "required": true,
+        "format": "text",
+        "description": "Passcode for your SMS notifications app",
+        "link": null,
+        "default": null,
+        "configurable": true
+      }
+    ],
     "voice-ivr": [
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
