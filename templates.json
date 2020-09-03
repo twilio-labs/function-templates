@@ -186,6 +186,11 @@
       "description": "Only allow certain numbers to join the conference call"
     },
     {
+      "id": "sms-notifications",
+      "name": "SMS Notifications",
+      "description": "Send SMS messages from the browser"
+    },
+    {
       "id": "voice-ivr",
       "name": "Voice IVR",
       "description": "Navigate a IVR (phone tree) using keys or speech-to-text"
