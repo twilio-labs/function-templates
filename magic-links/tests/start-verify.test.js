@@ -17,6 +17,8 @@ const mockClient = {
 
 const testContext = {
   VERIFY_SERVICE_SID: 'default',
+  DOMAIN_NAME: 'example.com',
+  PATH: 'verify.html',
   getTwilioClient: () => mockClient
 };
 
