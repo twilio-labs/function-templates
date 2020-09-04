@@ -27,7 +27,7 @@ In your `.env` file, set the following values:
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console)              | Yes      |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)              | Yes      |
 | `VERIFY_SERVICE_SID` | Create one [here](https://www.twilio.com/console/verify/services)  | Yes      |
-| `CALLBACK_URL`       | Use `http://localhost:3000/verify.html` for testing                | Yes      |
+| `CALLBACK_PATH`      | URL path linked in the email template to check verifications       | Yes      |
 
 ### Function Parameters
 

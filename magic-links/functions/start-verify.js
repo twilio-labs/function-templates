@@ -43,7 +43,8 @@ exports.handler = function(context, event, callback) {
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
   const to = event.to;
-  const callback_url = `${context.DOMAIN}/${context.CALLBACK_PATH}`
+  const protocol = (context.DOMAIN_NAME.startsWith('localhost:') ? 'http' : 'https')
+  const callback_url = `${protocol}://${context.DOMAIN_NAME}${context.PATH.substr(0, context.PATH.lastIndexOf('/'))}/${context.CALLBACK_PATH}`
 
   client.verify.services(service)
     .verifications
