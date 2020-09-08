@@ -72,7 +72,13 @@ After the deploy is completed you'll be shown some information about your functi
 
 ### Configure the callback url on a phone number
 
-Then we'll need a phone number to attach it to. For this you'll need a phone number sid. From the [Phone Numbers Section of the Twilio Console](https://twilio.com/console/phone-numbers) select the phone number you'd like to configure and then copy its Sid.
+Then we'll need a phone number to attach it to. For this you'll need a phone number sid. You can run the following command to see a summary of the phone numbers you own and their Sids:
+
+```
+twilio phone-numbers:list
+```
+
+Alternately, from the [Phone Numbers Section of the Twilio Console](https://twilio.com/console/phone-numbers) select the phone number you'd like to configure and then copy its Sid.
 
 Next we use the following command to configure the phone number. Replace `PhoneNumberSid` with the Sid you copied from the console and replace `CallBackUrl` with the url we found in the deployment details of the function deploy response.
 
