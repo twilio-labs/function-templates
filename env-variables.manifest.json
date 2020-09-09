@@ -729,6 +729,35 @@
         "configurable": false
       }
     ],
+    "video": [
+      {
+        "key": "API_KEY",
+        "required": true,
+        "format": "text",
+        "description": "API key for your Twilio Account",
+        "link": "https://www.twilio.com/console/runtime/api-keys/create",
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "API_SECRET",
+        "required": true,
+        "format": "secret",
+        "description": "API secret for your API Key",
+        "link": "https://www.twilio.com/console/runtime/api-keys/create",
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "PASSCODE",
+        "required": true,
+        "format": "text",
+        "description": "Passcode for your Video chat app",
+        "link": null,
+        "default": null,
+        "configurable": true
+      }
+    ],
     "sms-notifications": [
       {
         "key": "TWILIO_PHONE_NUMBER",
