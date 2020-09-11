@@ -1,6 +1,6 @@
 {
   "name": "airtable-sms-save",
   "dependencies": {
-    "airtable": "^0.8.1"
+    "airtable": "^0.10.0"
   }
 }
