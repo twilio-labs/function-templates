@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Login with Twilio Verify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Twilio Verify</h2>
+      <div class="content">
+        <div id="result-message"></div>
+        <p>
+          <a href="/index.html">Try another verification</a>
+        </p>
+      </div>
+    </div><!-- /.container -->
+  </body>
+  <script>
+    function showVerificationStatus(alertType, message) {
+      const content = $("#result-message");
+      content.empty();
+      content.append($("<div>")
+        .addClass(`alert alert-${alertType}`)
+        .attr("role", "alert")
+        .text(message))
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const to = params.get("to");
+
+    // Twilio functions do not accept multipart/form-data
+    const data = new URLSearchParams();
+    data.append("to", to);
+    data.append("verification_code", token);
+
+    fetch("./check-verify", {
+        method: 'POST',
+        body: data
+      })
+      .then(response => response.json())
+      .then(json => {
+        const alertType = json.success ? "success" : "danger";
+        showVerificationStatus(alertType, json.message);
+      })
+      .catch(err => {
+        console.log(err);
+        showVerificationStatus("danger", "Something went wrong!");
+      });
+  </script>
+</html>
