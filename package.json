@@ -1,19 +1,22 @@
 {
-  "name": "useful-twilio-functions",
-  "version": "0.0.1",
+  "name": "function-templates",
+  "version": "1.0.0",
   "private": true,
   "description": "A set of useful Twilio Functions.",
   "scripts": {
     "test": "jest",
     "new-template": "node _helpers/add-template.js",
-    "add-dependency": "npm install $npm_config_package --no-package-lock --prefix $npm_config_template && npm install --save-dev $npm_config_package"
+    "add-dependency": "npm install $npm_config_package --no-package-lock --prefix $npm_config_template && npm install --save-dev $npm_config_package",
+    "env-manifest": "node _helpers/generate-env-variable-manifest",
+    "ci:generate-manifest": "npm run env-manifest -- --write"
   },
-  "author": "Phil Nash <philnash@twilio.com>",
+  "author": "Twilio <open-source@twilio.com>",
   "license": "MIT",
   "devDependencies": {
     "@twilio-labs/serverless-api": "^1.1.0",
     "airtable": "^0.8.1",
     "common-tags": "^1.8.0",
+    "configure-env": "^2.0.0-0",
     "copy-template-dir": "^1.4.0",
     "eslint": "^5.4.0",
     "husky": "^4.2.5",

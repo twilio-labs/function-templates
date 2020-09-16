@@ -9,11 +9,11 @@
  *  - Add STRIPE_SECRET_KEY to your environment variables (https://www.twilio.com/console/functions/configure)
  *  - Add stripe to your NPM package dependencies (https://www.twilio.com/console/functions/configure)
  */
-const Stripe = require("stripe");
+const Stripe = require('stripe');
 
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
 
   // Uncomment to support CORS.
   // response.appendHeader('Access-Control-Allow-Origin', '*');
@@ -21,7 +21,7 @@ exports.handler = async function(context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Only action charge.succeeded events
-  if (event.type === "charge.succeeded") {
+  if (event.type === 'charge.succeeded') {
     // Retrieve the event object from Stripe to verify its validity.
     // If you're running your own server environment you can verify
     // the webhook signature instead:
@@ -32,7 +32,7 @@ exports.handler = async function(context, event, callback) {
       const stripe = Stripe(context.STRIPE_SECRET_KEY);
       const stripeEvent = await stripe.events.retrieve(event.id);
       const charge = await stripe.charges.retrieve(stripeEvent.data.object.id, {
-        expand: ["customer"]
+        expand: ['customer'],
       });
       const customer = charge.customer;
       // Look for phone number on the customer otherwise use phone number from the
@@ -45,12 +45,12 @@ exports.handler = async function(context, event, callback) {
         const client = context.getTwilioClient();
         const message = await client.messages.create({
           to: customerPhone,
-          from: context.FROM_PHONE || "STRIPEDEMO",
-          body: `Thanks for your payment ❤️ Here is your receipt: ${charge.receipt_url}`
+          from: context.TWILIO_PHONE_NUMBER || 'STRIPEDEMO',
+          body: `Thanks for your payment ❤️ Here is your receipt: ${charge.receipt_url}`,
         });
         console.log(`Sending SMS. Message sid: ${message.sid}`);
       } else {
-        console.log("No phone number found for this customer/charge.");
+        console.log('No phone number found for this customer/charge.');
       }
     } catch (error) {
       console.log(error.message);

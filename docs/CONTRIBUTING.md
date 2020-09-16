@@ -49,7 +49,7 @@ npm run new-template
 
 This script will prompt you for a couple of questions and set up a basic template that you can work from.
 
-It will create a directory wiht the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be
+It will create a directory wiht the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be accessible without a [valid `X-Twilio-Signature` header](https://www.twilio.com/docs/usage/webhooks/webhooks-security#validating-signatures-from-twilio). Protected Functions are best used to respond to Twilio webhooks.
 
 ### Adding external dependencies (npm)
 
@@ -64,11 +64,21 @@ npm run add-dependency --template=video-token --package=twilio-video
 Any variable you want the user to have to set should be added to the `.env` file in your template directory and should include a commented line before that explaining what the variable is about. Example:
 
 ```bash
-# The number you want your calls to be forwarded to
+# description: The number you want your calls to be forwarded to
+# required: true
+# format: phone_number
 MY_PHONE_NUMBER=
 ```
 
+**Important**: You can find the format of the `.env` file and possible comments as part of [this Schema](https://github.com/twilio-labs/configure-env/blob/main/docs/SCHEMA.md).
+
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
+
+### Updating the `index.html`
+
+If your app has a front-end component to it, you can override the existing `index.html` file in your project.
+
+In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
 
 ### Testing the functionality of your new template locally
 
