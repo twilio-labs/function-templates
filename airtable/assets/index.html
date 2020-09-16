@@ -42,21 +42,24 @@
         <h3>Get started with your app</h3>
         <p>This app automatically adds people who text in to your phone number into the specified table in Airtable. Follow the steps below to test your app:</p>
         <ol>
-          <li>Text your Twilio phone number (referenced below) with a message.</li>
+          <li>Text your Twilio phone number with a message.</li>
           <li>Go to the specified table in Airtable and refresh it. Your message and phone number should now be input into the table.</li>
-          <li>In order to test the broadcast feature, go to /broadcast-sms. All numbers that are in Airtable should receive a text.</li>
+          <li>In order to test the broadcast feature, go to   <p>
+              <pre><code><span class="function-root"></span>/broadcast-sms</code></pre>
+            </p>. All numbers that are in Airtable should receive a text.</li>
         </ol>
       </section>
       <section>
         <h3>Troubleshooting</h3>
         <ul>
           <li>Check the <a href="https://www.twilio.com/console/phone-numbers/incoming">phone number configuration</a> and make sure the Twilio phone number you want your app has an SMS webhook configured to point at
+            <p>
+              <pre><code><span class="function-root"></span>/save-sms</code></pre>
+            </p>
           </li>
-          <p>
-            <pre><code><span class="function-root"></span>/save-sms</code></pre>
-          </p>
         </ul>
       </section>
+      <!-- APP_INFO -->
     </div>
     <footer>
       <p>
