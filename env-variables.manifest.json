@@ -252,7 +252,7 @@
         "required": true,
         "format": "text",
         "description": "Your Airtable Base ID",
-        "link": null,
+        "link": "https://airtable.com/api",
         "default": "appAbcD12efG3HijK",
         "configurable": true
       },
