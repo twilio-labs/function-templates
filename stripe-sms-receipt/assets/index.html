@@ -40,13 +40,14 @@
     <div role="main">
       <section>
         <h3>Get started with your app</h3>
-        <p>This function shows you how to programmatically send a payment receipt URL to your customer via SMS using a <a href="https://stripe.com/docs/webhooks"> Stripe webhook event</a> as a trigger.</p>
+        <p>This app shows you how to programmatically send a payment receipt URL to your customer via SMS using a <a href="https://stripe.com/docs/webhooks">Stripe webhook event</a> as a trigger.</p>
         <ol>
-          <li>Before you can test your app, you need to add a <a href="https://dashboard.stripe.com/webhooks"> Stripe Webhook</a> and set the URL to the URL of this page, but replace `/index.html` with `/send-sms-receipt`</li>
+          <li>Before you can test your app, you need to add a <a href="https://dashboard.stripe.com/webhooks"> Stripe Webhook</a> and set the URL to <code><span class="function-root"></span>/send-sms-receipt</code></li>
           <li>Select "All Events" and save the webhook.</li>
           <li>To test the app, initiate a payment from Stripe. You should receive an SMS receipt to the phone number on the payment.</li>
         </ol>
       </section>
+      <!-- EDIT_CODE -->
     </div>
     <footer>
       <p>

@@ -40,24 +40,25 @@
     <div role="main">
       <section>
         <h3>Get started with your app</h3>
-        <p>This app shows you how to create an invoice in Stripe based on an SMS prompt (in this case `DONATE <AMOUNT>`). Once the invoice is finalized, it will reply with a payment link.</p>
+        <p>This app shows you how to create an invoice in Stripe based on an SMS prompt (in this case <code>DONATE &lt;AMOUNT&gt;</code>). Once the invoice is finalized, it will reply with a payment link.</p>
         <ol>
-          <li>Before you can test your app, you need to add a <a href="https://dashboard.stripe.com/webhooks"> Stripe Webhook</a> and set the URL to the URL of this page, but replace `/index.html` with `/send-invoice-sms`</li>
+          <li>Before you can test your app, you need to add a <a href="https://dashboard.stripe.com/webhooks"> Stripe Webhook</a> and set it to <code><span class="function-root"></span>/send-invoice-sms</code></li>
           <li>Select "All Events" and save the webhook.</li>
-          <li>To test the customer initiated scenario of this app, text `DONATE 10` to your Twilio phone number referenced below. You should receive a Stripe invoice link to your phone.</li>
-          <li>To test the Merchant initiated flow, you need to create an invoice in the Stripe Dashbboard. Follow this <a href="https://stripe.com/docs/billing/invoices/create#without-code" guide</a> or this <a href="https://youtu.be/YftvRXupgpw" video </a>. Make sure to set a phone number when entering the customer details.</li>
+          <li>To test the customer initiated scenario of this app, text <code>DONATE 10</code> to your Twilio phone number. You should receive a Stripe invoice link to your phone.</li>
+          <li>To test the Merchant initiated flow, you need to create an invoice in the Stripe Dashbboard. Follow this <a href="https://stripe.com/docs/billing/invoices/create#without-code">guide</a> or this <a href="https://youtu.be/YftvRXupgpw">video</a>. Make sure to set a phone number when entering the customer details.</li>
         </ol>
       </section>
       <section>
         <h3>Troubleshooting</h3>
         <ul>
           <li>Check the <a href="https://www.twilio.com/console/phone-numbers/incoming">phone number configuration</a> and make sure the Twilio phone number you want your app has an SMS webhook configured to point at
+            <p>
+              <pre><code><span class="function-root"></span>/create-invoice</code></pre>
+            </p>
           </li>
-          <p>
-            <pre><code><span class="function-root"></span>/create-invoice</code></pre>
-          </p>
         </ul>
       </section>
+      <!-- APP_INFO -->
     </div>
     <footer>
       <p>
