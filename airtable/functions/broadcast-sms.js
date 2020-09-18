@@ -2,12 +2,12 @@ exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
 
   var Airtable = require('airtable');
-  var base = new Airtable({ apiKey: context.AIRTABLE_APIKEY }).base(
-    context.AIRTABLE_BASEID
+  var base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
+    context.AIRTABLE_BASE_ID
   );
 
   base
-    .table(context.AIRTABLE_TABLENAME)
+    .table(context.AIRTABLE_TABLE_NAME)
     .select()
     .all()
     .then((records) => {
@@ -15,7 +15,7 @@ exports.handler = function (context, event, callback) {
         const client = context.getTwilioClient();
         return client.messages
           .create({
-            to: record.get('PhoneNumber'),
+            to: record.get('From'),
             from: context.TWILIO_PHONE_NUMBER,
             body: 'This is a broadcast message from Twilio.',
           })
