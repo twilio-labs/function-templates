@@ -29,9 +29,9 @@ const mockAirtableTable = {
 }
 
 const context = {
-  AIRTABLE_APIKEY: 'keyAbcD12efG3HijK',
-  AIRTABLE_BASEID: 'appAbcD12efG3HijK',
-  AIRTABLE_TABLENAME: 'Table 1',
+  AIRTABLE_API_KEY: 'keyAbcD12efG3HijK',
+  AIRTABLE_BASE_ID: 'appAbcD12efG3HijK',
+  AIRTABLE_TABLE_NAME: 'Table 1',
   MY_PHONE_NUMBER: 'TwilioNumber'
 };
 
