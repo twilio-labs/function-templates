@@ -17,7 +17,7 @@ In your `.env` file, set the following values:
 | AIRTABLE_API_KEY | Your Airtable API Key | Yes |
 | AIRTABLE_BASE_ID | The Airtable Base ID | Yes |
 | AIRTABLE_TABLE_NAME | The name of the specific Base table to connect to | Yes |
-| MY_PHONE_NUMBER | A Twilio phone number | Only for broadcasting messages |
+| TWILIO_PHONE_NUMBER | A Twilio phone number | Only for broadcasting messages |
 
 ## Create a new project with the template
 

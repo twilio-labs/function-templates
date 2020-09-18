@@ -32,7 +32,7 @@ const context = {
   AIRTABLE_API_KEY: 'keyAbcD12efG3HijK',
   AIRTABLE_BASE_ID: 'appAbcD12efG3HijK',
   AIRTABLE_TABLE_NAME: 'Table 1',
-  MY_PHONE_NUMBER: 'TwilioNumber'
+  TWILIO_PHONE_NUMBER: 'TwilioNumber'
 };
 
 beforeAll(() => {
