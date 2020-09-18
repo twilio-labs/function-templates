@@ -14,9 +14,15 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
+<<<<<<< HEAD
 | AIRTABLE_API_KEY | Your Airtable API Key | Yes |
 | AIRTABLE_BASE_ID | The Airtable Base ID | Yes |
 | AIRTABLE_TABLE_NAME | The name of the specific Base table to connect to | Yes |
+=======
+| AIRTABLE_APIKEY | Your Airtable API Key | Yes |
+| AIRTABLE_BASEID | The Airtable Base ID | Yes |
+| AIRTABLE_TABLENAME | The name of the specific Base table to connect to | Yes |
+>>>>>>> af884f5b431d937f07399cbb8ffdab315519bbba
 | TWILIO_PHONE_NUMBER | A Twilio phone number | Only for broadcasting messages |
 
 ## Create a new project with the template
@@ -40,7 +46,7 @@ twilio serverless:init example --template={{name}} && cd verify-sample
 twilio serverless:start
 ```
 
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+5. Open the web page at https://localhost:3000/index.html and follow the instructions to test your application.
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 

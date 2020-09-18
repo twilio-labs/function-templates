@@ -41,23 +41,21 @@
       <section>
         <h3>Get started with your app</h3>
         <p>Now that your code is deployed, here are the last steps you need to do to finish your app.</p>
+        <p>This app create a conference line that verifies the phone numbers of participants before joining them into a call. It will first verify that the number is on a list of valid numbers and then use <a href="https://www.twilio.com/docs/verify/api">Twilio Verify</a> to verify they are not spoofing their number by sending them a code they have to enter.</p>
         <ol>
-          <li>Call your Twilio phone number</li>
-          <li>You should be greated by a voice listing all options</li>
-          <li>Press any of the mentioned digits or try saying the words</li>
+          <li>Call your Twilio phone number from the phone number entered for <b>MODERATOR_PHONE_NUMBER</b></li>
+          <li>Call your Twilio phone number from another number used for <b>VALID_PARTICIPANTS</b></li>
+          <li>Follow the propmts to verify the participant</li>
         </ol>
       </section>
       <section>
         <h3>Troubleshooting</h3>
         <ul>
-          <li>Make sure the Twilio phone number you want your app has a voice webhook configured to point at
-          </li>
+          <li>Check the <a href="https://www.twilio.com/console/phone-numbers/incoming">phone number configuration</a> and make sure the Twilio phone number you want your app has a voice webhook configured to point at
           <p>
-            <pre><code><span class="function-root"></span>/voice-ivr</code></pre>
+            <pre><code><span class="function-root"></span>/verify-conference</code></pre>
           </p>
-          <li>Check the
-            <code>README.md</code>
-            of your project</li>
+          </li>
         </ul>
       </section>
       <!-- APP_INFO -->
