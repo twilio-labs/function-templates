@@ -239,7 +239,7 @@
     ],
     "airtable": [
       {
-        "key": "AIRTABLE_APIKEY",
+        "key": "AIRTABLE_API_KEY",
         "required": true,
         "format": "secret",
         "description": "Your Airtable API Key",
@@ -248,7 +248,7 @@
         "configurable": true
       },
       {
-        "key": "AIRTABLE_BASEID",
+        "key": "AIRTABLE_BASE_ID",
         "required": true,
         "format": "text",
         "description": "Your Airtable Base ID",
@@ -257,7 +257,7 @@
         "configurable": true
       },
       {
-        "key": "AIRTABLE_TABLENAME",
+        "key": "AIRTABLE_TABLE_NAME",
         "required": true,
         "format": "text",
         "description": "Your Airtable Table Name",
