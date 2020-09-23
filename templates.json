@@ -199,6 +199,11 @@
       "id": "voice-ivr",
       "name": "Voice IVR",
       "description": "Navigate a IVR (phone tree) using keys or speech-to-text"
+    },
+    {
+      "id": "magic-links",
+      "name": "Email Verification Magic Links",
+      "description": "Send one-click email verification using Verify and SendGrid"
     }
   ]
 }
