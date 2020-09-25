@@ -1,0 +1,31 @@
+{
+  "name": "verify-sample",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "start": "twilio-run",
+    "deploy": "twilio-run deploy"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "testPathIgnorePatterns": [
+      "/_helpers/",
+      "/node_modules/"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest-cli": "^24.8.0",
+    "twilio": "^3.49.3",
+    "twilio-run": "^2.6.0"
+  },
+  "engines": {
+    "node": "10"
+  }
+}
