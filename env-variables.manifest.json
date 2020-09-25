@@ -788,6 +788,26 @@
         "default": "/voice-ivr",
         "configurable": false
       }
+    ],
+    "magic-links": [
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "CALLBACK_PATH",
+        "required": true,
+        "format": "text",
+        "description": "URL path linked in the email template to check verifications",
+        "link": null,
+        "default": "verify.html",
+        "configurable": true
+      }
     ]
   }
 }

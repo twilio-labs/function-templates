@@ -2,47 +2,34 @@
 <html lang="en">
   <head>
     <title>Login with Twilio Verify</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-      crossorigin="anonymous"
-    ></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   </head>
   <body>
     <div class="container">
       <h2>Twilio Verify</h2>
       <p>
-        This example shows how to deploy 
-        <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> 
+        This example shows how to deploy
+        <a href="https://twilio.com/docs/verify/api">Twilio Verify</a>
         and Twilio functions for serverless email verification with magic links.
       </p>
       <div class="content">
         <form id="login">
-          <div class="form-group email-input"">
+          <div class="form-group email-input" ">
             <p>Enter your email:</p>
-            <input
-              type="email"
-              id="email"
-              class="form-control" />
+            <input type="email" id="email" class="form-control"/>
           </div>
           <div class="form-group">
-            <input
-              type="submit"
-              class="btn btn-primary"
-              value="Verify"/>
+            <input type="submit" class="btn btn-primary" value="Verify"/>
           </div>
         </form>
         <span id="form-success" class="text-success"></span>
         <span id="form-error" class="text-danger"></span>
       </div>
-    </div><!-- /.container -->
+    </div>
+    <!-- /.container -->
+    <!-- EDIT_CODE -->
   </body>
   <script>
     function showSubmitStatus(statusType, message) {
@@ -51,7 +38,7 @@
       content.append(message);
     }
 
-    $("#login").submit(function(event) {
+    $("#login").submit(function (event) {
       event.preventDefault();
 
       const to = $("#email").val()
@@ -62,9 +49,9 @@
       data.append("to", to);
 
       fetch("./start-verify", {
-          method: "POST",
-          body: data
-        })
+        method: "POST",
+        body: data
+      })
         .then(response => {
           return response.json()
         })
