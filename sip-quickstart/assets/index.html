@@ -55,7 +55,14 @@
           }
         },
         created() {
-          this.refreshConfiguration();
+          this.refreshConfiguration()
+            .then(() => {
+              if (!this.configuration.initialized) {
+                alert(`You must first initialize this application. 
+                  You will now be redirected to the admin interface.`);
+                window.location.href = "./admin/index.html";
+              }
+            });
         }
       });
 

@@ -9,6 +9,7 @@ exports.handler = async (context, event, callback) => {
     ".sip.us1.twilio.com"
   );
   callback(null, {
+    initialized: context.INITIALIZED,
     appName: context.APP_NAME,
     incomingNumber: context.INCOMING_NUMBER,
     callerId: context.CALLER_ID,
