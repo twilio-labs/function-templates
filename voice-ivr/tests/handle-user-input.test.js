@@ -54,7 +54,7 @@ describe('handles digit inputs', () => {
     const callback = (err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        '<Response><Say>You have not configured forwarding yet. Please find this section in your code and add a phone number</Say></Response>'
+        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' + context.MY_PHONE_NUMBER + '</Dial></Response>'
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
@@ -121,7 +121,7 @@ describe('handles speech inputs', () => {
     const callback = (err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        '<Response><Say>You have not configured forwarding yet. Please find this section in your code and add a phone number</Say></Response>'
+        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' + context.MY_PHONE_NUMBER + '</Dial></Response>'
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
