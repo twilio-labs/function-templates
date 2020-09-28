@@ -40,7 +40,7 @@ exports.handler = function (context, event, callback) {
 
   switch (UserInput) {
     case '1':
-      twiml.say("Your call will now be forwarded to our sales line.")
+      twiml.say("Thank you. You will now be forwarded to our sales department.")
       twiml.dial(context.MY_PHONE_NUMBER);
       break;
     case '2':

@@ -19,6 +19,7 @@ const mockTwilioClient = {
 
 const context = {
   getTwilioClient: () => mockTwilioClient,
+  MY_PHONE_NUMBER: 'TwilioNumber'
 };
 const baseEvent = {
   From: '+12223334444',
