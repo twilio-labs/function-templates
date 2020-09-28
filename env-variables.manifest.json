@@ -735,7 +735,7 @@
         "required": true,
         "format": "text",
         "description": "API key for your Twilio Account",
-        "link": "https://www.twilio.com/console/runtime/api-keys/create",
+        "link": "https://www.twilio.com/console/project/api-keys",
         "default": null,
         "configurable": true
       },
@@ -744,7 +744,7 @@
         "required": true,
         "format": "secret",
         "description": "API secret for your API Key",
-        "link": "https://www.twilio.com/console/runtime/api-keys/create",
+        "link": "https://www.twilio.com/console/project/api-keys",
         "default": null,
         "configurable": true
       },
@@ -779,6 +779,15 @@
       }
     ],
     "voice-ivr": [
+      {
+        "key": "MY_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Your phone number",
+        "link": null,
+        "default": "+12223334444",
+        "configurable": true
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
