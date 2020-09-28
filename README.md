@@ -36,6 +36,7 @@ This is the list of Functions available in this repo:
 - [Temp Storage](temp-storage) - Function that shows you where files created in a Twilio Function go and how to manage them for one-off activities
 - [Verify](verify) - Functions to send and check one-time passwords via SMS or Voice for phone verification
 - [Email Verification Magic Links](magic-links) - Send one-click email verification using Verify and SendGrid
+- [Verify Testing Dashboard](verify-dashboard) - Helpful dashboard for testing and debugging during your development with Twilio Verify.
 
 ### Todo
 
