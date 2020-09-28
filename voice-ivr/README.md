@@ -12,7 +12,7 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-
+MY_PHONE_NUMBER Your phone number true
 
 ### Function Parameters
 

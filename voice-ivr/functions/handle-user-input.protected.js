@@ -40,10 +40,8 @@ exports.handler = function (context, event, callback) {
 
   switch (UserInput) {
     case '1':
-      twiml.say(
-        'You have not configured forwarding yet. Please find this section in your code and add a phone number'
-      );
-      //twiml.dial('+1222333444');
+      twiml.say("Thank you. You will now be forwarded to our sales department.")
+      twiml.dial(context.MY_PHONE_NUMBER);
       break;
     case '2':
       twiml.say('We are open from 9am to 5pm every day but Sunday.');
