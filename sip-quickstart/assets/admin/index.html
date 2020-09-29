@@ -8,7 +8,7 @@
       <div class="login" v-if="!adminClient.isReady">
         <h1>Password required</h1>
         <p>
-          A password is required to update your environment. This can be found in the <code>.env</code>file in the root of your application. 
+          A password is required to update your environment. This can be found in your environment variables.
         </p>
         <form @submit.prevent="login">
           <div>

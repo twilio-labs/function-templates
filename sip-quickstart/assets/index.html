@@ -51,6 +51,12 @@
         methods: {
           async refreshConfiguration() {
             const response = await fetch("./sip-configuration");
+            if (!response.ok) {
+              const message = "You must first initialize this application." +
+                  "  You will now be redirected to the admin interface.";
+              alert(message);
+              window.location.href = "./admin/index.html";
+            }
             this.configuration = await response.json();
           }
         },
