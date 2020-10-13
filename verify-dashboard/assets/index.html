@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Twilio Verify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Twilio Verify</h2>
+      <div class="alert alert-danger" role="alert">
+        <strong>To protect against fraud, we recommend running this locally only.</strong>
+        Do not leave this as a live website. This interface is intended to be used during development 
+        to test and troubleshoot your verification workflow.
+      </div>
+      <div id="service-details-message"></div>
+      <div class="content">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Start a verification</h3>
+              </div>
+              <div class="panel-body">
+                <form id="start">
+                  <div class="form-group" id="channel-select">
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="channel" id="channel-sms" value="sms" checked>
+                      <label class="form-check-label" for="channel-sms">SMS</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="channel" id="channel-call" value="call">
+                      <label class="form-check-label" for="channel-call">Call</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="channel" id="channel-email" value="email">
+                      <label class="form-check-label" for="channel-email">Email</label>
+                    </div>
+                  </div>
+                  <div class="form-group phone-input">
+                    <p>Enter your phone number:</p>
+                    <input
+                      type="tel"
+                      id="phone_number"
+                      class="form-control" />
+                  </div>
+                  <div class="form-group email-input" style="display:none;">
+                    <p>Enter your email:</p>
+                    <input
+                      type="email"
+                      id="email"
+                      class="form-control" />
+                  </div>
+                  <div class="form-group locale-input">
+                    <p>Select your preferred language:</p>
+                    <select class="form-control" id="select-locale">
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="submit"
+                      class="btn btn-primary"
+                      value="Start verification"/>
+                  </div>
+                </form>
+                <div id="start-message"></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Check a verification</h3>
+              </div>
+              <div class="panel-body">
+                <form id="check">
+                  <div class="form-group">
+                    <p>
+                      Enter the verification SID, phone number (<a href="https://www.twilio.com/docs/glossary/what-e164">in e.164 format</a>), 
+                      or email you want to verify:
+                    </p>
+                    <input
+                      type="text"
+                      id="check-to"
+                      class="form-control" 
+                      required/>
+                  </div>
+                  <div class="form-group">
+                    <p>
+                      Enter the one-time passcode:
+                    </p>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="verification_code"
+                      required/>
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="submit"
+                      class="btn btn-primary"
+                      value="Check verification"/>
+                  </div>
+                </form>
+                <div id="check-message" style="white-space: pre-wrap;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Cancel a verification</h3>
+        </div>
+        <div class="panel-body">
+          <form id="cancel">
+            <div class="form-group">
+              <p>
+                Enter the verification SID, phone number (<a href="https://www.twilio.com/docs/glossary/what-e164">in e.164 format</a>), 
+                or email you want to cancel:
+              </p>
+              <input
+                type="text"
+                id="cancel-to"
+                class="form-control" 
+                required/>
+            </div>
+            <div class="form-group">
+              <input
+                type="submit"
+                class="btn btn-primary"
+                value="Cancel verification"/>
+            </div>
+          </form>
+          <div id="cancel-message"></div>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Get a verification status</h3>
+        </div>
+        <div class="panel-body">
+          <form id="status">
+            <div class="form-group">
+              <p>
+                Enter the verification SID, phone number (<a href="https://www.twilio.com/docs/glossary/what-e164">in e.164 format</a>), 
+                or email:
+              </p>
+              <input
+                type="text"
+                id="status-to"
+                class="form-control" 
+                required/>
+            </div>
+            <div class="form-group">
+              <input
+                type="submit"
+                class="btn btn-primary"
+                value="Get verification status"/>
+            </div>
+          </form>
+          <div id="status-message" style="position: relative;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- EDIT_CODE -->
+  </body>
+  <script>
+    // Handle international prefixes, format phone input field
+    // Uses intl-tel-input library
+    const phoneInputField = document.querySelector("#phone_number");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+      preferredCountries: ["us", "co", "in", "de"],
+      separateDialCode: true,
+      utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js"
+    });
+
+    $("#channel-select").change(function() {
+      const channel = $("input[name='channel']:checked").val();
+      if (channel === "email") {
+        $(".phone-input").hide();
+        $(".email-input").show();
+      } else if (channel === "sms" || channel === "call") {
+        $(".phone-input").show();
+        $(".email-input").hide();
+      }
+    });
+
+    fetch("./service-details")
+      .then(response => response.json())
+      .then(json => {
+        if (json.success) {
+          $("#service-details-message").html(`
+            <p>
+              You're testing the <strong>${json.friendlyName}</strong> Service
+              with SID <a href="https://www.twilio.com/console/verify/services/${json.sid}/settings"><strong>${json.sid}</strong></a>.
+            </p>`
+          )
+        } else {
+          showStatus(
+            "service-details",
+            "danger",
+            `Unable to load Service <a href="https://www.twilio.com/console/verify/services/${json.error.sid}/settings"><strong>${json.error.sid}</strong></a>, check the Service SID in your .env file.`)
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        showStatus("check", "danger", "Something went wrong!");
+        $("#verification_code").val("");
+      });
+
+    function registerCloseStatus() {
+      $(".close").click(function() {
+        $(this).closest('div').hide();
+      })
+    }
+
+    function showStatus(actionName, statusType, message) {
+      var content = $(`#${actionName}-message`);
+      content.empty();
+      content
+        .removeClass()
+        .addClass(`alert alert-${statusType}`)
+        .attr("role", "alert")
+        .html(message)
+        .append($("<button>").addClass("close").html(`&times;`))
+        .show();
+
+      registerCloseStatus();
+    }
+
+    $("#start").submit(function(event) {
+      event.preventDefault();
+
+      const channel = $("input[name='channel']:checked").val();
+      const locale = $("#select-locale").val();
+      const to = (channel === "email") ? $("#email").val() : phoneInput.getNumber();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("to", to);
+      data.append("channel", channel);
+      data.append("locale", locale);
+
+      fetch("./start-verify", {
+          method: "POST",
+          body: data
+        })
+        .then(response => {
+          const content = $(".result-message");
+          content.empty();
+          return response.json()
+        })
+        .then(json => {
+          if (json.success) {
+            showStatus("start", "success", `Sent token to ${to} (SID: '${json.sid}')`);
+          } else {
+            showStatus("start", "danger", `${json.error.message} <a href="${json.error.moreInfo}">[more info]</a>`);
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          showStatus("start", "danger", "Error starting verification.");
+        });
+    });
+
+    $("#check").submit(function(event) {
+      event.preventDefault();
+      const to = $("#check-to").val();
+      const code = $("#verification_code").val();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("to", to);
+      data.append("verification_code", code);
+
+      fetch("./check-verify", {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          if (json.success) {
+            showStatus("check", "success", json.message);
+          } else {
+            showStatus("check", "danger", json.message);
+          }
+          $("#verification_code").val("");
+        })
+        .catch(err => {
+          console.log(err);
+          showStatus("check", "danger", "Something went wrong!");
+          $("#verification_code").val("");
+        });
+    });
+
+    $("#cancel").submit(function(event) {
+      event.preventDefault();
+      const to = $("#cancel-to").val();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("status", "canceled");
+      data.append("to", to);
+
+      fetch("./update-verify", {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          if (json.success) {
+            showStatus("cancel", "success", `Canceled verification '${to}'`);
+          } else {
+            showStatus("cancel", "danger", `${json.error.message} <a href="${json.error.moreInfo}">[more info]</a>`);
+          }
+          $("#cancel-to").val("");
+        })
+        .catch(err => {
+          console.log(err);
+          showStatus("cancel", "danger", "Something went wrong!");
+          $("#cancel-to").val("");
+        });
+    });
+
+    $("#status").submit(function(event) {
+      event.preventDefault();
+      const to = $("#status-to").val();
+
+      // Twilio functions do not accept multipart/form-data
+      const data = new URLSearchParams();
+      data.append("to", to);
+
+      fetch("./status-verify", {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          if (json.success) {
+            var content = $('#status-message');
+            content.empty();
+            content
+              .html(`<button class="close" style="position: absolute; top: 10px; right: 10px;">x</button>
+                     <pre>${JSON.stringify(json, null, 2)}</pre>`)
+              .show();
+            
+            registerCloseStatus();
+          } else {
+            showStatus("status", "danger", `${json.error.message} <a href="${json.error.moreInfo}">[more info]</a>`);
+          }
+          $("#status-to").val("");
+        })
+        .catch(err => {
+          console.log(err);
+          showStatus("status", "danger", "Something went wrong!");
+          $("#status-to").val("");
+        });
+    });
+
+    const locales = [
+      { text: "English", value: "en" },
+      { text: "Afrikaans", value: "af" },
+      { text: "Arabic", value: "ar" },
+      { text: "Catalan", value: "ca" },
+      { text: "Chinese", value: "zh" },
+      { text: "Chinese (Mandarin)", value: "zh-CN" },
+      { text: "Chinese (Cantonese)", value: "zh-HK" },
+      { text: "Croatian", value: "hr" },
+      { text: "Czech", value: "cs" },
+      { text: "Danish", value: "da" },
+      { text: "Dutch", value: "nl" },
+      { text: "English (British)", value: "en-GB" },
+      { text: "Finnish", value: "fi" },
+      { text: "French", value: "fr" },
+      { text: "German", value: "de" },
+      { text: "Greek", value: "el" },
+      { text: "Hebrew", value: "he" },
+      { text: "Hindi", value: "hi" },
+      { text: "Hungarian", value: "hu" },
+      { text: "Indonesian", value: "id" },
+      { text: "Italian", value: "it" },
+      { text: "Japanese", value: "ja" },
+      { text: "Korean", value: "ko" },
+      { text: "Malay", value: "ms" },
+      { text: "Norwegian", value: "nb" },
+      { text: "Polish", value: "pl" },
+      { text: "Portuguese - Brazil", value: "pt-BR" },
+      { text: "Portuguese", value: "pt" },
+      { text: "Romanian", value: "ro" },
+      { text: "Russian", value: "ru" },
+      { text: "Spanish", value: "es" },
+      { text: "Swedish", value: "sv" },
+      { text: "Tagalog", value: "tl" },
+      { text: "Thai", value: "th" },
+      { text: "Turkish", value: "tr" },
+      { text: "Vietnamese", value: "vi" }
+    ];
+
+    const selectLocale = $("#select-locale");
+
+    locales.forEach(l => {
+      selectLocale.append($("<option>")
+        .val(l.value)
+        .text(l.text))
+    });
+  </script>
+</html>

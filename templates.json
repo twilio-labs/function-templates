@@ -204,6 +204,11 @@
       "id": "magic-links",
       "name": "Email Verification Magic Links",
       "description": "Send one-click email verification using Verify and SendGrid"
+    },
+    {
+      "id": "verify-dashboard",
+      "name": "Verify Testing Dashboard",
+      "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
     }
   ]
 }
