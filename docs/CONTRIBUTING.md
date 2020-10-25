@@ -49,7 +49,7 @@ npm run new-template
 
 This script will prompt you for a couple of questions and set up a basic template that you can work from.
 
-It will create a directory wiht the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be accessible without a [valid `X-Twilio-Signature` header](https://www.twilio.com/docs/usage/webhooks/webhooks-security#validating-signatures-from-twilio). Protected Functions are best used to respond to Twilio webhooks.
+It will create a directory with the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be accessible without a [valid `X-Twilio-Signature` header](https://www.twilio.com/docs/usage/webhooks/webhooks-security#validating-signatures-from-twilio). Protected Functions are best used to respond to Twilio webhooks.
 
 ### Adding external dependencies (npm)
 
