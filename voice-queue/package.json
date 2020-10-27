@@ -1,0 +1,6 @@
+{
+  "name": "voice-queue",
+  "dependencies": {
+    "twilio": "^3.50.0"
+  }
+}
