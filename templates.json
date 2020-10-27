@@ -209,6 +209,11 @@
       "id": "verify-dashboard",
       "name": "Verify Testing Dashboard",
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
+    },
+    {
+      "id": "voice-queue",
+      "name": "Voice Queue with hold music",
+      "description": "Inbound calls are queued, and hold music is played until the intended recipient answers the call."
     }
   ]
 }
