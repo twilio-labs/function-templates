@@ -1,4 +1,4 @@
-# Forward SMS message as an email (SendGrid)
+# Forward SMS message as an email (Mailgun)
 
 This function will forward incoming SMS messages to an email address using the [Mailgun API](https://documentation.mailgun.com/en/latest/api_reference.html).
 
