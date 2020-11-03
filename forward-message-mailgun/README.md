@@ -6,7 +6,7 @@ You will need a Mailgun account and an [API key](https://app.mailgun.com/app/acc
 
 ### Environment Variables
 
-This Function expects found environment variables to be set. You should configure these in your [Functions configuration page](https://www.twilio.com/console/runtime/functions/configure)
+This Function expects four environment variables to be set. You should configure these in your [Functions configuration page](https://www.twilio.com/console/runtime/functions/configure)
 
 | Variable             | Meaning                                                   |
 | :------------------- | :-------------------------------------------------------- |
