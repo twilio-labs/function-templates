@@ -11,7 +11,7 @@ This Function expects three environment variables to be set.
 | Variable             | Meaning                                                   |
 | :------------------- | :-------------------------------------------------------- |
 | `MAILGUN_API_KEY`    | Your Mailgun API key                                      |
-| `YOUR_DOMAIN`        | Your Mailgun verified domain you want to send emails from |
+| `MG_VERIFIED_DOMAIN` | Your Mailgun verified domain you want to send emails from |
 | `TO_EMAIL_ADDRESS`   | The email address to forward the message to               |
 | `FROM_EMAIL_ADDRESS` | The email address that Mailgun should send the email from |
 
@@ -25,4 +25,4 @@ This Function depends on one npm module. You should add the following dependenci
 
 ### Parameters
 
-This Function expects the incoming request to be a messaging webhook. The parameters that will be used are `From` and `Body`.
+This Function expects the incoming request to be a messaging webhook. The parameters that will be used are `To`, `From` and `Body`.
