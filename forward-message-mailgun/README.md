@@ -2,7 +2,7 @@
 
 This function will forward incoming SMS messages to an email address using the [Mailgun API](https://documentation.mailgun.com/en/latest/api_reference.html).
 
-You will need a Mailgun account and an [API key](hhttps://app.mailgun.com/app/account/security/api_keys) to use this Function. You can find your API key in the settings area of your mailgun account.
+You will need a Mailgun account and an [API key](https://app.mailgun.com/app/account/security/api_keys) to use this Function. You can find your API key in the settings area of your mailgun account.
 
 ### Environment Variables
 
