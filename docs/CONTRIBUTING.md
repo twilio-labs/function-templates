@@ -122,6 +122,27 @@ or alternatively:
 npx jest --watch
 ```
 
+### UI and Integration Testing with Cypress
+
+You can use [Cypress](https://www.cypress.io/) to run automated browser testing for your function.
+To test with Cypress, first set up a development server by running:
+
+```bash
+npm start
+```
+
+With the development server running, launch the Cypress UI with:
+
+```bash
+npx cypress open
+```
+
+If you want to run Cypress tests for all of the function templates in your terminal, use:
+
+```bash
+npm cypress
+```
+
 ## Testing your template
 
 If you want to test how your new template works with the Twilio CLI, make sure you have the latest version of [`@twilio-labs/plugin-serverless`](https://npm.im/@twilio-labs/plugin-serverless) installed.
