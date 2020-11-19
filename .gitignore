@@ -4,3 +4,5 @@ coverage/
 package-lock.json
 .DS_Store
 **/.env
+cypress/screenshots/
+cypress/videos/
