@@ -37,15 +37,15 @@
         <form id="login">
           <div class="form-group" id="channel-select">
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="channel" id="channel-sms" value="sms" checked>
+              <input class="form-check-input" type="radio" name="channel" id="channel-sms" value="sms" data-cy="radio-sms" checked>
               <label class="form-check-label" for="channel-sms">SMS</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="channel" id="channel-call" value="call">
+              <input class="form-check-input" type="radio" name="channel" id="channel-call" value="call" data-cy="radio-call">
               <label class="form-check-label" for="channel-call">Call</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="channel" id="channel-email" value="email">
+              <input class="form-check-input" type="radio" name="channel" id="channel-email" value="email" data-cy="radio-email">
               <label class="form-check-label" for="channel-email">Email</label>
             </div>
           </div>
@@ -54,14 +54,16 @@
             <input
               type="tel"
               id="phone_number"
-              class="form-control" />
+              class="form-control"
+              data-cy="input-phone" />
           </div>
           <div class="form-group email-input" style="display:none;">
             <p>Enter your email:</p>
             <input
               type="email"
               id="email"
-              class="form-control" />
+              class="form-control"
+              data-cy="input-email" />
           </div>
           <div class="form-group locale-input">
             <p>Select your preferred language:</p>
@@ -72,6 +74,7 @@
             <input
               type="submit"
               class="btn btn-primary"
+              data-cy="submit"
               value="Verify"/>
           </div>
         </form>
@@ -95,7 +98,8 @@
                       <span class="input-group-btn">
                         <button 
                           class="btn btn-primary btn-lg" 
-                          type="submit">Verify
+                          type="submit"
+                          data-cy="token-submit">Verify
                         </button>
                       </span>
                     </form>
