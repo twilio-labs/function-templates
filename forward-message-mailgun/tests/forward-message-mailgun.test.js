@@ -6,8 +6,8 @@ const Twilio = require("twilio");
 const context = {
   MAILGUN_API_KEY: "API_KEY",
   DOMAIN: "DOMAIN",
-  TO: "test_to@example.com",
-  FROM: "test_from@example.com",
+  TO: "TO_EMAIL_ADDRESS",
+  FROM: "FROM_EMAIL_ADDRESS",
 };
 const event = {
   Body: "Hello",

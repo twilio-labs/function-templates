@@ -25,4 +25,4 @@ This Function depends on one npm module. You should add the following dependenci
 
 ### Parameters
 
-This Function expects the incoming request to be a messaging webhook. The parameters that will be used are `To`, `From` and `Body`.
+This Function expects the incoming request to be a messaging webhook. The parameters that will be used are `From` and `Body`.
