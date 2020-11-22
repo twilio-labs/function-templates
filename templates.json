@@ -209,6 +209,11 @@
       "id": "verify-dashboard",
       "name": "Verify Testing Dashboard",
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
+    },
+    {
+      "id": "forward-message-mailgun",
+      "name": "Forward SMS message as an email (Mailgun)",
+      "description": "The function will forward incoming SMS messages to an email address using the Mailgun API"
     }
   ]
 }
