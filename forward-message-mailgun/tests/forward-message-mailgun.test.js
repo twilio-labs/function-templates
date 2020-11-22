@@ -4,11 +4,12 @@ const forwardMessageToMailgun = require("../functions/forward-message-mailgun").
 const Twilio = require("twilio");
 
 const context = {
-  MAILGUN_API_KEY: "API_KEY",
+  MAILGUN_API_KEY: "MAILGUN_API_KEY",
   DOMAIN: "DOMAIN",
-  TO: "TO_EMAIL_ADDRESS",
-  FROM: "FROM_EMAIL_ADDRESS",
+  TO_EMAIL_ADDRESS: "TO_EMAIL_ADDRESS",
+  FROM_EMAIL_ADDRESS: "FROM_EMAIL_ADDRESS",
 };
+
 const event = {
   Body: "Hello",
   From: "ExternalNumber",
