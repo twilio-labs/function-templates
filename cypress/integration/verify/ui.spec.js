@@ -2,7 +2,7 @@
 
 // `verify` function template UI-only tests
 
-const testNumber = "5555555555";
+const testNumber = "+18448144627";
 const testEmail = "test@example.org";
 
 describe('verify Template UI', () => {
