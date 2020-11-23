@@ -137,6 +137,16 @@ With the development server running, launch the Cypress UI with:
 npx cypress open
 ```
 
+To launch a single Cypress test from the command line, run:
+
+```bash
+npx cypress run --spec "path/to/test.spec.js"
+```
+
+The above command also accepts a `--record` flag, which causes the Cypress UI
+to record the test run. To learn about the other flags `cypress run` accepts,
+[see the Cyprus CLI documentation](https://docs.cypress.io/guides/guides/command-line.html#cypress-run).
+
 If you want to run Cypress tests for all of the function templates in your terminal, use:
 
 ```bash
