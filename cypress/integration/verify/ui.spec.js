@@ -50,4 +50,32 @@ describe('verify Template UI', () => {
         // NOTE: This response will change when Cypress integration tests are incorporated
         cy.contains('Error');
     });
+
+    it('should contain an EDIT_CODE tag and no APP_INFO', () => {
+        const collectComments = (doc, contents) => {
+            let commentWalker = doc.createTreeWalker(
+                doc.body,
+                NodeFilter.SHOW_COMMENT,
+                { acceptNode: (node) => node.nodeValue.trim() === contents ?
+                  NodeFilter.FILTER_ACCEPT :
+                  NodeFilter.FILTER_REJECT },
+                false
+            );
+
+            const comments = [];
+            let currentNode;
+
+            while(currentNode = commentWalker.nextNode()) {
+                comments.push(currentNode);
+                currentNode = commentWalker.nextNode();
+            }
+
+            return comments;
+        };
+
+        cy.document().then((doc) => {
+            expect(collectComments(doc, "EDIT_CODE").length).to.be.greaterThan(0);
+            expect(collectComments(doc, "APP_INFO").length).to.equal(0);
+        });
+    });
 });
