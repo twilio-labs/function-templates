@@ -2,13 +2,16 @@
   "name": "function-templates",
   "version": "1.0.0",
   "private": true,
+  "main": "./src/index.js",
   "description": "A set of useful Twilio Functions.",
   "scripts": {
+    "start": "node .",
     "test": "jest",
     "new-template": "node _helpers/add-template.js",
     "add-dependency": "npm install $npm_config_package --no-package-lock --prefix $npm_config_template && npm install --save-dev $npm_config_package",
     "env-manifest": "node _helpers/generate-env-variable-manifest",
-    "ci:generate-manifest": "npm run env-manifest -- --write"
+    "ci:generate-manifest": "npm run env-manifest -- --write",
+    "cypress": "cypress run"
   },
   "author": "Twilio <open-source@twilio.com>",
   "license": "MIT",
@@ -18,7 +21,10 @@
     "common-tags": "^1.8.0",
     "configure-env": "^2.0.0-0",
     "copy-template-dir": "^1.4.0",
+    "cypress": "^5.6.0",
     "eslint": "^5.4.0",
+    "express": "^4.17.1",
+    "filehound": "^1.17.4",
     "husky": "^4.2.5",
     "inquirer": "^7.0.4",
     "jest-cli": "^24.8.0",
@@ -33,11 +39,13 @@
     "collectCoverage": true,
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "/cypress/"
     ],
     "testPathIgnorePatterns": [
       "/_helpers/",
-      "/node_modules/"
+      "/node_modules/",
+      "/cypress/"
     ]
   },
   "dependencies": {
