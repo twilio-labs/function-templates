@@ -24,6 +24,7 @@
     "cypress": "^5.6.0",
     "eslint": "^5.4.0",
     "express": "^4.17.1",
+    "filehound": "^1.17.4",
     "husky": "^4.2.5",
     "inquirer": "^7.0.4",
     "jest-cli": "^24.8.0",
@@ -36,8 +37,16 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/", "/cypress/"],
-    "testPathIgnorePatterns": ["/_helpers/", "/node_modules/", "/cypress/"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/",
+      "/cypress/"
+    ],
+    "testPathIgnorePatterns": [
+      "/_helpers/",
+      "/node_modules/",
+      "/cypress/"
+    ]
   },
   "dependencies": {
     "got": "^6.7.1"
