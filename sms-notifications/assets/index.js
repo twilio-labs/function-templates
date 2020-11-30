@@ -20,6 +20,7 @@ function clearForm(form) {
 
 recipientForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
+
   if (newRecipientInput.value) {
     addRecipient(newRecipientInput.value);
     newRecipientInput.value = '';
@@ -69,6 +70,12 @@ function sendMessages(form) {
 
 sendNotificationForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
+
+  if (recipients.length === 0 && newRecipientInput.value) {
+    addRecipient(newRecipientInput.value);
+    newRecipientInput.value = '';
+  }
+
   if (recipients.length === 0) {
     resultSection.innerText = 'Please enter at least one phone number';
   } else {
