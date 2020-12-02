@@ -214,6 +214,11 @@
       "id": "forward-message-mailgun",
       "name": "Forward SMS message as an email (Mailgun)",
       "description": "The function will forward incoming SMS messages to an email address using the Mailgun API"
+    },
+    {
+      "id": "lookup-app",
+      "name": "Twilio Lookup Single-Page App",
+      "description": "Use the Lookup API from your browser"
     }
   ]
 }

@@ -1,0 +1,103 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #f22f46;
+  color: white;
+}
+
+body {
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  color: #0d122b;
+  border-top: 5px solid #f22f46;
+}
+
+header {
+  padding: 2em;
+  margin-bottom: 2em;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+header h1 {
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(148, 151, 155, 0.2);
+}
+
+a {
+  color: #008cff;
+}
+
+main {
+  margin: 0 auto 6em;
+  padding: 0 2em;
+  max-width: 800px;
+}
+
+main p {
+  margin-bottom: 2em;
+}
+
+main h2 {
+  margin-bottom: 1em;
+}
+
+footer {
+  margin: 0 auto;
+  max-width: 800px;
+  text-align: center;
+}
+
+footer p {
+  border-top: 1px solid rgba(148, 151, 155, 0.2);
+  padding-top: 2em;
+  margin: 0 2em;
+}
+
+main label {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+main input {
+  margin-bottom: 1em;
+  display: block;
+  width: 100%;
+  font-size: 24px;
+  border-radius: 6px;
+}
+
+main button {
+  font-size: 24px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1em;
+  background: #0d122b;
+  color: #fff;
+  border: none;
+  padding: 0.5em;
+  border-radius: 6px;
+}
+
+.lookupResults {
+  margin-top: 1em;
+  border: 1px solid #f22f46;
+  background-color: #f8f8f8;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+.lookupResultText {
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+
+.error {
+  color: #800;
+  font-weight: bold;
+}
