@@ -26,6 +26,7 @@
     "log-symbols": "^3.0.0",
     "mailgun-js": "0.22.0",
     "moment": "^2.24.0",
+    "node-fetch": "^2.6.1",
     "stripe": "^8.20.0",
     "twilio": "^3.43.0"
   },
