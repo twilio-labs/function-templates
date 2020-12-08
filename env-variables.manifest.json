@@ -828,6 +828,53 @@
         "default": null,
         "configurable": true
       }
+    ],
+    "forward-message-mailgun": [
+      {
+        "key": "MAILGUN_API_KEY",
+        "required": true,
+        "format": "secret",
+        "description": "Your Mailgun API key",
+        "link": "https://app.mailgun.com/app/account/security/api_keys",
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "MG_VERIFIED_DOMAIN",
+        "required": true,
+        "format": "text",
+        "description": "Your Mailgun verified domain you want to send emails from",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "TO_EMAIL_ADDRESS",
+        "required": true,
+        "format": "email",
+        "description": "The email address to forward the message to",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "FROM_EMAIL_ADDRESS",
+        "required": true,
+        "format": "email",
+        "description": "The email address that Mailgun should send the email from",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "TWILIO_SMS_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/forward-message-mailgun",
+        "configurable": false
+      }
     ]
   }
 }
