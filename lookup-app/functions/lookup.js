@@ -3,7 +3,7 @@ exports.handler = function(context, event, callback) {
     checkCredentials(event, callback);
 
     const client = context.getTwilioClient();
-    doLookup(client, event.pn, callback);
+    doLookup(client, event.phoneNumber, callback);
 }
 
 function checkCredentials(event, callback){
@@ -18,8 +18,8 @@ function checkCredentials(event, callback){
         }
 }
 
-function doLookup(client, pn, callback){
-    client.lookups.phoneNumbers(pn)
+function doLookup(client, phoneNumber, callback){
+    client.lookups.phoneNumbers(phoneNumber)
         .fetch({type: ['carrier']})
         .then(
             res => callback(null, res),

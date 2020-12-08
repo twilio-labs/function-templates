@@ -1,23 +1,47 @@
-import React, {useRef} from 'react';
+import React from 'react';
 
-function LookupInput({setLookupData}) {
-    const pnInputElement = useRef();
-    const tokenInputElement = useRef();
+function LookupInput({
+    handleSubmit,
+    phoneNumber,
+    setPhoneNumber,
+    pageToken,
+    setPageToken,
+  }) {
 
-    const setPnForLookup = () => {
-        setLookupData({
-            pn: pnInputElement.current.value,
-            pageToken: tokenInputElement.current.value
-        });
-    }
+    const handlePhoneNumberChange = (event) => {
+      setPhoneNumber(event.target.value);
+    };
 
-    return <div>
-             <label for='lookup-pn'>Phone number to look up, in <a href="https://www.twilio.com/docs/glossary/what-e164">E.164</a> format:</label>
-                <input id='lookup-pn' ref={pnInputElement}></input>
-                <label for='lookup-token'>Your page token:</label>
-                <input id='lookup-token' ref={tokenInputElement} autoComplete='off'></input>
-                <button onClick={setPnForLookup}>Lookup</button>
-           </div>
-}
+    const handlePageTokenChange = (event) => {
+      setPageToken(event.target.value);
+    };
+
+    return (
+      <form onSubmit={handleSubmit}>
+
+        <label for="lookup-phonenumber">
+            Phone number to look up, in <a href="https://www.twilio.com/docs/glossary/what-e164">
+              E.164 format
+            </a>:
+        </label>
+        <input
+          id="lookup-phonenumber"
+          value={phoneNumber}
+          onChange={handlePhoneNumberChange}
+        ></input>
+
+        <label for="lookup-token">Your page token:</label>
+        <input
+          id="lookup-token"
+          value={pageToken}
+          onChange={handlePageTokenChange}
+          autoComplete="off"
+        ></input>
+
+        <button type="submit">Lookup</button>
+
+      </form>
+    );
+  }
 
 export {LookupInput}
