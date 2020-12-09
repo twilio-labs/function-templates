@@ -216,9 +216,9 @@
       "description": "The function will forward incoming SMS messages to an email address using the Mailgun API"
     },
     {
-      "id": "zapier",
-      "name": "Zapier Webhook",
-      "description": "Push incoming SMS metadata and contents to a Zapier webhook"
+      "id": "json-webhook",
+      "name": "JSON Webhook Adapter",
+      "description": "Convert a Twilio webhook event into a JSON webhook, suitable for services like Zapier and IFTTT"
     }
   ]
 }

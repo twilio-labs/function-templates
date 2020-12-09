@@ -40,10 +40,10 @@
     <div role="main">
       <section>
         <h3>Get started with your app</h3>
-        <p>This app exposes the metadata and contents of the SMS messages received by your phone number to a Zapier webhook trigger. Follow the steps below to test your app:</p>
+        <p>This app exposes the metadata and contents of the SMS messages received by your phone number to a webhook. Follow the steps below to test your app:</p>
         <ol>
           <li>Text your Twilio phone number with a message.</li>
-          <li>You should see your Zapier webhook trigger receive the JSON data for the text you sent.</li>
+          <li>Your configured webhook should receive the data from your text.</li>
         </ol>
       </section>
       <section>
@@ -51,10 +51,11 @@
         <ul>
           <li>Check the <a href="https://www.twilio.com/console/phone-numbers/incoming">phone number configuration</a> and make sure the Twilio phone number you want your app has an SMS webhook configured to point at
             <p>
-              <pre><code><span class="function-root"></span>/sms-to-webhook</code></pre>
+              <pre><code><span class="function-root"></span>/event-to-webhook</code></pre>
             </p>
           </li>
-          <li>Ensure that you have a Zapier Catch Hook webhook configured, and that you have provided its URL as the <code>ZAPIER_WEBHOOK_URL</code> environment variable for this function.</li>
+          <li>Ensure that your webhook is configured properly. For Zapier, it should be a Catch Hook trigger. For IFTTT, make sure the event in your webhook URL matches the one configured for your Applet.</li>
+          <li>Verify that the <code>WEBHOOK_URL</code> environment variable for this function is the correct URL for your webhook.</li>
         </ul>
       </section>
     </div>

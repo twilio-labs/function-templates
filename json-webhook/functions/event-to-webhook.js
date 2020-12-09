@@ -2,7 +2,12 @@ const fetch = require('node-fetch');
 
 exports.handler = async function(context, event, callback) {
   try {
-    const res = await fetch(context.ZAPIER_WEBHOOK_URL, {
+    // IFTTT only pulls the fields value1, value2, and value3 from webhook JSON;
+    event.value1 = event.MessageSid;
+    event.value2 = event.From;
+    event.value3 = event.Body;
+
+    const res = await fetch(context.WEBHOOK_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,8 +1,8 @@
 const helpers = require('../../test/test-helper');
-const smsToWebhook = require('../functions/sms-to-webhook').handler;
+const eventToWebhook = require('../functions/event-to-webhook').handler;
 
 const context = {
-    ZAPIER_WEBHOOK_URL: 'http://example.com/webhook,'
+    WEBHOOK_URL: 'http://example.com/webhook,'
 };
 
 const mockFetchResponse = {
@@ -34,5 +34,5 @@ it('should successfully call its webhook', (done) => {
         From: 'ExternalNumber',
     };
 
-    smsToWebhook(context, event, callback);
+    eventToWebhook(context, event, callback);
 });

@@ -1,11 +1,19 @@
-# Zapier
+# JSON Webhook Adapter
 
-Push incoming SMS metadata and contents to a Zapier webhook.
+Convert a Twilio webhook event into a JSON webhook, suitable for services like Zapier and IFTTT.
 
 ## Pre-requisites
 
+Generally, this function template needs the URL for a publicly accessible webhook that can receive Twilio event data in a JSON format.
+
+### Zapier
+
 To push data to Zapier, you will need a [Zapier](https://zapier.com) account and
 a Zap with a [Catch Hook webhook trigger](https://zapier.com/help/create/code-webhooks/trigger-zaps-from-webhooks).
+
+### IFTTT
+
+To push data to IFFF, use an [IFTTT Maker Webhook](https://ifttt.com/maker_webhooks) as a trigger for an action. The URL for your webhook will be available in the documentation page for IFTTT Maker Webhooks. By default, this function template exposes SMS SIDs, phone numbers, and text content to IFTTT.
 
 ### Environment variables
 
@@ -13,9 +21,9 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable           | Description                                       | Required |
-| :----------------- | :------------------------------------------------ | :------- |
-| ZAPIER_WEBHOOK_URL | The URL for your Zap's Catch Hook webhook trigger | Yes      |
+| Variable    | Description                                               | Required |
+| :---------- | :-------------------------------------------------------- | :------- |
+| WEBHOOK_URL | The URL for the webhook your function should push data to | Yes      |
 
 ## Create a new project with the template
 
@@ -29,7 +37,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init example --template=zapier && cd example
+twilio serverless:init example --template=json-webhook && cd example
 ```
 
 4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
