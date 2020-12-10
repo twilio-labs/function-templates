@@ -17,20 +17,6 @@ In your `.env` file, set the following values:
 | SHEETS_DOC_ID     | The document ID for your Google Sheets spreadsheet                | Yes      |
 | SHEETS_SHEET_NAME | The spreadsheet name to log to within your Google Sheets document | Yes      |
 
-### Function Parameters
-
-`/blank` expects the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
 ## Create a new project with the template
 
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
