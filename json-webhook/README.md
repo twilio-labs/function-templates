@@ -1,6 +1,6 @@
 # JSON Webhook Adapter
 
-Convert a Twilio webhook event into a JSON webhook, suitable for services like Zapier and IFTTT.
+Forward a URL encoded Twilio webhook event to a JSON webhook, suitable for use with services like Zapier and IFTTT.
 
 ## Pre-requisites
 

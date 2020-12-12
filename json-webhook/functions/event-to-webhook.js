@@ -1,6 +1,8 @@
 const fetch = require('node-fetch');
 
 exports.handler = async function(context, event, callback) {
+  const twiml = new Twilio.twiml.MessagingResponse();
+
   try {
     // IFTTT only pulls the fields value1, value2, and value3 from webhook JSON;
     event.value1 = event.MessageSid;
@@ -16,14 +18,13 @@ exports.handler = async function(context, event, callback) {
     });
 
     if (res.ok) {
-      callback(null, {});
+      twiml.message('The SMS was successfully forwarded to your webhook.');
+      callback(null, twiml);
     }
     else {
-      console.log(res.statusText);
       callback(res.statusText)
     }
   } catch (error) {
-    console.log({ error });
     callback(error);
   }
 };

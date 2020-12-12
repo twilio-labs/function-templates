@@ -40,7 +40,7 @@
     <div role="main">
       <section>
         <h3>Get started with your app</h3>
-        <p>This app exposes the metadata and contents of the SMS messages received by your phone number to a webhook. Follow the steps below to test your app:</p>
+        <p>This app forwards the URL encoded metadata and contents of the SMS messages received by your phone number to a webhook that expects JSON-formatted data, for use with services like Zapier and IFTTT. Follow the steps below to test your app:</p>
         <ol>
           <li>Text your Twilio phone number with a message.</li>
           <li>Your configured webhook should receive the data from your text.</li>
@@ -58,6 +58,7 @@
           <li>Verify that the <code>WEBHOOK_URL</code> environment variable for this function is the correct URL for your webhook.</li>
         </ul>
       </section>
+      <!-- APP_INFO -->
     </div>
     <footer>
       <p>
