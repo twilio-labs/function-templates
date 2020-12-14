@@ -4,25 +4,10 @@ const Twilio = require('twilio');
 
 const event = {};
 
-const mockGoogleClient = {
-  google: {
-    auth: {
-      GoogleAuth: jest.fn(),
-    },
-    sheets: jest.fn(() => ({
-      spreadsheets: {
-        values: {
-          append: jest.fn(() => Promise.resolve())
-        },
-      },
-    })),
-  }
-};
-
 jest.mock('googleapis', () => ({
   google: {
     auth: {
-      GoogleAuth: jest.fn(),
+      JWT: jest.fn(),
     },
     sheets: jest.fn(() => ({
       spreadsheets: {
@@ -35,9 +20,10 @@ jest.mock('googleapis', () => ({
 }));
 
 const context = {
+  SHEETS_CLIENT_EMAIL: 'test@example.com',
+  SHEETS_PRIVATE_KEY: '1234testkey',
   SHEETS_DOC_ID: 'appAbcD12efG3HijK',
   SHEETS_SHEET_NAME: 'Sheet1',
-  SHEETS_SERVICE_ACCOUNT_JSON: './assets/auth.json',
 };
 
 beforeAll(() => {
