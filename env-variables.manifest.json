@@ -875,6 +875,26 @@
         "default": "/forward-message-mailgun",
         "configurable": false
       }
+    ],
+    "json-webhook": [
+      {
+        "key": "WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The URL for the webhook this function should call",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "TWILIO_SMS_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the Twilio Function webhook",
+        "link": null,
+        "default": "/event-to-webhook",
+        "configurable": false
+      }
     ]
   }
 }
