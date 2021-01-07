@@ -219,6 +219,11 @@
       "id": "json-webhook",
       "name": "JSON Webhook Adapter",
       "description": "Forward a URL encoded Twilio webhook event to a JSON webhook, suitable for use with services like Zapier and IFTTT"
+    },
+    {
+      "id": "sms-broadcast",
+      "name": "SMS Broadcast",
+      "description": "Use a Twilio Notify service to subscribe users and broadcast messages to them"
     }
   ]
 }
