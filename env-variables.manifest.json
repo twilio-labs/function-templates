@@ -895,6 +895,35 @@
         "default": "/event-to-webhook",
         "configurable": false
       }
+    ],
+    "sms-broadcast": [
+      {
+        "key": "BROADCAST_NOTIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Notify Service",
+        "link": "https://www.twilio.com/console/notify/services",
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "BROADCAST_ADMIN_NUMBERS",
+        "required": true,
+        "format": "phone_number",
+        "description": "A comma separated list of numbers in E.164 format that are allowed to trigger a broadcast",
+        "link": null,
+        "default": "+12223334444,+491761234567",
+        "configurable": true
+      },
+      {
+        "key": "TWILIO_SMS_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/broadcast",
+        "configurable": false
+      }
     ]
   }
 }
