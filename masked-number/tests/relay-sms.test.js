@@ -79,7 +79,7 @@ describe('masked-number function template', () => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
       expect(twiml).toMatch(
-        `<Message>You need to specify a recipient number and a ":" before the message.</Message>`
+        `<Message>You need to specify a recipient number and a ":" before the message. For example, "+12223334444: message".</Message>`
       );
 
       done();
@@ -95,7 +95,7 @@ describe('masked-number function template', () => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
       expect(twiml).toMatch(
-        `<Message>I couldn't understand the recipient phone number you entered.</Message>`
+        `<Message>There was an issue with the phone number you entered; please verify it is correct and try again.</Message>`
       );
 
       done();

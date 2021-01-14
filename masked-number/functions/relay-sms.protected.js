@@ -6,7 +6,7 @@ exports.handler = async function(context, event, callback) {
     const separatorPosition = event.Body.indexOf(':');
 
     if (separatorPosition < 1) {
-      twiml.message('You need to specify a recipient number and a ":" before the message.');
+      twiml.message('You need to specify a recipient number and a ":" before the message. For example, "+12223334444: message".');
     } else {
       const recipientNumber = event.Body.substr(0, separatorPosition).trim();
       const messageBody = event.Body.substr(separatorPosition + 1).trim();
@@ -22,7 +22,7 @@ exports.handler = async function(context, event, callback) {
         return callback(null);
       }
       catch (err) {
-        twiml.message("I couldn't understand the recipient phone number you entered.");
+        twiml.message("There was an issue with the phone number you entered; please verify it is correct and try again.");
       }
     }
   } else {

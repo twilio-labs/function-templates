@@ -228,7 +228,7 @@
     {
       "id": "masked-number",
       "name": "Masked Phone Number",
-      "description": "Uses a Twilio phone number to relay SMS messages to and from your phone"
+      "description": "Uses a Twilio phone number to relay SMS messages to and from your phone, masking your phone number behind a Twilio phone number"
     }
   ]
 }

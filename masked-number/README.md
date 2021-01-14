@@ -1,6 +1,6 @@
-# masked-number
+# Masked Number
 
-Uses a Twilio phone number to relay SMS messages to and from your phone.
+Uses a Twilio phone number to relay SMS messages to and from your phone; since the other party only sees your Twilio number, this effectively allows you to mask your phone number for privacy purposes.
 
 ## Pre-requisites
 
