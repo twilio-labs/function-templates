@@ -31,6 +31,18 @@
         width: 50px;
         height: 50px;
       }
+
+      #check-status {
+        padding: 1em;
+      }
+
+      .status-success {
+        color: darkgreen;
+      }
+
+      .status-failure {
+        color: maroon;
+      }
     </style>
   </head>
   <body>
@@ -50,6 +62,14 @@
       <section>
         <h3>Troubleshooting</h3>
         <ul>
+          <li>
+            Verify your Google Sheets configuration:
+            <div id="check-status">
+              <button onclick="showGoogleSheetsStatus()">Verify Configuration</button>
+              <span id="status-message"></span>
+            </div>
+            If the above check reveals problems, edit this function's <code>.env</code> file via the <code>Edit This Code</code> button below, if available, and ensure that all values are correct.
+          </li>
           <li>Check the <a href="https://www.twilio.com/console/phone-numbers/incoming">phone number configuration</a> and make sure the Twilio phone number you want your app has an SMS webhook configured to point at
             <p>
               <pre><code><span class="function-root"></span>/log-sms</code></pre>
@@ -97,4 +117,25 @@
       })
     </script>
   </body>
+  <script>
+   async function showGoogleSheetsStatus() {
+       const message = document.getElementById('status-message');
+
+       message.className = '';
+       message.textContent = 'Checking Google Sheets status...';
+
+       try {
+           const res = await fetch('./check-sheets-config', {
+               method: 'POST',
+           });
+           const resData = await res.json();
+
+           message.className = resData.success ? 'status-success' : 'status-failure';
+           message.textContent = resData.message;
+       } catch (err) {
+           message.className = 'status-failure';
+           message.textContent = `Google Sheets error: ${err}`;
+       }
+   }
+  </script>
 </html>

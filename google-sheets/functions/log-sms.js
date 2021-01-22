@@ -17,7 +17,7 @@ exports.handler = async function(context, event, callback) {
       auth,
     });
 
-    const res = await sheets.spreadsheets.values.append({
+    await sheets.spreadsheets.values.append({
       spreadsheetId: context.SHEETS_DOC_ID,
       range: `'${context.SHEETS_SHEET_NAME}'`,
       valueInputOption: 'USER_ENTERED',

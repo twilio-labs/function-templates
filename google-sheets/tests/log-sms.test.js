@@ -1,23 +1,19 @@
 const helpers = require('../../test/test-helper');
 const logSms = require('../functions/log-sms').handler;
-const Twilio = require('twilio');
+const { google } = require('googleapis');
 
 const event = {};
 
-jest.mock('googleapis', () => ({
-  google: {
-    auth: {
-      JWT: jest.fn(),
+jest.mock('googleapis');
+
+google.auth.JWT.mockReturnValue();
+google.sheets.mockReturnValue({
+  spreadsheets: {
+    values: {
+      append: jest.fn(() => Promise.resolve())
     },
-    sheets: jest.fn(() => ({
-      spreadsheets: {
-        values: {
-          append: jest.fn(() => Promise.resolve())
-        },
-      },
-    })),
-  }
-}));
+  },
+});
 
 const context = {
   SHEETS_CLIENT_EMAIL: 'test@example.com',
@@ -34,18 +30,49 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('returns a MessageResponse', done => {
+it('should successfully save the message', done => {
   const callback = (err, result) => {
-    expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
+    expect(err).toBeFalsy();
+    expect(result.toString()).toMatch('<Message>The SMS was successfully saved.</Message>');
     done();
   };
 
   logSms(context, event, callback);
 });
 
-test('successfully saved the message', done => {
-  const callback = (err, result) => {
-    expect(result.toString()).toMatch('<Message>The SMS was successfully saved.</Message>');
+it('should handle missing document IDs', done => {
+  google.sheets.mockReturnValueOnce({
+    spreadsheets: {
+      values: {
+        append: jest.fn(() => Promise.reject({
+          code: 404,
+        }))
+      },
+    },
+  });
+
+  const callback = (err, _result) => {
+    expect(err.code).toEqual(404);
+    done();
+  };
+
+  logSms(context, event, callback);
+});
+
+it('should handle Google Sheets API errors', done => {
+  google.sheets.mockReturnValueOnce({
+    spreadsheets: {
+      values: {
+        append: jest.fn(() => Promise.reject({
+          code: 400,
+          errors: [{ message: 'test Google Sheets API error' }]
+        }))
+      },
+    },
+  });
+
+  const callback = (err, _result) => {
+    expect(err.code).toEqual(400);
     done();
   };
 
