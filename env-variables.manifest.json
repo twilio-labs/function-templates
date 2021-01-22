@@ -924,6 +924,26 @@
         "default": "/broadcast",
         "configurable": false
       }
+    ],
+    "masked-number": [
+      {
+        "key": "MY_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "The number you want to forward incoming messages to",
+        "link": null,
+        "default": "+1112223333",
+        "configurable": true
+      },
+      {
+        "key": "TWILIO_SMS_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/relay-sms",
+        "configurable": false
+      }
     ]
   }
 }
