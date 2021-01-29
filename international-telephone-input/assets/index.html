@@ -73,6 +73,7 @@
           info.style.display = "";
           info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`
         } else {
+          console.log(json.error);
           error.style.display = "";
           error.innerHTML = `Invalid phone number.`
         }

@@ -9,10 +9,7 @@
  *  Returns JSON
  *  {
  *    "success": boolean,
- *    "error": {                // not present if success is true
- *      "message": string,
- *      "moreInfo": url string
- *    }
+ *    "error": string      // not present if success is true
  *  }
  */
 
@@ -28,10 +25,7 @@ exports.handler = function (context, event, callback) {
   if (typeof event.phone === "undefined") {
     response.setBody({
       success: false,
-      error: {
-        message: "Missing parameter; please provide a phone number.",
-        moreInfo: "https://www.twilio.com/docs/lookup/api",
-      },
+      error: "Missing parameter; please provide a phone number.",
     });
     response.setStatusCode(400);
     return callback(null, response);
@@ -54,10 +48,7 @@ exports.handler = function (context, event, callback) {
       response.setStatusCode(error.status);
       response.setBody({
         success: false,
-        error: {
-          message: error.message,
-          moreInfo: error.moreInfo,
-        },
+        error: error.message,
       });
       callback(null, response);
     });
