@@ -38,7 +38,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init phone-input-sample --template=telinput && cd phone-input-sample
+twilio serverless:init phone-input-sample --template=international-telephone-input && cd phone-input-sample
 ```
 
 4. Add your environment variables to `.env`:
