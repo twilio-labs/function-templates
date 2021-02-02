@@ -22,7 +22,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (event.phone === "") {
+  if (event.phone === "" || typeof event.phone === "undefined") {
     response.setBody({
       success: false,
       error: "Missing parameter; please provide a phone number.",
