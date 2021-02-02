@@ -1,6 +1,6 @@
 # International telephone input validation
 
-This project will show you one way to validate phone number inputs with the `intl-tel-input` library and Twilio's [Lookup API](https://www.twilio.com/docs/lookup/api). For a production use case we recommend adding [phone verification](https://github.com/twilio-labs/function-templates/tree/main/verify), which is a best practice for collecting phone numbers from your users in order to make sure they have control of the number.
+This project will show you one way to validate phone number inputs with the [`intl-tel-input`](https://github.com/jackocnr/intl-tel-input) plugin and Twilio's [Lookup API](https://www.twilio.com/docs/lookup/api). For a production use case we recommend adding [phone verification](https://github.com/twilio-labs/function-templates/tree/main/verify), which is a best practice for collecting phone numbers from your users in order to make sure they have control of the number.
 
 ## How to use the template
 

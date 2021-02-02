@@ -18,9 +18,10 @@
         <a href="https://github.com/jackocnr/intl-tel-input"><code>intl-tel-input</code></a>
         library and detect invalid phone numbers with the
         <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>.
+        Learn more in <a href="https://www.twilio.com/blog/international-phone-number-input-html-javascript">this blog post.</a>
       </p>
       <div>
-        <form id="login" onsubmit="process(event)">
+        <form id="lookup">
           <p>Enter your phone number:</p>
           <input id="phone" type="tel" name="phone">
           <input type="submit" class="btn" value="Verify" />
@@ -88,6 +89,9 @@
         //   error.innerHTML = `Invalid phone number.`
         // }
       }
+
+      const form = document.getElementById("lookup");
+      form.addEventListener("submit", process);
     </script>
   </body>
 </html>
