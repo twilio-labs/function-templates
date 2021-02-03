@@ -211,6 +211,11 @@
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
     },
     {
+      "id": "international-telephone-input",
+      "name": "International telephone input",
+      "description": "International telephone input form field and phone number validation with Twilio Lookup."
+    },
+    {
       "id": "forward-message-mailgun",
       "name": "Forward SMS message as an email (Mailgun)",
       "description": "The function will forward incoming SMS messages to an email address using the Mailgun API"
