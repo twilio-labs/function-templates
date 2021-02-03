@@ -829,6 +829,7 @@
         "configurable": true
       }
     ],
+    "international-telephone-input": [],
     "forward-message-mailgun": [
       {
         "key": "MAILGUN_API_KEY",
