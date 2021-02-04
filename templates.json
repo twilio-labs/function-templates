@@ -194,6 +194,11 @@
       "id": "verify-dashboard",
       "name": "Verify Testing Dashboard",
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
+    },
+    {
+      "id": "international-telephone-input",
+      "name": "International telephone input",
+      "description": "International telephone input form field and phone number validation with Twilio Lookup."
     }
   ]
 }
