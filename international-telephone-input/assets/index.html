@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>International telephone input</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>International telephone input</h1>
+      <p>
+        This example shows how to process and parse international phone numbers with the
+        <a href="https://github.com/jackocnr/intl-tel-input"><code>intl-tel-input</code></a>
+        library and detect invalid phone numbers with the
+        <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>.
+        Learn more in <a href="https://www.twilio.com/blog/international-phone-number-input-html-javascript">this blog post.</a>
+      </p>
+      <div>
+        <form id="lookup">
+          <p>Enter your phone number:</p>
+          <input id="phone" type="tel" name="phone">
+          <input type="submit" class="btn" value="Verify" />
+        </form>
+      <div class="alert alert-info" style="display: none;"></div>
+      <div class="alert alert-error" style="display: none;"></div>
+    </div>
+    <script>
+      // Handle international prefixes, format phone input field
+      // Uses intl-tel-input plugin
+      const phoneInputField = document.querySelector("#phone");
+      const phoneInput = window.intlTelInput(phoneInputField, {
+        // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+        preferredCountries: ["us", "co", "in", "de"],
+        utilsScript:
+          "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+      });
+
+      const info = document.querySelector(".alert-info");
+      const error = document.querySelector(".alert-error");
+
+      function process(event) {
+        event.preventDefault();
+
+        const phoneNumber = phoneInput.getNumber();
+
+        info.style.display = "none";
+        error.style.display = "none";
+
+        // OPTION 1 - Twilio Lookup API
+        // Pros: Free API call, updated data
+        // Pros: The Lookup API can return line type and carrier info too: https://www.twilio.com/docs/lookup/api
+        // Cons: Network request
+        const data = new URLSearchParams();
+        data.append("phone", phoneNumber);
+
+        fetch("./lookup", {
+          method: 'POST',
+          body: data
+        })
+        .then(response => response.json())
+        .then(json => {
+          if (json.success) {
+            info.style.display = "";
+            info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`
+          } else {
+            console.log(json.error);
+            error.style.display = "";
+            error.innerHTML = `Invalid phone number.`
+          }
+        })
+        .catch(err => {
+          error.style.display = "";
+          error.innerHTML = `Something went wrong: ${err}`
+        });
+
+        // OPTION 2 - intl-tel-input validity check
+        // Pros: No additional API call
+        // Cons: Requires plugin updates for updates on phone number validity
+        // if (phoneInput.isValidNumber()) {
+        //   info.style.display = "";
+        //   info.innerHTML = `Phone number in E.164 format: <strong>${phoneNumber}</strong>`
+        // } else {
+        //   error.style.display = "";
+        //   error.innerHTML = `Invalid phone number.`
+        // }
+      }
+
+      const form = document.getElementById("lookup");
+      form.addEventListener("submit", process);
+    </script>
+  </body>
+</html>
