@@ -31,21 +31,44 @@
         width: 50px;
         height: 50px;
       }
+			.btn {
+				background: rgb(0, 20, 137);
+				color: #fff;
+				font-weight: bold;
+				padding: 5px 10px;
+				border-radius: 4px;
+			}
+			.btn:hover {
+				color: white;
+				background: rgb(3, 11, 93);
+				cursor: pointer;
+			}
+			.deploy-studio-flow {
+				margin: 10px 0;
+			}
     </style>
   </head>
   <body>
     <header>
-      <h1>Welcome to your new Twilio App</h1>
+      <h1>COVID-19 Vaccine Standby List</h1>
     </header>
     <div role="main">
       <section>
         <h3>Get started with your app</h3>
         <p>Now that your code is deployed, here are the last steps you need to do to finish your app.</p>
         <ol>
-          <li>Text anything to your Twilio app</li>
-          <li>You should receive a response saying "Hello World"</li>
+          <li>
+						Click the button below to deploy the Twilio Studio Flow for the SMS bot
+						<div class="deploy-studio-flow">
+							<a class="btn">Deploy Studio Flow</a>
+						</div>
+					</li>
+          <li>Connect your Twilio phone number to the Studio Flow</li>
         </ol>
       </section>
+			<section>
+				<h3>Registered Residents</h3>
+			</section>
       <section>
         <h3>Troubleshooting</h3>
         <ul>
