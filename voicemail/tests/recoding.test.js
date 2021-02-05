@@ -38,7 +38,7 @@ const mockClient = {
 
 let context = {
   getTwilioClient: () => mockClient,
-  MY_PHONE_NUMBER: '+1112223333',
+  MY_PHONE_NUMBER: '+12223334444',
 };
 let event = {
   RecordingUrl: 'http://localhost/demo',
@@ -63,7 +63,7 @@ test('sends an sms', done => {
     expect(mockClient.messages.create.mock.calls[0]).toEqual([
       {
         from: '+1234567890',
-        to: '+1112223333',
+        to: '+12223334444',
         body:
           'You have a new message to your Twilio voicemail from +9998887777.\nhttp://localhost/demo',
       },
