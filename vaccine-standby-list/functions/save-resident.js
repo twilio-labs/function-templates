@@ -9,6 +9,7 @@ exports.handler = function(context, event, callback) {
                 "Phone Number": event.phone,
                 "Email": event.email,
                 "Age": event.age,
+                "Essential Worker": event.essential_worker,
                 "Zip Code": event.zip_code,
                 "Work From Home": event.work_from_home,
                 "Live in Long Term Care Facility": event.long_term_care,
