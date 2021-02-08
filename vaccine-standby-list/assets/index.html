@@ -68,6 +68,7 @@
       </section>
 			<section>
 				<h3>Registered Residents</h3>
+        <div id="airtable-embedded-iframe-container"></div>
 			</section>
       <section>
         <h3>Troubleshooting</h3>
@@ -118,6 +119,15 @@
       functionRoots.forEach(element => {
         element.innerText = fullUrl
       })
+      // Grab the Airtable embed code and use it to populate the iFrame to embed the base
+      let request = new XMLHttpRequest();
+      request.open('GET', fullUrl + '/return-airtable-config');
+      request.send();
+      request.onload = () => {
+        const airtable_embed_code = JSON.parse(request.response).airtable_embed_code;
+        const iframe_container = document.getElementById('airtable-embedded-iframe-container');
+        iframe_container.innerHTML = airtable_embed_code;
+      }
     </script>
   </body>
 </html>
