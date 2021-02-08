@@ -2,34 +2,73 @@
 <html lang="en">
   <head>
     <title>Login with Twilio Verify</title>
+<<<<<<< HEAD
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+=======
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+>>>>>>> f34519c624c7991a425383dba82f5a2e4a3fa464
   </head>
   <body>
     <div class="container">
       <h2>Twilio Verify</h2>
       <p>
+<<<<<<< HEAD
         This example shows how to deploy
         <a href="https://twilio.com/docs/verify/api">Twilio Verify</a>
+=======
+        This example shows how to deploy 
+        <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> 
+>>>>>>> f34519c624c7991a425383dba82f5a2e4a3fa464
         and Twilio functions for serverless email verification with magic links.
       </p>
       <div class="content">
         <form id="login">
+<<<<<<< HEAD
           <div class="form-group email-input" ">
             <p>Enter your email:</p>
             <input type="email" id="email" class="form-control"/>
           </div>
           <div class="form-group">
             <input type="submit" class="btn btn-primary" value="Verify"/>
+=======
+          <div class="form-group email-input"">
+            <p>Enter your email:</p>
+            <input
+              type="email"
+              id="email"
+              class="form-control" />
+          </div>
+          <div class="form-group">
+            <input
+              type="submit"
+              class="btn btn-primary"
+              value="Verify"/>
+>>>>>>> f34519c624c7991a425383dba82f5a2e4a3fa464
           </div>
         </form>
         <span id="form-success" class="text-success"></span>
         <span id="form-error" class="text-danger"></span>
       </div>
+<<<<<<< HEAD
     </div>
     <!-- /.container -->
     <!-- EDIT_CODE -->
+=======
+    </div><!-- /.container -->
+>>>>>>> f34519c624c7991a425383dba82f5a2e4a3fa464
   </body>
   <script>
     function showSubmitStatus(statusType, message) {
@@ -38,7 +77,11 @@
       content.append(message);
     }
 
+<<<<<<< HEAD
     $("#login").submit(function (event) {
+=======
+    $("#login").submit(function(event) {
+>>>>>>> f34519c624c7991a425383dba82f5a2e4a3fa464
       event.preventDefault();
 
       const to = $("#email").val()
@@ -49,9 +92,15 @@
       data.append("to", to);
 
       fetch("./start-verify", {
+<<<<<<< HEAD
         method: "POST",
         body: data
       })
+=======
+          method: "POST",
+          body: data
+        })
+>>>>>>> f34519c624c7991a425383dba82f5a2e4a3fa464
         .then(response => {
           return response.json()
         })
