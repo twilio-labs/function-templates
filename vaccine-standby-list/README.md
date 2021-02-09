@@ -10,8 +10,13 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
+| Variable              | Description | Required |
+| :-------------------- | :----------------------------------------------------- | :-- |
+| `MY_PHONE_NUMBER`     | Your Twilio phone number for sending and receiving SMS | Yes |
+| `AIRTABLE_API_KEY`    | Your Airtable API key                                  | Yes |
+| `AIRTABLE_BASE_ID`    | The Airtable Base ID. Base should be copied from the [vaccine standby list template](https://airtable.com/universe/expeJaAHwR6NK9al0/covid-19-vaccine-standby-list) on Airtable Universe | Yes |
+| `AIRTABLE_EMBED_CODE` | Full HTML string of embed code of your Airtable base   | Yes |
+
 
 
 ### Function Parameters
