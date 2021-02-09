@@ -35,7 +35,7 @@ exports.handler = async function(context, event, callback) {
                 .then(environments => {
                     environments.forEach(e => {
                         // TODO: double check this is the environemnt that the Quickdeploy with launch with?
-                        if (e.uniqueName === "vaccine-standby-list") {
+                        if (e.uniqueName === "vaccine-standby") {
                             console.log(`Found vaccine standby list environment: ${e.sid}.`);
                             resolve({sid: e.sid, domain: e.domainName});
                             return;
