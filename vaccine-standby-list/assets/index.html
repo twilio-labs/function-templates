@@ -13,6 +13,8 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        max-width: 1024px;
+        margin: 0 auto;
       }
 
       div[role="main"] {
@@ -46,43 +48,38 @@
 			.deploy-studio-flow {
 				margin: 10px 0;
 			}
+      .standby-list-diagram {
+        border: 1px solid rgb(136, 145, 170);
+        margin-bottom: 20px;
+      }
     </style>
   </head>
   <body>
     <header>
       <h1>COVID-19 Vaccine Standby List</h1>
+      <img class="standby-list-diagram" src="/standby-list-diagram.png" />
+      <p>This Quick Deploy app is designed for public health agencies to create a COVID-19 vaccine eligibility standby list for their city or state.
+      Residents send an SMS to a pre-configured phone number, and are asked a series of demographic questions informed by the CDC's vaccine rollout guidelines powered by a Twilio Studio Flow.
+       
+      <p>This data is meant to help ensure vaccinations are administered as quickly as possible as supply becomes available. With this template, your agency can create a standardized list of eligible
+      vaccine recipients. In exchange for sharing this information, residents are notified when it is their turn to receive the vaccine.</p>
     </header>
     <div role="main">
       <section>
-        <h3>Get started with your app</h3>
-        <p>Now that your code is deployed, here are the last steps you need to do to finish your app.</p>
-        <ol>
-          <li>
-						Click the button below to deploy the Twilio Studio Flow for the SMS bot
-						<div class="deploy-studio-flow">
-							<a class="btn">Deploy Studio Flow</a>
-						</div>
-					</li>
-          <li>Connect your Twilio phone number to the Studio Flow</li>
-        </ol>
+        <h3>Finish configuring your app</h3>
+        <p>Your app is deployed, but you need to finish configuring it to get it working.</p>
+        <p>Click the button below to deploy the Twilio Studio Flow for the SMS bot:</p>
+        <div class="deploy-studio-flow">
+          <a class="btn">Deploy Studio Flow</a>
+        </div>
+					
       </section>
 			<section>
-				<h3>Registered Residents</h3>
+        <h3>Test your Standby List</h3>
+        <p>Once you deploy your Studio Flow successfully, you can try out your Standby List by sending a text message to <strong id="phone-number"></strong>.</p>
+        <p>When you finish going through the chatbot, you should see your record recorded below:</p>
         <div id="airtable-embedded-iframe-container"></div>
 			</section>
-      <section>
-        <h3>Troubleshooting</h3>
-        <ul>
-          <li>Make sure the Twilio phone number you want your app has a messaging webhook configured to point at
-          </li>
-          <p>
-            <pre><code><span class="function-root"></span>/hello-messaging</code></pre>
-          </p>
-          <li>Check the
-            <code>README.md</code>
-            of your project</li>
-        </ul>
-      </section>
     </div>
     <footer>
       <p>
@@ -119,14 +116,21 @@
       functionRoots.forEach(element => {
         element.innerText = fullUrl
       })
-      // Grab the Airtable embed code and use it to populate the iFrame to embed the base
       let request = new XMLHttpRequest();
       request.open('GET', fullUrl + '/return-airtable-config');
       request.send();
       request.onload = () => {
-        const airtable_embed_code = JSON.parse(request.response).airtable_embed_code;
+        const response = JSON.parse(request.response);
+        const airtable_embed_code = response.airtable_embed_code;
+        const phone_number = response.phone_number;
+
+        // Grab the Airtable embed code and use it to populate the iFrame to embed the base
         const iframe_container = document.getElementById('airtable-embedded-iframe-container');
         iframe_container.innerHTML = airtable_embed_code;
+
+        // Grab the phone number being used and display it to help the user test their app
+        const phone_number_element = document.getElementById('phone-number');
+        phone_number_element.innerHTML = phone_number;
       }
     </script>
   </body>
