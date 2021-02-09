@@ -41,8 +41,8 @@
         "key": "MY_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
-        "description": "The number you want to forward incoming calls to",
-        "link": null,
+        "description": "Calls made to your Twilio number will get forwarded to this e164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
         "configurable": true
       },
@@ -61,8 +61,8 @@
         "key": "MY_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
-        "description": "The number you want to forward incoming messages to",
-        "link": null,
+        "description": "Messages sent to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
         "configurable": true
       },
@@ -110,7 +110,7 @@
         "key": "TO_EMAIL_ADDRESS",
         "required": true,
         "format": "email",
-        "description": "The email address to forward the message to",
+        "description": "Messages sent to your Twilio number will be forwarded to this email address",
         "link": null,
         "default": null,
         "configurable": true
@@ -139,16 +139,16 @@
         "key": "MY_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
-        "description": "The phone number to forward the phone calls to",
-        "link": null,
-        "default": "+1112223333",
+        "description": "Calls made to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
         "configurable": true
       },
       {
         "key": "TIMEZONE_OFFSET",
         "required": false,
         "format": "integer",
-        "description": "The timezone offset from UTC to check for business hours",
+        "description": "The timezone offset from UTC to check for business hours (-8 for PST, -5 for EST)",
         "link": null,
         "default": "0",
         "configurable": true
@@ -157,7 +157,7 @@
         "key": "WORK_WEEK_START",
         "required": false,
         "format": "integer",
-        "description": "Day of the week where the business hours should start applying. 0-6 = Sunday - Saturday. 1 = Monday",
+        "description": "Day of the week where the business hours should start applying. 0-6 = Sunday - Saturday. Default is set to 1, which is Monday",
         "link": null,
         "default": "1",
         "configurable": true
@@ -166,7 +166,7 @@
         "key": "WORK_WEEK_END",
         "required": false,
         "format": "integer",
-        "description": "Day of the week after which the business hours should stop applying. 0-6 = Sunday - Saturday. 5 = Friday",
+        "description": "Day of the week after which the business hours should stop applying. 0-6 = Sunday - Saturday. Default is set to 5, which is Friday",
         "link": null,
         "default": "5",
         "configurable": true
@@ -175,7 +175,7 @@
         "key": "WORK_HOUR_START",
         "required": false,
         "format": "integer",
-        "description": "Hour of the day where business hours should start. 0-23. 8 = 8:00:00 = 8:00:00AM",
+        "description": "Hour of the day where business hours should start. 0-23. Default is set to 8, meaning business hours start at 8:00:00AM",
         "link": null,
         "default": "8",
         "configurable": true
@@ -184,7 +184,7 @@
         "key": "WORK_HOUR_END",
         "required": false,
         "format": "integer",
-        "description": "Hour of the day where business hours should stop. 0-23. 18 = 18:59:59 = 6:59:59PM",
+        "description": "Hour of the day where business hours should stop. 0-23. Default is set to 18, meaning business hours end at 18:59:59 or 6:59:59PM",
         "link": null,
         "default": "18",
         "configurable": true
@@ -213,7 +213,7 @@
         "key": "TO_EMAIL_ADDRESS",
         "required": true,
         "format": "email",
-        "description": "The email address to forward the message to",
+        "description": "Messages sent to your Twilio number will be forwarded to this email address",
         "link": null,
         "default": null,
         "configurable": true
@@ -479,8 +479,8 @@
         "key": "BLOCKLIST",
         "required": true,
         "format": "list(phone_number)",
-        "description": "The list of numbers you want to reject",
-        "link": null,
+        "description": "Only phone numbers in this comma-separated list will be allowed to join the conference. All phone numbers must follow the E.164 format",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12125551234,+17025556789",
         "configurable": true
       },
@@ -587,7 +587,7 @@
         "key": "APP_NAME",
         "required": true,
         "format": "text",
-        "description": "TwiML application name",
+        "description": "Choose a name for your application",
         "link": null,
         "default": "voice-client-javascript",
         "configurable": true
@@ -596,7 +596,7 @@
         "key": "ADMIN_PASSWORD",
         "required": true,
         "format": "text",
-        "description": "the password to protect your admin interface",
+        "description": "Set a password for your app. Users who want to use the admin interface will have to use this password to access it",
         "link": null,
         "default": "default",
         "configurable": true
@@ -618,7 +618,7 @@
         "key": "APP_NAME",
         "required": true,
         "format": "text",
-        "description": "The name of your SIP application",
+        "description": "Choose a name for your application",
         "link": null,
         "default": "SIP Quickstart",
         "configurable": true
@@ -627,7 +627,7 @@
         "key": "ADMIN_PASSWORD",
         "required": true,
         "format": "text",
-        "description": "A password to protect your admin interface",
+        "description": "Set a password for your app. Users who want to use the admin interface will have to use this password to access it",
         "link": null,
         "default": "default",
         "configurable": true
@@ -665,7 +665,7 @@
         "key": "VALID_PARTICIPANTS",
         "required": true,
         "format": "list(phone_number)",
-        "description": "Phone numbers in E.164 format of valid participants. Comma separated",
+        "description": "Only phone numbers in this comma-separated list will be allowed to join the conference. All phone number must use E.164 format",
         "link": null,
         "default": null,
         "configurable": true
@@ -685,7 +685,7 @@
         "key": "CONFERENCE_PIN",
         "required": true,
         "format": "integer",
-        "description": "A PIN code (only digits) that the caller has to enter to be connected to your conference line",
+        "description": "Choose a PIN code (only digits) for your app. Callers have to enter this code to be connected to your conference line",
         "link": null,
         "default": null,
         "configurable": true
@@ -714,8 +714,8 @@
         "key": "VALID_PARTICIPANTS",
         "required": true,
         "format": "list(phone_number)",
-        "description": "Phone numbers in E.164 format of valid participants. Comma separated",
-        "link": null,
+        "description": "Only phone numbers in this comma-separated list will be allowed to join the conference. All phone numbers must follow the E.164 format",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": null,
         "configurable": true
       },
@@ -752,7 +752,7 @@
         "key": "PASSCODE",
         "required": true,
         "format": "text",
-        "description": "Passcode for your Video chat app",
+        "description": "Choose a passcode for your app. Users have to use this passcode to enter the video call",
         "link": null,
         "default": null,
         "configurable": true
@@ -772,7 +772,7 @@
         "key": "PASSCODE",
         "required": true,
         "format": "text",
-        "description": "Passcode for your SMS notifications app",
+        "description": "Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts",
         "link": null,
         "default": null,
         "configurable": true
@@ -853,7 +853,7 @@
         "key": "TO_EMAIL_ADDRESS",
         "required": true,
         "format": "email",
-        "description": "The email address to forward the message to",
+        "description": "Messages sent to your Twilio number will be forwarded to this email address",
         "link": null,
         "default": null,
         "configurable": true
@@ -931,9 +931,9 @@
         "key": "MY_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
-        "description": "The number you want to forward incoming messages to",
-        "link": null,
-        "default": "+1112223333",
+        "description": "Messages sent to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
         "configurable": true
       },
       {
