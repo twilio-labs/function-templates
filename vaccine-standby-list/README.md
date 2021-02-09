@@ -69,6 +69,26 @@ twilio serverless:start
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
+### Studio Flow
+This app includes a [Twilio Studio](https://www.twilio.com/studio) Flow that orchestrates the SMS chatbot. You will be prompted to deploy the Studio flow as part of the steps included in `index.html`. Once deployed, you can view your flow [here](https://www.twilio.com/console/studio/dashboard) — it will be named "Vaccine Standby Intake".
+
+The default Flow contains the following sequence of interactions:
+1. Welcome Message & Opt-In
+2. Full Name
+3. Age
+4. Zip Code
+5. Are you an essential worker?
+6. Do you work from home?
+7. Do you live in a long term care facility?
+8. Do you live in a congregate setting?
+9. Do you have an underlying health condition increasing risk of severe COVID infection?
+10. Notification preference (SMS or Email)
+  --> If user chooses email, they will be asked for their email address
+11. Language Preference
+12. Confirmation
+
+You are encouraged to edit the Studio Flow in accordance with your organization's unique needs.
+
 ## Deploying
 
 Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
