@@ -2,7 +2,7 @@ let flowDefinition = require('../sms-studio-flow.json');
 
 exports.handler = async function(context, event, callback) {
 
-	const client = context.getTwilioClient();
+    const client = context.getTwilioClient();
 
     // Get Serverless SID
     function getServiceSid() {
@@ -47,6 +47,7 @@ exports.handler = async function(context, event, callback) {
         })
     }
 
+    // Get Funcsion SID
     function getFunctionSid(serviceSid) {
         console.log("Getting Serverless Function SID.");
 
@@ -67,6 +68,7 @@ exports.handler = async function(context, event, callback) {
         })
     }
 
+    // Append function widget to Studio Flow
     function formatStudioFlow(serviceSid, environmentDetails, functionSid) {
 
         let functionWidgetConfig = {
@@ -176,7 +178,7 @@ exports.handler = async function(context, event, callback) {
         return new Promise((resolve, reject) => {
             client.incomingPhoneNumbers(numberSid)
                 .update({
-                    voiceUrl: studioWebhook
+                    smsUrl: studioWebhook
                 })
                 .then(d => {
                     console.log(`Successfully updated ${numberSid} to use ${studioWebhook}.`);
