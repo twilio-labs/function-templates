@@ -47,7 +47,7 @@ exports.handler = async function(context, event, callback) {
         })
     }
 
-    // Get Funcsion SID
+    // Get Function SID
     function getFunctionSid(serviceSid) {
         console.log("Getting Serverless Function SID.");
 
@@ -140,9 +140,10 @@ exports.handler = async function(context, event, callback) {
             }
         }
 
-        flowDefinition.states.push(functionWidgetConfig)
+        let formattedFlow = flowDefinition;
+        formattedFlow.states.push(functionWidgetConfig)
         
-        return flowDefinition;
+        return formattedFlow;
     }
 
     // Deploy Twilio Studio Flow
