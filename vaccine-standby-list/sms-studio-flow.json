@@ -420,28 +420,6 @@
       }
     },
     {
-      "name": "http_1",
-      "type": "make-http-request",
-      "transitions": [
-        {
-          "event": "success"
-        },
-        {
-          "event": "failed"
-        }
-      ],
-      "properties": {
-        "offset": {
-          "x": -590,
-          "y": 3720
-        },
-        "method": "POST",
-        "content_type": "application/json;charset=utf-8",
-        "body": "{\n \"data\": {\n \"name\": \"{{widgets.Name.inbound.Body}}\",\n \"notification_preference\": \"{{widgets.NotificationPreference.inbound.Body}} \",\n \"email\": \"{{widgets.GetEmail.inbound.Body}}\",\n \"phone_number\": \"{{trigger.message.From}} \",\n \"job\": \"{{widgets.EssentialWorker.inbound.Body}} \",\n \"work_from_home\": {{widgets.WorkFromHome.inbound.To}},\n \"zip_code\": \"{{widgets.ZipCode.inbound.Body}}\",\n \"long_term_care\": \"{{widgets.LongTermCare.inbound.Body}}\",\n \"congregate_setting\": \"{{widgets.CongregateSetting.inbound.Body}}\",\n \"age\": \"{{widgets.Age.inbound.Body}}\",\n \"preferred_language\": \"{{widgets.LanguagePreference.inbound.Body}}\",\n \"health_conditions\": \"{{widgets.HealthCondition.inbound.Body}}\"\n }\n}",
-        "url": "https://mydomain.com/api"
-      }
-    },
-    {
       "name": "ZipCode",
       "type": "send-and-wait-for-reply",
       "transitions": [
@@ -466,74 +444,6 @@
         "from": "{{flow.channel.address}}",
         "body": "What's your 5-digit zip code?",
         "timeout": "3600"
-      }
-    },
-    {
-      "name": "SaveToAirtable",
-      "type": "run-function",
-      "transitions": [
-        {
-          "event": "success"
-        },
-        {
-          "event": "fail"
-        }
-      ],
-      "properties": {
-        "service_sid": "",
-        "environment_sid": "",
-        "offset": {
-          "x": 60,
-          "y": 3710
-        },
-        "function_sid": "",
-        "parameters": [
-          {
-            "value": "{{widgets.Name.inbound.Body}}",
-            "key": "name"
-          },
-          {
-            "value": "{{widgets.NotificationPreference.inbound.Body}}",
-            "key": "notification_preference"
-          },
-          {
-            "value": "{{widgets.GetEmail.inbound.Body}}",
-            "key": "email"
-          },
-          {
-            "value": "{{trigger.message.From}}",
-            "key": "phone_number"
-          },
-          {
-            "value": "{{widgets.EssentialWorker.inbound.Body}}",
-            "key": "essential_worker"
-          },
-          {
-            "value": "{{widgets.WorkFromHome.inbound.To}}",
-            "key": "work_from_home"
-          },
-          {
-            "value": "{{widgets.ZipCode.inbound.Body}}",
-            "key": "zip_code"
-          },
-          {
-            "value": "{{widgets.LongTermCare.inbound.Body}}",
-            "key": "long_term_care"
-          },
-          {
-            "value": "{{widgets.CongregateSetting.inbound.Body}}",
-            "key": "congregate_setting"
-          },
-          {
-            "value": "{{widgets.HealthCondition.inbound.Body}}",
-            "key": "underlying_health_condition"
-          },
-          {
-            "value": "{{widgets.LanguagePreference.inbound.Body}",
-            "key": "language_preference"
-          }
-        ],
-        "url": ""
       }
     }
   ],
