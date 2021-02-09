@@ -1,6 +1,6 @@
 exports.handler = function(context, event, callback) {
     var Airtable = require('airtable');
-    var base = new Airtable({apiKey: context.env.AIRTABLE_API_KEY}).base(context.env.AIRTABLE_BASE_ID);
+    var base = new Airtable({apiKey: context.AIRTABLE_API_KEY}).base(context.AIRTABLE_BASE_ID);
 
     base('Registered Residents').create([
         {
