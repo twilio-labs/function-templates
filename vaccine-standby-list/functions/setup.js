@@ -584,7 +584,7 @@ exports.handler = async function(context, event, callback) {
                         "key": "underlying_health_condition"
                     },
                     {
-                        "value": "{{widgets.LanguagePreference.inbound.Body}",
+                        "value": "{{widgets.LanguagePreference.inbound.Body}}",
                         "key": "language_preference"
                     }
                 ],
