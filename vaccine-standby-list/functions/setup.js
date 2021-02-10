@@ -1,4 +1,4 @@
-let flowDefinition = require('../sms-studio-flow.json');
+let flowDefinition = require('../assets/sms-studio-flow.json');
 
 exports.handler = async function(context, event, callback) {
 
