@@ -140,7 +140,7 @@ exports.handler = async function(context, event, callback) {
             }
         }
 
-        let formattedFlow = flowDefinition;
+        let formattedFlow = require(`https://${environmentDetails.domain}/sms-studio-flow.json`) ;
         formattedFlow.states.push(functionWidgetConfig)
         
         return formattedFlow;
