@@ -2,12 +2,12 @@ exports.handler = function(context, event, callback) {
 
     const client = context.getTwilioClient();
 
-    client.studio.v1.flows(event.sid).executions.list({limit: 20})
+    client.studio.v1.flows(event.sid).executions.list({limit: 100})
         .then(executions => {
             if (executions.length > 0) {
-                let promises = executions.map(e => {
+                const endedExecutions = executions.filter((e) => e.status === 'ended');
+                let promises = endedExecutions.map(e => {
                     return new Promise((resolve, reject) => {
-
                         client.studio.flows(event.sid)
                             .executions(e.sid)
                             .executionContext()
