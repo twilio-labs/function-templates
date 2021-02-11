@@ -182,6 +182,7 @@
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"></script>
     <script>
+      let phone_number;
       // This code will replace the content of any <span class="function-root"></span> with the base path of the URL
       const baseUrl = new URL(location.href);
       baseUrl.pathname = baseUrl
@@ -202,7 +203,7 @@
       request.send();
       request.onload = () => {
         const response = JSON.parse(request.response);
-        const phone_number = response.phone_number;
+        phone_number = response.phone_number;
 
         // Grab the phone number being used and display it to help the user test their app
         const phone_number_elements = $('.phone-number');
@@ -251,25 +252,29 @@
         fetch(`/get-studio-executions?sid=${sid}`)
           .then(response => response.json())
           .then(data => {
-            let rows = "";
-            for (var i = 0; i < data.length; i++) {
-              let tr = "<tr>";
-              tr += "<td>"+data[i].name+"</td>";
-              tr += "<td>"+data[i].phone_number+"</td>";
-              tr += "<td>"+data[i].age+"</td>";
-              tr += "<td>"+data[i].zip_code+"</td>";
-              tr += "<td>"+data[i].essential_worker+"</td>";
-              tr += "<td>"+data[i].work_from_home+"</td>";
-              tr += "<td>"+data[i].long_term_care+"</td>";
-              tr += "<td>"+data[i].congregate_setting+"</td>";
-              tr += "<td>"+data[i].health_condition+"</td>";
-              tr += "<td>"+data[i].notification_preference+"</td>";
-              tr += "<td>"+data[i].language_preference+"</td>";
-              tr += "</tr>";
+            if (data.length > 0) {
+              let rows = "";
+              for (var i = 0; i < data.length; i++) {
+                let tr = "<tr>";
+                tr += "<td>"+data[i].name+"</td>";
+                tr += "<td>"+data[i].phone_number+"</td>";
+                tr += "<td>"+data[i].age+"</td>";
+                tr += "<td>"+data[i].zip_code+"</td>";
+                tr += "<td>"+data[i].essential_worker+"</td>";
+                tr += "<td>"+data[i].work_from_home+"</td>";
+                tr += "<td>"+data[i].long_term_care+"</td>";
+                tr += "<td>"+data[i].congregate_setting+"</td>";
+                tr += "<td>"+data[i].health_condition+"</td>";
+                tr += "<td>"+data[i].notification_preference+"</td>";
+                tr += "<td>"+data[i].language_preference+"</td>";
+                tr += "</tr>";
 
-              rows = rows.concat(tr);
+                rows = rows.concat(tr);
+              }
+              tbody.html(rows);
+            } else {
+              tbody.html(`<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phone_number}</strong> to begin.</td></tr>`)
             }
-            tbody.html(rows);
           })
           .catch(err => console.log(err));
       }
