@@ -236,7 +236,7 @@
       "description": "Uses a Twilio phone number to relay SMS messages to and from your phone, masking your phone number behind a Twilio phone number"
     },
     {
-      "id": "vaccine-standby-list",
+      "id": "vaccine-standby",
       "name": "COVID-19 Vaccine Standby List",
       "description": "Allows for the creation of a list of residents who want to be notified when it’s their turn to get the vaccine, who self-report demographic data that can be used by health agencies to prioritize the rollout in accordance with CDC guidelines."
     }
