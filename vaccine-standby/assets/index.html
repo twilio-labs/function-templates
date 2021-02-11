@@ -104,6 +104,14 @@
       #test-standby-list {
         display: none;
       }
+
+      #hipaa-disclaimer {
+        border: 2px solid rgb(136, 145, 170);
+        padding: 20px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 14px;
+      }
     </style>
   </head>
   <body>
@@ -137,6 +145,9 @@
       <section id="test-standby-list">
         <h3>Test your Standby List</h3>
         <p>You can try out your Standby List by sending a text message to <strong class="phone-number"></strong>. As residents complete the chatbot, you should see records recorded below, pulled from <a href="https://www.twilio.com/docs/studio/rest-api/execution" target="_blank">Studio Flow execution</a> logs:</p>
+        <div id="hipaa-disclaimer">
+          Note that organizations which are covered entities and subject to HIPAA should consult with a Twilio Expert before publicly offering this service in a production context. Business Associate Addendums (BAA) are available from with Twilio for the offerings shown in this solution.
+        </div>
         <div id="residents-table">
           <table>
             <thead>
