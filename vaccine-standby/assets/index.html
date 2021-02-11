@@ -90,7 +90,26 @@
         <h3>Test your Standby List</h3>
         <p>Once you deploy your Studio Flow successfully, you can try out your Standby List by sending a text message to <strong id="phone-number"></strong>.</p>
         <p>When you finish going through the chatbot, you should see your record recorded below:</p>
-        <div id="airtable-embedded-iframe-container"></div>
+        <div id="residents-table">
+          <table>
+            <thead>
+              <th>Name</th>
+              <th>Phone Number</th>
+              <th>Age</th>
+              <th>Zip Code</th>
+              <th>Essential Worker</th>
+              <th>Work from Home</th>
+              <th>Long Term Care</th>
+              <th>Congregate Setting</th>
+              <th>Health Condition</th>
+              <th>Notification Preference</th>
+              <th>Language Preference</th>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
       </section>
     </div>
     <footer>
@@ -136,12 +155,7 @@
       request.send();
       request.onload = () => {
         const response = JSON.parse(request.response);
-        const airtable_embed_code = response.airtable_embed_code;
         const phone_number = response.phone_number;
-
-        // Grab the Airtable embed code and use it to populate the iFrame to embed the base
-        const iframe_container = document.getElementById('airtable-embedded-iframe-container');
-        iframe_container.innerHTML = airtable_embed_code;
 
         // Grab the phone number being used and display it to help the user test their app
         const phone_number_element = document.getElementById('phone-number');
@@ -169,9 +183,22 @@
               $('#deploy-flow').hide();
               $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`)
               console.log('flow exists')
+              setInterval(getStudioExecutions, 5000, sid);
             }
           });
       };
+
+      function getStudioExecutions(sid) {
+        console.log('Pulling from Studio...')
+        fetch(`/get-studio-executions?sid=${sid}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data);
+
+            // Todo: update table
+          })
+          .catch(err => console.log(err));
+      }
 
       checkStudioFlow();
     </script>
