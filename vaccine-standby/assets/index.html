@@ -150,7 +150,7 @@
         element.innerText = fullUrl
       })
       let request = new XMLHttpRequest();
-      request.open('GET', fullUrl + '/return-airtable-config');
+      request.open('GET', fullUrl + '/return-config');
       request.send();
       request.onload = () => {
         const response = JSON.parse(request.response);
