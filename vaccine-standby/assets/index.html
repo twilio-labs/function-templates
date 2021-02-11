@@ -181,8 +181,9 @@
               $('#flow-deployed').show();
               $('#deploy-flow').hide();
               $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`)
-              console.log('flow exists')
-              setInterval(getStudioExecutions, 5000, sid);
+              console.log('flow exists');
+              getStudioExecutions(sid);
+              setInterval(getStudioExecutions, 3000, sid);
             }
           });
       };
@@ -210,9 +211,7 @@
               tr += "</tr>";
 
               rows = rows.concat(tr);
-              console.log(rows);
             }
-            console.log(rows);
             tbody.html(rows);
           })
           .catch(err => console.log(err));
