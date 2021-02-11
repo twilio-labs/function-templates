@@ -43,12 +43,46 @@
         font-weight: 100px;
         border-radius: 4px;
         line-height: 1.7;
+        display: inline-block;
+      }
+      .btn.secondary {
+        background-color: white;
+        border: 1px solid #0263e0;
+        color: #0263e0;
+        box-shadow: none;
+      }
+      .btn.secondary:hover {
+        background-color: white;
+        border: 1px solid rgb(3, 11, 93);
+        color: rgb(3, 11, 93);
       }
       .btn:hover {
         color: white;
         background: rgb(3, 11, 93);
         cursor: pointer;
       }
+      .btn.loading {
+        background: rgb(244, 244, 246);
+        color: rgb(96, 107, 133);
+        box-shadow: none;
+        cursor: default;
+      }
+      .loader {
+        border: 4px solid rgb(244, 244, 246);
+        border-top: 4px solid rgb(18, 28, 45);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 5px;
+        margin-top: -5px;
+      }
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
       .deploy-studio-flow {
         margin: 10px 0;
         margin-bottom: 30px;
@@ -56,6 +90,19 @@
       .standby-list-diagram {
         border: 1px solid rgb(136, 145, 170);
         margin-bottom: 20px;
+      }
+      span.checkmark {
+        color: rgb(20, 176, 83);
+      }
+      tr.table-placeholder {
+        background: rgb(244, 244, 246);
+        text-align: center;
+      }
+      tr.table-placeholder td {
+        padding: 30px 0;
+      }
+      #test-standby-list {
+        display: none;
       }
     </style>
   </head>
@@ -75,21 +122,21 @@
           <h3>Finish configuring your app</h3>
           <p>Your app is deployed, but you need to finish configuring it to get it working. Click the button below to automatically run the following deployment steps:</p>
           <ul>
-            <li>Deploy Studio Flow</li>
-            <li>Link Studio Flow data capture to Airtable</li>
-            <li>Configure phone number with a Studio flow</li>
+            <li>Deploy Vaccine Standby List Studio Flow to power SMS chatbot</li>
+            <li>Link your phone number (<strong class="phone-number"></strong>) with Studio Flow</li>
           </ul>
-          <a class="btn" onclick="setup(event)">Deploy Vaccine Standby List</a>
+          <a class="btn" onclick="setup(event)">Deploy Studio Flow</a>
+          <div class="loader" style="display: none;"></div>
         </div>
         <div id="flow-deployed" style="display: none;" class="deploy-studio-flow">
-          <h3>Your App is Deployed</h3>
-          <a id="open-studio" class="btn" href="" target="_blank">Open Vaccine Standby List Studio Flow</a>
+          <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>
+          <p>You can move on to test your vaccine standby list below or click the button to make changes to your Studio Flow.</p>
+          <a id="open-studio" class="btn secondary" href="" target="_blank">Edit Studio Flow</a>
         </div>
       </section>
-      <section>
+      <section id="test-standby-list">
         <h3>Test your Standby List</h3>
-        <p>Once you deploy your Studio Flow successfully, you can try out your Standby List by sending a text message to <strong id="phone-number"></strong>.</p>
-        <p>When you finish going through the chatbot, you should see your record recorded below:</p>
+        <p>You can try out your Standby List by sending a text message to <strong class="phone-number"></strong>. As residents complete the chatbot, you should see records recorded below:</p>
         <div id="residents-table">
           <table>
             <thead>
@@ -106,6 +153,7 @@
               <th>Language Preference</th>
             </thead>
             <tbody id="residents-table-body">
+              <tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number"></strong> to begin.</td></tr>
             </tbody>
           </table>
         </div>
@@ -157,30 +205,39 @@
         const phone_number = response.phone_number;
 
         // Grab the phone number being used and display it to help the user test their app
-        const phone_number_element = document.getElementById('phone-number');
-        phone_number_element.innerHTML = phone_number;
+        const phone_number_elements = $('.phone-number');
+        phone_number_elements.html(phone_number);
       }
 
       function setup(e) {
         e.preventDefault();
+        $('#deploy-flow .btn').addClass('loading');
+        $('.loader').show();
 
         fetch('/setup').then(response => {
           checkStudioFlow();
         })
-        .catch(err => console.log("An error ocurred", err));
+        .catch(err => {
+          console.log("An error ocurred creating Studio Flow", err);
+          $('#deploy-flow .btn').removeClass('loading');
+          $('.loader').hide();
+        });
       }
 
       function checkStudioFlow() {
         fetch('/check-existing-flow')
           .then(response => response.text())
           .then(sid => {
+            $('#deploy-flow .btn').removeClass('loading');
+            $('.loader').hide();
             if (sid === 'none') {
               $('#deploy-flow').show();
               console.log('no flow')
             } else {
               $('#flow-deployed').show();
               $('#deploy-flow').hide();
-              $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`)
+              $('#test-standby-list').show();
+              $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
               console.log('flow exists');
               getStudioExecutions(sid);
               setInterval(getStudioExecutions, 3000, sid);
