@@ -1,6 +1,4 @@
 {
   "name": "vaccine-standby",
-  "dependencies": {
-    "airtable": "^0.10.1"
-  }
+  "dependencies": {}
 }
