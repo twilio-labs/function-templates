@@ -40,7 +40,7 @@ twilio serverless:start
 
 5. Open the web page at https://localhost:3000/index.html and follow the steps to finish the configuration of your app. You will be prompted to deploy the Studio Flow that contains the contents of the SMS bot to your Twilio account. This studio flow will automatically be associated with the phone number set as the `TWILIO_PHONE_NUMBER` environment variable
 
-6. Once the Studio Flow is deployed, you can text your Twilio phone number to begin testing the app. Your responses will be automatically displayed on this web page with each successful completion of the chat bot interaction from the Twilio Studio Flow execution logs.
+6. Once the Studio Flow is deployed, you can text your Twilio phone number to begin testing the app. Your responses will be automatically displayed on this web page with each successful completion of the chat bot interaction from the Twilio Studio Flow execution logs. Studio Logs are stored for 30 days. This section of `index.html` is password protected and can only be viewed by entering `ADMIN_PASSWORD`.
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
