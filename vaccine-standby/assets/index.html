@@ -266,21 +266,23 @@
             if (data.length > 0) {
               let rows = "";
               for (var i = 0; i < data.length; i++) {
-                let tr = "<tr>";
-                tr += "<td>"+data[i].name+"</td>";
-                tr += "<td>"+data[i].phone_number+"</td>";
-                tr += "<td>"+data[i].age+"</td>";
-                tr += "<td>"+data[i].zip_code+"</td>";
-                tr += "<td>"+data[i].essential_worker+"</td>";
-                tr += "<td>"+data[i].work_from_home+"</td>";
-                tr += "<td>"+data[i].long_term_care+"</td>";
-                tr += "<td>"+data[i].congregate_setting+"</td>";
-                tr += "<td>"+data[i].health_condition+"</td>";
-                tr += "<td>"+data[i].notification_preference+"</td>";
-                tr += "<td>"+data[i].language_preference+"</td>";
-                tr += "</tr>";
+                if(data[i]) {
+                  let tr = "<tr>";
+                  tr += "<td>"+data[i].name+"</td>";
+                  tr += "<td>"+data[i].phone_number+"</td>";
+                  tr += "<td>"+data[i].age+"</td>";
+                  tr += "<td>"+data[i].zip_code+"</td>";
+                  tr += "<td>"+data[i].essential_worker+"</td>";
+                  tr += "<td>"+data[i].work_from_home+"</td>";
+                  tr += "<td>"+data[i].long_term_care+"</td>";
+                  tr += "<td>"+data[i].congregate_setting+"</td>";
+                  tr += "<td>"+data[i].health_condition+"</td>";
+                  tr += "<td>"+data[i].notification_preference+"</td>";
+                  tr += "<td>"+data[i].language_preference+"</td>";
+                  tr += "</tr>";
 
-                rows = rows.concat(tr);
+                  rows = rows.concat(tr);
+                }
               }
               tbody.html(rows);
             } else {
