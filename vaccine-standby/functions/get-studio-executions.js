@@ -55,7 +55,9 @@ exports.handler = function (context, event, callback) {
                 resident.language_preference = ec.widgets.LanguagePreference.inbound.Body;
                 resolve(resident);
               } catch (err) {
-                reject(err);
+                console.log(err);
+                // This happens when there's an incomplete studio execution. Resolving null will be handled gracefully in the front-end.
+                resolve(null);
               }
             })
             .catch((err) => {
