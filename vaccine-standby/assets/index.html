@@ -41,7 +41,7 @@
         <h3>Test your Standby List</h1>
         <p>You can try out your Standby List by sending a text message to <strong class="phone-number"></strong>. If your account is in trial mode, you will need to send the SMS from <a href="https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number" target="_blank">verified phone numbers</a>.</p>
         <div id="password-form" style="display: none;">
-            <p>A password is required to see responses. This was the admin password you set when launching your Quick Deploy app. Or it can be found in the <code>.env</code>file in the root of your application.</p>
+            <p>To protect sensitive data, a password is required to see responses. This was the admin password you set when launching your Quick Deploy app. Or it can be found in the <code>.env</code>file in the root of your application.</p>
             <p id="login-error" style="color:red;"></p> 
             <form>
             <div>
@@ -54,6 +54,7 @@
         </div>
       </section>
       <section id="test-standby-list">
+        <p class="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
         <p>As the chatbot is completed, you should see records recorded below, pulled from <a class="execution-logs-link" href="" target="_blank">Studio Flow execution</a> logs:</p>
         <div id="hipaa-disclaimer">
           Note that organizations which are covered entities and subject to HIPAA should <a href="https://ahoy.twilio.com/vaccine-distribution-1" target="_blank">consult with a Twilio Expert</a> before publicly offering this service in a production context. Business Associate Addendums (BAA) are available from Twilio for the offerings shown in this solution.

@@ -86,3 +86,10 @@ tr.table-placeholder td {
 #password-form input {
     background: white;
 }
+
+.auth-successful {
+    background: rgb(244, 244, 246);
+    display: inline-block;
+    padding: 5px 10px;
+    margin-bottom: 20px;
+}
