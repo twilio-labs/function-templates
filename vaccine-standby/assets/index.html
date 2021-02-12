@@ -28,28 +28,31 @@
             <li>Deploy Vaccine Standby List Studio Flow to power SMS chatbot</li>
             <li>Link your phone number (<strong class="phone-number"></strong>) with Studio Flow</li>
           </ul>
-          <a class="btn" onclick="setup(event)">Deploy Studio Flow</a>
+          <a class="button" onclick="setup(event)">Deploy Studio Flow</a>
           <div class="loader" style="display: none;"></div>
         </div>
         <div id="flow-deployed" style="display: none;" class="deploy-studio-flow">
           <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>
           <p>You can move on to test your vaccine standby list below or click the button to make changes to your Studio Flow.</p>
-          <a id="open-studio" class="btn secondary" href="" target="_blank">Edit Studio Flow</a>
+          <a id="open-studio" class="button button-outline" href="" target="_blank">Edit Studio Flow</a>
         </div>
       </section>
       <section>
-        <h3>Password required</h1>
-        <p>
-          A password is required to update your environment. This can be found in the <code>.env</code>file in the root of your application. 
-        </p>
-        <form>
-          <div>
-            <label for="password">Password:
-              <input id="password-input" type="password" name="password">
-            </label>
-          </div>
-          <button class="btn secondary" onclick="login(event)">Login</button>
-        </form>
+        <div id="password-form" style="display: none;">
+          <h3>Password required</h1>
+            <p>
+              A password is required to see responses. This can be found in the <code>.env</code>file in the root of your application. 
+            </p>
+            <p id="login-error" style="color:red;"></p> 
+            <form>
+            <div>
+              <label for="password">Password:
+                <input id="password-input" type="password" name="password">
+              </label>
+            </div>
+            <button class="button" onclick="login(event)">View Responses</button>
+          </form>
+        </div>
       </section>
       <section id="test-standby-list">
         <h3>Test your Standby List</h3>
