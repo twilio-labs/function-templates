@@ -69,34 +69,46 @@ function setup(e) {
     });
 }
 
+function updateTable(data) {
+  const tbody = $('#residents-table-body');
+  let rows = '';
+  for (let i = 0; i < data.length; i += 1) {
+    if (data[i]) {
+      let tr = '<tr>';
+      tr += `<td>${data[i].name}</td>`;
+      tr += `<td>${data[i].phone_number}</td>`;
+      tr += `<td>${data[i].age}</td>`;
+      tr += `<td>${data[i].zip_code}</td>`;
+      tr += `<td>${data[i].essential_worker}</td>`;
+      tr += `<td>${data[i].work_from_home}</td>`;
+      tr += `<td>${data[i].long_term_care}</td>`;
+      tr += `<td>${data[i].congregate_setting}</td>`;
+      tr += `<td>${data[i].health_condition}</td>`;
+      tr += `<td>${data[i].notification_preference}</td>`;
+      tr += `<td>${data[i].language_preference}</td>`;
+      tr += '</tr>';
+
+      rows = rows.concat(tr);
+    }
+  }
+  tbody.html(rows);
+}
+
 function getStudioExecutions(sid, token) {
   console.log('Pulling from Studio...');
   const tbody = $('#residents-table-body');
-  fetch(`/get-studio-executions?sid=${sid}&token=${token}`)
+  fetch(`/get-studio-executions?sid=${sid}`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: token }),
+  })
     .then((response) => response.json())
     .then((data) => {
       if (data.length > 0) {
-        let rows = '';
-        for (let i = 0; i < data.length; i += 1) {
-          if (data[i]) {
-            let tr = '<tr>';
-            tr += `<td>${data[i].name}</td>`;
-            tr += `<td>${data[i].phone_number}</td>`;
-            tr += `<td>${data[i].age}</td>`;
-            tr += `<td>${data[i].zip_code}</td>`;
-            tr += `<td>${data[i].essential_worker}</td>`;
-            tr += `<td>${data[i].work_from_home}</td>`;
-            tr += `<td>${data[i].long_term_care}</td>`;
-            tr += `<td>${data[i].congregate_setting}</td>`;
-            tr += `<td>${data[i].health_condition}</td>`;
-            tr += `<td>${data[i].notification_preference}</td>`;
-            tr += `<td>${data[i].language_preference}</td>`;
-            tr += '</tr>';
-
-            rows = rows.concat(tr);
-          }
-        }
-        tbody.html(rows);
+        updateTable(data);
       } else {
         tbody.html(`<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phoneNumber}</strong> to begin.</td></tr>`);
       }
