@@ -1,5 +1,7 @@
 exports.handler = function(context, event, callback) {
 
+    // Validate token before running
+
     const client = context.getTwilioClient();
 
     client.studio.v1.flows(event.sid).executions.list({limit: 100})

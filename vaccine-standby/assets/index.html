@@ -142,6 +142,20 @@
           <a id="open-studio" class="btn secondary" href="" target="_blank">Edit Studio Flow</a>
         </div>
       </section>
+      <section>
+        <h3>Password required</h1>
+        <p>
+          A password is required to update your environment. This can be found in the <code>.env</code>file in the root of your application. 
+        </p>
+        <form>
+          <div>
+            <label for="password">Password:
+              <input id="password-input" type="password" name="password">
+            </label>
+          </div>
+          <button class="btn secondary" onclick="login(event)">Login</button>
+        </form>
+      </section>
       <section id="test-standby-list">
         <h3>Test your Standby List</h3>
         <p>You can try out your Standby List by sending a text message to <strong class="phone-number"></strong>. If your account is in trial mode, you will need to send the SMS from <a href="https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number" target="_blank">verified phone numbers</a>.</p>
@@ -219,6 +233,9 @@
       crossorigin="anonymous"></script>
     <script>
       let phone_number;
+      let accessToken;
+      let flowSid;
+
       // This code will replace the content of any <span class="function-root"></span> with the base path of the URL
       const baseUrl = new URL(location.href);
       baseUrl.pathname = baseUrl
@@ -271,22 +288,49 @@
               $('#deploy-flow').show();
               console.log('no flow')
             } else {
+              flowSid = sid;
               $('#flow-deployed').show();
               $('#deploy-flow').hide();
-              $('#test-standby-list').show();
               $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
               $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
               console.log('flow exists');
-              getStudioExecutions(sid);
-              setInterval(getStudioExecutions, 3000, sid);
             }
           });
       };
 
-      function getStudioExecutions(sid) {
+      function getStudioData(token) {
+          $('#test-standby-list').show();
+          clearInterval(getStudioExecutions);
+          setInterval(getStudioExecutions, 3000, flowSid, token);
+      }
+
+      async function login(e) {
+        e.preventDefault();
+
+        let passwordInput = $('#password-input').val();
+        console.log(passwordInput);
+        const response = await fetch('/login', {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({'password': passwordInput})
+        })
+        .then(response => response.json())
+        .then(t => {
+          console.log('response');
+          console.log(t);
+          debugger;
+          getStudioData(t.token);
+        })
+        .catch(err => console.log(err));
+      }
+
+      function getStudioExecutions(sid, token) {
         console.log('Pulling from Studio...');
         const tbody = $('#residents-table-body');
-        fetch(`/get-studio-executions?sid=${sid}`)
+        fetch(`/get-studio-executions?sid=${sid}&token=${token}`)
           .then(response => response.json())
           .then(data => {
             if (data.length > 0) {
