@@ -7,112 +7,7 @@
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
     <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
     <link rel="stylesheet" href="https://unpkg.com/milligram/dist/milligram.min.css">
-    <style>
-      body {
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-        max-width: 1024px;
-        margin: 0 auto;
-      }
-
-      div[role="main"] {
-        flex: 1;
-      }
-
-      footer {
-        text-align: center;
-      }
-
-      footer p {
-        margin-bottom: 0;
-      }
-
-      #twilio-logo {
-        width: 50px;
-        height: 50px;
-      }
-      .btn {
-        background-color: #0263e0;
-        transition: all .2s cubic-bezier(.4,0,.2,1);
-        box-shadow: 0 5px 30px rgb(17 17 17 / 30%);
-        color: hsla(0,0%,100%,.8);
-        padding: 8px 15px;
-        font-size: 22px;
-        font-weight: 100px;
-        border-radius: 4px;
-        line-height: 1.7;
-        display: inline-block;
-      }
-      .btn.secondary {
-        background-color: white;
-        border: 1px solid #0263e0;
-        color: #0263e0;
-        box-shadow: none;
-      }
-      .btn.secondary:hover {
-        background-color: white;
-        border: 1px solid rgb(3, 11, 93);
-        color: rgb(3, 11, 93);
-      }
-      .btn:hover {
-        color: white;
-        background: rgb(3, 11, 93);
-        cursor: pointer;
-      }
-      .btn.loading {
-        background: rgb(244, 244, 246);
-        color: rgb(96, 107, 133);
-        box-shadow: none;
-        cursor: default;
-      }
-      .loader {
-        border: 4px solid rgb(244, 244, 246);
-        border-top: 4px solid rgb(18, 28, 45);
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        animation: spin 1s linear infinite;
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: 5px;
-        margin-top: -5px;
-      }
-      @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      .deploy-studio-flow {
-        margin: 10px 0;
-        margin-bottom: 30px;
-      }
-      .standby-list-diagram {
-        border: 1px solid rgb(136, 145, 170);
-        margin-bottom: 20px;
-      }
-      span.checkmark {
-        color: rgb(20, 176, 83);
-      }
-      tr.table-placeholder {
-        background: rgb(244, 244, 246);
-        text-align: center;
-      }
-      tr.table-placeholder td {
-        padding: 30px 0;
-      }
-      #test-standby-list {
-        display: none;
-      }
-
-      #hipaa-disclaimer {
-        border: 2px solid rgb(136, 145, 170);
-        padding: 20px;
-        text-align: center;
-        font-weight: bold;
-        font-size: 14px;
-      }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <header>
@@ -133,13 +28,30 @@
             <li>Deploy Vaccine Standby List Studio Flow to power SMS chatbot</li>
             <li>Link your phone number (<strong class="phone-number"></strong>) with Studio Flow</li>
           </ul>
-          <a class="btn" onclick="setup(event)">Deploy Studio Flow</a>
+          <a class="button" onclick="setup(event)">Deploy Studio Flow</a>
           <div class="loader" style="display: none;"></div>
         </div>
         <div id="flow-deployed" style="display: none;" class="deploy-studio-flow">
           <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>
           <p>You can move on to test your vaccine standby list below or click the button to make changes to your Studio Flow.</p>
-          <a id="open-studio" class="btn secondary" href="" target="_blank">Edit Studio Flow</a>
+          <a id="open-studio" class="button button-outline" href="" target="_blank">Edit Studio Flow</a>
+        </div>
+      </section>
+      <section>
+        <div id="password-form" style="display: none;">
+          <h3>Password required</h1>
+            <p>
+              A password is required to see responses. This can be found in the <code>.env</code>file in the root of your application. 
+            </p>
+            <p id="login-error" style="color:red;"></p> 
+            <form>
+            <div>
+              <label for="password">Password:
+                <input id="password-input" type="password" name="password">
+              </label>
+            </div>
+            <button class="button" onclick="login(event)">View Responses</button>
+          </form>
         </div>
       </section>
       <section id="test-standby-list">
@@ -217,108 +129,6 @@
       src="https://code.jquery.com/jquery-3.5.1.min.js"
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"></script>
-    <script>
-      let phone_number;
-      // This code will replace the content of any <span class="function-root"></span> with the base path of the URL
-      const baseUrl = new URL(location.href);
-      baseUrl.pathname = baseUrl
-        .pathname
-        .replace(/\/index\.html$/, '');
-      delete baseUrl.hash;
-      delete baseUrl.search;
-      const fullUrl = baseUrl
-        .href
-        .substr(0, baseUrl.href.length - 1);
-      const functionRoots = document.querySelectorAll('span.function-root');
-
-      functionRoots.forEach(element => {
-        element.innerText = fullUrl
-      })
-      let request = new XMLHttpRequest();
-      request.open('GET', fullUrl + '/return-config');
-      request.send();
-      request.onload = () => {
-        const response = JSON.parse(request.response);
-        phone_number = response.phone_number;
-
-        // Grab the phone number being used and display it to help the user test their app
-        const phone_number_elements = $('.phone-number');
-        phone_number_elements.html(phone_number);
-      }
-
-      function setup(e) {
-        e.preventDefault();
-        $('#deploy-flow .btn').addClass('loading');
-        $('.loader').show();
-
-        fetch('/setup').then(response => {
-          checkStudioFlow();
-        })
-        .catch(err => {
-          console.log("An error ocurred creating Studio Flow", err);
-          $('#deploy-flow .btn').removeClass('loading');
-          $('.loader').hide();
-        });
-      }
-
-      function checkStudioFlow() {
-        fetch('/check-existing-flow')
-          .then(response => response.text())
-          .then(sid => {
-            $('#deploy-flow .btn').removeClass('loading');
-            $('.loader').hide();
-            if (sid === 'none') {
-              $('#deploy-flow').show();
-              console.log('no flow')
-            } else {
-              $('#flow-deployed').show();
-              $('#deploy-flow').hide();
-              $('#test-standby-list').show();
-              $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
-              $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
-              console.log('flow exists');
-              getStudioExecutions(sid);
-              setInterval(getStudioExecutions, 3000, sid);
-            }
-          });
-      };
-
-      function getStudioExecutions(sid) {
-        console.log('Pulling from Studio...');
-        const tbody = $('#residents-table-body');
-        fetch(`/get-studio-executions?sid=${sid}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.length > 0) {
-              let rows = "";
-              for (var i = 0; i < data.length; i++) {
-                if(data[i]) {
-                  let tr = "<tr>";
-                  tr += "<td>"+data[i].name+"</td>";
-                  tr += "<td>"+data[i].phone_number+"</td>";
-                  tr += "<td>"+data[i].age+"</td>";
-                  tr += "<td>"+data[i].zip_code+"</td>";
-                  tr += "<td>"+data[i].essential_worker+"</td>";
-                  tr += "<td>"+data[i].work_from_home+"</td>";
-                  tr += "<td>"+data[i].long_term_care+"</td>";
-                  tr += "<td>"+data[i].congregate_setting+"</td>";
-                  tr += "<td>"+data[i].health_condition+"</td>";
-                  tr += "<td>"+data[i].notification_preference+"</td>";
-                  tr += "<td>"+data[i].language_preference+"</td>";
-                  tr += "</tr>";
-
-                  rows = rows.concat(tr);
-                }
-              }
-              tbody.html(rows);
-            } else {
-              tbody.html(`<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phone_number}</strong> to begin.</td></tr>`)
-            }
-          })
-          .catch(err => console.log(err));
-      }
-
-      checkStudioFlow();
-    </script>
+    <script type="application/javascript" src="/client.js"></script>
   </body>
 </html>
