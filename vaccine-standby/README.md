@@ -15,6 +15,7 @@ In your `.env` file, set the following values:
 | Variable              | Description | Required |
 | :-------------------- | :----------------------------------------------------- | :-- |
 | `TWILIO_PHONE_NUMBER` | Your Twilio phone number for sending and receiving SMS | Yes |
+| `ADMIN_PASSWORD`      | Password to restrict access to sensitive data          | Yes |
 
 ## Create a new project with the template
 
