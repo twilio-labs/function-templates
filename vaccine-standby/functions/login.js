@@ -26,4 +26,10 @@ exports.handler = function (context, event, callback) {
     if (isAllowed(token)) {
         return callback(null, { token });
     }
+
+    response = new Twilio.Response();
+    response.setStatusCode(403);
+    response.setBody({'message': 'Unauthorized'});
+
+    callback(null, response);
 };

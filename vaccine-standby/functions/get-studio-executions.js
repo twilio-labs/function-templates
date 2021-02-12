@@ -1,6 +1,30 @@
+const crypto = require('crypto');
+
 exports.handler = function(context, event, callback) {
 
+    const SALT = 'salty';
     // Validate token before running
+    function isAllowed(token) {
+        // Create the token with the environment password
+        const tokenString = `${context.ACCOUNT_SID}:${context.ADMIN_PASSWORD}:${SALT}`;
+
+        // Similar to TwilioClient
+        const originalToken = crypto
+            .createHmac("sha1", context.AUTH_TOKEN)
+            .update(Buffer.from(tokenString, "utf-8"))
+            .digest("base64");
+        
+        return originalToken === token;
+    }
+
+    if(!isAllowed(event.token)) {
+        response = new Twilio.response();
+        response.status(403);
+        response.message('unathorized')
+
+        callback('unauthorized', response);
+        return;
+    }
 
     const client = context.getTwilioClient();
 
