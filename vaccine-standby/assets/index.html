@@ -144,7 +144,8 @@
       </section>
       <section id="test-standby-list">
         <h3>Test your Standby List</h3>
-        <p>You can try out your Standby List by sending a text message to <strong class="phone-number"></strong>. As residents complete the chatbot, you should see records recorded below, pulled from <a href="https://www.twilio.com/docs/studio/rest-api/execution" target="_blank">Studio Flow execution</a> logs:</p>
+        <p>You can try out your Standby List by sending a text message to <strong class="phone-number"></strong>. If your account is in trial mode, you will need to send the SMS from <a href="https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number" target="_blank">verified phone numbers</a>.</p>
+        <p>As the chatbot is completed, you should see records recorded below, pulled from <a class="execution-logs-link" href="" target="_blank">Studio Flow execution</a> logs:</p>
         <div id="hipaa-disclaimer">
           Note that organizations which are covered entities and subject to HIPAA should <a href="https://www.twilio.com/help/sales" target="_blank">consult with a Twilio Expert</a> before publicly offering this service in a production context. Business Associate Addendums (BAA) are available from Twilio for the offerings shown in this solution.
         </div>
@@ -169,6 +170,19 @@
           </table>
         </div>
       </section>
+      <section>
+        <h3>Troubleshooting</h3>
+        <ul>
+          <strong>If you aren't getting a response when texting your phone number, make sure that:</strong>
+          <li>If your account is in trial mode, you are sending the SMS from <a href="https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number" target="_blank">verified phone numbers</a>.</li>
+          <li>Your Twilio phone number's (<a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank"><span class="phone-number"></span></a>) Message Configuration is set to the "Vaccine Standby Intake" Studio Workflow.</li>
+        </ul>
+        <ul>
+          <strong>If you aren't seeing responses show up in the table above, make sure that:</strong>
+          <li>The texter has fully completed the chatbot interaction. Responses are not added until the end (e.g. "You are now on the vaccine standby list").</li>
+          <li>You see the execution logged <a class="execution-logs-link" href="" target="_blank">here</a> and the status of the execution is set to <code>ended</code>.</li>
+        </ul>
+      </section>
     </div>
     <footer>
       <p>
@@ -185,6 +199,7 @@
         </a>
       </p>
       <p>
+        <small style="display: block;">Made with <3 by the Twilio.org team</small>
         <a href="https://www.twilio.com/code-exchange">Learn about other things you can build with Twilio</a>
       </p>
     </footer>
@@ -250,6 +265,7 @@
               $('#deploy-flow').hide();
               $('#test-standby-list').show();
               $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
+              $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
               console.log('flow exists');
               getStudioExecutions(sid);
               setInterval(getStudioExecutions, 3000, sid);
