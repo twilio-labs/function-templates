@@ -38,7 +38,7 @@ function checkStudioFlow() {
   fetch('/check-existing-flow')
     .then((response) => response.text())
     .then((sid) => {
-      $('#deploy-flow .btn').removeClass('loading');
+      $('#deploy-flow .button').removeClass('loading');
       $('.loader').hide();
       if (sid === 'none') {
         $('#deploy-flow').show();
@@ -56,7 +56,7 @@ function checkStudioFlow() {
 // eslint-disable-next-line no-unused-vars
 function setup(e) {
   e.preventDefault();
-  $('#deploy-flow .btn').addClass('loading');
+  $('#deploy-flow .button').addClass('loading');
   $('.loader').show();
 
   fetch('/setup').then(() => {
@@ -64,7 +64,7 @@ function setup(e) {
   })
     .catch((err) => {
       console.log('An error ocurred creating Studio Flow', err);
-      $('#deploy-flow .btn').removeClass('loading');
+      $('#deploy-flow .button').removeClass('loading');
       $('.loader').hide();
     });
 }
