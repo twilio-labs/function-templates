@@ -22,17 +22,14 @@ functionRoots.forEach((element) => {
   element.innerText = fullUrl;
 });
 
-const request = new XMLHttpRequest();
-request.open('GET', `${fullUrl}/return-config`);
-request.send();
-request.onload = () => {
-  const response = JSON.parse(request.response);
-  phoneNumber = response.phone_number;
-
-  // Grab the phone number being used and display it to help the user test their app
-  const phoneNumberElements = $('.phone-number');
-  phoneNumberElements.html(phoneNumber);
-};
+fetch(`${fullUrl}/return-config`)
+  .then((response) => response.json())
+  .then((json) => {
+    phoneNumber = json.phone_number;
+    // Grab the phone number being used and display it to help the user test their app
+    const phoneNumberElements = $('.phone-number');
+    phoneNumberElements.html(phoneNumber);
+  });
 
 function checkStudioFlow() {
   fetch('/check-existing-flow')
