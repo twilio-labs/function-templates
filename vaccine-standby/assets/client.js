@@ -3,8 +3,6 @@
 let phoneNumber;
 let flowSid;
 
-// This code will replace the content of any <span class="function-root"></span>
-// with the base path of the URL
 // eslint-disable-next-line no-restricted-globals
 const baseUrl = new URL(location.href);
 baseUrl.pathname = baseUrl
@@ -15,12 +13,6 @@ delete baseUrl.search;
 const fullUrl = baseUrl
   .href
   .substr(0, baseUrl.href.length - 1);
-const functionRoots = document.querySelectorAll('span.function-root');
-
-functionRoots.forEach((element) => {
-  // eslint-disable-next-line no-param-reassign
-  element.innerText = fullUrl;
-});
 
 fetch(`${fullUrl}/return-config`)
   .then((response) => response.json())
