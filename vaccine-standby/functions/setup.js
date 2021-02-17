@@ -492,7 +492,6 @@ exports.handler = async function (context, event, callback) {
           smsUrl: studioWebhook,
         })
         .then(() => {
-          console.log(`Successfully updated ${numberSid} to use ${studioWebhook}.`);
           resolve('success');
         })
         .catch((err) => reject(err));
