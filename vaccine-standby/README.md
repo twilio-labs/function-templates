@@ -2,7 +2,7 @@
 
 This Quick Deploy app is designed for public health agencies to create a COVID-19 vaccine eligibility standby list for their city or state. Residents send an SMS to a pre-configured Twilio phone number, and are asked a series of demographic questions informed by the CDC's vaccine rollout guidelines powered by a Twilio Studio Flow. Resident responses to the SMS chatbot are captured Studio Flow logs and displayed on a password protected section of the `index.html` page of this app.
 
-This data is meant to help ensure vaccinations are administered as quickly as possible as supply becomes available. With this template, your agency can create a standardized list of eligible vaccine recipients. In exchange for sharing this information, residents are notified when it is their turn to receive the vaccine.
+This data is meant to help ensure vaccinations are administered as quickly as possible as supply becomes available. With this template, your agency can create a standardized list of eligible vaccine recipients. In exchange for sharing this information, residents are instructed that they will be notified when it is their turn to receive the vaccine. The ability to send outbound notifications to those that register is out of the scope of this template.
 
 ## Pre-requisites
 
