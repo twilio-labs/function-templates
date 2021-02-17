@@ -458,19 +458,15 @@ exports.handler = async function (context, event, callback) {
 
   // Deploy Twilio Studio Flow
   function deployStudio(formattedFlow) {
-    return new Promise((resolve, reject) => {
-      client.studio.flows
+    return client.studio.flows
         .create({
           commitMessage: 'Code Exchange automatic deploy',
           friendlyName: 'Vaccine Standby Intake',
           status: 'published',
           definition: formattedFlow,
         })
-        .then((flow) => {
-          resolve(flow.webhookUrl);
-        })
-        .catch((err) => reject(err.details));
-    });
+        .then((flow) => flow.webhookUrl)
+        .catch((err) => { throw new Error(err.details) });
   }
 
   function getPhoneNumberSid() {
