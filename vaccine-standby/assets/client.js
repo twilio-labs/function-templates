@@ -39,6 +39,9 @@ function checkStudioFlow() {
         $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
         $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
       }
+    })
+    .catch((err) => {
+      console.log('An error occurred when attempting to check the Studio Flow', err);
     });
 }
 
@@ -51,11 +54,11 @@ function setup(e) {
   fetch('/setup').then(() => {
     checkStudioFlow();
   })
-    .catch((err) => {
-      console.log('An error ocurred creating Studio Flow', err);
-      $('#deploy-flow .button').removeClass('loading');
-      $('.loader').hide();
-    });
+  .catch((err) => {
+    console.log('An error ocurred creating Studio Flow', err);
+    $('#deploy-flow .button').removeClass('loading');
+    $('.loader').hide();
+  });
 }
 
 function getStudioExecutions(sid, token) {
