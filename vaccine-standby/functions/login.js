@@ -4,7 +4,7 @@ exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
   const { createToken, isAllowed } = require(path);
   let ac = context.ACCOUNT_SID;
-  debugger;
+
   const token = createToken(event.password, context);  
 
   // Short-circuits
