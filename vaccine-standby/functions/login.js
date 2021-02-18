@@ -1,27 +1,14 @@
-const crypto = require('crypto');
 
 // eslint-disable-next-line func-names
 exports.handler = function (context, event, callback) {
-  // Create a token from the password, and use it to check by setting it
-  function createToken(password) {
-    const tokenString = `${context.ACCOUNT_SID}:${password}:${context.SALT}`;
+  const path = Runtime.getFunctions()['auth'].path;
+  const { createToken, isAllowed } = require(path);
+  let ac = context.ACCOUNT_SID;
+  debugger;
+  const token = createToken(event.password, context);  
 
-    return crypto
-      .createHmac('sha1', context.AUTH_TOKEN)
-      .update(Buffer.from(tokenString, 'utf-8'))
-      .digest('base64');
-  }
-
-  function isAllowed(token) {
-    // Create the token with the environment password
-    const masterToken = createToken(context.ADMIN_PASSWORD);
-    return masterToken === token;
-  }
-
-  const token = createToken(event.password);
   // Short-circuits
-
-  if (isAllowed(token)) {
+  if (isAllowed(token, context)) {
     callback(null, { token });
   }
 
