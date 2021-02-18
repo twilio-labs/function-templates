@@ -293,7 +293,7 @@ const flowDefinition = {
             service: '{{trigger.message.InstanceSid}}',
             channel: '{{trigger.message.ChannelSid}}',
             from: '{{flow.channel.address}}',
-            body: "When it's your turn, would you like to be notifified via SMS or Email? \n\nReply \"1\" for SMS and \"2\" for Email.",
+            body: "When it's your turn, would you like to be notified via SMS or Email? \n\nReply \"1\" for SMS and \"2\" for Email.",
             timeout: '3600',
           },
         },
