@@ -1,34 +1,24 @@
-const crypto = require('crypto');
 
 // eslint-disable-next-line func-names
 exports.handler = function (context, event, callback) {
-  // Create a token from the password, and use it to check by setting it
-  function createToken(password) {
-    const tokenString = `${context.ACCOUNT_SID}:${password}:${context.SALT}`;
+  const path = Runtime.getFunctions()['auth'].path;
+  const { createToken, isAllowed } = require(path);
+  let ac = context.ACCOUNT_SID;
 
-    return crypto
-      .createHmac('sha1', context.AUTH_TOKEN)
-      .update(Buffer.from(tokenString, 'utf-8'))
-      .digest('base64');
-  }
+  const token = createToken(event.password, context);
+  let response = new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
 
-  function isAllowed(token) {
-    // Create the token with the environment password
-    const masterToken = createToken(context.ADMIN_PASSWORD);
-    return masterToken === token;
-  }
-
-  const token = createToken(event.password);
   // Short-circuits
-
-  if (isAllowed(token)) {
-    callback(null, { token });
+  if (isAllowed(token, context)) {
+    response.setBody({ token });
+    callback(null, response);
+    return;
   }
 
   // eslint-disable-next-line no-undef
-  const response = new Twilio.Response();
-  response.setStatusCode(403);
-  response.setBody({ message: 'Unauthorized' });
+  response.setStatusCode(401);
+  response.setBody({ 'message': 'Unauthorized' });
 
   callback(null, response);
 };

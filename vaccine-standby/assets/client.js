@@ -111,6 +111,7 @@ function getStudioExecutions(sid, token) {
 function getStudioData(token) {
   $('#test-standby-list').show();
   clearInterval(getStudioExecutions);
+  getStudioExecutions(flowSid, token);
   setInterval(getStudioExecutions, 3000, flowSid, token);
 }
 

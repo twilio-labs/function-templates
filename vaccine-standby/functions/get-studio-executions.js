@@ -1,35 +1,25 @@
 /* eslint-disable no-console */
-const crypto = require('crypto');
+const path = Runtime.getFunctions()['auth'].path;
+const { isAllowed } = require(path);
 
 // eslint-disable-next-line func-names
 exports.handler = function (context, event, callback) {
   // Validate token before running
-  function isAllowed(token) {
-    // Create the token with the environment password
-    const tokenString = `${context.ACCOUNT_SID}:${context.ADMIN_PASSWORD}:${context.SALT}`;
 
-    // Similar to TwilioClient
-    const originalToken = crypto
-      .createHmac('sha1', context.AUTH_TOKEN)
-      .update(Buffer.from(tokenString, 'utf-8'))
-      .digest('base64');
-
-    return originalToken === token;
-  }
-
-  if (!isAllowed(event.token)) {
+  if (!isAllowed(event.token, context)) {
     // eslint-disable-next-line no-undef
-    const response = new Twilio.Response();
-    response.status(403);
-    response.message('unathorized');
+    let response = new Twilio.Response();
+    response.setStatusCode(401);
+    response.appendHeader('Content-Type', 'application/json');
+    response.setBody({ 'message': 'Unauthorized' });
 
-    callback('unauthorized', response);
+    callback(null, response);
     return;
   }
 
   const client = context.getTwilioClient();
 
-  client.studio.v1.flows(event.sid).executions.list({ limit: 100 })
+  return client.studio.v1.flows(event.sid).executions.list({ limit: 100 })
     .then((executions) => {
       if (executions.length > 0) {
         const endedExecutions = executions.filter((e) => e.status === 'ended');
