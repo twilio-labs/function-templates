@@ -8,11 +8,12 @@ exports.handler = function (context, event, callback) {
 
   if (!isAllowed(event.token, context)) {
     // eslint-disable-next-line no-undef
-    const response = new Twilio.Response();
-    response.status(403);
-    response.message('unathorized');
+    let response = new Twilio.Response();
+    response.setStatusCode(401);
+    response.appendHeader('Content-Type', 'application/json');
+    response.setBody({ 'message': 'Unauthorized' });
 
-    callback('unauthorized', response);
+    callback(null, response);
     return;
   }
 

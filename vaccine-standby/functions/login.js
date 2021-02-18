@@ -5,17 +5,20 @@ exports.handler = function (context, event, callback) {
   const { createToken, isAllowed } = require(path);
   let ac = context.ACCOUNT_SID;
 
-  const token = createToken(event.password, context);  
+  const token = createToken(event.password, context);
+  let response = new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
 
   // Short-circuits
   if (isAllowed(token, context)) {
-    callback(null, { token });
+    response.setBody({ token });
+    callback(null, response);
+    return;
   }
 
   // eslint-disable-next-line no-undef
-  const response = new Twilio.Response();
-  response.setStatusCode(403);
-  response.setBody({ message: 'Unauthorized' });
+  response.setStatusCode(401);
+  response.setBody({ 'message': 'Unauthorized' });
 
   callback(null, response);
 };
