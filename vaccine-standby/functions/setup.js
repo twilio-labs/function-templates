@@ -3,6 +3,8 @@ exports.handler = async function (context, event, callback) {
 
   const assets = Runtime.getAssets();
   const flowDefinition = require(assets["/studio_flow.js"].path);
+  const path = Runtime.getFunctions()['auth'].path;
+  const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
 
   const client = context.getTwilioClient();
 
@@ -15,7 +17,7 @@ exports.handler = async function (context, event, callback) {
           status: 'published',
           definition: flowDefinition,
         })
-        .then((flow) => flow.webhookUrl)
+        .then((flow) => flow)
         .catch((err) => { throw new Error(err.details) });
   }
 
@@ -44,9 +46,20 @@ exports.handler = async function (context, event, callback) {
     });
   }
 
-  const webhookUrl = await deployStudio(flowDefinition);
+  function setFlowSidEnvVar(environment, sid) {
+    return setEnvironmentVariable(
+      context,
+      environment,
+      'FLOW_SID',
+      sid
+    );
+  }
+
+  const flow = await deployStudio(flowDefinition);
+  const environment = await getCurrentEnvironment(context);
+  const flowSidEnvVar = await setFlowSidEnvVar(environment, flow.sid);
   const phoneNumberSid = await getPhoneNumberSid();
-  await updatePhoneNumberWebhook(webhookUrl, phoneNumberSid);
+  await updatePhoneNumberWebhook(flow.webhookUrl, phoneNumberSid);
 
   callback(null, 'success');
 };
