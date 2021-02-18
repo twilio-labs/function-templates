@@ -48,7 +48,7 @@ exports.handler = async function (context, event, callback) {
           service: '{{trigger.message.InstanceSid}}',
           channel: '{{trigger.message.ChannelSid}}',
           from: '{{flow.channel.address}}',
-          body: 'You can get notified when it’s your turn to get the COVID-19 vaccine.\n\nYou will be asked a few basic questions based on the CDC’s vaccine rollout recommendations, then you will be notified when you are eligible to make an appointment to receive your first dose.\n\nTo continue, reply “YES”.',
+          body: 'You can get notified when it’s your turn to get the COVID-19 vaccine by [YOUR ORG NAME HERE].\n\nYou will be asked a few basic questions based on the CDC’s vaccine rollout recommendations, then you will be notified when you are eligible to make an appointment to receive your first dose.\n\nTo continue, reply “YES” or reply "STOP" to unsubscribe.',
           timeout: '3600',
         },
       },
@@ -390,7 +390,7 @@ exports.handler = async function (context, event, callback) {
           channel: '{{trigger.message.ChannelSid}}',
           from: '{{flow.channel.address}}',
           to: '{{contact.channel.address}}',
-          body: "Thank you, you are now now on the vaccine standby list.\n\nWe will notify you when you're eligible to receive a vaccine.",
+          body: "Thank you, you are now on the [YOUR ORG NAME HERE] vaccine standby list.\n\nWe will notify you when you're eligible to receive a vaccine.",
         },
       },
       {
