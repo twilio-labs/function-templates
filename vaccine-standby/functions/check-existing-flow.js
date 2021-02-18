@@ -2,7 +2,7 @@ exports.handler = function(context, event, callback) {
 
     const client = context.getTwilioClient();
 
-    client.studio.flows.list({limit: 20})
+    client.studio.flows.list({limit: 100})
         .then(flows => {
             if (flows.length > 0) {
                 flows.forEach(f => {
