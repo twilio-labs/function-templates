@@ -104,7 +104,10 @@ function getStudioExecutions(sid, token) {
         tbody.html(`<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phoneNumber}</strong> to begin.</td></tr>`);
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err)
+      tbody.html(`<tr class="table-placeholder"><td colspan="11" style="color: red">There was an error when attempting to fetch Studio Logs. Refresh the page to try again or see troubleshooting steps below.</td></tr>`);
+    });
 }
 
 function getStudioData(token) {
