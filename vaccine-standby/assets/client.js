@@ -87,7 +87,6 @@ function updateTable(data) {
 }
 
 function getStudioExecutions(sid, token) {
-  console.log('Pulling from Studio...');
   const tbody = $('#residents-table-body');
   fetch(`/get-studio-executions?sid=${sid}`, {
     method: 'POST',
