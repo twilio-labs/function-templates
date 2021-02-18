@@ -1,7 +1,9 @@
 /* eslint-disable no-console, func-names */
 exports.handler = async function (context, event, callback) {
+
   const assets = Runtime.getAssets();
   const flowDefinition = require(assets["/studio_flow.js"].path);
+
   const client = context.getTwilioClient();
 
   // Deploy Twilio Studio Flow
