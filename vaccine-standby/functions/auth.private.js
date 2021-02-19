@@ -92,7 +92,7 @@ async function setEnvironmentVariable(context, environment, key, value, override
 module.exports = {
     createToken,
     isAllowed,
-	  getCurrentEnvironment,
+    getCurrentEnvironment,
     getEnvironmentVariables,
     getEnvironmentVariable,
     setEnvironmentVariable
