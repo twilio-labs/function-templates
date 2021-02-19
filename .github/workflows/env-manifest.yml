@@ -1,0 +1,43 @@
+name: Generate Env Manifest
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: generate manifest
+        run: |
+          npm install
+          npm run ci:generate-manifest
+        env:
+          CI: true
+          NODE_ENV: test
+      - name: check for changes
+        id: changes
+        run: |
+          git diff --name-only | xargs
+          echo "::set-output name=files::$(git diff --name-only | xargs)"
+      - name: commit changes
+        if: ${{ contains(steps.changes.outputs.files, 'env-variables.manifest.json') }}
+        run: |
+          git config user.name twilio-labs-ci
+          git config user.email 65686990+twilio-labs-ci@users.noreply.github.com
+          git add env-variables.manifest.json
+          git commit -m "chore(env-manifest): update manifest file"
+          git push

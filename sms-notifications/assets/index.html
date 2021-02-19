@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get started with your Twilio Functions!</title>
+    <link
+      rel="stylesheet"
+      href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/normalize.css/normalize.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/milligram/dist/milligram.min.css"
+    />
+    <style>
+      body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      div[role='main'] {
+        max-width: 800px;
+        flex: 1;
+      }
+
+      footer {
+        text-align: center;
+      }
+
+      footer p {
+        margin-bottom: 0;
+      }
+
+      #twilio-logo {
+        width: 50px;
+        height: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome to your new Twilio App</h1>
+    </header>
+    <div role="main">
+      <section>
+        <h3>Add Recipients</h3>
+        <p>
+          Enter one or more phone numbers to send your messages to. Press Enter
+          or click on Add after each number. All numbers have to be in the
+          <a
+            href="https://www.twilio.com/docs/glossary/what-e164"
+            target="_blank"
+            >E.164 format</a
+          >.
+        </p>
+        <form id="recipientForm">
+          <fieldset>
+            <label for="newRecipientInput">New Recipient Phone Number:</label>
+            <input type="tel" id="newRecipientInput" required />
+            <input class="button-primary"
+                   type="submit"
+                   value="Add" />
+          </fieldset>
+        </form>
+        <p><strong>Current list of recipients:</strong></p>
+        <ul id="recipients"></ul>
+      </section>
+      <section>
+        <h3>Send your notification</h3>
+        <form id="sendNotificationForm">
+          <fieldset>
+            <label for="passcodeInput" required>Application Passcode</label>
+            <input name="passcode" id="passcodeInput" />
+            <label for="messageInput">Write your message:</label>
+            <textarea name="message" id="messageInput" required></textarea>
+            <input class="button-primary" type="submit" value="Send" />
+          </fieldset>
+        </form>
+      </section>
+      <section>
+        <h3>Result</h3>
+        <p id="resultSection"></p>
+      </section>
+      <!-- EDIT_CODE -->
+    </div>
+    <footer>
+      <p>
+        <a href="https://www.twilio.com/">
+          <svg
+            id="twilio-logo"
+            data-name="Layer 1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewbox="0 0 60 60"
+          >
+            <defs>
+              <style>
+                .cls-1 {
+                  fill: #f22f46;
+                }
+              </style>
+            </defs>
+            <title>Twilio Logo</title>
+            <path
+              class="cls-1"
+              d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+            />
+          </svg>
+        </a>
+      </p>
+      <p>
+        <a href="https://www.twilio.com/code-exchange"
+          >Learn about other things you can build with Twilio</a
+        >
+      </p>
+    </footer>
+    <script src="index.js"></script>
+  </body>
+</html>

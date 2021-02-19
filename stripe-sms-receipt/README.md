@@ -42,7 +42,7 @@ In your `.env` file, set the following values:
 | `ACCOUNT_SID`       | Find in the [console](https://www.twilio.com/console)                                  | Yes                          |
 | `AUTH_TOKEN`        | Find in the [console](https://www.twilio.com/console)                                  | Yes                          |
 | `STRIPE_SECRET_KEY` | Find in your [Stripe Dahsboard](https://dashboard.stripe.com/test/apikeys)             | Yes                          |
-| `FROM_PHONE`        | Needs to be [configured](https://www.twilio.com/console/phone-numbers/getting-started) | Maybe (depending on country) |
+| `TWILIO_PHONE_NUMBER` | Needs to be [configured](https://www.twilio.com/console/phone-numbers/getting-started) | Maybe (depending on country) |
 
 ### Using the Stripe CLI
 

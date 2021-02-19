@@ -49,7 +49,7 @@ npm run new-template
 
 This script will prompt you for a couple of questions and set up a basic template that you can work from.
 
-It will create a directory wiht the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be
+It will create a directory with the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be accessible without a [valid `X-Twilio-Signature` header](https://www.twilio.com/docs/usage/webhooks/webhooks-security#validating-signatures-from-twilio). Protected Functions are best used to respond to Twilio webhooks.
 
 ### Adding external dependencies (npm)
 
@@ -64,11 +64,23 @@ npm run add-dependency --template=video-token --package=twilio-video
 Any variable you want the user to have to set should be added to the `.env` file in your template directory and should include a commented line before that explaining what the variable is about. Example:
 
 ```bash
-# The number you want your calls to be forwarded to
+# description: The number you want your calls to be forwarded to
+# required: true
+# format: phone_number
 MY_PHONE_NUMBER=
 ```
 
+**Important**: You can find the format of the `.env` file and possible comments as part of [this Schema](https://github.com/twilio-labs/configure-env/blob/main/docs/SCHEMA.md).
+
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
+
+**Note**: All function templates are checked for the presence of a `.env` file by `npm test`. If a test named `should have a .env file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
+
+### Updating the `index.html`
+
+If your app has a front-end component to it, you can override the existing `index.html` file in your project.
+
+In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
 
 ### Testing the functionality of your new template locally
 
@@ -118,7 +130,7 @@ If you want to test how your new template works with the Twilio CLI, make sure y
 
 Afterwards make sure you push your changes to a different branch or fork of the repository. Your changes have to be uploaded to GitHub for you to be able to test them.
 
-For example if I'm working on the `verify` template, I might push my changes to a new branch called `update-verify` under my personal fork of the `function-templates` repository, located at: https://github.com/**dkundel/function-templates**.
+For example if I'm working on the `verify` template, I might push my changes to a new branch called `update-verify` under my personal fork of the `function-templates` repository, located at: https://github.com/dkundel/function-templates.
 
 In order to test if my changes are working, I can invoke the `twilio serverless:init` command with the following flags:
 
