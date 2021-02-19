@@ -17,6 +17,7 @@ In your `.env` file, set the following values:
 | `TWILIO_PHONE_NUMBER` | Your Twilio phone number for sending and receiving SMS | Yes |
 | `ADMIN_PASSWORD`      | Password to restrict access to sensitive data          | Yes |
 | `SALT`                | Change this to invalidate existing auth tokens         | No  |
+| `FLOW_SID`            | SID of Studio Flow for chatbot. Set automatically.     | No  |
 
 ## Create a new project with the template
 
