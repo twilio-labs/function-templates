@@ -945,6 +945,44 @@
         "default": "/relay-sms",
         "configurable": false
       }
+    ],
+    "vaccine-standby": [
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Your Twilio phone number for sending and receiving messages",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "ADMIN_PASSWORD",
+        "required": true,
+        "format": "secret",
+        "description": "Set a password for your app. Users who want to configure the app or view who messaged in, will need this password.",
+        "link": null,
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "SALT",
+        "required": true,
+        "format": "secret",
+        "description": "change the salt to invalidate existing auth tokens",
+        "link": null,
+        "default": "salty",
+        "configurable": false
+      },
+      {
+        "key": "FLOW_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of the Vaccine Intake Studio Flow",
+        "link": null,
+        "default": null,
+        "configurable": false
+      }
     ]
   }
 }
