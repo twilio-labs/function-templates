@@ -57,7 +57,12 @@ exports.handler = async function (context, event, callback) {
 
   const flow = await deployStudio(flowDefinition);
   const environment = await getCurrentEnvironment(context);
-  const flowSidEnvVar = await setFlowSidEnvVar(environment, flow.sid);
+  // No environment exists when developing locally
+  if(environment) {
+    await setFlowSidEnvVar(environment, flow.sid);
+  } else {
+    process.env.FLOW_SID = flow.sid;
+  }
   const phoneNumberSid = await getPhoneNumberSid();
   await updatePhoneNumberWebhook(flow.webhookUrl, phoneNumberSid);
 

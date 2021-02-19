@@ -35,6 +35,7 @@ function checkStudioFlow() {
         flowSid = sid;
         $('#flow-deployed').show();
         $('#deploy-flow').hide();
+        $('.post-deploy-studio').show();
         $('#password-form').show();
         $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
         $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
@@ -49,7 +50,7 @@ function checkStudioFlow() {
 function setup(e) {
   e.preventDefault();
   $('#deploy-flow .button').addClass('loading');
-  $('.loader').show();
+  $('.loader.button-loader').show();
 
   fetch('/setup').then(() => {
     checkStudioFlow();
@@ -57,7 +58,7 @@ function setup(e) {
   .catch((err) => {
     console.log('An error ocurred creating Studio Flow', err);
     $('#deploy-flow .button').removeClass('loading');
-    $('.loader').hide();
+    $('.loader.button-loader').hide();
   });
 }
 
@@ -88,7 +89,7 @@ function updateTable(data) {
 
 function getStudioExecutions(sid, token) {
   const tbody = $('#residents-table-body');
-  fetch(`/get-studio-executions?sid=${sid}`, {
+  fetch(`/get-studio-executions`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',

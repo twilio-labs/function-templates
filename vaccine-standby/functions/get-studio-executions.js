@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
-const path = Runtime.getFunctions()['auth'].path;
-const { isAllowed } = require(path);
-
 // eslint-disable-next-line func-names
-exports.handler = function (context, event, callback) {
+exports.handler = async function (context, event, callback) {
   // Validate token before running
+  /* eslint-disable no-console */
+  const path = Runtime.getFunctions()['auth'].path;
+  const { isAllowed, getCurrentEnvironment, getEnvironmentVariable } = require(path);
 
   if (!isAllowed(event.token, context)) {
     // eslint-disable-next-line no-undef
@@ -16,15 +15,23 @@ exports.handler = function (context, event, callback) {
     callback(null, response);
     return;
   }
-
   const client = context.getTwilioClient();
+  const environment = await getCurrentEnvironment(context);
+  let flowSid;
+  if (environment) {
+    const flowVar = await getEnvironmentVariable(context, environment, 'FLOW_SID');
+    flowSid = flowVar.value;
+  } else {
+    // Local development
+    flowSid = process.env.FLOW_SID;
+  }
 
-  return client.studio.v1.flows(event.sid).executions.list({ limit: 100 })
+  client.studio.v1.flows(flowSid).executions.list({ limit: 100 })
     .then((executions) => {
       if (executions.length > 0) {
         const endedExecutions = executions.filter((e) => e.status === 'ended');
         const promises = endedExecutions.map((e) => new Promise((resolve, reject) => {
-          client.studio.flows(event.sid)
+          client.studio.flows(flowSid)
             .executions(e.sid)
             .executionContext()
             .fetch()
@@ -59,7 +66,9 @@ exports.handler = function (context, event, callback) {
         Promise.all(promises).then((data) => {
           callback(null, data);
         })
-          .catch((err) => callback(err));
+        .catch((err) => callback(err));
+      } else {
+        callback(null, []);
       }
     })
     .catch((err) => callback(err));

@@ -1,4 +1,6 @@
 {
   "name": "vaccine-standby",
-  "dependencies": {}
+  "dependencies": {
+    "twilio": "^3.56.0"
+  }
 }
