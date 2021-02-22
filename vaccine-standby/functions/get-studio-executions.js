@@ -3,7 +3,7 @@ exports.handler = async function (context, event, callback) {
   // Validate token before running
   /* eslint-disable no-console */
   const path = Runtime.getFunctions()['auth'].path;
-  const { isAllowed, getCurrentEnvironment, getEnvironmentVariable } = require(path);
+  const { isAllowed } = require(path);
 
   if (!isAllowed(event.token, context)) {
     // eslint-disable-next-line no-undef
@@ -16,15 +16,7 @@ exports.handler = async function (context, event, callback) {
     return;
   }
   const client = context.getTwilioClient();
-  const environment = await getCurrentEnvironment(context);
-  let flowSid;
-  if (environment) {
-    const flowVar = await getEnvironmentVariable(context, environment, 'FLOW_SID');
-    flowSid = flowVar.value;
-  } else {
-    // Local development
-    flowSid = process.env.FLOW_SID;
-  }
+  const flowSid = context.FLOW_SID;
 
   client.studio.v1.flows(flowSid).executions.list({ limit: 100 })
     .then((executions) => {

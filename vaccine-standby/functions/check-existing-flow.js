@@ -1,18 +1,7 @@
 exports.handler = async function(context, event, callback) {
 
     const client = context.getTwilioClient();
-    const path = Runtime.getFunctions()['auth'].path;
-    const { getCurrentEnvironment, getEnvironmentVariable } = require(path);
-
-    const environment = await getCurrentEnvironment(context);
-    let flowSid;
-    if (environment) {
-        const flowVar = await getEnvironmentVariable(context, environment, 'FLOW_SID');
-        flowSid = flowVar.value;
-    } else {
-        // Local development
-        flowSid = process.env.FLOW_SID;
-    }
+    const flowSid = context.FLOW_SID;
 
     client.studio.flows.list({limit: 100})
         .then(flows => {
