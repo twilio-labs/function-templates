@@ -133,7 +133,7 @@ async function login(e) {
   })
     .then((response) => {
       if (!response.ok) {
-        $('#login-error').text(response.statusText);
+        $('#login-error').text(response.status === 401 ? 'Incorrect password, please try again.' : 'There was an error when attempting to log in.');
         throw Error(response.statusText);
       }
 
