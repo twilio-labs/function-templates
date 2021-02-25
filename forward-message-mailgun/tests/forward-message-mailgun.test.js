@@ -1,6 +1,6 @@
 const helpers = require("../../test/test-helper");
 const mailgun = require("mailgun-js");
-const forwardMessageToMailgun = require("../functions/forward-message-mailgun").handler;
+const forwardMessageToMailgun = require("../functions/forward-message-mailgun.protected").handler;
 const Twilio = require("twilio");
 
 const context = {
