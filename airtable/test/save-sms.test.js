@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const saveSms = require('../functions/save-sms').handler;
+const saveSms = require('../functions/save-sms.protected').handler;
 const Twilio = require('twilio');
 
 const event = {};

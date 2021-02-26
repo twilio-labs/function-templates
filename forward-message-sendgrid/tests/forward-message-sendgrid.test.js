@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
 const got = jest.mock('got');
-const sendGrid = require('../functions/forward-message-sendgrid').handler;
+const sendGrid = require('../functions/forward-message-sendgrid.protected').handler;
 const Twilio = require('twilio');
 
 const context = {
