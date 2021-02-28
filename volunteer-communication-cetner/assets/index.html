@@ -39,23 +39,61 @@
     </header>
     <div role="main">
       <section>
-        <h3>Get started with your app</h3>
-        <p>Now that your code is deployed, here are the last steps you need to do to finish your app.</p>
-        <p>This app is a basic Twilio <a href="https://www.twilio.com/docs/sms/twiml">Messaging TwiML</a> template Function that will return TwiML to say "Hello World"</p>
-        <ol>
-          <li>Text any message to your Twilio phone number</li>
-        </ol>
-      </section>
-      <section>
-        <h3>Troubleshooting</h3>
+        <h3>How it works</h3>
+        <img class="standby-list-diagram" src="./flow.png">
+
+        <p>This template provides a quick way to build a simple communication center for volunteer coordinators in the disaster and crisis response space. Volunteers that have general, logistical questions can contact a Twilio phone number to get answers almost instantaneously. A pre-trained Autopilot bot exchanges a few messages to understand the question and tries to deliver a helpful response. In the case that the bot cannot fully understand the volunteer's question, it will redirect the conversation to an actual coordinator. While keeping the same conversation, a coordinator can respond in live time via the Flex console to ensure that the volunteer's question gets answered quickly and accurately.
+        </p>
+
+        <p>This app makes use of many Twilio's products</p>
         <ul>
-          <li>Check the <a href="https://www.twilio.com/console/phone-numbers/incoming">phone number configuration</a> and make sure the Twilio phone number you want your app has a SMS webhook configured to point at
-          <p>
-            <pre><code><span class="function-root"></span>/hello-messaging</code></pre>
-          </p>
-          </li>
+          <li><a href="https://www.twilio.com/flex">Twilio Flex</a></li>
+          <li><a href="https://www.twilio.com/autopilot">Twilio Autopilot</a></li>
+          <li><a href="https://www.twilio.com/studio">Twilio Studio</a></li>
+          <li><a href="https://www.twilio.com/messaging-api">Programmable Messaging API</a></li>
+          <li><a href="https://www.twilio.com/voice">Programmable Voice API</a></li>
+          <li><a href="https://www.twilio.com/whatsapp">WhatsApp API</a></li>
+          <li><a href="https://www.twilio.com/phone-numbers">Twilio Phone Numbers</a></li>
+
+
         </ul>
       </section>
+      <section>
+        <h3>Out of the Box</h3>
+        <p>Congrats! You have successfully deployed your own instance of a volunteer communication center.</p>
+
+        <h4>Studio Flow</h4>
+         <p>A studio flow has been set up to handle incoming messages to <strong>PHONE NUMBER</strong>. You can update the flow and any of the logic by clicking the button below.</p>
+
+         <!-- TODO: modify address to go to specific flow that was just created -->
+         <a id="open-studio" class="button button-outline" href="https://www.twilio.com/console/studio/flows/FWe089e3e21eca207f422de548432f9ff8" target="_blank">Edit Studio Flow</a>
+
+         
+         <h4>Twilio Autopilot</h4>
+         
+         <p>When a volunteer contacts the number through their preferred mode of available communication channels an Autopilot bot will respond accordingly. The bot is currently deployed and trained on only a handful of common volunteer questions.</p>
+
+         <p>Try texting PHONE NUMBER "example question"</p>
+         <p>You can also ask the bot what it is capable of doing by texting PHONE NUMBER "help"</p>
+           
+          
+      <p>The training data can easily be modified through the Twilio console. Try creating a new task and adding sample variants to train the model.</p>
+
+         <!-- TODO: change to go to autopilot project task list -->
+         <a id="open-autopilot" class="button button-outline" href="https://www.twilio.com/console/studio/flows/FWe089e3e21eca207f422de548432f9ff8" target="_blank">Edit Autopilot Bot</a>
+
+      <h4>Twilio Flex</h4>
+      <p>While bots a great, they don't replace humans. When the bot cannot answer a question for the volunteer, the Studio Flow passes the message on to a Flex console. The request will show up in as an incoming issue which a coordinator can accept and address. They will continue the conversation where the Autopilot bot left off in order to get the volunteer help as fast as possible.</p>
+      
+      <!-- TODO: view link and add url-->
+      <a id="open-autopilot" class="button button-outline" href="https://www.twilio.com/console/studio/flows/FWe089e3e21eca207f422de548432f9ff8" target="_blank">Go to Flex</a>
+
+
+      <h3>Next Steps</h3>
+      <h3>Troubleshooting</h3>
+      </section>
+
+
       <!-- APP_INFO -->
     </div>
     <footer>
