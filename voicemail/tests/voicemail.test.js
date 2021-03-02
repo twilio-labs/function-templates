@@ -38,12 +38,12 @@ test('returns a VoiceResponse', done => {
 test('forwards calls during business hours', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
   };
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
-      '<Response><Dial>+1112223333</Dial></Response>'
+      '<Response><Dial>+12223334444</Dial></Response>'
     );
     done();
   };
@@ -54,7 +54,7 @@ test('forwards calls during business hours', done => {
 test('allows to configure business week start', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
     WORK_WEEK_START: 2,
   };
 
@@ -73,7 +73,7 @@ test('allows to configure business week start', done => {
 test('allows to configure business hours start', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
     WORK_HOUR_START: 9,
   };
 
@@ -92,7 +92,7 @@ test('allows to configure business hours start', done => {
 test('allows to configure business week end', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
     WORK_WEEK_END: 4,
   };
 
@@ -111,7 +111,7 @@ test('allows to configure business week end', done => {
 test('allows to configure business hours end', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
     WORK_HOUR_END: 16,
   };
 
@@ -130,7 +130,7 @@ test('allows to configure business hours end', done => {
 test('handles timezone offset', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
     TIMEZONE_OFFSET: '-1',
   };
 
@@ -138,7 +138,7 @@ test('handles timezone offset', done => {
 
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
-      '<Response><Dial>+1112223333</Dial></Response>'
+      '<Response><Dial>+12223334444</Dial></Response>'
     );
     done();
   };
@@ -149,7 +149,7 @@ test('handles timezone offset', done => {
 test('handles timezone offset outside business hours', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
     TIMEZONE_OFFSET: '-1',
   };
 
@@ -168,7 +168,7 @@ test('handles timezone offset outside business hours', done => {
 test('sends default message outside of business hours', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
   };
 
   mockedTimeString = '2020-02-13T19:00:00.000Z';
@@ -186,7 +186,7 @@ test('sends default message outside of business hours', done => {
 test('sends translated message outside of business hours', done => {
   context = {
     PATH: '/demo/voicemail',
-    MY_PHONE_NUMBER: '+1112223333',
+    MY_PHONE_NUMBER: '+12223334444',
   };
 
   event = {

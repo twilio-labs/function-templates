@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
 const got = jest.mock('got');
-const sparkPost = require('../functions/forward-message-sparkpost').handler;
+const sparkPost = require('../functions/forward-message-sparkpost.protected').handler;
 const Twilio = require('twilio');
 
 const context = {

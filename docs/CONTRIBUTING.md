@@ -74,6 +74,8 @@ MY_PHONE_NUMBER=
 
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
 
+**Note**: All function templates are checked for the presence of a `.env` file by `npm test`. If a test named `should have a .env file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
+
 ### Updating the `index.html`
 
 If your app has a front-end component to it, you can override the existing `index.html` file in your project.
@@ -128,7 +130,7 @@ If you want to test how your new template works with the Twilio CLI, make sure y
 
 Afterwards make sure you push your changes to a different branch or fork of the repository. Your changes have to be uploaded to GitHub for you to be able to test them.
 
-For example if I'm working on the `verify` template, I might push my changes to a new branch called `update-verify` under my personal fork of the `function-templates` repository, located at: https://github.com/**dkundel/function-templates**.
+For example if I'm working on the `verify` template, I might push my changes to a new branch called `update-verify` under my personal fork of the `function-templates` repository, located at: https://github.com/dkundel/function-templates.
 
 In order to test if my changes are working, I can invoke the `twilio serverless:init` command with the following flags:
 

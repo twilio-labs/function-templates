@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const createInvoice = require('../functions/create-invoice').handler;
+const createInvoice = require('../functions/create-invoice.protected').handler;
 
 const context = {
   STRIPE_SECRET_KEY: 'StripeSecretKey',
