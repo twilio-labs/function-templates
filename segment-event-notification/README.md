@@ -6,7 +6,7 @@ This app sends an SMS to your number when your Segment-enabled website generates
 
 ### Segment
 
-A Segment account and a Connection that generates `track` events are pre-requisites for using this integration.
+A [Segment](https://segment.com/) account and a Connection that generates `track` events are pre-requisites for using this integration. You can register for a Segment account [here](http://app.segment.com/signup).
 
 ### Environment variables
 

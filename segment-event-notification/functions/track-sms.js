@@ -3,8 +3,6 @@ exports.handler = async function(context, event, callback) {
 
   try {
     if(event.type === 'track' && event.event === context.SEGMENT_EVENT) {
-      console.info(`Received a Segment track event named "${context.SEGMENT_EVENT}"`);
-
       let body = `The Segment event "${event.event}" occurred.`;
 
       if (event.properties && Object.keys(event.properties).length > 0) {

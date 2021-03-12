@@ -70,7 +70,7 @@ it('should send an SMS after a matching event is received with properties', (don
 
 test: true
 n: 1
-s: hello
+s: "hello"
 `
     });
     done();
