@@ -61,7 +61,6 @@ async function getEnvironmentVariables(context, environment) {
 }
 
 async function getEnvironmentVariable(context, environment, key) {
-  const client = context.getTwilioClient();
   // The list filter method isn't implemented yet.
   const envVars = await getEnvironmentVariables(context, environment);
   return envVars.find(variable => variable.key === key);
@@ -78,8 +77,13 @@ async function setEnvironmentVariable(context, environment, key, value, override
     if (currentVariable) {
       if (currentVariable.value !== value) {
         if (override) {
-          console.log(`Updating ${key}...`);
-          await currentVariable.update({ value });
+          if (value === undefined) {
+            console.log(`Removing ${key}...`);
+            await currentVariable.remove();
+          } else {
+            console.log(`Updating ${key}...`);
+            await currentVariable.update({ value });
+          }
           return true;
         } else {
           console.log(`Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`);

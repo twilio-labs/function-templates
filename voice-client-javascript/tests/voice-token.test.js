@@ -6,7 +6,8 @@ const baseContext = {
   ACCOUNT_SID: "ACxxx",
   API_KEY: "api-key",
   API_SECRET: "api-secret",
-  TWIML_APPLICATION_SID: "APxxx"
+  TWIML_APPLICATION_SID: "APxxx",
+  DEFAULT_CLIENT_NAME: "grace"
 };
 
 describe("voice-client-javascript/voice-token", () => {
@@ -26,7 +27,7 @@ describe("voice-client-javascript/voice-token", () => {
         expect(decoded.iss).toBe(baseContext.API_KEY);
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
         expect(decoded.grants).toEqual({
-          identity: "the_user_id",
+          identity: "grace",
           voice: {
             incoming: {
               allow: true

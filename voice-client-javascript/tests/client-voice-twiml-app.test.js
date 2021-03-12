@@ -1,7 +1,9 @@
 const twimlAppFunction = require("../functions/client-voice-twiml-app").handler;
 const helpers = require("../../test/test-helper");
 
-const baseContext = {};
+const baseContext = {
+  DEFAULT_CLIENT_NAME: "bob"
+};
 
 let backupEnv;
 describe("voice-client-javascript/client-voice-twiml-app", () => {
@@ -12,21 +14,23 @@ describe("voice-client-javascript/client-voice-twiml-app", () => {
   beforeEach(() => {
     helpers.restoreEnv(backupEnv);
     process.env.CALLER_ID = "+18004567890";
+    process.env.DEFAULT_CLIENT_NAME = "bob";
   });
   afterAll(() => {
     helpers.teardown();
   });
 
-  test("returns TwiML with `<Say>` when no `To` is provided", done => {
+  test("returns TwiML with `<Dial>` when `Direction` is inbound", done => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       const twiml = result.toString();
       expect(typeof twiml).toBe("string");
-      expect(twiml).toContain('<Say>');
-      expect(twiml).toContain('Thanks for calling');
+      expect(twiml).toContain('<Dial>');
+      expect(twiml).toContain('<Client>');
+      expect(twiml).toContain('bob');
       done();
     };
-    twimlAppFunction(baseContext, {}, callback);
+    twimlAppFunction(baseContext, {Direction: "inbound"}, callback);
   });
 
   test("returns TwiML for `<Dial>` a `<Number>` when number provided", done => {

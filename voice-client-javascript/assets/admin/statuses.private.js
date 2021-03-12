@@ -21,11 +21,9 @@ async function checkEnvironmentInitialization(context) {
     \`\`\`
     After it has been deployed, revisit this page in your deployed application.
     `;
-  } else if (!process.env.INITIALIZED) {
+  } else if (!context.INITIALIZED) {
     status.description = stripIndents`
     The Twilio Client JavaScript Quickstart requires that you setup a few things on your account. 
-    
-    We've written some tools that will initialize the various parts to use this tool.
     
     To initialize your environment, click the button below.
     
@@ -44,26 +42,26 @@ async function checkEnvironmentInitialization(context) {
   return status;
 }
 
-function missingTwimlApplicationError(error) {
-  return `Uh oh, couldn't find your specified [TwiML Application](https://www.twilio.com/console/voice/twiml/apps/) (\`${process.env.TWIML_APPLICATION_SID}\`).`;
+function missingTwimlApplicationError(context, error) {
+  return `Uh oh, couldn't find your specified [TwiML Application](https://www.twilio.com/console/voice/twiml/apps/) (\`${context.TWIML_APPLICATION_SID}\`).`;
 }
 
 async function getTwiMLApplicationStatus(context) {
   const client = context.getTwilioClient();
-  const friendlyName = process.env.APP_NAME;
+  const friendlyName = context.APP_NAME;
   const status = {
     valid: false,
     title: `TwiML Application is created and defined in the environment`,
   };
-  if (process.env.TWIML_APPLICATION_SID) {
+  if (context.TWIML_APPLICATION_SID) {
     try {
       const app = await client
-        .applications(process.env.TWIML_APPLICATION_SID)
+        .applications(context.TWIML_APPLICATION_SID)
         .fetch();
       status.valid = true;
       status.description = `TwiML Application: [${app.friendlyName}](https://www.twilio.com/console/voice/twiml/apps/${app.sid})`;
     } catch (err) {
-      status.description = missingTwimlApplicationError(err);
+      status.description = missingTwimlApplicationError(context, err);
       status.actions = [
         {
           title: "Recreate a new TwiML Application",
@@ -103,7 +101,7 @@ async function getTwiMLApplicationStatus(context) {
       status.description = stripIndents`
       We need to create a new TwiML Application. You can do this by clicking the button below.
       
-      You can do this [via the API or CLI](https://www.twilio.com/docs/usage/api/applications?code-sample=code-create-a-new-application-within-your-account&code-language=curl&code-sdk-version=json).
+      You could also do this [via the API or CLI](https://www.twilio.com/docs/usage/api/applications?code-sample=code-create-a-new-application-within-your-account&code-language=curl&code-sdk-version=json).
       `;
       status.actions = [
         {
@@ -119,9 +117,88 @@ async function getTwiMLApplicationStatus(context) {
   return status;
 }
 
+async function getIncomingNumberStatus(context) {
+  const client = context.getTwilioClient();
+  const status = {
+    valid: false,
+    title: "Incoming Number is wired up correctly",
+  };
+  const incomingNumbers = await client.incomingPhoneNumbers.list();
+  const incomingNumber = incomingNumbers.find((numberObject) => {
+    return numberObject.phoneNumber === context.INCOMING_NUMBER;
+  });
+
+  // Not found
+  if (incomingNumber === undefined) {
+    //Not set
+    if (context.INCOMING_NUMBER === undefined) {
+      if (incomingNumbers.length > 0) {
+        status.description = stripIndents`
+        Please choose an incoming number below. If you would like, you can [purchase a new Twilio number](https://www.twilio.com/console/phone-numbers/search) to automatically connect to your clients.
+        `;
+      } else {
+        status.description = stripIndents`
+        Looks like you haven't purchased any numbers yet. 
+        If you would like, you can [purchase a new Twilio number](https://www.twilio.com/console/phone-numbers/search) to automatically connect to your clients.
+
+        Refresh this page and it will show up.
+        `;
+      }
+    } else {
+      status.description = stripIndents`
+      Your incoming number is set to ${context.INCOMING_NUMBER}, but that number is unavailable. Please choose a new incoming number.'
+      `;
+    }
+    // Show number options
+    status.actions = incomingNumbers.map((num) => ({
+      title: `Choose Twilio # ${num.friendlyName}`,
+      name: "updateIncomingNumber",
+      params: {
+        sid: num.sid,
+        voiceApplicationSid: context.TWIML_APPLICATION_SID,
+      },
+    }));
+  } else {
+    // Found
+    // Is it wired up correctly?
+    if (context.TWIML_APPLICATION_SID === incomingNumber.voiceApplicationSid) {
+      status.valid = true;
+      status.description = stripIndents`
+      Your incoming number ${incomingNumber.friendlyName} (${incomingNumber.phoneNumber}) is wired up to route calls via the TwiML application incoming handler **/client-voice-twiml** to a registered client named ${context.DEFAULT_CLIENT_NAME}.
+      `;
+      status.actions = [
+        {
+          title: "Choose a new incoming number",
+          name: "clearIncomingNumber",
+        },
+      ];
+    } else {
+      status.description = stripIndents`
+      Your incoming number ${incomingNumber.friendlyName} is wired up to a a different Voice Application: "${incomingNumber.voiceApplicationSid}".
+      It is expected to be wired up to "${context.TWIML_APPLICATION_SID}".
+      `;
+      status.actions = [
+        {
+          title: "Wire up your number to the correct application",
+          name: "updateIncomingNumber",
+          params: {
+            sid: incomingNumber.sid,
+            voiceApplicationSid: context.TWIML_APPLICATION_SID,
+          },
+        },
+        {
+          title: "Choose a new incoming number",
+          name: "clearIncomingNumber",
+        },
+      ];
+    }
+  }
+  return status;
+}
+
 async function getCallerIdStatus(context) {
   const client = context.getTwilioClient();
-  const callerId = process.env.CALLER_ID;
+  const callerId = context.CALLER_ID;
   const status = {
     valid: false,
     title: "Caller ID is set to a valid number",
@@ -130,19 +207,25 @@ async function getCallerIdStatus(context) {
   const incomingNumbers = await client.incomingPhoneNumbers.list();
   const outgoingCallerIds = await client.outgoingCallerIds.list();
   function finder(numberObject) {
-    return numberObject.phoneNumber === process.env.CALLER_ID;
+    return numberObject.phoneNumber === context.CALLER_ID;
   }
-  if (process.env.CALLER_ID) {
+  if (callerId) {
     if (incomingNumbers.find(finder) || outgoingCallerIds.find(finder)) {
       status.valid = true;
-      status.description = `Your CallerID is set to ${process.env.CALLER_ID}`;
+      status.description = `Your CallerID is set to ${context.CALLER_ID}`;
     } else {
       status.description = stripIndents`
-      Your CallerID is set to ${process.env.CALLER_ID}, but that number is not yet verified.
+      Your CallerID is set to ${context.CALLER_ID}, but that number is not yet verified.
       
-      You can [verify it via the console](https://www.twilio.com/console/phone-numbers/verified), [CLI or API](https://www.twilio.com/docs/voice/api/outgoing-caller-ids).
+      You can [verify it via the console](https://www.twilio.com/console/phone-numbers/verified), [CLI, or API](https://www.twilio.com/docs/voice/api/outgoing-caller-ids).
       `;
     }
+    status.actions = [
+      {
+        title: "Choose a different CallerID",
+        action: "clearCallerId",
+      },
+    ];
   } else {
     status.description = `Your outgoing caller ID can be set to any Twilio number that you've purchased or any numbers that are verified on your account. `;
     status.actions = incomingNumbers.map((num) => ({
@@ -172,7 +255,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
     context.PATH,
     ".."
   )}`;
-  twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
+  twimlApplicationSid = context.TWIML_APPLICATION_SID;
   const status = {
     title: "TwiML Application is configured to use incoming call function",
     valid: false,
@@ -206,7 +289,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
         ];
       }
     } catch (err) {
-      status.description = missingTwimlApplicationError(err);
+      status.description = missingTwimlApplicationError(context, err);
     }
   }
   return status;
@@ -221,14 +304,14 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
   };
 
   // Set
-  if (process.env.API_KEY && process.env.API_SECRET) {
+  if (context.API_KEY && context.API_SECRET) {
     try {
-      const key = await client.keys(process.env.API_KEY).fetch();
+      const key = await client.keys(context.API_KEY).fetch();
       status.valid = true;
-      status.description = `Your web application will mint AccessTokens using your [${key.friendlyName} API Key](https://www.twilio.com/console/voice/settings/api-keys/${process.env.API_KEY})`;
+      status.description = `Your web application will mint AccessTokens using your [${key.friendlyName} API Key](https://www.twilio.com/console/voice/settings/api-keys/${context.API_KEY})`;
     } catch (err) {
       status.description = stripIndents`
-      Uh oh, unable to find your API Key \`${process.env.API_KEY}\`.
+      Uh oh, unable to find your API Key \`${context.API_KEY}\`.
       
       Please [double check your key](https://www.twilio.com/console/voice/settings/api-keys/) or create a new one.
       `;
@@ -237,7 +320,7 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
           title: "Generate a new REST API Key and Secret",
           name: "generateNewKey",
           params: {
-            friendlyName: process.env.APP_NAME,
+            friendlyName: context.APP_NAME,
           },
         },
       ];
@@ -255,7 +338,7 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
         title: "Generate a new REST API Key and Secret",
         name: "generateNewKey",
         params: {
-          friendlyName: process.env.APP_NAME,
+          friendlyName: context.APP_NAME,
         },
       },
     ];
@@ -268,7 +351,7 @@ async function getDefaultPasswordChanged(context) {
     title: "Default admin password has been changed",
     valid: false,
   };
-  if (process.env.ADMIN_PASSWORD === "default") {
+  if (context.ADMIN_PASSWORD === "default") {
     status.description = stripIndents`
     Please take a moment to change your admin password from the provided default password. 
     
@@ -294,6 +377,7 @@ module.exports = {
     getTwiMLApplicationStatus,
     getTwiMLApplicationIsWiredUp,
     getAPIKeyAndSecretFromEnvStatus,
+    getIncomingNumberStatus,
     getCallerIdStatus,
     getDefaultPasswordChanged,
   ],

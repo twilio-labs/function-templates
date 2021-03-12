@@ -8,12 +8,14 @@ const mockTwilioClient = {
 const mockVariables = [{
   key: "LAST_NAME",
   value: "Lovelace",
-  update: jest.fn()
+  update: jest.fn(),
+  remove: jest.fn()
 },
 {
   key: "FIRST_NAME",
   value: "Ada",
-  update: jest.fn()
+  update: jest.fn(),
+  remove: jest.fn()
 }];
 
 const mockEnvironment = {
@@ -273,11 +275,11 @@ describe("voice-client-javascript/admin/private/shared", () => {
   });
 
 
-  
+  test("setEnvironmentVariable will remove a variable", async () => {
+    // Act
+    const result = await shared.setEnvironmentVariable(CONTEXT, mockEnvironment, "LAST_NAME", undefined, true);
 
-  /*
-    getEnvironmentVariables,
-    getEnvironmentVariable,
-   setEnvironmentVariable,
- */
+    expect(result).toBeTruthy();
+    expect(mockVariables[0].remove).toHaveBeenCalled();
+  });
 });
