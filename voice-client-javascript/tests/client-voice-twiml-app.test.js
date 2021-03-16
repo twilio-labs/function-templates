@@ -40,7 +40,7 @@ describe("voice-client-javascript/client-voice-twiml-app", () => {
         expect(twiml).toContain('<Number>');
         done();
       };
-      twimlAppFunction(baseContext, { To: '+15558675309' }, callback);
+      twimlAppFunction(baseContext, { PhoneNumber: '+15558675309' }, callback);
   });
 
   test("returns TwiML for `<Dial>` a `<Client>` when name is provided", done => {
@@ -50,7 +50,7 @@ describe("voice-client-javascript/client-voice-twiml-app", () => {
       expect(twiml).toContain('<Client>');
       done();
     };
-    twimlAppFunction(baseContext, { To: 'alice' }, callback);
+    twimlAppFunction(baseContext, { PhoneNumber: 'alice' }, callback);
 });
 
 });
