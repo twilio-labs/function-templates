@@ -29,7 +29,7 @@ class Actions {
     console.log("Generating new REST API Key");
     results = await this.generateNewKey(this.options);
     env = Object.assign(env, results);
-    const incomingNumber = await this.chooseLogicalIncomingNumber(options.CHOSEN_TWILIO_NUMBER);
+    const incomingNumber = await this.chooseLogicalIncomingNumber(this.options.CHOSEN_TWILIO_NUMBER);
     if (incomingNumber !== undefined) {
       results = await this.updateIncomingNumber({
         sid: incomingNumber.sid,
