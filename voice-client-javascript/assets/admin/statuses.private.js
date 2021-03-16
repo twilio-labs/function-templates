@@ -37,7 +37,7 @@ async function checkEnvironmentInitialization(context) {
     ];
   } else {
     status.valid = true;
-    status.description = `Your application is initialized! View your [running application](../index.html)`;
+    status.description = `Your application is initialized! View your [running application](../browser.html)`;
   }
   return status;
 }
