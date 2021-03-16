@@ -29,7 +29,7 @@ class Actions {
     console.log("Generating new REST API Key");
     results = await this.generateNewKey(this.options);
     env = Object.assign(env, results);
-    const incomingNumber = await this.chooseLogicalIncomingNumber();
+    const incomingNumber = await this.chooseLogicalIncomingNumber(options.CHOSEN_TWILIO_NUMBER);
     if (incomingNumber !== undefined) {
       results = await this.updateIncomingNumber({
         sid: incomingNumber.sid,
@@ -70,8 +70,11 @@ class Actions {
     };
   }
 
-  async chooseLogicalIncomingNumber() {
+  async chooseLogicalIncomingNumber(preferredNumber) {
     const incomingNumbers = await this.client.incomingPhoneNumbers.list();
+    if (preferredNumber !== undefined) {
+      return incomingNumbers.find(number => number.phoneNumber === preferredNumber);
+    }
     return incomingNumbers.find(
       (number) =>
         number.voiceUrl === DEFAULT_TWILIO_WEBHOOK || number.voiceUrl === ""
