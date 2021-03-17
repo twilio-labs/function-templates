@@ -983,6 +983,35 @@
         "default": null,
         "configurable": false
       }
+    ],
+    "segment-event-notification": [
+      {
+        "key": "SEGMENT_EVENT",
+        "required": true,
+        "format": "text",
+        "description": "The name of the Segment event you want to be notified about",
+        "link": "https://segment.com/docs/connections/spec/track/#event",
+        "default": null,
+        "configurable": true
+      },
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "The Twilio phone number to send SMS notifications from",
+        "link": null,
+        "default": "+12223334444",
+        "configurable": true
+      },
+      {
+        "key": "MY_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Segment event notifications will be sent to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
+        "configurable": true
+      }
     ]
   }
 }
