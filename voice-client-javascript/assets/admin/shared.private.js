@@ -66,6 +66,16 @@ async function getEnvironmentVariable(context, environment, key) {
   return envVars.find(variable => variable.key === key);
 }
 
+/**
+ * 
+ * @param {*} context Function Context
+ * @param {*} environment Serverless Environment
+ * @param {*} key Name of the variable
+ * @param {*} value The value to set. Using `undefined` will unset/remove the variable
+ * @param {*} override Should existing values be overridden. Default is true.
+ * @returns 
+ */
+
 async function setEnvironmentVariable(context, environment, key, value, override=true) {
   const client = context.getTwilioClient();
   try {
@@ -77,6 +87,7 @@ async function setEnvironmentVariable(context, environment, key, value, override
     if (currentVariable) {
       if (currentVariable.value !== value) {
         if (override) {
+          // undefined is a special value that means to unset environment variables
           if (value === undefined) {
             console.log(`Removing ${key}...`);
             await currentVariable.remove();

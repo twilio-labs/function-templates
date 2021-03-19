@@ -54,6 +54,11 @@ const CONTEXT = {
   getTwilioClient: jest.fn(() => mockTwilioClient),
 };
 
+function createContext(additional = {}) {
+  return { ...additional, ...CONTEXT };
+}
+
+
 let origAdminPassword;
 
 describe("voice-client-javascript/admin/private/shared", () => {
@@ -94,14 +99,15 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
 
   test("checkAuthorization passes thru on success", () => {
+    const context = createContext({ADMIN_PASSWORD: "testing"});
     //Arrange
     const event = {
-      token: shared.createToken(CONTEXT, process.env.ADMIN_PASSWORD),
+      token: shared.createToken(context, "testing"),
     };
     const cb = jest.fn();
 
     // Act
-    const result = shared.checkAuthorization(CONTEXT, event, cb);
+    const result = shared.checkAuthorization(context, event, cb);
 
     // Assert
     expect(result).toBeTruthy();

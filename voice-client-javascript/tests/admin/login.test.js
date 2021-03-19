@@ -6,7 +6,6 @@ let createToken;
 
 describe("voice-client-javascript/admin/login", () => {
   beforeAll(() => {
-    process.env.ADMIN_PASSWORD = "supersekret";
     const runtime = new helpers.MockRuntime();
     runtime._addAsset("/admin/shared.js", "../../assets/admin/shared.private.js");
     helpers.setup({}, runtime);
@@ -21,6 +20,7 @@ describe("voice-client-javascript/admin/login", () => {
   const baseContext = {
     ACCOUNT_SID: "ACXXX",
     AUTH_TOKEN: "abcdef",
+    ADMIN_PASSWORD: "supersekret",
   };
 
   test("missing token throws 403", (done) => {
@@ -48,12 +48,11 @@ describe("voice-client-javascript/admin/login", () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result.token).toBeDefined();
-      const expectedToken = createToken(baseContext, process.env.ADMIN_PASSWORD);
+      const expectedToken = createToken(baseContext, baseContext.ADMIN_PASSWORD);
       expect(result.token).toBe(expectedToken);
       done();
     };
-    // process.env.ADMIN_PASSWORD defined in setup
-    loginFunction(baseContext, {password: process.env.ADMIN_PASSWORD}, callback);
+    loginFunction(baseContext, {password: baseContext.ADMIN_PASSWORD}, callback);
     
   });
 });
