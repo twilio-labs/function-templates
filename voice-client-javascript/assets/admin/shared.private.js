@@ -16,7 +16,7 @@ function createToken(context, password) {
 
 function isAllowed(context, token) {
   // Create the token with the environment password
-  const masterToken = createToken(context, process.env.ADMIN_PASSWORD);
+  const masterToken = createToken(context, context.ADMIN_PASSWORD);
   return masterToken === token;
 }
 
