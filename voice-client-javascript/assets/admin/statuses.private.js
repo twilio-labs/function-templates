@@ -223,7 +223,7 @@ async function getCallerIdStatus(context) {
     status.actions = [
       {
         title: "Choose a different CallerID",
-        action: "clearCallerId",
+        name: "clearCallerId",
       },
     ];
   } else {
