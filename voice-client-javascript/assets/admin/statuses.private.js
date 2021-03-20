@@ -355,9 +355,9 @@ async function getDefaultPasswordChanged(context) {
     status.description = stripIndents`
     Please take a moment to change your admin password from the provided default password. 
     
-    You can do this by editing the \`ADMIN_PASSWORD\` value in the \`.env\` in the root of this project.
+    You can do this by editing the \`ADMIN_PASSWORD\` value in your environment.
     
-    After you have saved that file, please redeploy.
+    After you have changed it, please redeploy.
 
     \`\`\`bash
     twilio serverless:deploy
@@ -366,7 +366,7 @@ async function getDefaultPasswordChanged(context) {
   } else {
     status.valid = true;
     status.description =
-      "You're all set. You can change this value in your `.env` file at anytime.";
+      "You're all set. You can change this value in your environment at anytime.";
   }
   return status;
 }
