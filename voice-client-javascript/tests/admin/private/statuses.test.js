@@ -526,7 +526,7 @@ describe("voice-client-javascript/admin/private/statuses", () => {
     // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
-    expect(status.description).toContain("`.env`");
+    expect(status.description).toContain("editing the `ADMIN_PASSWORD`");
   });
 
   test("getDefaultPasswordChanged is valid with different password", async () => {
