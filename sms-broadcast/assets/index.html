@@ -60,8 +60,8 @@
                             You have been subscribed for updates."
                         </li>
                         <li>
-                            From the phone number that you configured to trigger a broadcast, text any message
-                            to your Twilio phone number
+                            From the phone number that you configured to trigger a broadcast, text
+                            "broadcast &lt;your message here&gt;" to your Twilio phone number
                         </li>
                         <li>
                             The message will be sent out to all subscribers, and you should receive it on the
@@ -91,6 +91,13 @@
                         </li>
                         <li><p>Make sure you have set up the Notify Service and Messaging Service correctly.</p></li>
                         <li><p>Ensure that the Messaging Service is set up to handle incoming messages.</p></li>
+                        <li>
+                            <p>
+                                If you cannot send broadcasts, make sure your message starts with the "broadcast"
+                                command, and that you are messaging your Twilio phone number from the phone number
+                                you have configured to be able to send broadcasts.
+                            </p>
+                        </li>
                     </ul>
                 </section>
             </div>
