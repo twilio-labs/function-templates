@@ -11,7 +11,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/hello-voice",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "hello-messaging": [
@@ -22,7 +23,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/hello-messaging",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "never-gonna-give-you-up": [
@@ -33,7 +35,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/never-gonna-give-you-up",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "forward-call": [
@@ -44,7 +47,8 @@
         "description": "Calls made to your Twilio number will get forwarded to this e164-formatted phone number",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -53,7 +57,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/forward-call",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "forward-message": [
@@ -64,7 +69,8 @@
         "description": "Messages sent to your Twilio number will get forwarded to this E.164-formatted phone number",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -73,7 +79,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/forward-message",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "forward-message-multiple": [
@@ -84,7 +91,8 @@
         "description": "A list of numbers in E.164 format you want to forward incoming messages to, separated by commas",
         "link": null,
         "default": "+12223334444,+491761234567",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -93,7 +101,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/forward-message-multiple",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "forward-message-sendgrid": [
@@ -104,7 +113,8 @@
         "description": "Your SendGrid API key",
         "link": "https://sendgrid.com/docs/ui/account-and-settings/api-keys/",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TO_EMAIL_ADDRESS",
@@ -113,7 +123,8 @@
         "description": "Messages sent to your Twilio number will be forwarded to this email address",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "FROM_EMAIL_ADDRESS",
@@ -122,7 +133,8 @@
         "description": "The email address that SendGrid should send the email from",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -131,7 +143,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/forward-message-sendgrid",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "voicemail": [
@@ -142,7 +155,8 @@
         "description": "Calls made to your Twilio number will get forwarded to this E.164-formatted phone number",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TIMEZONE_OFFSET",
@@ -151,7 +165,8 @@
         "description": "The timezone offset from UTC to check for business hours (-8 for PST, -5 for EST)",
         "link": null,
         "default": "0",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "WORK_WEEK_START",
@@ -160,7 +175,8 @@
         "description": "Day of the week where the business hours should start applying. 0-6 = Sunday - Saturday. Default is set to 1, which is Monday",
         "link": null,
         "default": "1",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "WORK_WEEK_END",
@@ -169,7 +185,8 @@
         "description": "Day of the week after which the business hours should stop applying. 0-6 = Sunday - Saturday. Default is set to 5, which is Friday",
         "link": null,
         "default": "5",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "WORK_HOUR_START",
@@ -178,7 +195,8 @@
         "description": "Hour of the day where business hours should start. 0-23. Default is set to 8, meaning business hours start at 8:00:00AM",
         "link": null,
         "default": "8",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "WORK_HOUR_END",
@@ -187,7 +205,8 @@
         "description": "Hour of the day where business hours should stop. 0-23. Default is set to 18, meaning business hours end at 18:59:59 or 6:59:59PM",
         "link": null,
         "default": "18",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -196,7 +215,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/voicemail",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "forward-message-sparkpost": [
@@ -207,7 +227,8 @@
         "description": "Your SparkPost API key",
         "link": "https://www.sparkpost.com/docs/getting-started/create-api-keys/",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TO_EMAIL_ADDRESS",
@@ -216,7 +237,8 @@
         "description": "Messages sent to your Twilio number will be forwarded to this email address",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "FROM_EMAIL_ADDRESS",
@@ -225,7 +247,8 @@
         "description": "The email address that SparkPost should send the email from",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -234,7 +257,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/forward-message-sparkpost",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "airtable": [
@@ -245,7 +269,8 @@
         "description": "Your Airtable API Key",
         "link": "https://support.airtable.com/hc/en-us/articles/219046777-How-do-I-get-my-API-key-",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "AIRTABLE_BASE_ID",
@@ -254,7 +279,8 @@
         "description": "Your Airtable Base ID",
         "link": "https://airtable.com/api",
         "default": "appAbcD12efG3HijK",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "AIRTABLE_TABLE_NAME",
@@ -263,7 +289,8 @@
         "description": "Your Airtable Table Name",
         "link": null,
         "default": "Table 1",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_PHONE_NUMBER",
@@ -272,7 +299,8 @@
         "description": "The Twilio phone number to send broadcast SMS from",
         "link": null,
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -281,7 +309,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/save-sms",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "conference": [
@@ -292,7 +321,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/conference",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "stripe-payment-link-sms": [
@@ -303,7 +333,8 @@
         "description": "A Stripe secret key",
         "link": "https://dashboard.stripe.com/test/apikeys",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_PHONE_NUMBER",
@@ -312,7 +343,8 @@
         "description": "Sender phone number. Default is \"STRIPEDEMO\"",
         "link": "https://www.twilio.com/console/phone-numbers/getting-started",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -321,7 +353,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/create-invoice",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "stripe-sms-receipt": [
@@ -332,7 +365,8 @@
         "description": "A Stripe secret key",
         "link": "https://dashboard.stripe.com/test/apikeys",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_PHONE_NUMBER",
@@ -341,7 +375,8 @@
         "description": "Sender phone number. Default is \"STRIPEDEMO\"",
         "link": "https://www.twilio.com/console/phone-numbers/getting-started",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "chat-token": [
@@ -352,7 +387,8 @@
         "description": "API key for your Twilio Account",
         "link": "https://www.twilio.com/console/runtime/api-keys/create",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "API_SECRET",
@@ -361,7 +397,8 @@
         "description": "API secret for your API Key",
         "link": "https://www.twilio.com/console/runtime/api-keys/create",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "CHAT_SERVICE_SID",
@@ -370,7 +407,8 @@
         "description": "SID of your Twilio Chat Service",
         "link": "https://www.twilio.com/docs/api/chat/rest/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "sync-token": [
@@ -381,7 +419,8 @@
         "description": "API key for your Twilio Account",
         "link": "https://www.twilio.com/console/runtime/api-keys/create",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "API_SECRET",
@@ -390,7 +429,8 @@
         "description": "API secret for your API Key",
         "link": "https://www.twilio.com/console/runtime/api-keys/create",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "SYNC_SERVICE_SID",
@@ -399,7 +439,8 @@
         "description": "SID of your Twilio Sync Service",
         "link": "https://www.twilio.com/docs/api/sync/rest/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "video-token": [
@@ -410,7 +451,8 @@
         "description": "API key for your Twilio Account",
         "link": "https://www.twilio.com/console/runtime/api-keys/create",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "API_SECRET",
@@ -419,7 +461,8 @@
         "description": "API secret for your API Key",
         "link": "https://www.twilio.com/console/runtime/api-keys/create",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "hunt": [
@@ -430,7 +473,8 @@
         "description": "A comma separated list of numbers in E.164 format that you want to dial in order",
         "link": null,
         "default": "+12223334444,+491761234567",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "FINAL_URL",
@@ -439,7 +483,8 @@
         "description": "A URL to redirect the call to if none of the numbers answer. If this is not supplied then the call will just hang up once it has exhausted all the options",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -448,7 +493,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/hunt",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "http-redirect": [
@@ -459,7 +505,8 @@
         "description": "The URL you want your redirect Function to redirect to",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "temp-storage": [],
@@ -471,7 +518,8 @@
         "description": "SID of your Twilio Verify Service",
         "link": "https://www.twilio.com/console/verify/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "blocklist-call": [
@@ -482,7 +530,8 @@
         "description": "Only phone numbers in this comma-separated list will be allowed to join the conference. All phone numbers must follow the E.164 format",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12125551234,+17025556789",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -491,7 +540,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/blocklist-call",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-echo": [
@@ -502,7 +552,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-echo",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-simple-message": [
@@ -513,7 +564,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-simple-message",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-simple-menu": [
@@ -524,7 +576,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-simple-menu",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-whisper": [
@@ -535,7 +588,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-whisper",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-forward": [
@@ -546,7 +600,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-forward",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-call-me": [
@@ -557,7 +612,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-call-me",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-simulring": [
@@ -568,7 +624,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-simulring",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "funlet-find-me": [
@@ -579,7 +636,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/funlet-find-me",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "voice-client-javascript": [
@@ -590,7 +648,8 @@
         "description": "Choose a name for your application",
         "link": null,
         "default": "voice-client-javascript",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "ADMIN_PASSWORD",
@@ -599,7 +658,8 @@
         "description": "Set a password for your app. Users who want to use the admin interface will have to use this password to access it",
         "link": null,
         "default": "default",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "conversations": [
@@ -610,7 +670,8 @@
         "description": "The SID of the Studio Flow you want to use Conversations with. This number is found on your Studio Dashboard",
         "link": "https://www.twilio.com/console/studio/dashboard",
         "default": "FWxxxxxxxxx",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "sip-quickstart": [
@@ -621,7 +682,8 @@
         "description": "Choose a name for your application",
         "link": null,
         "default": "SIP Quickstart",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "ADMIN_PASSWORD",
@@ -630,7 +692,8 @@
         "description": "Set a password for your app. Users who want to use the admin interface will have to use this password to access it",
         "link": null,
         "default": "default",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "DEFAULT_SIP_USER_PASSWORD",
@@ -639,7 +702,8 @@
         "description": "The default password for your SIP user",
         "link": null,
         "default": "ThisIs1Password!",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "conference-verify": [
@@ -650,7 +714,8 @@
         "description": "SID of your Twilio Verify Service",
         "link": "https://www.twilio.com/console/verify/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "MODERATOR_PHONE_NUMBER",
@@ -659,7 +724,8 @@
         "description": "Phone number of the moderator. Conference starts when this number joins. In E.164 format",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "VALID_PARTICIPANTS",
@@ -668,7 +734,8 @@
         "description": "Only phone numbers in this comma-separated list will be allowed to join the conference. All phone number must use E.164 format",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -677,7 +744,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/verify-conference",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "conference-pin": [
@@ -688,7 +756,8 @@
         "description": "Choose a PIN code (only digits) for your app. Callers have to enter this code to be connected to your conference line",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -697,7 +766,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/conference-with-pin",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "conference-caller-gated": [
@@ -708,7 +778,8 @@
         "description": "Phone number of the moderator. Conference starts when this number joins. In E.164 format",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "VALID_PARTICIPANTS",
@@ -717,7 +788,8 @@
         "description": "Only phone numbers in this comma-separated list will be allowed to join the conference. All phone numbers must follow the E.164 format",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -726,7 +798,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/gated-conference",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "video": [
@@ -737,7 +810,8 @@
         "description": "API key for your Twilio Account",
         "link": "https://www.twilio.com/console/project/api-keys",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "API_SECRET",
@@ -746,7 +820,8 @@
         "description": "API secret for your API Key",
         "link": "https://www.twilio.com/console/project/api-keys",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "PASSCODE",
@@ -755,7 +830,8 @@
         "description": "Choose a passcode for your app. Users have to use this passcode to enter the video call",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "sms-notifications": [
@@ -766,7 +842,8 @@
         "description": "The Twilio phone number to send broadcast SMS from",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "PASSCODE",
@@ -775,7 +852,8 @@
         "description": "Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "voice-ivr": [
@@ -786,7 +864,8 @@
         "description": "Your phone number",
         "link": null,
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
@@ -795,7 +874,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/voice-ivr",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "magic-links": [
@@ -806,7 +886,8 @@
         "description": "SID of your Twilio Verify Service",
         "link": "https://www.twilio.com/console/verify/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "CALLBACK_PATH",
@@ -815,7 +896,8 @@
         "description": "URL path linked in the email template to check verifications",
         "link": null,
         "default": "verify.html",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "verify-dashboard": [
@@ -826,7 +908,8 @@
         "description": "SID of your Twilio Verify Service",
         "link": "https://www.twilio.com/console/verify/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "international-telephone-input": [],
@@ -838,7 +921,8 @@
         "description": "Your Mailgun API key",
         "link": "https://app.mailgun.com/app/account/security/api_keys",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "MG_VERIFIED_DOMAIN",
@@ -847,7 +931,8 @@
         "description": "Your Mailgun verified domain you want to send emails from",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TO_EMAIL_ADDRESS",
@@ -856,7 +941,8 @@
         "description": "Messages sent to your Twilio number will be forwarded to this email address",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "FROM_EMAIL_ADDRESS",
@@ -865,7 +951,8 @@
         "description": "The email address that Mailgun should send the email from",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -874,7 +961,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/forward-message-mailgun",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "json-webhook": [
@@ -885,7 +973,8 @@
         "description": "The URL for the webhook this function should call",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -894,7 +983,8 @@
         "description": "The path to the Twilio Function webhook",
         "link": null,
         "default": "/event-to-webhook",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "sms-broadcast": [
@@ -905,7 +995,8 @@
         "description": "SID of your Twilio Notify Service",
         "link": "https://www.twilio.com/console/notify/services",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "BROADCAST_ADMIN_NUMBERS",
@@ -914,7 +1005,8 @@
         "description": "A comma separated list of numbers in E.164 format that are allowed to trigger a broadcast",
         "link": null,
         "default": "+12223334444,+491761234567",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -923,7 +1015,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/broadcast",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "masked-number": [
@@ -934,7 +1027,8 @@
         "description": "Messages sent to your Twilio number will get forwarded to this E.164-formatted phone number",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_SMS_WEBHOOK_URL",
@@ -943,7 +1037,8 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/relay-sms",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "vaccine-standby": [
@@ -954,7 +1049,8 @@
         "description": "Your Twilio phone number for sending and receiving messages",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "ADMIN_PASSWORD",
@@ -963,7 +1059,8 @@
         "description": "Set a password for your app. Users who want to configure the app or view who messaged in, will need this password.",
         "link": null,
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "SALT",
@@ -972,7 +1069,8 @@
         "description": "change the salt to invalidate existing auth tokens",
         "link": null,
         "default": "salty",
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       },
       {
         "key": "FLOW_SID",
@@ -981,7 +1079,8 @@
         "description": "SID of the Vaccine Intake Studio Flow",
         "link": null,
         "default": null,
-        "configurable": false
+        "configurable": false,
+        "contentKey": null
       }
     ],
     "segment-event-notification": [
@@ -992,7 +1091,8 @@
         "description": "The name of the Segment event you want to be notified about",
         "link": "https://segment.com/docs/connections/spec/track/#event",
         "default": null,
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "TWILIO_PHONE_NUMBER",
@@ -1001,7 +1101,8 @@
         "description": "The Twilio phone number to send SMS notifications from",
         "link": null,
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       },
       {
         "key": "MY_PHONE_NUMBER",
@@ -1010,7 +1111,8 @@
         "description": "Segment event notifications will be sent to this E.164-formatted phone number",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
         "default": "+12223334444",
-        "configurable": true
+        "configurable": true,
+        "contentKey": null
       }
     ]
   }
