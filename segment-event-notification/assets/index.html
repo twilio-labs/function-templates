@@ -9,9 +9,10 @@
         <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
         <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
         <style>
-            ol.steps > li > form {
-                padding-left: 2rem;
-            }
+         img.screenshot {
+             width: 100%;
+             height: auto;
+         }
         </style>
         <script src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js" defer></script>
         <script>
@@ -53,44 +54,41 @@
                         Now that your code is deployed, here are the last steps you need to do to finish your app.
                     </p>
                     <p>
-                        This app shows you how to create an invoice in Stripe based on an SMS
-                        prompt (in this case <code>DONATE &lt;AMOUNT&gt;</code>). Once the invoice
-                        is finalized, it will reply with a payment link.
+                        This app sends an SMS to your number when your Segment-enabled website
+                        generates a specific tracking event.
                     </p>
                     <ol class="steps">
                         <li>
-                            Before you can test your app, you need to add a
-                            <a href="https://dashboard.stripe.com/webhooks"
+                            <a href="https://app.segment.com/login?utm_source=twilio&utm_medium=referral&utm_campaign=twilio_all_dg-demo_codeexchange_trigger_sms_segment_events"
+                               target="_blank"
+                               rel="noopener">Login</a> to your Segment App
+                            (if you don't have an account,
+                            <a href="https://app.segment.com/signup?utm_source=twilio&utm_medium=referral&utm_campaign=twilio_all_dg-demo_codeexchange_trigger_sms_segment_events"
                                target="_blank"
                                rel="noopener">
-                                Stripe Webhook
-                            </a>
-                            and set it to point at
+                                sign-up for a free developer account
+                            </a>)
+                        </li>
+                        <li>Click the "Add Destination" button on your Workspace Overview page</li>
+                        <li>
+                            Search for "Webhooks" in your Catalog and configure the Webhook destination
+                            with your source
+                        </li>
+                        <li>
+                            Input this webhook URL into your destination settings and click Save:
                             <form>
-                                <label for="twilio-webhook">Stripe Webhook URL</label>
-                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/send-invoice-sms">
+                                <label for="twilio-webhook">Webhook URL</label>
+                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/track-sms">
                             </form>
+                            <img class="screenshot"
+                                 src="segment-webhook-settings.png"
+                                 alt="Segment destination webhook settings">
                         </li>
-                        <li>Select "All Events" and save the webhook</li>
+                        <li>Finally, activate the new destination by flipping its toggle switch to ON</li>
                         <li>
-                            To test the customer initiated scenario of this app, text
-                            <code>DONATE 10</code> to your Twilio phone number. You should receive a
-                            Stripe invoice link to your phone
-                        </li>
-                        <li>
-                            To test the Merchant initiated flow, you need to create an invoice in the
-                            Stripe Dashbboard. Follow this
-                            <a href="https://stripe.com/docs/billing/invoices/create#without-code"
-                               target="_blank"
-                               rel="noopener">
-                                guide
-                            </a>
-                            or this <a href="https://youtu.be/YftvRXupgpw"
-                                       target="_blank"
-                                       rel="noopener">
-                                video
-                            </a>. Make sure to set
-                            a phone number when entering the customer details.
+                            When a Segment <code>track</code> event occurs and its name matches the one this
+                            application was configured to look for, you should receive a text. To generate a
+                            <code>track</code> event for testing, see the Troubleshooting section below.
                         </li>
                     </ol>
                 </section>
@@ -102,18 +100,19 @@
                     <h2>Troubleshooting</h2>
                     <ul>
                         <li>
-                            Check the
-                            <a href="https://www.twilio.com/console/phone-numbers/incoming"
+                            From your Segment Workspace, use the Event Tester to verify that your
+                            webhook is functioning correctly. If you send a <code>track</code> event
+                            with the same name as the one this application is configured to look for,
+                            you should receive a text. See the
+                            <a href="https://segment.com/docs/connections/test-connections/"
                                target="_blank"
                                rel="noopener">
-                                phone number configuration
-                            </a>
-                            and make sure the Twilio phone number you want for your app has a SMS webhook
-                            configured to point at the following URL
-                            <form>
-                                <label for="twilio-webhook">Webhook URL</label>
-                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/create-invoice">
-                            </form>
+                                Segment documentation
+                            </a> for more information on using the Event Tester.
+                            <img class="screenshot"
+                                 style="margin-top: 1em;"
+                                 src="segment-event-tester.png"
+                                 alt="Segment event tester">
                         </li>
                     </ul>
                 </section>

@@ -38,6 +38,10 @@ This is the list of Functions available in this repo:
 - [Email Verification Magic Links](magic-links) - Send one-click email verification using Verify and SendGrid
 - [Verify Testing Dashboard](verify-dashboard) - Helpful dashboard for testing and debugging during your development with Twilio Verify.
 
+## Github Pages
+
+The Quick Deploy Functions in this repo contain an `index.html` asset that is displayed after a deployment succeeds. That `index.html` file is served by the Function itself, but several static assets shared by every `index.html` are served by Github Pages from the `/docs/static` directory of this repo. These files all follow [semver](https://semver.org/) versioning, and are located in a subdirectory of `/docs/static` named after their semver major version number. For example, a file of version `1.2.3` should have a comment header containing `Version: 1.2.3` (if possible), and be located in the `v1` subdirectory of `/docs/static`.
+
 ### Todo
 
 - [ ] Forward message to email with other API providers

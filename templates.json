@@ -239,6 +239,11 @@
       "id": "vaccine-standby",
       "name": "COVID-19 Vaccine Standby List",
       "description": "Allows for the creation of a list of residents who want to be notified when it’s their turn to get the vaccine, who self-report demographic data that can be used by health agencies to prioritize the rollout in accordance with CDC guidelines."
+    },
+    {
+      "id": "segment-event-notification",
+      "name": "Segment Track Notification",
+      "description": "Sends an SMS when your Segment-enabled website generates a specific tracking event."
     }
   ]
 }
