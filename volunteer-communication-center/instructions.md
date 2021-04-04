@@ -12,9 +12,12 @@ Create an Twilio account, you can sign up for a free trial account [here](https:
 
 Create a Flex Project by going to the Flex tab on the side menu and clicking 'Create My Start Project'
 
-![new flex project](assets/new-flex-project.png)
+<img src="assets/new-flex-project.png" width="800">
 
 Confirm that you have a phone number, creating a Flex project should have created one for you. It should be listed in the [Phone Numbers](https://www.twilio.com/console/phone-numbers/incoming) tab in the console. Under the "Active Configuration" column in the table of numbers, Messaging should say **Flex Proxy Service**. 
+
+<img src="assets/active-number.jpg" width="800">
+
 
 ### Setting up Autopilot
 
