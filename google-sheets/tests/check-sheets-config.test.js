@@ -16,8 +16,7 @@ google.sheets.mockReturnValue({
 });
 
 const context = {
-  SHEETS_CLIENT_EMAIL: 'test@example.com',
-  SHEETS_PRIVATE_KEY: '1234testkey',
+  SHEETS_AUTH_JSON: '/assets/auth.private.json',
   SHEETS_DOC_ID: 'appAbcD12efG3HijK',
   SHEETS_SHEET_NAME: 'Sheet1',
 };

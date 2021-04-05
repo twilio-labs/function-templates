@@ -4,7 +4,7 @@ Logs incoming SMS numbers and messages into a Google Sheets spreadsheet.
 
 ## Pre-requisites
 
-To use this function, you will need a Google Sheets spreadsheet you want to log messages into, and a Google Cloud service account and associated authentication key. See the Google documentation on [creating a service account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating) and [generating an authentication key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys) for details. Ensure that your authentication key is in JSON format, and that it is saved to a file named `auth.json` under the `assets` directory for this function.
+To use this function, you will need a Google Sheets spreadsheet you want to log messages into, and a Google Cloud service account and associated authentication key. See the Google documentation on [creating a service account](https://cloud.google.com/iam/docs/creating-managing-service-accounts#creating) and [generating an authentication key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys) for details. Ensure that your authentication key is in JSON format, and that it is saved to a file named `auth.private.json` under the `assets` directory for this function.
 
 ### Environment variables
 
@@ -14,6 +14,7 @@ In your `.env` file, set the following values:
 
 | Variable          | Description                                                       | Required |
 | :---------------- | :---------------------------------------------------------------- | :------- |
+| SHEETS_AUTH_JSON  | The path to your Google service account authentication JSON file  | Yes      |
 | SHEETS_DOC_ID     | The document ID for your Google Sheets spreadsheet                | Yes      |
 | SHEETS_SHEET_NAME | The spreadsheet name to log to within your Google Sheets document | Yes      |
 

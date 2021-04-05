@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const logSms = require('../functions/log-sms').handler;
+const logSms = require('../functions/log-sms.protected').handler;
 const { google } = require('googleapis');
 
 const event = {};
@@ -16,8 +16,7 @@ google.sheets.mockReturnValue({
 });
 
 const context = {
-  SHEETS_CLIENT_EMAIL: 'test@example.com',
-  SHEETS_PRIVATE_KEY: '1234testkey',
+  SHEETS_AUTH_JSON: '/assets/auth.private.json',
   SHEETS_DOC_ID: 'appAbcD12efG3HijK',
   SHEETS_SHEET_NAME: 'Sheet1',
 };
@@ -51,8 +50,9 @@ it('should handle missing document IDs', done => {
     },
   });
 
-  const callback = (err, _result) => {
-    expect(err.code).toEqual(404);
+  const callback = (err, result) => {
+    expect(err).toBeFalsy();
+    expect(result.toString()).toMatch('<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>');
     done();
   };
 
@@ -71,8 +71,30 @@ it('should handle Google Sheets API errors', done => {
     },
   });
 
-  const callback = (err, _result) => {
-    expect(err.code).toEqual(400);
+  const callback = (err, result) => {
+    expect(err).toBeFalsy();
+    expect(result.toString()).toMatch('<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>');
+    done();
+  };
+
+  logSms(context, event, callback);
+});
+
+it('should handle unknown errors', done => {
+  google.sheets.mockReturnValueOnce({
+    spreadsheets: {
+      values: {
+        append: jest.fn(() => Promise.reject({
+          code: 500,
+          errors: [{ message: 'test Google Sheets unknown error' }]
+        }))
+      },
+    },
+  });
+
+  const callback = (err, result) => {
+    expect(err).toBeFalsy();
+    expect(result.toString()).toMatch('<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>');
     done();
   };
 

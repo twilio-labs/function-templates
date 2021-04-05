@@ -1,16 +1,17 @@
 const { google } = require('googleapis');
+const path = require('path');
 
 exports.handler = async function(context, _event, callback) {
     const response = new Twilio.Response();
     response.appendHeader('Content-Type', 'application/json');
 
     try {
-        const auth = new google.auth.JWT(
-            context.SHEETS_CLIENT_EMAIL,
-            null,
-            context.SHEETS_PRIVATE_KEY.replace(/\\n/g, '\n'),
-            [ 'https://www.googleapis.com/auth/spreadsheets' ],
-        );
+        const authJson = require(path.join('..', context.SHEETS_AUTH_JSON));
+        const auth = new google.auth.JWT({
+            email: authJson.client_email,
+            key: authJson.private_key,
+            scopes: [ 'https://www.googleapis.com/auth/spreadsheets' ],
+        });
         const sheets = google.sheets({
             version: 'v4',
             auth,
@@ -37,7 +38,7 @@ exports.handler = async function(context, _event, callback) {
             message = `Google sheets error: ${error.errors[0].message}. Please ensure SHEETS_SHEET_NAME is a valid spreadsheet inside your document.`;
         }
 
-        response.setStatusCode(400);
+        response.setStatusCode(error.code || 400);
         response.setBody({
             success: false,
             message,
