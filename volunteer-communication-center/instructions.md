@@ -1,14 +1,12 @@
-# Volunteer Communication Center
+# Volunteer Communication Center: Getting Started
 
 info/description
 
-## Getting Started
-
-### Creating an account
+## Creating an account
 
 Create an Twilio account, you can sign up for a free trial account [here](https://www.twilio.com/try-twilio)
 
-### Setting up Flex
+## Setting up Flex
 
 Create a Flex Project by going to the Flex tab on the side menu and clicking 'Create My Start Project'
 
@@ -16,32 +14,35 @@ Create a Flex Project by going to the Flex tab on the side menu and clicking 'Cr
 
 Confirm that you have a phone number, creating a Flex project should have created one for you. It should be listed in the [Phone Numbers](https://www.twilio.com/console/phone-numbers/incoming) tab in the console. Under the "Active Configuration" column in the table of numbers, Messaging should say **Flex Proxy Service**. 
 
+
 <img src="assets/active-number.jpg" width="800">
 
 
-### Setting up Autopilot
+## Setting up Autopilot
 
 Next, import our Autopilot bot into your project. To do so, you must have [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart) and the [Autopilot plug-in](https://www.twilio.com/docs/autopilot/twilio-autopilot-cli) installed. 
 
 Twilio CLI
 
-`npm install twilio-cli -g`
+```npm install twilio-cli -g```
 
 Autopilot Plugin 
 
-`twilio plugins:install @dabblelab/plugin-autopilot`
+```twilio plugins:install @dabblelab/plugin-autopilot```
 
 Login to your Twilio Account in the CLI 
 
-`twilio login`
+```twilio login```
 
 Use the CLI to upload the `FAQ_Chatbot.json` file into the console.
 
-`twilio autopilot:create -s FAQ_Chatbot.json`
+```twilio autopilot:create -s FAQ_Chatbot.json```
 
 You can check that it was successfully created by going to the [Autopilot](https://www.twilio.com/console/autopilot/list) tab in the console.
 
-### Create a function
+<img src="assets/autopilot.png" width=800>
+
+## Create a function
 
 Now, crate a function in the [Functions](https://www.twilio.com/console/functions/overview) tab which will handle the handoff between Autopilot and Flex.
 
@@ -53,7 +54,7 @@ Press "Deploy All" at the bottom of the page and then "Copy URL"
 
 Find the "sendtoagent" task in the FAQ_Chatbot [task list](https://www.twilio.com/console/autopilot/FAQ_Chatbot/tasks) and select the radio button that says "Actions URL" and paste the URL you just copied in the text field. Press save at the bottom of the page and then "Build Model"
 
-### Create Studio Flow
+## Create Studio Flow
 
 Go to the [Studio tab](https://www.twilio.com/console/studio/dashboard) and create a new flow called "Chatbot Interaction Flow" and select the option "Import from json" in the menu that pops up. 
 
@@ -64,10 +65,10 @@ Modify the Flex Widget. Set the Workflow to "Assign to Anyone" and the channel t
 Click Publish at the top right of the page to publish your flow.
 
 
-### Connect Phone Number
+## Connect Phone Number
 
 Go to the Flex tab and click Messaging from the side menu. Then edit the SMS channel and set the Studio Flow configuration to the flow you just made. 
 
-### Try it out
+## Try it out
 
 Text the phone number you just set up. You should receive a message from the bot telling you what it can do! Make sure your phone number is [registered](https://www.twilio.com/console/phone-numbers/verified) in order to do so with trial accounts. 
