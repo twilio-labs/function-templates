@@ -2,11 +2,11 @@
 
 info/description
 
-## Creating an account
+## 1. Create an account
 
 Create an Twilio account, you can sign up for a free trial account [here](https://www.twilio.com/try-twilio)
 
-## Setting up Flex
+## 2. Set up Flex
 
 Create a Flex Project by going to the Flex tab on the side menu and clicking 'Create My Start Project'
 
@@ -18,7 +18,7 @@ Confirm that you have a phone number, creating a Flex project should have create
 <img src="assets/active-number.jpg" width="800">
 
 
-## Setting up Autopilot
+## 3. Set up Autopilot
 
 Next, import our Autopilot bot into your project. To do so, you must have [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart) and the [Autopilot plug-in](https://www.twilio.com/docs/autopilot/twilio-autopilot-cli) installed. 
 
@@ -42,7 +42,7 @@ You can check that it was successfully created by going to the [Autopilot](https
 
 <img src="assets/autopilot.png" width=800>
 
-## Create a function
+## 4. Create a function
 
 Now, crate a function in the [Functions](https://www.twilio.com/console/functions/overview) tab which will handle the handoff between Autopilot and Flex.
 
@@ -50,11 +50,11 @@ Create a new service and name it handoff. You should be brought to the editor, i
 
 Press "Deploy All" at the bottom of the page and then "Copy URL" 
 
-### Configure Autopilot
+### 5. Configure Autopilot
 
 Find the "sendtoagent" task in the FAQ_Chatbot [task list](https://www.twilio.com/console/autopilot/FAQ_Chatbot/tasks) and select the radio button that says "Actions URL" and paste the URL you just copied in the text field. Press save at the bottom of the page and then "Build Model"
 
-## Create Studio Flow
+## 6. Create Studio Flow
 
 Go to the [Studio tab](https://www.twilio.com/console/studio/dashboard) and create a new flow called "Chatbot Interaction Flow" and select the option "Import from json" in the menu that pops up. 
 
@@ -65,7 +65,7 @@ Modify the Flex Widget. Set the Workflow to "Assign to Anyone" and the channel t
 Click Publish at the top right of the page to publish your flow.
 
 
-## Connect Phone Number
+## 7. Connect Phone Number
 
 Go to the Flex tab and click Messaging from the side menu. Then edit the SMS channel and set the Studio Flow configuration to the flow you just made. 
 
