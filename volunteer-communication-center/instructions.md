@@ -27,7 +27,6 @@ Import our Autopilot bot into your project. To do so, you must have [Twilio CLI]
 Twilio CLI
 
 ```
-
 npm install twilio-cli -g
 ```
 
@@ -79,8 +78,8 @@ Modify the Autopilot Widget by selecting the widget and setting the FAQ_Chatbot 
 
 Modify the Flex Widget. Set the Workflow to "Assign to Anyone" and the channel to "Programmable Chat". Press save.
 
-<div style="{ display: flex; flex-direction: row;}">
-<img src="assets/configure-bot.png" width=400>
+<div style="{ display: flex; flex-direction: row; }">
+<img src="assets/configure-bot.png" style="{ padding-right: 20px; }" width=400>
 <img src="assets/configure-flex.png" width=400>
 </div>
 
