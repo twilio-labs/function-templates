@@ -8,7 +8,8 @@
     "new-template": "node _helpers/add-template.js",
     "add-dependency": "npm install $npm_config_package --no-package-lock --prefix $npm_config_template && npm install --save-dev $npm_config_package",
     "env-manifest": "node _helpers/generate-env-variable-manifest",
-    "ci:generate-manifest": "npm run env-manifest -- --write"
+    "ci:generate-manifest": "npm run env-manifest -- --write",
+    "ci:verify-templates": "CI=1 jest test/ci/verify-templates.test.js"
   },
   "author": "Twilio <open-source@twilio.com>",
   "license": "MIT",
@@ -33,14 +34,8 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "testPathIgnorePatterns": [
-      "/_helpers/",
-      "/node_modules/"
-    ]
+    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+    "testPathIgnorePatterns": ["/_helpers/", "/node_modules/"]
   },
   "dependencies": {
     "got": "^6.7.1"
