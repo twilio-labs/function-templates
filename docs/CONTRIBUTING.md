@@ -61,7 +61,11 @@ npm run add-dependency --template=video-token --package=twilio-video
 
 ### Adding environment variables
 
-Any variable you want the user to have to set should be added to the `.env` file in your template directory and should include a commented line before that explaining what the variable is about. Example:
+Function templates can use environment variables for deploy-specific secrets by adding them to the `.env` file in the root of your template. These are the fields that the user will be able to pre-set on the CodeExchange web app. See `Step 2` here: https://www.twilio.com/code-exchange/simple-sms-forwarding
+
+
+
+Any variable you want the user to have to set should include a commented line before that explaining what the variable is about. Example:
 
 ```bash
 # description: The number you want your calls to be forwarded to
@@ -73,6 +77,8 @@ MY_PHONE_NUMBER=
 **Important**: You can find the format of the `.env` file and possible comments as part of [this Schema](https://github.com/twilio-labs/configure-env/blob/main/docs/SCHEMA.md).
 
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
+
+ If you _do not_ want an environment variable to appear on the Code Exchange page, set `configurable: false` for that variable.
 
 **Note**: All function templates are checked for the presence of a `.env` file by `npm test`. If a test named `should have a .env file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
 
@@ -124,6 +130,32 @@ or alternatively:
 npx jest --watch
 ```
 
+## Deploy and test to a hosted Twilio serverless environment
+1. Create a profile/api key, if you don't already have one
+```
+twilio login
+```
+2. List existing profiles
+```
+twilio profiles:list
+```
+2. Activate the profile
+```
+twilio profiles:use <your_profile_id>
+```
+3. Deploy
+```twilio serverless:deploy```
+
+## Creating a pull request
+
+Please open a pull request on the [function-templates](https://github.com/twilio-labs/function-templates/pulls) repository from your fork and fill out the pull request template.
+
+If you are adding a new template please name the pull request after the following convention and update `NAME_OF_YOUR_TEMPLATE` with the name of your template directory.
+
+```
+feat(templates): add NAME_OF_YOUR_TEMPLATE template
+```
+
 ## Testing your template
 
 If you want to test how your new template works with the Twilio CLI, make sure you have the latest version of [`@twilio-labs/plugin-serverless`](https://npm.im/@twilio-labs/plugin-serverless) installed.
@@ -138,16 +170,6 @@ In order to test if my changes are working, I can invoke the `twilio serverless:
 TWILIO_SERVERLESS_TEMPLATE_BRANCH="update-verify" \
 TWILIO_SERVERLESS_TEMPLATE_REPO="dkundel/function-templates" \
 twilio serverless:init example --template="verify"
-```
-
-## Creating a pull request
-
-Please open a pull request on the [function-templates](https://github.com/twilio-labs/function-templates/pulls) repository from your fork and fill out the pull request template.
-
-If you are adding a new template please name the pull request after the following convention and update `NAME_OF_YOUR_TEMPLATE` with the name of your template directory.
-
-```
-feat(templates): add NAME_OF_YOUR_TEMPLATE template
 ```
 
 ## Code of Conduct
