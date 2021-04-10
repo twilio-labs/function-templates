@@ -1,6 +1,0 @@
-{
-  "name": "volunteer-communication",
-  "dependencies": {
-    "twilio": "^3.56.0"
-  }
-}
