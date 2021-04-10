@@ -1,10 +1,9 @@
 const { google } = require('googleapis');
-const path = require('path');
 
 exports.handler = async function(context, event, callback) {
   // Assemble an authentication JWT from a service account email and private
   // key provided as environment variables:
-  const authJson = require(path.join('..', context.SHEETS_AUTH_JSON));
+  const authJson = require(Runtime.getAssets()[context.SHEETS_AUTH_JSON].path);
   const auth = new google.auth.JWT({
     email: authJson.client_email,
     key: authJson.private_key,

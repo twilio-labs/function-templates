@@ -16,13 +16,15 @@ google.sheets.mockReturnValue({
 });
 
 const context = {
-  SHEETS_AUTH_JSON: '/assets/auth.private.json',
+  SHEETS_AUTH_JSON: '/auth.json',
   SHEETS_DOC_ID: 'appAbcD12efG3HijK',
   SHEETS_SHEET_NAME: 'Sheet1',
 };
 
 beforeAll(() => {
-  helpers.setup(context);
+  const runtime = new helpers.MockRuntime();
+  runtime._addAsset('/auth.json', './auth.test.json');
+  helpers.setup(context, runtime);
 });
 
 afterAll(() => {

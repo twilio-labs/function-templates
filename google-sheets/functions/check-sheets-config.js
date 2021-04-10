@@ -1,12 +1,22 @@
 const { google } = require('googleapis');
-const path = require('path');
+
+const isAuthValid = (authJson) =>
+      authJson.client_email &&
+      authJson.client_email !== "<YOUR SERVICE ACCOUNT EMAIL ADDRESS>" &&
+      authJson.private_key &&
+      authJson.private_key !== "<YOUR PRIVATE KEY BLOCK HERE>";
 
 exports.handler = async function(context, _event, callback) {
     const response = new Twilio.Response();
     response.appendHeader('Content-Type', 'application/json');
 
     try {
-        const authJson = require(path.join('..', context.SHEETS_AUTH_JSON));
+        const authJson = require(Runtime.getAssets()[context.SHEETS_AUTH_JSON].path);
+
+        if(!isAuthValid(authJson)) {
+            throw new Error('Invalid authentication JSON file');
+        }
+
         const auth = new google.auth.JWT({
             email: authJson.client_email,
             key: authJson.private_key,
