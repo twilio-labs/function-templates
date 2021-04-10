@@ -1,5 +1,5 @@
 
-{
+const flowDefinition = {
   "description": "A New Flow",
   "states": [
     {
@@ -223,4 +223,6 @@
   "flags": {
     "allow_concurrent_calls": true
   }
-}
+};
+
+module.exports = flowDefinition;
