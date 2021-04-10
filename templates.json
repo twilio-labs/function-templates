@@ -244,11 +244,6 @@
       "id": "segment-event-notification",
       "name": "Segment Track Notification",
       "description": "Sends an SMS when your Segment-enabled website generates a specific tracking event."
-    },
-    {
-      "id": "volunteer-communication",
-      "name": "Volunteer Communication",
-      "description": "Multi-Channel communication center for disaster response coordinators"
     }
   ]
 }
