@@ -31,7 +31,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init example --template=vaccine-standby-list && cd example
+twilio serverless:init example --template=vaccine-standby && cd example
 ```
 
 4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
