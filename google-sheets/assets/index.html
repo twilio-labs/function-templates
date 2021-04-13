@@ -12,6 +12,10 @@
          async function showGoogleSheetsStatus() {
              const message = document.getElementById('status-message');
 
+             if(!message) {
+                 throw new Error('Missing "status-message" element');
+             }
+
              message.className = '';
              message.textContent = 'Checking Google Sheets status...';
 
@@ -76,7 +80,8 @@
                         <li>Open the Google Sheets document whose ID you configured for use with this app.</li>
                         <li>
                             Click the <b>Share</b> button in the toolbar of your Google Sheets document, enter the
-                            <a href="https://console.cloud.google.com/iam-admin/serviceaccounts">
+                            <a href="https://console.cloud.google.com/iam-admin/serviceaccounts"
+                               target="_blank" rel="noopener">
                                 email address belonging to your service account
                             </a>, and press Enter to give your service account access to your Google Sheets
                             document.
