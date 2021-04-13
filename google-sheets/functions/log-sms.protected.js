@@ -1,17 +1,27 @@
 const { google } = require('googleapis');
 const fs = require('fs').promises;
 
+const isAuthValid = (authJson) =>
+      authJson.client_email &&
+      authJson.client_email !== "<YOUR SERVICE ACCOUNT EMAIL ADDRESS>" &&
+      authJson.private_key &&
+      authJson.private_key !== "<YOUR PRIVATE KEY BLOCK HERE>";
+
 exports.handler = async function(context, event, callback) {
   const twiml = new Twilio.twiml.MessagingResponse();
   try {
     const authJson = JSON.parse(await fs.readFile(
       Runtime.getAssets()[context.SHEETS_AUTH_JSON].path));
+
+    if(!isAuthValid(authJson)) {
+      throw new Error('Invalid authentication JSON file');
+    }
+
     const auth = new google.auth.JWT({
       email: authJson.client_email,
       key: authJson.private_key,
       scopes: [ 'https://www.googleapis.com/auth/spreadsheets' ],
     });
-
     const sheets = google.sheets({
       version: 'v4',
       auth,
