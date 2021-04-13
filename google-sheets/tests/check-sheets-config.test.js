@@ -57,7 +57,6 @@ it('should handle Google Sheets API errors', done => {
 
   const callback = (_err, res) => {
     expect(res._body.success).toBeFalsy();
-    expect(res._body.message).toEqual(`Google Sheets integration error: ${errorMessage}`);
     done();
   };
 
@@ -84,7 +83,7 @@ it('should handle a missing Google Sheets document', done => {
   checkConfig(context, event, callback);
 });
 
-it('should pass along Google Sheets API errors', done => {
+it('should log Google Sheets API errors', done => {
   const testError = 'API test error';
   google.sheets.mockReturnValueOnce({
     spreadsheets: {
@@ -99,7 +98,6 @@ it('should pass along Google Sheets API errors', done => {
 
   const callback = (_err, res) => {
     expect(res._body.success).toBeFalsy();
-    expect(res._body.message).toEqual(`Google sheets error: ${testError}. Please ensure SHEETS_SHEET_NAME is a valid spreadsheet inside your document.`);
     done();
   };
 

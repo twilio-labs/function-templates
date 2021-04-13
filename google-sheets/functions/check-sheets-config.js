@@ -41,13 +41,16 @@ exports.handler = async function(context, _event, callback) {
         });
         callback(null, response);
     } catch (error) {
-        let message = `Google Sheets integration error: ${error.message || error}`;
+        let message = 'Google Sheets integration error. Please check the debugger in your Twilio Console.';
 
         if (error.code === 404) {
             message = 'Could not find your Google Sheets document. Please ensure SHEETS_DOC_ID is correct.';
         }
         else if (error.code === 400 && error.errors && error.errors[0] && error.errors[0].message) {
-            message = `Google sheets error: ${error.errors[0].message}. Please ensure SHEETS_SHEET_NAME is a valid spreadsheet inside your document.`;
+            console.error(`Google sheets error: ${error.errors[0].message}. Please ensure SHEETS_SHEET_NAME is a valid spreadsheet inside your document.`);
+        }
+        else {
+            console.error(`Google Sheets integration error: ${error.message || error}`);
         }
 
         response.setStatusCode(error.code || 400);
