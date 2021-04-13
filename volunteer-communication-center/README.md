@@ -9,3 +9,6 @@ This Function requires no environment variables to run successfully.
 ## Parameters
 
 This Function requires no URL or POST parameters to run successfully.
+
+
+`twilio serverless:start --load-local-env`

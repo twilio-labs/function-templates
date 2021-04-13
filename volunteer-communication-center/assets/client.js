@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 let phoneNumber;
 let flowSid;
+let autopilotSid;
 
 // eslint-disable-next-line no-restricted-globals
 const baseUrl = new URL(location.href);
@@ -46,6 +47,28 @@ function checkStudioFlow() {
     });
 }
 
+function checkAutopilot() {
+  fetch('/check-existing-bot')
+    .then((response) => response.text())
+    .then((sid) => {
+      $('#deploy-bot .button').removeClass('loading');
+      $('.loader').hide();
+      if (sid === 'none') {
+        $('#deploy-bot').show();
+      } else {
+        autopilotSid = sid;
+        $('#bot-deployed').show();
+        $('#bot-flow').hide();
+        $('.post-deploy-studio').show();
+        $('#open-bot').attr('href', `https://www.twilio.com/console/autopilot/${sid}`);
+      }
+    })
+    .catch((err) => {
+      console.log('An error occurred when attempting to check the Autopilot Assistant', err);
+    });
+}
+
+
 // eslint-disable-next-line no-unused-vars
 function setup(e) {
   e.preventDefault();
@@ -62,30 +85,25 @@ function setup(e) {
   });
 }
 
-function updateTable(data) {
-  const tbody = $('#residents-table-body');
-  let rows = '';
-  for (let i = 0; i < data.length; i += 1) {
-    if (data[i]) {
-      let tr = '<tr>';
-      tr += `<td>${data[i].name}</td>`;
-      tr += `<td>${data[i].phone_number}</td>`;
-      tr += `<td>${data[i].age}</td>`;
-      tr += `<td>${data[i].zip_code}</td>`;
-      tr += `<td>${data[i].essential_worker}</td>`;
-      tr += `<td>${data[i].work_from_home}</td>`;
-      tr += `<td>${data[i].long_term_care}</td>`;
-      tr += `<td>${data[i].congregate_setting}</td>`;
-      tr += `<td>${data[i].health_condition}</td>`;
-      tr += `<td>${data[i].notification_preference}</td>`;
-      tr += `<td>${data[i].language_preference}</td>`;
-      tr += '</tr>';
+// eslint-disable-next-line no-unused-vars
+function setup1(e) {
+  
+  e.preventDefault();
+  $('#deploy-bot .button').addClass('loading');
+  $('.loader.button-loader').show();
 
-      rows = rows.concat(tr);
-    }
-  }
-  tbody.html(rows);
+  fetch('/setup').then(() => {
+    checkAutopilot();
+  })
+  .catch((err) => {
+    console.log('An error ocurred creating Assistant', err);
+    $('#deploy-bot .button').removeClass('loading');
+    $('.loader.button-loader').hide();
+  });
+
 }
+
+
 
 function getStudioExecutions(sid, token) {
   const tbody = $('#residents-table-body');
@@ -148,3 +166,4 @@ async function login(e) {
 }
 
 checkStudioFlow();
+checkAutopilot();

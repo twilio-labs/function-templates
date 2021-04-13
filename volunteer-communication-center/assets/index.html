@@ -98,26 +98,30 @@
         <a id="open-studio" class="button button-outline" href="" target="_blank">Edit Studio Flow</a>
       </div>
     </div>
+
+    <div class="component-container">
+
+      <div class="loader"></div>
+      <div id="deploy-bot" style="display: none;" class="deploy-studio-flow">
+        <h4>Autopilot</h3>
+          <p>Click the button below to import the autopilot assistant, Henry. He is trained and read to answer incoming questions.</p>
+
+          <a class="button" onclick="setup1(event)">Deploy Autopilot Bot</a>
+          <div class="loader button-loader" style="display: none;"></div>
+      </div>
+      <div id="bot-deployed" style="display: none;" class="deploy-studio-flow">
+        <h3><span class="checkmark">&#10003;</span> Your Bot is deployed</h3>
+        <p>A descripytn hfsafjaks;fljlajfsdk;ajfasd;kjf jsjfklsda jf;fnlsk a fjskalfj fjsdaklf; fjksl fdasj kjdsjfkds jrkls jfkdl fjdskl; ajfkddjkkdjfksl;a f d fd kjsjfkdls fjdksa fjffkj sjfkjf fkdaf; jkdjfj jfsldjfskdl ; f djsjfklsfjslkdf f sf sdf kjlsdfjsdklf f f sf sdfdjsflsfjjf dsf sf fjdklsfjlsjfo fdds</p>
+        <a id="open-bot" class="button button-outline" href="" target="_blank">Meet Henry</a>
+      </div>
+    </div>
+
     </section>
 
+
+
     <section>
-      <div class="component-container">
-        <h4>Twilio Autopilot</h4>
-
-        <p>When a volunteer contacts the number through their preferred mode of available communication channels an
-          Autopilot bot will respond accordingly. The bot is currently deployed and trained on only a handful of common
-          volunteer questions.</p>
-
-        <p>Try texting <strong>&ltPHONE NUMBER&gt</strong> <strong>&lt"EXAMPLE QUESTION"&gt</strong><br>
-          You can also ask the bot what it is capable of doing by texting <strong>&ltPHONE NUMBER&gt</strong> "help"<br>
-          The training data can easily be modified through the Twilio console. Try creating a new task and adding sample
-          variants to train the model.</p>
-
-        <!-- TODO: change to go to autopilot project task list -->
-        <a id="open-autopilot" class="button button-outline"
-          href="https://www.twilio.com/console/studio/flows/FWe089e3e21eca207f422de548432f9ff8" target="_blank">Edit
-          Autopilot Bot</a>
-      </div>
+    
       <div class="component-container">
         <h4>Twilio Flex</h4>
         <p>While bots a great, they don't replace humans. When the bot cannot answer a question for the volunteer, the
