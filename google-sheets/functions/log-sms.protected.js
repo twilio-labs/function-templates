@@ -1,17 +1,17 @@
 const { google } = require('googleapis');
+const fs = require('fs').promises;
 
 exports.handler = async function(context, event, callback) {
-  // Assemble an authentication JWT from a service account email and private
-  // key provided as environment variables:
-  const authJson = require(Runtime.getAssets()[context.SHEETS_AUTH_JSON].path);
-  const auth = new google.auth.JWT({
-    email: authJson.client_email,
-    key: authJson.private_key,
-    scopes: [ 'https://www.googleapis.com/auth/spreadsheets' ],
-  });
   const twiml = new Twilio.twiml.MessagingResponse();
-
   try {
+    const authJson = JSON.parse(await fs.readFile(
+      Runtime.getAssets()[context.SHEETS_AUTH_JSON].path));
+    const auth = new google.auth.JWT({
+      email: authJson.client_email,
+      key: authJson.private_key,
+      scopes: [ 'https://www.googleapis.com/auth/spreadsheets' ],
+    });
+
     const sheets = google.sheets({
       version: 'v4',
       auth,

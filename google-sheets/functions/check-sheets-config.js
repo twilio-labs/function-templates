@@ -1,4 +1,5 @@
 const { google } = require('googleapis');
+const fs = require('fs').promises;
 
 const isAuthValid = (authJson) =>
       authJson.client_email &&
@@ -11,7 +12,8 @@ exports.handler = async function(context, _event, callback) {
     response.appendHeader('Content-Type', 'application/json');
 
     try {
-        const authJson = require(Runtime.getAssets()[context.SHEETS_AUTH_JSON].path);
+        const authJson = JSON.parse(await fs.readFile(
+            Runtime.getAssets()[context.SHEETS_AUTH_JSON].path));
 
         if(!isAuthValid(authJson)) {
             throw new Error('Invalid authentication JSON file');
