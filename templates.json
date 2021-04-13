@@ -244,6 +244,11 @@
       "id": "segment-event-notification",
       "name": "Segment Track Notification",
       "description": "Sends an SMS when your Segment-enabled website generates a specific tracking event."
+    },
+    {
+      "id": "google-sheets",
+      "name": "Google Sheets SMS Log",
+      "description": "Logs incoming SMS numbers and messages into a Google Sheets table"
     }
   ]
 }
