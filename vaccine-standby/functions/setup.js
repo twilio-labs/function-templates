@@ -23,6 +23,9 @@ exports.handler = async function (context, event, callback) {
 
   function getPhoneNumberSid() {
     return new Promise((resolve, reject) => {
+      if (typeof(context.TWILIO_PHONE_NUMBER) == 'undefined' || context.TWILIO_PHONE_NUMBER == '') {
+        throw new Error("TWILIO_PHONE_NUMBER is not set. You must set TWILIO_PHONE_NUMBER= in your .env file.");
+      }
       client.incomingPhoneNumbers
         .list({ phoneNumber: context.TWILIO_PHONE_NUMBER, limit: 20 })
         .then((incomingPhoneNumbers) => {
