@@ -1,8 +1,10 @@
 const { stripIndents } = require("common-tags");
 const assets = Runtime.getAssets();
-const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
-  "/admin/shared.js"
-].path);
+const {
+  getCurrentEnvironment,
+  urlForSiblingPage,
+  usesFunctionUi,
+} = require(assets["/admin/shared.js"].path);
 
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
@@ -12,13 +14,14 @@ async function checkEnvironmentInitialization(context) {
   };
   if (!environment) {
     status.description = stripIndents`
-    This application is **must be** deployed. 
+    This application **must be** deployed. 
     
     To deploy this function, use the following command:
     
     \`\`\`bash
     twilio serverless:deploy
     \`\`\`
+
     After it has been deployed, revisit this page in your deployed application.
     `;
   } else if (!context.INITIALIZED) {
@@ -163,6 +166,8 @@ async function getIncomingNumberStatus(context) {
     // Is it wired up correctly?
     if (context.TWIML_APPLICATION_SID === incomingNumber.voiceApplicationSid) {
       status.valid = true;
+      // TODO: This can point to the actual function
+      // /console/functions/editor/${service.sid}/environment/${environment.sid}/function/${function.sid}
       status.description = stripIndents`
       Your incoming number ${incomingNumber.friendlyName} (${incomingNumber.phoneNumber}) is wired up to route calls via the TwiML application incoming handler **/client-voice-twiml** to a registered client named ${context.DEFAULT_CLIENT_NAME}.
       `;
@@ -351,22 +356,48 @@ async function getDefaultPasswordChanged(context) {
     title: "Default admin password has been changed",
     valid: false,
   };
+  const env = await getCurrentEnvironment(context);
+  const consoleUrl = `https://www.twilio.com/console/functions/editor/${env.serviceSid}/environment/${env.sid}/config/variables`;
   if (context.ADMIN_PASSWORD === "default") {
     status.description = stripIndents`
     Please take a moment to change your admin password from the provided default password. 
     
-    You can do this by editing the \`ADMIN_PASSWORD\` value in your environment.
-    
-    After you have changed it, please redeploy.
+    You can do this by editing the \`ADMIN_PASSWORD\` value in your environment.`;
 
-    \`\`\`bash
-    twilio serverless:deploy
-    \`\`\`
-    `;
+    if (await usesFunctionUi(context)) {
+      status.description += stripIndents`
+      Change the [\`ADMIN_PASSWORD\` environment variable on the Environment tab](${consoleUrl}) of your Functions editor.
+
+      After updating environment variables you must redeploy your Application. Press the **Deploy All** button on the Functions editor.
+      `;
+    } else {
+      status.description += stripIndents`
+      Update your local \`.env\` file and then re-deploy using the CLI
+
+      \`\`\`
+      twilio serverless:deploy
+      \`\`\`
+      `;
+    }
   } else {
     status.valid = true;
     status.description =
       "You're all set. You can change this value in your environment at anytime.";
+    if (await usesFunctionUi(context)) {
+      status.description += stripIndents`
+        To change the admin password head over to [the Environment tab](${consoleUrl}) of your Functions editor.
+  
+        After updating environment variables you must redeploy your Application. Press the **Deploy All** button on the Functions editor.
+        `;
+    } else {
+      status.description += stripIndents`
+        Update your local \`.env\` file and then re-deploy using the CLI
+  
+        \`\`\`
+        twilio serverless:deploy
+        \`\`\`
+        `;
+    }
   }
   return status;
 }

@@ -32,6 +32,15 @@ function checkAuthorization(context, event, callback) {
   return true;
 }
 
+async function usesFunctionUi(context) {
+  const environment = getCurrentEnvironment(context);
+  if (environment === undefined) {
+    return false;
+  }
+  const service = await client.serverless.services(environment.serviceSid).fetch();
+  return service.uiEditable;
+}
+
 async function getCurrentEnvironment(context) {
   if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith("localhost")) {
     return;
@@ -136,5 +145,6 @@ module.exports = {
   getEnvironmentVariables,
   getEnvironmentVariable,
   setEnvironmentVariable,
-  urlForSiblingPage
+  urlForSiblingPage,
+  usesFunctionUi,
 };
