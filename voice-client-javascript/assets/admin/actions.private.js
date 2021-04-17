@@ -99,13 +99,13 @@ class Actions {
     return number;
   }
 
-  async setCallerId({ number }) {
+  setCallerId({ number }) {
     return {
       CALLER_ID: number,
     };
   }
 
-  async clearCallerId() {
+  clearCallerId() {
     return {
       CALLER_ID: undefined,
     };
@@ -120,13 +120,13 @@ class Actions {
     };
   }
 
-  async clearIncomingNumber() {
+  clearIncomingNumber() {
     return {
       INCOMING_NUMBER: undefined,
     };
   }
 
-  async useExistingTwimlApp({ twimlApplicationSid }) {
+  useExistingTwimlApp({ twimlApplicationSid }) {
     return {
       TWIML_APPLICATION_SID: twimlApplicationSid,
     };
