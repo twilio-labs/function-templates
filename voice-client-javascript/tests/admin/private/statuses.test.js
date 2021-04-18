@@ -3,6 +3,7 @@ const helpers = require("../../../../test/test-helper");
 const statusFunctions = {};
 let environmentFunction;
 let mockGetCurrentEnvironment;
+let mockUsesFunctionUi;
 
 const mockApplications = {
   fetch: jest.fn(),
@@ -11,6 +12,10 @@ const mockApplications = {
 const mockKeys = {
   fetch: jest.fn(),
 };
+
+const fixtureEnvironments = [
+  { uniqueName: "devtown", sid: "ZE123", serviceSid: "ZS123" }
+];
 
 const fixtureIncomingNumbers = [
   {
@@ -65,6 +70,7 @@ describe("voice-client-javascript/admin/private/statuses", () => {
     helpers.setup(createContext(), runtime);
     // Mock out shared
     mockGetCurrentEnvironment = jest.fn();
+    mockUsesFunctionUi = jest.fn(() => Promise.resolve(false));
     const mockShared = jest.mock("../../../assets/admin/shared.private", () => {
       const actualShared = jest.requireActual(
         "../../../assets/admin/shared.private"
@@ -72,6 +78,7 @@ describe("voice-client-javascript/admin/private/statuses", () => {
       return {
         urlForSiblingPage: actualShared.urlForSiblingPage,
         getCurrentEnvironment: mockGetCurrentEnvironment,
+        usesFunctionUi: mockUsesFunctionUi,
       };
     });
     const mod = require("../../../assets/admin/statuses.private");
@@ -104,7 +111,7 @@ describe("voice-client-javascript/admin/private/statuses", () => {
   test("checkEnvironmentInitialization prompts to initialize if not yet initialized", async () => {
     // Arrange
     mockGetCurrentEnvironment.mockReturnValueOnce(
-      Promise.resolve({ uniqueName: "devtown" })
+      Promise.resolve(fixtureEnvironments[0])
     );
 
     // Act
@@ -122,7 +129,7 @@ describe("voice-client-javascript/admin/private/statuses", () => {
     const INITIALIZED = "voice-client-quickstart";
     const context = createContext({ INITIALIZED });
     mockGetCurrentEnvironment.mockReturnValueOnce(
-      Promise.resolve({ uniqueName: "devtown" })
+      Promise.resolve(fixtureEnvironments[0])
     );
 
     // Act
@@ -541,5 +548,26 @@ describe("voice-client-javascript/admin/private/statuses", () => {
     expect(status).toBeDefined();
     expect(status.valid).toBeTruthy();
     expect(status.description).toContain("all set");
+  });
+
+  test("getDefaultPasswordChanged guides to update using Function UI when applicable", async () => {
+    // Arrange
+    mockUsesFunctionUi.mockReturnValueOnce(Promise.resolve(true));
+    const env = fixtureEnvironments[0];
+    mockGetCurrentEnvironment.mockReturnValueOnce(
+      Promise.resolve(env)
+    );
+    const uiPath = `/console/functions/editor/${env.serviceSid}/environment/${env.sid}/config/variables`;
+    const ADMIN_PASSWORD = "default";
+    const context = createContext({ADMIN_PASSWORD});
+
+
+    // Act
+    const status = await statusFunctions.getDefaultPasswordChanged(context);
+
+    // Assert
+    expect(status).toBeDefined();
+    expect(status.valid).toBeFalsy();
+    expect(status.description).toContain(uiPath);
   });
 });

@@ -357,14 +357,14 @@ async function getDefaultPasswordChanged(context) {
     valid: false,
   };
   const env = await getCurrentEnvironment(context);
-  const consoleUrl = `https://www.twilio.com/console/functions/editor/${env.serviceSid}/environment/${env.sid}/config/variables`;
   if (context.ADMIN_PASSWORD === "default") {
     status.description = stripIndents`
     Please take a moment to change your admin password from the provided default password. 
     
     You can do this by editing the \`ADMIN_PASSWORD\` value in your environment.`;
-
+    
     if (await usesFunctionUi(context)) {
+      const consoleUrl = `https://www.twilio.com/console/functions/editor/${env.serviceSid}/environment/${env.sid}/config/variables`;
       status.description += stripIndents`
       Change the [\`ADMIN_PASSWORD\` environment variable on the Environment tab](${consoleUrl}) of your Functions editor.
 
