@@ -14,6 +14,11 @@ If this is your first time contributing to an open-source project, [check out ou
 - git installed on your computer. [Learn how to install it](https://help.github.com/en/articles/set-up-git)
 - [Node.js](https://nodejs.org) and a package manager like [npm](https://npmjs.com)
 
+## CodeExchange
+Under the hood, every CodeExchange Quick Deploy app is a Function Template. Read more about the Quick Deploy onboarding process here: https://wiki.hq.twilio.com/x/VgBYEQ
+
+See Quick Deploy apps here: https://www.twilio.com/code-exchange?q=&f=serverless
+
 ## Setting up your local environment
 
 1. [Fork this repository](https://github.com/twilio-labs/function-templates/fork)
