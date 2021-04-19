@@ -61,7 +61,7 @@ npm run add-dependency --template=video-token --package=twilio-video
 
 ### Adding environment variables
 
-Function templates can use environment variables for deploy-specific secrets by adding them to the `.env` file in the root of your template. These are the fields that the user will be able to pre-set on the CodeExchange web app. See `Step 2` here: https://www.twilio.com/code-exchange/simple-sms-forwarding
+Function templates can use environment variables for deploy-specific secrets by adding them to the `.env` file in the root of your template. These are the fields that the user will be able to pre-set on the CodeExchange web app. `Step 2` visually shows the env vars that are set in `.env`: https://www.twilio.com/code-exchange/simple-sms-forwarding
 
 
 
@@ -78,7 +78,7 @@ MY_PHONE_NUMBER=
 
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
 
- If you _do not_ want an environment variable to appear on the Code Exchange page, set `configurable: false` for that variable.
+ If you _do not_ want an environment variable to appear on the CodeExchange page, set `configurable: false` for that variable.
 
 **Note**: All function templates are checked for the presence of a `.env` file by `npm test`. If a test named `should have a .env file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
 
@@ -87,6 +87,8 @@ They should also be mentioned in the existing table inside the `README.md` of yo
 If your app has a front-end component to it, you can override the existing `index.html` file in your project.
 
 In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
+
+## Testing
 
 ### Testing the functionality of your new template locally
 
@@ -110,7 +112,7 @@ twilio serverless:start
 twilio serverless:start --load-local-env
 ```
 
-## Running tests
+## Running automated tests
 
 The tests are written using [Jest](https://jestjs.io/). You can run the test suite by running:
 
@@ -144,19 +146,12 @@ twilio profiles:list
 twilio profiles:use <your_profile_id>
 ```
 3. Deploy
-```twilio serverless:deploy```
-
-## Creating a pull request
-
-Please open a pull request on the [function-templates](https://github.com/twilio-labs/function-templates/pulls) repository from your fork and fill out the pull request template.
-
-If you are adding a new template please name the pull request after the following convention and update `NAME_OF_YOUR_TEMPLATE` with the name of your template directory.
-
 ```
-feat(templates): add NAME_OF_YOUR_TEMPLATE template
+twilio serverless:deploy
 ```
 
-## Testing your template
+
+## Test the installation of your template
 
 If you want to test how your new template works with the Twilio CLI, make sure you have the latest version of [`@twilio-labs/plugin-serverless`](https://npm.im/@twilio-labs/plugin-serverless) installed.
 
@@ -171,6 +166,17 @@ TWILIO_SERVERLESS_TEMPLATE_BRANCH="update-verify" \
 TWILIO_SERVERLESS_TEMPLATE_REPO="dkundel/function-templates" \
 twilio serverless:init example --template="verify"
 ```
+
+### Creating a pull request
+
+Please open a pull request on the [function-templates](https://github.com/twilio-labs/function-templates/pulls) repository from your fork and fill out the pull request template.
+
+If you are adding a new template please name the pull request after the following convention and update `NAME_OF_YOUR_TEMPLATE` with the name of your template directory.
+
+```
+feat(templates): add NAME_OF_YOUR_TEMPLATE template
+```
+
 
 ## Code of Conduct
 
