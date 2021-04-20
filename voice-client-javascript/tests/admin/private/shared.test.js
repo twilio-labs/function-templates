@@ -21,8 +21,8 @@ const mockVariables = [{
 const mockEnvironment = {
   serviceSid: "SERVICE_SID",
   sid: "ENVIRONMENT_SID",
-
 };
+
 const mockServicesList = jest.fn(() => Promise.resolve([]));
 const mockEnvironmentList = jest.fn(() => Promise.resolve([]));
 const mockEnvironmentVariablesList = jest.fn(() => Promise.resolve(mockVariables));
@@ -37,9 +37,12 @@ const mockEnvironments = jest.fn(() => {
   };
 });
 
+// TODO: Add uiEditable for the test of usesFunctionUi
+const mockServiceFetch = jest.fn();
 mockTwilioClient.serverless.services = jest.fn(() => {
   const inner = {
     environments: mockEnvironments,
+    fetch: mockServiceFetch
   };
   inner.environments.list = mockEnvironmentList;
   return inner;
@@ -155,7 +158,7 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
   test("getCurrentEnvironment returns undefined if no matching environments are found", async () => {
     // Arrange
-    mockServicesList.mockReturnValue(
+    mockServicesList.mockReturnValueOnce(
       Promise.resolve([
         {
           sid: "SERVICE_SID",
@@ -178,7 +181,7 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
   test("getCurrentEnvironment returns matching environment", async () => {
     // Arrange
-    mockServicesList.mockReturnValue(
+    mockServicesList.mockReturnValueOnce(
       Promise.resolve([
         {
           sid: "SERVICE_SID",
@@ -287,5 +290,24 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
     expect(result).toBeTruthy();
     expect(mockVariables[0].remove).toHaveBeenCalled();
+  });
+
+  test("usesFunctionUi is true when service is editable", async() => {
+    // Arrange
+    const service = {
+      sid: "SERVICE_SID",
+      uiEditable: true
+    };
+    mockServicesList.mockReturnValueOnce(Promise.resolve([service]));
+    mockServiceFetch.mockReturnValueOnce(service);
+
+    // Act
+    const result = await shared.usesFunctionUi(CONTEXT);
+
+    // Assert
+    expect(result).toBeDefined();
+    expect(result).toBeTruthy();
+    expect(mockServicesList).toHaveBeenCalled();
+    expect(mockServiceFetch).toHaveBeenCalled();
   });
 });

@@ -37,6 +37,7 @@ async function usesFunctionUi(context) {
   if (environment === undefined) {
     return false;
   }
+  const client = context.getTwilioClient();
   const service = await client.serverless.services(environment.serviceSid).fetch();
   return service.uiEditable;
 }
