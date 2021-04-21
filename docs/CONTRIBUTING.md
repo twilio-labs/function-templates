@@ -15,7 +15,7 @@ If this is your first time contributing to an open-source project, [check out ou
 - [Node.js](https://nodejs.org) and a package manager like [npm](https://npmjs.com)
 
 ## CodeExchange
-Under the hood, every CodeExchange Quick Deploy app is a Function Template. Read more about the Quick Deploy onboarding process here: https://wiki.hq.twilio.com/x/VgBYEQ
+Under the hood, every CodeExchange Quick Deploy app is powered by a Function Template. 
 
 See Quick Deploy apps here: https://www.twilio.com/code-exchange?q=&f=serverless
 
