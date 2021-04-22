@@ -73,24 +73,37 @@ describe('CI template verification', () => {
             });
         });
 
-        describe('its .env file', () => {
-            const envFile = path.join(projectRoot, template, '.env');
-
-            it('should exist', (done) => {
-                fs.access(envFile, fs.constants.F_OK, (err) => {
-                    expect(err).toBeFalsy();
-                    done();
+        describe('its .env.example (or .env) file', () => {
+            const envFile = () => new Promise((resolve, reject) => {
+                const envExamplePath = path.join(projectRoot, template, '.env.example');
+                fs.access(envExamplePath, fs.constants.F_OK, (err) => {
+                    if (err) {
+                        const envPath = path.join(projectRoot, template, '.env');
+                        fs.access(envPath, fs.constants.F_OK, (err) => {
+                            if (err) {
+                                reject(new Error('cannot find a .env.example or .env file'));
+                            } else {
+                                resolve(envPath);
+                            }
+                        })
+                    } else {
+                        resolve(envExamplePath);
+                    }
                 });
             });
 
+            it('should exist', async () => {
+                await expect(envFile()).resolves.toBeTruthy();
+            });
+
             it('should be parseable', async () => {
-                const result = await parser.parseFile(envFile);
+                const result = await parser.parseFile(await envFile());
 
                 expect(result).toBeTruthy();
             });
 
             it('should have a description for each variable', async () => {
-                const result = await parser.parseFile(envFile);
+                const result = await parser.parseFile(await envFile());
 
                 result.variables.forEach((v) => {
                     if(!v.description) {
@@ -100,7 +113,7 @@ describe('CI template verification', () => {
             });
 
             it('should have non-configurable TWILIO_*_WEBHOOK_URL variables, if present', async () => {
-                const result = await parser.parseFile(envFile);
+                const result = await parser.parseFile(await envFile());
                 const varRegex = /^TWILIO_.*_WEBHOOK_URL$/;
 
                 result.variables

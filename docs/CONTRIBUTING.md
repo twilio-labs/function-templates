@@ -15,7 +15,8 @@ If this is your first time contributing to an open-source project, [check out ou
 - [Node.js](https://nodejs.org) and a package manager like [npm](https://npmjs.com)
 
 ## CodeExchange
-Under the hood, every CodeExchange Quick Deploy app is powered by a Function Template. 
+
+Under the hood, every CodeExchange Quick Deploy app is powered by a Function Template.
 
 See Quick Deploy apps here: https://www.twilio.com/code-exchange?q=&f=serverless
 
@@ -68,9 +69,7 @@ npm run add-dependency --template=video-token --package=twilio-video
 
 Function templates can use environment variables for deploy-specific secrets by adding them to the `.env` file in the root of your template. These are the fields that the user will be able to pre-set on the CodeExchange web app. `Step 2` visually shows the env vars that are set in `.env`: https://www.twilio.com/code-exchange/simple-sms-forwarding
 
-
-
-Any variable you want the user to have to set should include a commented line before that explaining what the variable is about. Example:
+Any variable you want the user to have to set should be added to the `.env.example` file in your template directory and should include a commented line before that explaining what the variable is about. Example:
 
 ```bash
 # description: The number you want your calls to be forwarded to
@@ -79,13 +78,13 @@ Any variable you want the user to have to set should include a commented line be
 MY_PHONE_NUMBER=
 ```
 
-**Important**: You can find the format of the `.env` file and possible comments as part of [this Schema](https://github.com/twilio-labs/configure-env/blob/main/docs/SCHEMA.md).
+**Important**: You can find the format of the `.env.example` file and possible comments as part of [this Schema](https://github.com/twilio-labs/configure-env/blob/main/docs/SCHEMA.md).
 
 They should also be mentioned in the existing table inside the `README.md` of your template directory.
 
- If you _do not_ want an environment variable to appear on the CodeExchange page, set `configurable: false` for that variable.
+If you _do not_ want an environment variable to appear on the CodeExchange page, set `configurable: false` for that variable.
 
-**Note**: All function templates are checked for the presence of a `.env` file by `npm test`. If a test named `should have a .env file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
+**Note**: All function templates are checked for the presence of a `.env.example` or a `.env` file by `npm test`. If a test named `should have a .env.example (or .env) file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
 
 ### Updating the `index.html`
 
@@ -138,23 +137,30 @@ npx jest --watch
 ```
 
 ### Deploy and test to a hosted Twilio serverless environment
+
 1. Create a profile/api key, if you don't already have one
+
 ```
 twilio login
 ```
+
 2. List existing profiles
+
 ```
 twilio profiles:list
 ```
+
 2. Activate the profile
+
 ```
 twilio profiles:use <your_profile_id>
 ```
+
 3. Deploy
+
 ```
 twilio serverless:deploy
 ```
-
 
 ### Test the installation of your template
 
@@ -181,7 +187,6 @@ If you are adding a new template please name the pull request after the followin
 ```
 feat(templates): add NAME_OF_YOUR_TEMPLATE template
 ```
-
 
 ## Code of Conduct
 
