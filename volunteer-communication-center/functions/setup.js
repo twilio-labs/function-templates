@@ -1,3 +1,6 @@
+const { exec } = require('child_process');
+const { tasks } = require('../assets/autopilot_bot.private');
+
 /* eslint-disable no-console, func-names */
 exports.handler = async function (context, event, callback) {
 
@@ -22,16 +25,63 @@ exports.handler = async function (context, event, callback) {
         .catch((err) => { throw new Error(err.details) });
   }
 
-  function deployAutopilot() {
+  function createAssistant() {
     return client.autopilot.assistants
-                .create({
-                   friendlyName: 'Styled Assistant',
-                   uniqueName: 'stsyled-assigstant',
-                   styleSheet: autopilotDefinition
-                 })
-                .then((assistant) => assistant)
-                .catch((err) => { throw new Error(err.details) }
-                );
+    .create({
+       friendlyName: autopilotDefinition["friendlyName"],
+       uniqueName: autopilotDefinition["uniqueName"],
+       styleSheet: autopilotDefinition["styleSheet"]
+     })
+    .then(assistant => assistant);
+  }
+
+  function createTask(assistant, task) {
+    return client.autopilot.assistants(assistant.sid)
+        .tasks
+        .create({
+          actions: task["actions"],
+         uniqueName: task["uniqueName"]
+        })
+        .then(task => task)
+        .catch((err) => { throw new Error(err.details) });
+  }
+
+  function createSample(assistant, task, sample) {
+    return client.autopilot.assistants(assistant.sid)
+                .tasks(task.sid)
+                .samples
+                .create(sample)
+                .then(sample => sample)
+                .catch((err) => { throw new Error(err.details) });
+
+  }
+
+  function modelBuild(assistant) {
+    return client.autopilot.assistants(assistant.sid)
+      .modelBuilds
+      .create()
+      .then(model_build => console.log(model_build.sid))
+      .catch((err) => { throw new Error(err.details) });
+  }
+
+
+  async function deployAutopilot() {
+    const assistant = await createAssistant();
+    
+    const tasks = autopilotDefinition["tasks"];
+
+    for (let i = 0; i < tasks.length; i++) {
+      const taskData = tasks[i];
+      const task = await createTask(assistant, taskData);
+
+      for (let j = 0; j < taskData["samples"].length; j++) {
+        const sample = await createSample(assistant, task, taskData["samples"][j]);
+      }
+    }
+
+    await modelBuild(assistant);
+
+    return assistant.sid;
 
   }
 
@@ -70,15 +120,15 @@ exports.handler = async function (context, event, callback) {
   }
 
   const flow = await deployStudio(flowDefinition);
-  const assistant = await deployAutopilot(autopilotDefinition);
+  // const assistant = await deployAutopilot();
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
   if(environment) {
     await setFlowSidEnvVar(environment, flow.sid);
-    await setAutopilotSidEnvVar(environment, assistant.sid);
+    // await setAutopilotSidEnvVar(environment, assistant.sid);
   } else {
     process.env.FLOW_SID = flow.sid;
-    process.env.AUTOPILOT_SID = assistant.sid;
+    // process.env.AUTOPILOT_SID = assistant.sid;
   }
   const phoneNumberSid = await getPhoneNumberSid();
   await updatePhoneNumberWebhook(flow.webhookUrl, phoneNumberSid);
