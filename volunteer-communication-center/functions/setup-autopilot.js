@@ -1,29 +1,13 @@
-const { exec } = require('child_process');
-const { tasks } = require('../assets/autopilot_bot.private');
-
 /* eslint-disable no-console, func-names */
 exports.handler = async function (context, event, callback) {
 
   const assets = Runtime.getAssets();
-  const flowDefinition = require(assets["/studio_flow.js"].path);
   const autopilotDefinition = require(assets["/autopilot_bot.js"].path);
   const path = Runtime.getFunctions()['auth'].path;
   const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
 
   const client = context.getTwilioClient();
 
-  // Deploy Twilio Studio Flow
-  function deployStudio() {
-    return client.studio.flows
-        .create({
-          commitMessage: 'Code Exchange automatic deploy',
-          friendlyName: 'Volunteer Communication Center',
-          status: 'published',
-          definition: flowDefinition,
-        })
-        .then((flow) => flow)
-        .catch((err) => { throw new Error(err.details) });
-  }
 
   function createAssistant() {
     return client.autopilot.assistants
@@ -32,7 +16,8 @@ exports.handler = async function (context, event, callback) {
        uniqueName: autopilotDefinition["uniqueName"],
        styleSheet: autopilotDefinition["styleSheet"]
      })
-    .then(assistant => assistant);
+    .then(assistant => assistant)
+    .catch((err) => { throw new Error(err.details) });
   }
 
   function createTask(assistant, task) {
@@ -58,10 +43,10 @@ exports.handler = async function (context, event, callback) {
 
   function modelBuild(assistant) {
     return client.autopilot.assistants(assistant.sid)
-      .modelBuilds
-      .create()
-      .then(model_build => console.log(model_build.sid))
-      .catch((err) => { throw new Error(err.details) });
+            .modelBuilds
+            .create()
+            .then(model_build => model_build.sid)
+            .catch((err) => { throw new Error(err.details) });
   }
 
 
@@ -75,13 +60,13 @@ exports.handler = async function (context, event, callback) {
       const task = await createTask(assistant, taskData);
 
       for (let j = 0; j < taskData["samples"].length; j++) {
-        const sample = await createSample(assistant, task, taskData["samples"][j]);
+        await createSample(assistant, task, taskData["samples"][j]);
       }
     }
 
     await modelBuild(assistant);
 
-    return assistant.sid;
+    return assistant;
 
   }
 
@@ -97,41 +82,24 @@ exports.handler = async function (context, event, callback) {
     });
   }
 
-  function updatePhoneNumberWebhook(studioWebhook, numberSid) {
-    return new Promise((resolve, reject) => {
-      client.incomingPhoneNumbers(numberSid)
-        .update({
-          smsUrl: studioWebhook,
-        })
-        .then(() => {
-          resolve('success');
-        })
-        .catch((err) => reject(err));
-    });
-  }
 
-  function setFlowSidEnvVar(environment, sid) {
+  function setAutopilotSidEnvVar(environment, sid) {
     return setEnvironmentVariable(
       context,
       environment,
-      'FLOW_SID',
+      'AUTOPILOT_SID',
       sid
     );
   }
 
-  const flow = await deployStudio(flowDefinition);
-  // const assistant = await deployAutopilot();
+  const assistant = await deployAutopilot();
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
   if(environment) {
-    await setFlowSidEnvVar(environment, flow.sid);
-    // await setAutopilotSidEnvVar(environment, assistant.sid);
+    await setAutopilotSidEnvVar(environment, assistant.sid);
   } else {
-    process.env.FLOW_SID = flow.sid;
-    // process.env.AUTOPILOT_SID = assistant.sid;
+    process.env.AUTOPILOT_SID = assistant.sid;
   }
-  const phoneNumberSid = await getPhoneNumberSid();
-  await updatePhoneNumberWebhook(flow.webhookUrl, phoneNumberSid);
 
   callback(null, 'success');
 };

@@ -58,7 +58,7 @@ function checkAutopilot() {
       } else {
         autopilotSid = sid;
         $('#bot-deployed').show();
-        $('#bot-flow').hide();
+        $('#deploy-bot').hide();
         $('.post-deploy-studio').show();
         $('#open-bot').attr('href', `https://www.twilio.com/console/autopilot/${sid}`);
       }
@@ -70,12 +70,12 @@ function checkAutopilot() {
 
 
 // eslint-disable-next-line no-unused-vars
-function setup(e) {
+function setupFlow(e) {
   e.preventDefault();
   $('#deploy-flow .button').addClass('loading');
   $('.loader.button-loader').show();
 
-  fetch('/setup').then(() => {
+  fetch('/setup-flow').then(() => {
     checkStudioFlow();
   })
   .catch((err) => {
@@ -86,13 +86,13 @@ function setup(e) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function setup1(e) {
+function setupAutopilot(e) {
   
   e.preventDefault();
   $('#deploy-bot .button').addClass('loading');
   $('.loader.button-loader').show();
 
-  fetch('/setup').then(() => {
+  fetch('/setup-autopilot').then(() => {
     checkAutopilot();
   })
   .catch((err) => {
@@ -101,68 +101,6 @@ function setup1(e) {
     $('.loader.button-loader').hide();
   });
 
-}
-
-
-
-function getStudioExecutions(sid, token) {
-  const tbody = $('#residents-table-body');
-  fetch(`/get-studio-executions`, {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token: token }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.length > 0) {
-        updateTable(data);
-      } else {
-        tbody.html(`<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phoneNumber}</strong> to begin.</td></tr>`);
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-      tbody.html(`<tr class="table-placeholder"><td colspan="11" style="color: red">There was an error when attempting to fetch Studio Logs. Refresh the page to try again or see troubleshooting steps below.</td></tr>`);
-    });
-}
-
-function getStudioData(token) {
-  $('#test-standby-list').show();
-  clearInterval(getStudioExecutions);
-  getStudioExecutions(flowSid, token);
-  setInterval(getStudioExecutions, 3000, flowSid, token);
-}
-
-// eslint-disable-next-line no-unused-vars
-async function login(e) {
-  e.preventDefault();
-
-  const passwordInput = $('#password-input').val();
-  fetch('/login', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ password: passwordInput }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        $('#login-error').text(response.status === 401 ? 'Incorrect password, please try again.' : 'There was an error when attempting to log in.');
-        throw Error(response.statusText);
-      }
-
-      return response;
-    })
-    .then((response) => response.json())
-    .then((r) => {
-      $('#password-form').hide();
-      getStudioData(r.token);
-    })
-    .catch((err) => console.log(err));
 }
 
 checkStudioFlow();

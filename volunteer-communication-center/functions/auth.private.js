@@ -1,19 +1,19 @@
-const crypto = require('crypto');
+// const crypto = require('crypto');
 
-function createToken(password, context) {
-    const tokenString = `${context.ACCOUNT_SID}:${password}:${context.SALT}`;
+// function createToken(password, context) {
+//     const tokenString = `${context.ACCOUNT_SID}:${password}:${context.SALT}`;
 
-    return crypto
-        .createHmac('sha1', context.AUTH_TOKEN)
-        .update(Buffer.from(tokenString, 'utf-8'))
-        .digest('base64');
-}
+//     return crypto
+//         .createHmac('sha1', context.AUTH_TOKEN)
+//         .update(Buffer.from(tokenString, 'utf-8'))
+//         .digest('base64');
+// }
 
-function isAllowed(token, context) {
-    // Create the token with the environment password
-    const masterToken = createToken(context.ADMIN_PASSWORD, context);
-    return masterToken === token;
-}
+// function isAllowed(token, context) {
+//     // Create the token with the environment password
+//     const masterToken = createToken(context.ADMIN_PASSWORD, context);
+//     return masterToken === token;
+// }
 
 async function getCurrentEnvironment(context) {
   if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith("localhost")) {
@@ -90,8 +90,8 @@ async function setEnvironmentVariable(context, environment, key, value, override
 }
 
 module.exports = {
-    createToken,
-    isAllowed,
+    // createToken,
+    // isAllowed,
     getCurrentEnvironment,
     getEnvironmentVariables,
     getEnvironmentVariable,
