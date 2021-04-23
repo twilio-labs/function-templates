@@ -70,19 +70,6 @@ exports.handler = async function (context, event, callback) {
 
   }
 
-  function getPhoneNumberSid() {
-    return new Promise((resolve, reject) => {
-      client.incomingPhoneNumbers
-        .list({ phoneNumber: context.TWILIO_PHONE_NUMBER, limit: 20 })
-        .then((incomingPhoneNumbers) => {
-          const n = incomingPhoneNumbers[0];
-          resolve(n.sid);
-        })
-        .catch((err) => reject(err));
-    });
-  }
-
-
   function setAutopilotSidEnvVar(environment, sid) {
     return setEnvironmentVariable(
       context,

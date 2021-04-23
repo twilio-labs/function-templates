@@ -36,10 +36,7 @@ function checkStudioFlow() {
         flowSid = sid;
         $('#flow-deployed').show();
         $('#deploy-flow').hide();
-        $('.post-deploy-studio').show();
-        $('#password-form').show();
         $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
-        $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
       }
     })
     .catch((err) => {
@@ -59,7 +56,6 @@ function checkAutopilot() {
         autopilotSid = sid;
         $('#bot-deployed').show();
         $('#deploy-bot').hide();
-        $('.post-deploy-studio').show();
         $('#open-bot').attr('href', `https://www.twilio.com/console/autopilot/${sid}`);
       }
     })

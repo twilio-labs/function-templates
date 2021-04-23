@@ -52,6 +52,38 @@
       width: 50px;
       height: 50px;
     }
+
+    #deploy-flow .button.loading,
+    #deploy-bot .button.landing {
+      background: rgb(244, 244, 246);
+      border: 1px solid rgb(244, 244, 246);
+      color: rgb(96, 107, 133);
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .loader {
+        border: 4px solid rgb(244, 244, 246);
+        border-top: 4px solid rgb(18, 28, 45);
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 5px;
+        margin-top: -5px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .deploy-component {
+        margin: 10px 0;
+        margin-bottom: 30px;
+}
   </style>
 </head>
 
@@ -74,23 +106,20 @@
       </p>
     </section>
 
-
-
-
     <section>
       <h3>Out of the Box</h3>
       <p>Congrats! You have successfully deployed your own instance of a volunteer communication center.</p>
       <div class="component-container">
 
       <div class="loader"></div>
-      <div id="deploy-flow" style="display: none;" class="deploy-studio-flow">
+      <div id="deploy-flow" style="display: none;" class="deploy-component">
         <h4>Studio Flow</h3>
           <p>Click the button below to set up the studio flow. This flow handles incoming calls and messages.</p>
 
           <a class="button" onclick="setupFlow(event)">Deploy Studio Flow</a>
           <div class="loader button-loader" style="display: none;"></div>
       </div>
-      <div id="flow-deployed" style="display: none;" class="deploy-studio-flow">
+      <div id="flow-deployed" style="display: none;" class="deploy-component">
         <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>
         <p>A studio flow has been set up to handle incoming messages to <strong class="phone-number"></strong>. When a
           message comes in, the volunteer will be able to engage in a back and fourth conversation with the Autopilot
@@ -102,14 +131,14 @@
     <div class="component-container">
 
       <div class="loader"></div>
-      <div id="deploy-bot" style="display: none;" class="deploy-studio-flow">
+      <div id="deploy-bot" style="display: none;" class="deploy-component">
         <h4>Autopilot</h3>
           <p>Click the button below to import the autopilot assistant, Henry. He is trained and read to answer incoming questions.</p>
 
           <a class="button" onclick="setupAutopilot(event)">Deploy Autopilot Bot</a>
           <div class="loader button-loader" style="display: none;"></div>
       </div>
-      <div id="bot-deployed" style="display: none;" class="deploy-studio-flow">
+      <div id="bot-deployed" style="display: none;" class="deploy-component">
         <h3><span class="checkmark">&#10003;</span> Your Bot is deployed</h3>
         <p>A descripytn hfsafjaks;fljlajfsdk;ajfasd;kjf jsjfklsda jf;fnlsk a fjskalfj fjsdaklf; fjksl fdasj kjdsjfkds jrkls jfkdl fjdskl; ajfkddjkkdjfksl;a f d fd kjsjfkdls fjdksa fjffkj sjfkjf fkdaf; jkdjfj jfsldjfskdl ; f djsjfklsfjslkdf f sf sdf kjlsdfjsdklf f f sf sdfdjsflsfjjf dsf sf fjdklsfjlsjfo fdds</p>
         <a id="open-bot" class="button button-outline" href="" target="_blank">Meet Henry</a>
@@ -117,8 +146,6 @@
     </div>
 
     </section>
-
-
 
     <section>
     
@@ -130,8 +157,8 @@
           order to get the volunteer help as fast as possible.</p>
 
         <!-- TODO: view link and add url-->
-        <a id="open-autopilot" class="button button-outline"
-          href="https://www.twilio.com/console/studio/flows/FWe089e3e21eca207f422de548432f9ff8" target="_blank">Go to
+        <a id="open-flex" class="button"
+          href="https://flex.twilio.com/admin" target="_blank">Go to
           Flex</a>
 
       </div>

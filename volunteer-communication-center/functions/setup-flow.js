@@ -10,7 +10,6 @@ exports.handler = async function (context, event, callback) {
 
   // Deploy Twilio Studio Flow
   function deployStudio() {
-    console.log("studio")
     return client.studio.flows
         .create({
           commitMessage: 'Code Exchange automatic deploy',

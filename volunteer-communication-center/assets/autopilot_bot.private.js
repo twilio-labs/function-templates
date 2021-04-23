@@ -1,7 +1,7 @@
 const autopilotDefinition = {
     "friendlyName" : "Henry",
     "logQueries" : true,
-    "uniqueName" : "Volfvumjtrt",
+    "uniqueName" : "Volfvummjkdlsjtrt",
     "defaults" : {
         "defaults" : {
             "assistant_initiation" : "task://greeting",
