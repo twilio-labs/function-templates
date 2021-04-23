@@ -33,7 +33,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init example --template=broadcast-sms && cd example
+twilio serverless:init example --template=sms-broadcast && cd example
 ```
 
 Before using this Function, you will need to create (or use an existing) Notify service and Messaging service. The Notify service will use the Messaging service to send out SMS messages. The Messaging service will be configured to send incoming messages to your Subscribe/Broadcast function.
@@ -78,8 +78,8 @@ Now if all went well, you'll be able to start using your phone number for managi
 
 Once the Function is deployed and your Twilio phone number is set up, folks can text anything to it to receive a brief informational message about what commands are available.
 
-* `subscribe` - subscribes the current number for updates from the service
-* `stop/start` - uses Twilio's built-in stop handling to opt a user out from, or back in to, receiving messages (check out this article for [further details on Twilio's built-in features for handling opt-out/in keywords](https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-opt-out-keywords-SMS-STOP-filtering-))
-* `broadcast <message content>` - Administrators can use the broadcast command to send a message out to all subscribed users. Not included in help text.
+- `subscribe` - subscribes the current number for updates from the service
+- `stop/start` - uses Twilio's built-in stop handling to opt a user out from, or back in to, receiving messages (check out this article for [further details on Twilio's built-in features for handling opt-out/in keywords](https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-opt-out-keywords-SMS-STOP-filtering-))
+- `broadcast <message content>` - Administrators can use the broadcast command to send a message out to all subscribed users. Not included in help text.
 
 To edit the copy for any of the messages, open the function code and look for the text strings at the top of the file.

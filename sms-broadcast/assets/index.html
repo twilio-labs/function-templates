@@ -49,6 +49,19 @@
                     </p>
                     <p>This app allows you to broadcast SMS messages to large numbers of people.</p>
                     <ol class="steps">
+                        <li>
+                            In the Twilio Console page for your Notify Service, create a new Messaging
+                            Service with use case <b>Not listed here</b>, and add your Twilio phone number
+                            to its sender pool
+                        </li>
+                        <li>
+                            Under the <b>Integration</b> tab, select <b>Send a webhook</b>, and enter the
+                            below webhook URL as its <b>Request URL</b>
+                            <form>
+                                <label for="twilio-webhook">Webhook URL</label>
+                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/broadcast">
+                            </form>
+                        </li>
                         <li>Text anything to your Twilio phone number</li>
                         <li>
                             You should receive a response saying "Hello! Text "subscribe" to receive updates,
@@ -75,22 +88,17 @@
                 <section>
                     <h2>Troubleshooting</h2>
                     <ul>
-                        <li>
-                            Check the
-                            <a href="https://www.twilio.com/console/phone-numbers/incoming"
-                               target="_blank"
-                               rel="noopener">
-                                phone number configuration
-                            </a>
-                            and make sure the Twilio phone number you want for your app has a SMS webhook
-                            configured to point at the following URL
-                            <form>
-                                <label for="twilio-webhook">Webhook URL</label>
-                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/broadcast">
-                            </form>
-                        </li>
                         <li><p>Make sure you have set up the Notify Service and Messaging Service correctly.</p></li>
-                        <li><p>Ensure that the Messaging Service is set up to handle incoming messages.</p></li>
+                        <li>
+                            <p>
+                                Ensure that the Messaging Service is set up to send a webhook in response to incoming
+                                messages, with the request URL set to the following
+                                <form>
+                                    <label for="twilio-webhook">Webhook URL</label>
+                                    <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/broadcast">
+                                </form>
+                            </p>
+                        </li>
                         <li>
                             <p>
                                 If you cannot send broadcasts, make sure your message starts with the "broadcast"
