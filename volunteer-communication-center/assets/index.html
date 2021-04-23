@@ -63,27 +63,32 @@
     }
 
     .loader {
-        border: 4px solid rgb(244, 244, 246);
-        border-top: 4px solid rgb(18, 28, 45);
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        animation: spin 1s linear infinite;
-        display: inline-block;
-        vertical-align: middle;
-        margin-left: 5px;
-        margin-top: -5px;
+      border: 4px solid rgb(244, 244, 246);
+      border-top: 4px solid rgb(18, 28, 45);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 5px;
+      margin-top: -5px;
     }
 
     @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .deploy-component {
-        margin: 10px 0;
-        margin-bottom: 30px;
-}
+      margin: 10px 0;
+      margin-bottom: 30px;
+    }
   </style>
 </head>
 
@@ -109,7 +114,6 @@
     <section>
       <h3>Out of the Box</h3>
       <p>Congrats! You have successfully deployed your own instance of a volunteer communication center.</p>
-      <div class="component-container">
 
 
       <div class="component-container">
@@ -117,56 +121,61 @@
         <p>While bots a great, they don't replace humans. When the bot cannot answer a question for the volunteer, the
           Studio Flow passes the message on to a Flex console. The request will show up in as an incoming issue which a
           coordinator can accept and address. They will continue the conversation where the Autopilot bot left off in
-          order to get the volunteer help as fast as possible. Click the button below to open up Flex in the console and select the "Create My Flex Project" Button and follow the instructions. It will prompt you to name the project and verify your phone number. Then it will set up your account and connect it with a phone number.</p>
+          order to get the volunteer help as fast as possible. Click the button below to open up Flex in the console and
+          select the "Create My Flex Project" Button and follow the instructions. It will prompt you to name the project
+          and verify your phone number. Then it will set up your account and connect it with a phone number.</p>
 
         <!-- TODO: view link and add url-->
-        <a id="open-flex" class="button"
-          href="https://www.twilio.com/console/flex/overview" target="_blank">Go to
+        <a id="open-flex" class="button" href="https://www.twilio.com/console/flex/overview" target="_blank">Go to
           Flex</a>
 
       </div>
 
+      <div class="component-container">
 
+        <div class="loader"></div>
+        <div id="deploy-bot" style="display: none;" class="deploy-component">
+          <h4>Autopilot</h3>
+            <p>Click the button below to import the autopilot assistant, Henry. He is trained and read to answer
+              incoming questions.</p>
 
-
-      <div class="loader"></div>
-      <div id="deploy-flow" style="display: none;" class="deploy-component">
-        <h4>Studio Flow</h3>
-          <p>Click the button below to set up the studio flow. This flow handles incoming calls and messages.</p>
-
-          <a class="button" onclick="setupFlow(event)">Deploy Studio Flow</a>
-          <div class="loader button-loader" style="display: none;"></div>
+            <a class="button" onclick="setupAutopilot(event)">Deploy Autopilot Bot</a>
+            <div class="loader button-loader" style="display: none;"></div>
+        </div>
+        <div id="bot-deployed" style="display: none;" class="deploy-component">
+          <h3><span class="checkmark">&#10003;</span> Your Bot is deployed</h3>
+          <p>A descripytn hfsafjaks;fljlajfsdk;ajfasd;kjf jsjfklsda jf;fnlsk a fjskalfj fjsdaklf; fjksl fdasj kjdsjfkds
+            jrkls jfkdl fjdskl; ajfkddjkkdjfksl;a f d fd kjsjfkdls fjdksa fjffkj sjfkjf fkdaf; jkdjfj jfsldjfskdl ; f
+            djsjfklsfjslkdf f sf sdf kjlsdfjsdklf f f sf sdfdjsflsfjjf dsf sf fjdklsfjlsjfo fdds</p>
+          <a id="open-bot" class="button button-outline" href="" target="_blank">Meet Henry</a>
+        </div>
       </div>
-      <div id="flow-deployed" style="display: none;" class="deploy-component">
-        <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>
-        <p>A studio flow has been set up to handle incoming messages to <strong class="phone-number"></strong>. When a
-          message comes in, the volunteer will be able to engage in a back and fourth conversation with the Autopilot
-          bot. You can update the flow and any of the logic by clicking the button below.</p>
-        <a id="open-studio" class="button button-outline" href="" target="_blank">Edit Studio Flow</a>
-      </div>
-    </div>
 
-    <div class="component-container">
 
-      <div class="loader"></div>
-      <div id="deploy-bot" style="display: none;" class="deploy-component">
-        <h4>Autopilot</h3>
-          <p>Click the button below to import the autopilot assistant, Henry. He is trained and read to answer incoming questions.</p>
 
-          <a class="button" onclick="setupAutopilot(event)">Deploy Autopilot Bot</a>
-          <div class="loader button-loader" style="display: none;"></div>
+      <div class="component-container">
+        <div class="loader"></div>
+        <div id="deploy-flow" style="display: none;" class="deploy-component">
+          <h4>Studio Flow</h3>
+            <p>Click the button below to set up the studio flow. This flow handles incoming calls and messages.</p>
+
+            <a class="button" onclick="setupFlow(event)">Deploy Studio Flow</a>
+            <div class="loader button-loader" style="display: none;"></div>
+        </div>
+        <div id="flow-deployed" style="display: none;" class="deploy-component">
+          <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>
+          <p>A studio flow has been set up to handle incoming messages to <strong class="phone-number"></strong>. When a
+            message comes in, the volunteer will be able to engage in a back and fourth conversation with the Autopilot
+            bot. You can update the flow and any of the logic by clicking the button below.</p>
+          <a id="open-studio" class="button button-outline" href="" target="_blank">Edit Studio Flow</a>
+        </div>
       </div>
-      <div id="bot-deployed" style="display: none;" class="deploy-component">
-        <h3><span class="checkmark">&#10003;</span> Your Bot is deployed</h3>
-        <p>A descripytn hfsafjaks;fljlajfsdk;ajfasd;kjf jsjfklsda jf;fnlsk a fjskalfj fjsdaklf; fjksl fdasj kjdsjfkds jrkls jfkdl fjdskl; ajfkddjkkdjfksl;a f d fd kjsjfkdls fjdksa fjffkj sjfkjf fkdaf; jkdjfj jfsldjfskdl ; f djsjfklsfjslkdf f sf sdf kjlsdfjsdklf f f sf sdfdjsflsfjjf dsf sf fjdklsfjlsjfo fdds</p>
-        <a id="open-bot" class="button button-outline" href="" target="_blank">Meet Henry</a>
-      </div>
-    </div>
+
 
     </section>
 
     <section>
-    
+
 
       <h3>Next Steps</h3>
       <h3>Troubleshooting</h3>
