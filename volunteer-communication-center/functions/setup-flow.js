@@ -61,7 +61,6 @@ exports.handler = async function (context, event, callback) {
 
     const workspace = await getWorkspace();
     const workflow = await fetchWorkFlow(workspace.sid);
-    // console.log("workflow: ", workflow.sid);
     
     if (workspace && workflow) {
       const states = flowDefinition["states"];
@@ -81,7 +80,6 @@ exports.handler = async function (context, event, callback) {
 
 
   function configureFlowWithAssistant() {
-    console.log("assis")
     if (process.env.AUTOPILOT_SID) {
       const states = flowDefinition["states"];
 
