@@ -133,14 +133,14 @@
 
       <div class="component-container">
 
-        <div class="loader"></div>
+        <div id="bot-loader-container" class="loader"></div>
         <div id="deploy-bot" style="display: none;" class="deploy-component">
           <h4>Autopilot</h3>
             <p>Click the button below to import the autopilot assistant, Henry. He is trained and read to answer
               incoming questions.</p>
 
             <a class="button" onclick="setupAutopilot(event)">Deploy Autopilot Bot</a>
-            <div class="loader button-loader" style="display: none;"></div>
+            <div id="bot-loader" class="loader button-loader" style="display: none;"></div>
         </div>
         <div id="bot-deployed" style="display: none;" class="deploy-component">
           <h3><span class="checkmark">&#10003;</span> Your Bot is deployed</h3>
@@ -154,13 +154,13 @@
 
 
       <div class="component-container">
-        <div class="loader"></div>
+        <div id="flow-loader-container" class="loader"></div>
         <div id="deploy-flow" style="display: none;" class="deploy-component">
           <h4>Studio Flow</h3>
             <p>Click the button below to set up the studio flow. This flow handles incoming calls and messages.</p>
 
             <a class="button" onclick="setupFlow(event)">Deploy Studio Flow</a>
-            <div class="loader button-loader" style="display: none;"></div>
+            <div id="flow-loader" class="loader button-loader" style="display: none;"></div>
         </div>
         <div id="flow-deployed" style="display: none;" class="deploy-component">
           <h3><span class="checkmark">&#10003;</span> Your Studio Flow is deployed</h3>

@@ -29,7 +29,7 @@ function checkStudioFlow() {
     .then((response) => response.text())
     .then((sid) => {
       $('#deploy-flow .button').removeClass('loading');
-      $('.loader').hide();
+      $('#flow-loader-container').hide();
       if (sid === 'none') {
         $('#deploy-flow').show();
       } else {
@@ -49,7 +49,7 @@ function checkAutopilot() {
     .then((response) => response.text())
     .then((sid) => {
       $('#deploy-bot .button').removeClass('loading');
-      $('.loader').hide();
+      $('#bot-loader-container').hide();
       if (sid === 'none') {
         $('#deploy-bot').show();
       } else {
@@ -69,7 +69,7 @@ function checkAutopilot() {
 function setupFlow(e) {
   e.preventDefault();
   $('#deploy-flow .button').addClass('loading');
-  $('.loader.button-loader').show();
+  $('#flow-loader').show();
 
   fetch('/setup-flow').then(() => {
     checkStudioFlow();
@@ -86,7 +86,7 @@ function setupAutopilot(e) {
   
   e.preventDefault();
   $('#deploy-bot .button').addClass('loading');
-  $('.loader.button-loader').show();
+  $('#bot-loader').show();
 
   fetch('/setup-autopilot').then(() => {
     checkAutopilot();
