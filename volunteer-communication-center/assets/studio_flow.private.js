@@ -1,13 +1,13 @@
 
 const flowDefinition = {
-  "description": "A New Flow",
+  "description": "SMStoFlex",
   "states": [
     {
       "name": "Trigger",
       "type": "trigger",
       "transitions": [
         {
-          "next": "autopilot_1",
+          "next": "AutopilotFAQbot",
           "event": "incomingMessage"
         },
         {
@@ -25,11 +25,11 @@ const flowDefinition = {
       }
     },
     {
-      "name": "autopilot_1",
+      "name": "AutopilotFAQbot",
       "type": "send-to-auto-pilot",
       "transitions": [
         {
-          "next": "split_1",
+          "next": "CheckTask",
           "event": "sessionEnded"
         },
         {
@@ -42,10 +42,10 @@ const flowDefinition = {
       "properties": {
         "chat_channel": "{{trigger.message.ChannelSid}}",
         "offset": {
-          "x": -140,
+          "x": 0,
           "y": 160
         },
-        "autopilot_assistant_sid": "UA2ef3f645eece3a3d124a675aa14201bd",
+        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
         "from": "{{flow.channel.address}}",
         "chat_service": "{{trigger.message.InstanceSid}}",
         "body": "{{trigger.message.Body}}",
@@ -53,69 +53,55 @@ const flowDefinition = {
       }
     },
     {
-      "name": "split_1",
+      "name": "CheckTask",
       "type": "split-based-on",
       "transitions": [
         {
-          "next": "send_message_1",
           "event": "noMatch"
         },
         {
-          "next": "send_message_2",
+          "next": "AskToCoordinator",
           "event": "match",
           "conditions": [
             {
               "friendly_name": "If value equal_to send_to_agent",
               "arguments": [
-                "{{widgets.autopilot_1.CurrentTask}}"
+                "{{widgets.AutopilotFAQbot.CurrentTask}}"
               ],
               "type": "equal_to",
               "value": "send_to_agent"
             }
           ]
-        },
-        {
-          "next": "send_message_2",
-          "event": "match",
-          "conditions": [
-            {
-              "friendly_name": "If value equal_to text_try",
-              "arguments": [
-                "{{widgets.autopilot_1.CurrentTask}}"
-              ],
-              "type": "equal_to",
-              "value": "text_try"
-            }
-          ]
         }
       ],
       "properties": {
-        "input": "{{widgets.autopilot_1.CurrentTask}}",
+        "input": "{{widgets.AutopilotFAQbot.CurrentTask}}",
         "offset": {
-          "x": -110,
-          "y": 350
+          "x": 30,
+          "y": 390
         }
       }
     },
     {
-      "name": "send_to_flex_1",
+      "name": "GoToFlex",
       "type": "send-to-flex",
       "transitions": [
         {
           "event": "callComplete"
         },
         {
-          "next": "send_message_3",
+          "next": "NoAgentsAvailable",
           "event": "failedToEnqueue"
         },
         {
+          "next": "NoAgentsAvailable",
           "event": "callFailure"
         }
       ],
       "properties": {
         "offset": {
-          "x": 260,
-          "y": 880
+          "x": 0,
+          "y": 1330
         },
         "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
         "channel": "TC1538a54edef5895fcc2115489151e390",
@@ -124,7 +110,7 @@ const flowDefinition = {
       }
     },
     {
-      "name": "send_message_1",
+      "name": "NoAgentsAvailable",
       "type": "send-message",
       "transitions": [
         {
@@ -136,70 +122,93 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": -390,
-          "y": 550
+          "x": 160,
+          "y": 1570
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
         "from": "{{flow.channel.address}}",
         "to": "{{contact.channel.address}}",
-        "body": "Sorry, I failed"
+        "body": "We're sorry, no agent is available right now."
       }
     },
     {
-      "name": "send_message_2",
-      "type": "send-message",
+      "name": "AskToCoordinator",
+      "type": "send-and-wait-for-reply",
       "transitions": [
         {
-          "next": "send_to_flex_1",
-          "event": "sent"
+          "next": "CheckResponse",
+          "event": "incomingMessage"
         },
         {
-          "event": "failed"
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
         }
       ],
       "properties": {
         "offset": {
-          "x": 140,
-          "y": 660
+          "x": 210,
+          "y": 620
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
         "from": "{{flow.channel.address}}",
-        "to": "{{contact.channel.address}}",
-        "body": "Trying to connect you in"
+        "body": "If you would like to connect to a [coordinator], please reply YES. To continue with Henry, please reply NO.",
+        "timeout": "3600"
       }
     },
     {
-      "name": "send_to_flex_2",
-      "type": "send-to-flex",
+      "name": "CheckResponse",
+      "type": "split-based-on",
       "transitions": [
         {
-          "event": "callComplete"
+          "event": "noMatch"
         },
         {
-          "next": "send_message_3",
-          "event": "failedToEnqueue"
+          "next": "If_Yes",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to YES",
+              "arguments": [
+                "{{widgets.GoToCoordinator?.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "YES"
+            }
+          ]
         },
         {
-          "event": "callFailure"
+          "next": "If_No",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to NO",
+              "arguments": [
+                "{{widgets.GoToCoordinator?.inbound.Body}}"
+              ],
+              "type": "equal_to",
+              "value": "NO"
+            }
+          ]
         }
       ],
       "properties": {
+        "input": "{{widgets.GoToCoordinator?.inbound.Body}}",
         "offset": {
-          "x": -567,
-          "y": 124
-        },
-        "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
-        "channel": "TC1538a54edef5895fcc2115489151e390",
-        "attributes": "{\"name\": \"{{trigger.message.ChannelAttributes.from}}\", \"channelType\": \"{{trigger.message.ChannelAttributes.channel_type}}\", \"channelSid\": \"{{trigger.message.ChannelSid}}\"}"
+          "x": 210,
+          "y": 840
+        }
       }
     },
     {
-      "name": "send_message_3",
+      "name": "If_Yes",
       "type": "send-message",
       "transitions": [
         {
+          "next": "GoToFlex",
           "event": "sent"
         },
         {
@@ -208,14 +217,38 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": -40,
+          "x": -10,
           "y": 1100
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
         "from": "{{flow.channel.address}}",
         "to": "{{contact.channel.address}}",
-        "body": "We're sorry, something went wrong"
+        "body": "Redirecting a coordinator now. Someone will respond when available."
+      }
+    },
+    {
+      "name": "If_No",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "AutopilotFAQbot",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 450,
+          "y": 1090
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Connecting you back to Henry."
       }
     }
   ],
@@ -223,6 +256,6 @@ const flowDefinition = {
   "flags": {
     "allow_concurrent_calls": true
   }
-};
+}
 
 module.exports = flowDefinition;
