@@ -57,10 +57,21 @@ exports.handler = async function (context, event, callback) {
       });
   }
 
+  function getChannel(ws, type) {
+    return client.taskrouter.workspaces(ws)
+      .taskChannels
+      .list({limit: 20})
+      .then(taskChannels => taskChannels.find(channel => channel["uniqueName"] == type));
+  }
+
   async function configureFlowForFlex() {
 
     const workspace = await getWorkspace();
     const workflow = await fetchWorkFlow(workspace.sid);
+    const smsChannel = await getChannel(workspace.sid, "chat");
+    const voiceChannel = await getChannel(workspace.sid, "voice");
+
+
     
     if (workspace && workflow) {
       const states = flowDefinition["states"];
@@ -68,11 +79,15 @@ exports.handler = async function (context, event, callback) {
         if (states[i]["properties"].hasOwnProperty("workflow")) {
           
           states[i]["properties"]["workflow"] = workflow.sid;
-          break;
+
+          if (states[i].hasOwnProperty("name") && states[i]["name"] == "send_to_flex_sms") {
+            states[i]["properties"]["channel"] = smsChannel.sid;
+          } else if (states[i].hasOwnProperty("name") && states[i]["name"] == "send_to_flex_voice") {
+            states[i]["properties"]["channel"] = voiceChannel.sid;
+          }
         }
       }
       flowDefinition["states"] = states;
-      console.log("inside");
 
     }
   }
