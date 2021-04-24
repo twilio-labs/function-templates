@@ -41,6 +41,18 @@ exports.handler = async function (context, event, callback) {
 
   }
 
+  async function addSamples(assistant, tasks) {
+
+    for (let i = 0; i < tasks.length; i++) {
+      const taskData = tasks[i];
+      const task = await createTask(assistant, taskData);
+
+      for (let j = 0; j < taskData["samples"].length; j++) {
+        await createSample(assistant, task, taskData["samples"][j]);
+      }
+    }
+  }
+
   function modelBuild(assistant) {
     return client.autopilot.assistants(assistant.sid)
             .modelBuilds
@@ -55,14 +67,7 @@ exports.handler = async function (context, event, callback) {
     
     const tasks = autopilotDefinition["tasks"];
 
-    for (let i = 0; i < tasks.length; i++) {
-      const taskData = tasks[i];
-      const task = await createTask(assistant, taskData);
-
-      for (let j = 0; j < taskData["samples"].length; j++) {
-        await createSample(assistant, task, taskData["samples"][j]);
-      }
-    }
+    await addSamples(assistant, tasks);
 
     await modelBuild(assistant);
 
