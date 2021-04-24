@@ -19,6 +19,7 @@
     "configure-env": "^2.0.0-1",
     "copy-template-dir": "^1.4.0",
     "eslint": "^5.4.0",
+    "googleapis": "^65.0.0",
     "husky": "^4.2.5",
     "inquirer": "^7.0.4",
     "jest-cli": "^24.8.0",
@@ -33,14 +34,8 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/test/"
-    ],
-    "testPathIgnorePatterns": [
-      "/_helpers/",
-      "/node_modules/"
-    ]
+    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+    "testPathIgnorePatterns": ["/_helpers/", "/node_modules/"]
   },
   "dependencies": {
     "got": "^6.7.1",
