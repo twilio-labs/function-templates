@@ -1,7 +1,7 @@
 const autopilotDefinition = {
     "friendlyName" : "Henry",
     "logQueries" : true,
-    "uniqueName" : "nemoooo",
+    "uniqueName" : "Volunteer_FAQ_Chatbot",
     "defaults" : {
         "defaults" : {
             "assistant_initiation" : "task://greeting",
