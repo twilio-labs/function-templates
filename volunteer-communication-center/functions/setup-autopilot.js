@@ -41,7 +41,7 @@ exports.handler = async function (context, event, callback) {
 
   }
 
-  async function addSamples(assistant, tasks) {
+  async function configureTasksAndSamples(assistant, tasks) {
 
     for (let i = 0; i < tasks.length; i++) {
       const taskData = tasks[i];
@@ -67,7 +67,7 @@ exports.handler = async function (context, event, callback) {
     
     const tasks = autopilotDefinition["tasks"];
 
-    await addSamples(assistant, tasks);
+    await configureTasksAndSamples(assistant, tasks);
 
     await modelBuild(assistant);
 
