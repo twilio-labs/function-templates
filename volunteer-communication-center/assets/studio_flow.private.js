@@ -1,16 +1,16 @@
-
 const flowDefinition = {
-  "description": "SMStoFlex",
+  "description": "VoiceToFlex",
   "states": [
     {
       "name": "Trigger",
       "type": "trigger",
       "transitions": [
         {
-          "next": "AutopilotFAQbot",
+          "next": "autopilot_2",
           "event": "incomingMessage"
         },
         {
+          "next": "autopilot_1",
           "event": "incomingCall"
         },
         {
@@ -19,17 +19,17 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": 0,
-          "y": 0
+          "x": 10,
+          "y": 10
         }
       }
     },
     {
-      "name": "AutopilotFAQbot",
+      "name": "autopilot_1",
       "type": "send-to-auto-pilot",
       "transitions": [
         {
-          "next": "CheckTask",
+          "next": "split_1",
           "event": "sessionEnded"
         },
         {
@@ -42,8 +42,8 @@ const flowDefinition = {
       "properties": {
         "chat_channel": "{{trigger.message.ChannelSid}}",
         "offset": {
-          "x": 0,
-          "y": 160
+          "x": 170,
+          "y": 210
         },
         "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
         "from": "{{flow.channel.address}}",
@@ -53,20 +53,20 @@ const flowDefinition = {
       }
     },
     {
-      "name": "CheckTask",
+      "name": "split_1",
       "type": "split-based-on",
       "transitions": [
         {
           "event": "noMatch"
         },
         {
-          "next": "AskToCoordinator",
+          "next": "gather_1",
           "event": "match",
           "conditions": [
             {
-              "friendly_name": "If value equal_to send_to_agent",
+              "friendly_name": "If value equal_to talk-to-agent",
               "arguments": [
-                "{{widgets.AutopilotFAQbot.CurrentTask}}"
+                "{{widgets.autopilot_1.CurrentTask}}"
               ],
               "type": "equal_to",
               "value": "send_to_agent"
@@ -75,69 +75,151 @@ const flowDefinition = {
         }
       ],
       "properties": {
-        "input": "{{widgets.AutopilotFAQbot.CurrentTask}}",
+        "input": "{{widgets.autopilot_1.CurrentTask}}",
         "offset": {
-          "x": 30,
-          "y": 390
+          "x": 210,
+          "y": 560
         }
       }
     },
     {
-      "name": "GoToFlex",
+      "name": "send_to_flex_1",
       "type": "send-to-flex",
       "transitions": [
         {
           "event": "callComplete"
         },
         {
-          "next": "NoAgentsAvailable",
           "event": "failedToEnqueue"
         },
         {
-          "next": "NoAgentsAvailable",
           "event": "callFailure"
         }
       ],
       "properties": {
         "offset": {
-          "x": 0,
-          "y": 1330
+          "x": 710,
+          "y": 1360
         },
         "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
-        "channel": "TC1538a54edef5895fcc2115489151e390",
-        "attributes": "{\"name\": \"{{trigger.message.ChannelAttributes.from}}\", \"channelType\": \"{{trigger.message.ChannelAttributes.channel_type}}\", \"channelSid\": \"{{trigger.message.ChannelSid}}\"}",
-        "waitUrlMethod": "POST"
+        "channel": "TC3452ca1f798eb88a0a6a8d85114093fd",
+        "attributes": "{ \"type\": \"inbound\", \"name\": \"{{trigger.call.From}}\" }"
       }
     },
     {
-      "name": "NoAgentsAvailable",
-      "type": "send-message",
+      "name": "gather_1",
+      "type": "gather-input-on-call",
       "transitions": [
         {
-          "event": "sent"
+          "next": "say_play_1",
+          "event": "keypress"
         },
         {
-          "event": "failed"
+          "event": "speech"
+        },
+        {
+          "next": "autopilot_4",
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "number_of_digits": 1,
+        "speech_timeout": "auto",
+        "offset": {
+          "x": 890,
+          "y": 820
+        },
+        "loop": 1,
+        "finish_on_key": "#",
+        "say": "Please press any key to speak to a [coordinator]. To return to Henry, please hold momentarily.",
+        "stop_gather": true,
+        "gather_language": "en",
+        "profanity_filter": "true",
+        "timeout": 6
+      }
+    },
+    {
+      "name": "say_play_1",
+      "type": "say-play",
+      "transitions": [
+        {
+          "next": "send_to_flex_1",
+          "event": "audioComplete"
         }
       ],
       "properties": {
         "offset": {
-          "x": 160,
-          "y": 1570
+          "x": 810,
+          "y": 1120
         },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
-        "from": "{{flow.channel.address}}",
-        "to": "{{contact.channel.address}}",
-        "body": "We're sorry, no agent is available right now."
+        "loop": 1,
+        "say": "Now connecting you with a [coordinator]. Please hold."
       }
     },
     {
-      "name": "AskToCoordinator",
+      "name": "autopilot_2",
+      "type": "send-to-auto-pilot",
+      "transitions": [
+        {
+          "next": "split_2",
+          "event": "sessionEnded"
+        },
+        {
+          "event": "failure"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "chat_channel": "{{trigger.message.ChannelSid}}",
+        "offset": {
+          "x": -286,
+          "y": 188
+        },
+        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
+        "from": "{{flow.channel.address}}",
+        "chat_service": "{{trigger.message.InstanceSid}}",
+        "body": "{{trigger.message.Body}}",
+        "timeout": 14400
+      }
+    },
+    {
+      "name": "split_2",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "next": "send_and_reply_1",
+          "event": "noMatch"
+        },
+        {
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value equal_to send_to_agent",
+              "arguments": [
+                "{{widgets.autopilot_1.CurrentTask}}"
+              ],
+              "type": "equal_to",
+              "value": "send_to_agent"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.autopilot_1.CurrentTask}}",
+        "offset": {
+          "x": -342,
+          "y": 413
+        }
+      }
+    },
+    {
+      "name": "send_and_reply_1",
       "type": "send-and-wait-for-reply",
       "transitions": [
         {
-          "next": "CheckResponse",
+          "next": "split_3",
           "event": "incomingMessage"
         },
         {
@@ -149,66 +231,93 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": 210,
-          "y": 620
+          "x": -300,
+          "y": 690
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
         "from": "{{flow.channel.address}}",
-        "body": "If you would like to connect to a [coordinator], please reply YES. To continue with Henry, please reply NO.",
+        "body": "If you would like to connect to a [coordinator], please reply \"coordinator\". To continue with Henry, please reply \"Henry\".",
         "timeout": "3600"
       }
     },
     {
-      "name": "CheckResponse",
+      "name": "split_3",
       "type": "split-based-on",
       "transitions": [
         {
           "event": "noMatch"
         },
         {
-          "next": "If_Yes",
+          "next": "send_message_1",
           "event": "match",
           "conditions": [
             {
-              "friendly_name": "If value equal_to YES",
+              "friendly_name": "If value equal_to coordinator",
               "arguments": [
-                "{{widgets.GoToCoordinator?.inbound.Body}}"
+                "{{widgets.send_and_reply_1.inbound.Body}}"
               ],
               "type": "equal_to",
-              "value": "YES"
+              "value": "coordinator"
             }
           ]
         },
         {
-          "next": "If_No",
+          "next": "autopilot_3",
           "event": "match",
           "conditions": [
             {
-              "friendly_name": "If value equal_to NO",
+              "friendly_name": "If value equal_to Henry",
               "arguments": [
-                "{{widgets.GoToCoordinator?.inbound.Body}}"
+                "{{widgets.send_and_reply_1.inbound.Body}}"
               ],
               "type": "equal_to",
-              "value": "NO"
+              "value": "Henry"
             }
           ]
         }
       ],
       "properties": {
-        "input": "{{widgets.GoToCoordinator?.inbound.Body}}",
+        "input": "{{widgets.send_and_reply_1.inbound.Body}}",
         "offset": {
-          "x": 210,
-          "y": 840
+          "x": -331,
+          "y": 893
         }
       }
     },
     {
-      "name": "If_Yes",
+      "name": "autopilot_3",
+      "type": "send-to-auto-pilot",
+      "transitions": [
+        {
+          "event": "sessionEnded"
+        },
+        {
+          "event": "failure"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "chat_channel": "{{trigger.message.ChannelSid}}",
+        "offset": {
+          "x": -22,
+          "y": 1117
+        },
+        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
+        "from": "{{flow.channel.address}}",
+        "chat_service": "{{trigger.message.InstanceSid}}",
+        "body": "{{trigger.message.Body}}",
+        "timeout": 14400
+      }
+    },
+    {
+      "name": "send_message_1",
       "type": "send-message",
       "transitions": [
         {
-          "next": "GoToFlex",
+          "next": "send_to_flex_2",
           "event": "sent"
         },
         {
@@ -217,38 +326,65 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": -10,
-          "y": 1100
+          "x": -350,
+          "y": 1190
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
         "from": "{{flow.channel.address}}",
         "to": "{{contact.channel.address}}",
-        "body": "Redirecting a coordinator now. Someone will respond when available."
+        "body": "Redirecting to a coordinator now. Someone will respond when available."
       }
     },
     {
-      "name": "If_No",
-      "type": "send-message",
+      "name": "send_to_flex_2",
+      "type": "send-to-flex",
       "transitions": [
         {
-          "next": "AutopilotFAQbot",
-          "event": "sent"
+          "event": "callComplete"
         },
         {
-          "event": "failed"
+          "event": "failedToEnqueue"
+        },
+        {
+          "event": "callFailure"
         }
       ],
       "properties": {
         "offset": {
-          "x": 450,
-          "y": 1090
+          "x": -374,
+          "y": 1436
         },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
+        "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
+        "channel": "TC1538a54edef5895fcc2115489151e390",
+        "attributes": "{\"name\": \"{{trigger.message.ChannelAttributes.from}}\", \"channelType\": \"{{trigger.message.ChannelAttributes.channel_type}}\", \"channelSid\": \"{{trigger.message.ChannelSid}}\"}"
+      }
+    },
+    {
+      "name": "autopilot_4",
+      "type": "send-to-auto-pilot",
+      "transitions": [
+        {
+          "event": "sessionEnded"
+        },
+        {
+          "event": "failure"
+        },
+        {
+          "event": "timeout"
+        }
+      ],
+      "properties": {
+        "chat_channel": "{{trigger.message.ChannelSid}}",
+        "offset": {
+          "x": 1210,
+          "y": 1070
+        },
+        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
         "from": "{{flow.channel.address}}",
-        "to": "{{contact.channel.address}}",
-        "body": "Connecting you back to Henry."
+        "chat_service": "{{trigger.message.InstanceSid}}",
+        "body": "{{trigger.message.Body}}",
+        "timeout": 14400
       }
     }
   ],
