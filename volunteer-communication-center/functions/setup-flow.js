@@ -23,22 +23,13 @@ exports.handler = async function (context, event, callback) {
         .then((flow) => flow)
         .catch((err) => { throw new Error(err.details) });
       });
-
-    
   }
 
 
   function getWorkspace() {
     return client.taskrouter.workspaces
       .list({limit: 20})
-      .then(workspaces => {
-        for (let i=0; i < workspaces.length; i++) {
-          if (workspaces[i].hasOwnProperty("friendlyName") && workspaces[i]["friendlyName"] == "Flex Task Assignment") {
-            return workspaces[i];
-          }
-        }
-        return null;
-      })
+      .then(workspaces => workspaces.find(workspace => workspace["friendlyName"] == "Flex Task Assignment"))
       .catch((err) => { throw new Error(err.details) });
   }
 
@@ -47,14 +38,8 @@ exports.handler = async function (context, event, callback) {
     return client.taskrouter.workspaces(ws)
       .workflows
       .list({limit: 20})
-      .then(workflows => {
-        for (let i=0; i < workflows.length; i++) {
-          if (workflows[i].hasOwnProperty("friendlyName") && workflows[i]["friendlyName"] == "Assign to Anyone") {
-            return workflows[i];
-          }
-        }
-        return null;
-      });
+      .then(workflows => workflows.find(workflow => workflow["friendlyName"] == "Assign to Anyone"))
+      .catch((err) => { throw new Error(err.details) });
   }
 
   function getChannel(ws, type) {
@@ -71,8 +56,6 @@ exports.handler = async function (context, event, callback) {
     const smsChannel = await getChannel(workspace.sid, "chat");
     const voiceChannel = await getChannel(workspace.sid, "voice");
 
-
-    
     if (workspace && workflow) {
       const states = flowDefinition["states"];
       for (let i = 0; i < states.length; i++) {
@@ -102,7 +85,6 @@ exports.handler = async function (context, event, callback) {
         if (states[i]["properties"].hasOwnProperty("autopilot_assistant_sid")) {
           
           states[i]["properties"]["autopilot_assistant_sid"] = process.env.AUTOPILOT_SID;
-          break;
         }
       }
       flowDefinition["states"] = states;
