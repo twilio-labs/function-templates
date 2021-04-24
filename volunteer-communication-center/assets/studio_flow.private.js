@@ -83,7 +83,7 @@ const flowDefinition = {
       }
     },
     {
-      "name": "send_to_flex_1",
+      "name": "send_to_flex_voice",
       "type": "send-to-flex",
       "transitions": [
         {
@@ -143,7 +143,7 @@ const flowDefinition = {
       "type": "say-play",
       "transitions": [
         {
-          "next": "send_to_flex_1",
+          "next": "send_to_flex_voice",
           "event": "audioComplete"
         }
       ],
@@ -317,7 +317,7 @@ const flowDefinition = {
       "type": "send-message",
       "transitions": [
         {
-          "next": "send_to_flex_2",
+          "next": "send_to_flex_sms",
           "event": "sent"
         },
         {
@@ -337,7 +337,7 @@ const flowDefinition = {
       }
     },
     {
-      "name": "send_to_flex_2",
+      "name": "send_to_flex_sms",
       "type": "send-to-flex",
       "transitions": [
         {
