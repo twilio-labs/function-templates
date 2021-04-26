@@ -117,7 +117,7 @@ twilio serverless:start
 twilio serverless:start --load-local-env
 ```
 
-## Running automated tests
+### Running automated tests
 
 The tests are written using [Jest](https://jestjs.io/). You can run the test suite by running:
 
@@ -137,7 +137,7 @@ or alternatively:
 npx jest --watch
 ```
 
-## Deploy and test to a hosted Twilio serverless environment
+### Deploy and test to a hosted Twilio serverless environment
 1. Create a profile/api key, if you don't already have one
 ```
 twilio login
@@ -156,7 +156,7 @@ twilio serverless:deploy
 ```
 
 
-## Test the installation of your template
+### Test the installation of your template
 
 If you want to test how your new template works with the Twilio CLI, make sure you have the latest version of [`@twilio-labs/plugin-serverless`](https://npm.im/@twilio-labs/plugin-serverless) installed.
 
@@ -172,7 +172,7 @@ TWILIO_SERVERLESS_TEMPLATE_REPO="dkundel/function-templates" \
 twilio serverless:init example --template="verify"
 ```
 
-### Creating a pull request
+## Creating a pull request
 
 Please open a pull request on the [function-templates](https://github.com/twilio-labs/function-templates/pulls) repository from your fork and fill out the pull request template.
 
