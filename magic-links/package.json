@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "twilio": "^3.49.0"
+    "twilio": "^3.61.0"
   }
 }
