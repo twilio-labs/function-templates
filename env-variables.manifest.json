@@ -992,7 +992,7 @@
         "key": "BROADCAST_NOTIFY_SERVICE_SID",
         "required": true,
         "format": "sid",
-        "description": "SID of your Twilio Notify Service",
+        "description": "SID of your Twilio Notify Service (starts with IS)",
         "link": "https://www.twilio.com/console/notify/services",
         "default": null,
         "configurable": true,
