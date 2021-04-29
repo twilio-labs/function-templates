@@ -1,9 +1,6 @@
 /* eslint-disable no-console, func-names */
 exports.handler = async function (context, event, callback) {
 
-  const path = Runtime.getFunctions()['auth'].path;
-  const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
-
   const client = context.getTwilioClient();
 
 
@@ -36,11 +33,11 @@ exports.handler = async function (context, event, callback) {
   }
 
 
-  const sid = event.sid;
+  const assistantSID = event.sid;
   const taskData = event.task;
 
-  const task = await createTask(sid, taskData);
-  await configureSamples(sid, task, taskData);
+  const task = await createTask(assistantSID, taskData);
+  await configureSamples(assistantSID, task, taskData);
 
 
   callback(null, 'success');
