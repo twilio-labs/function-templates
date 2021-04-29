@@ -1,6 +1,6 @@
 {
   "name": "conversations",
   "dependencies": {
-    "twilio": "3.39.5"
+    "twilio": "^3.61.0"
   }
 }
