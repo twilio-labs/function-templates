@@ -82,20 +82,86 @@ function setupFlow(e) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function setupAutopilot(e) {
+// function setupAutopilot(e) {
   
+//   e.preventDefault();
+//   $('#deploy-bot .button').addClass('loading');
+//   $('#bot-loader').show();
+
+//   fetch('/setup-autopilot').then(() => {
+//     checkAutopilot();
+//   })
+//   .catch((err) => {
+//     console.log('An error ocurred creating Assistant', err);
+//     $('#deploy-bot .button').removeClass('loading');
+//     $('.loader.button-loader').hide();
+//   });
+// }
+
+function addTask(task) {
+
+    fetch('/add-task', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(task)
+    })
+    .then(() => res)
+    .catch((err) => {
+      console.log('An error ocurred creating Assistant', err);
+      $('#deploy-bot .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
+}
+
+
+
+function loadTasks(sid) {
+    fetch('/get-autopilot')
+    .then((response) => 
+      response.json()
+    )
+    .then((data) => {
+      const tasks = data["tasks"];
+
+      for (let i=0; i<tasks.length; i++) {
+        const taskObj = {
+          sid: sid,
+          task: tasks[i]
+        }
+        addTask(taskObj);
+      }
+    })
+    .catch((err) => {
+      console.log('An error ocurred creating Assistant', err);
+      $('#deploy-bot .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
+}
+
+function setupAutopilot(e) {
+
   e.preventDefault();
   $('#deploy-bot .button').addClass('loading');
   $('#bot-loader').show();
+  fetch('/create-autopilot').then((res) => {
+        return res.text();
+      })
+      .then((sid) => {
+        loadTasks(sid);
+      })
+      .then(() => {
+        checkAutopilot();
+      })
+      .catch((err) => {
+        console.log('An error ocurred creating Assistant', err);
+        $('#deploy-bot .button').removeClass('loading');
+        $('.loader.button-loader').hide();
+      });
+  
 
-  fetch('/setup-autopilot').then(() => {
-    checkAutopilot();
-  })
-  .catch((err) => {
-    console.log('An error ocurred creating Assistant', err);
-    $('#deploy-bot .button').removeClass('loading');
-    $('.loader.button-loader').hide();
-  });
+
 
 }
 
