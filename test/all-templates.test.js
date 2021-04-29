@@ -10,7 +10,7 @@ const { parser } = require('configure-env');
 // skipList is a list of function templates that don't pass verification
 // for now, but will in the long term
 const skipList = ['conversations', 'funlet-call-me', 'funlet-echo',
-                  'funlet-find-me', 'funlet-forward', 'funlet-simple-menu',
+                  'funlet-find-me', 'funlet-simple-menu',
                   'funlet-simple-message', 'funlet-simulring',
                   'funlet-whisper', 'vaccine-standby'];
 const excludedPaths = ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
