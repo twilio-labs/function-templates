@@ -48,6 +48,102 @@ const autopilotDefinition = {
     "fieldTypes" : [],
     "tasks" : [
         {
+            "uniqueName" : "account",
+            "actions" : {
+                "actions" : [
+                    {
+                        "say" : "To see information regarding your account, please visit [www.twilio.org]. If you do not have account yet, follow the directions on that page to create one. From there you will be able to view and edit details on your account page."
+                    },
+                    {
+                        "redirect" : "task://ask_for_input"
+                    }
+                ]
+            },
+            "fields" : [],
+            "samples" : [
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Create account?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "create account"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Change account settings?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "change account settings"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "i need to edit my account."
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "I need to change my account"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Where do i log in?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "where do I log in"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "i need to create an account"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "I need to make an account."
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Can I edit my account?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "can i edit my account"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "i want to see my account."
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "I want to see my account details"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Account?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "account"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "how do i create an account"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "How do I make an account?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Where is my account?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "where is my account"
+                }
+            ]
+        },
+        {
             "uniqueName" : "incomplete_training",
             "actions" : {
                 "actions" : [
@@ -61,6 +157,30 @@ const autopilotDefinition = {
             },
             "fields" : [],
             "samples" : [
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Do I have the right trainings?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "do i have the right trainings?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Are there trainings I havent finised"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "are there trainings i haven't finished?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "i would like to see which trainings i missed"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "I would like to see which trainings I missed."
+                },
                 {
                     "language" : "en-US",
                     "taggedText" : "What trainings do I need?"
@@ -143,59 +263,83 @@ const autopilotDefinition = {
             "samples" : [
                 {
                     "language" : "en-US",
-                    "taggedText" : "When is x event? "
+                    "taggedText" : "Where can I find information on the event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "What time is x event?"
+                    "taggedText" : "where can i find information on the event"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "What day is x event? "
+                    "taggedText" : "Where will the event be?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "When do I need to show up for x event"
+                    "taggedText" : "Where is the next event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "when be x "
+                    "taggedText" : "when do i need to show up for the event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "when and where is x event"
+                    "taggedText" : "what time is the event"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "what day is x"
+                    "taggedText" : "I would like information on the event."
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "when is x"
+                    "taggedText" : "can i get details about the next event"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "where is x event"
+                    "taggedText" : "When and where is the event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "where will x be"
+                    "taggedText" : "Can I get details about the next event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "what location is x at"
+                    "taggedText" : "i would like information on the event"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "where is x going to be"
+                    "taggedText" : "When is the next event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "where is x"
+                    "taggedText" : "What time is the event?"
                 },
                 {
                     "language" : "en-US",
-                    "taggedText" : "where will x be held"
+                    "taggedText" : "What day is the event?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "When do I need to show up for the event"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "when is the event"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "when and where is the event"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "what day is the event"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "where is the event"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "where will the event be"
                 }
             ]
         },
@@ -404,7 +548,7 @@ const autopilotDefinition = {
             "actions" : {
                 "actions" : [
                     {
-                        "say" : "Here are some topics I have information on:\n- Shift times and logging hours\n- Transportation availability\n- Coordinator Contact Info and contact preferences\n- Volunteer training signup and tracking\n- Event details, signups, and prerequisites.\nIf I cannot help you with your question, ask me to connect you to a volunteer coordinator.\nWhat can I help you with?"
+                        "say" : "Here are some questions I can answer:\n- When are my shifts?\n- How do I log hours?\n- Is transportation provided?\n- Who's my volunteer coordinator?\n- What trainings do I have?\n- What events are coming up?\nFeel free to ask other questions as well. If I cannot help you with your question, ask me to connect you to a volunteer coordinator.\nWhat can I help you with?"
                     },
                     { "listen" : true }
                 ]
@@ -515,6 +659,22 @@ const autopilotDefinition = {
             },
             "fields" : [],
             "samples" : [
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Can I see which trainings are done?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "can i see which trainings are done"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "I would like to see which trainings i finished."
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "i would like to know which trainings I finished"
+                },
                 {
                     "language" : "en-US",
                     "taggedText" : "what training have i finished"
@@ -1457,6 +1617,30 @@ const autopilotDefinition = {
             "samples" : [
                 {
                     "language" : "en-US",
+                    "taggedText" : "How do I get my shifts?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "how do i get my shifts"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "Is there a way to signup for shifts?"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "is there a way to sign up for shifts"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "i would like to signup for a shift"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "I would like to sign up for a shift."
+                },
+                {
+                    "language" : "en-US",
                     "taggedText" : "can i signup for a shift"
                 },
                 {
@@ -1526,7 +1710,7 @@ const autopilotDefinition = {
             "actions" : {
                 "actions" : [
                     {
-                        "say" : "Please go to the volunteer portal under the 'Events' tab at [twilio.com]. To sign up for events, go to the 'Sign-Up' link under the 'Events' tab."
+                        "say" : "Please go to the volunteer portal under the 'Events' tab at [twilio.com] to see your events. To sign up for events, go to the 'Sign-Up' link under the 'Events' tab."
                     },
                     {
                         "redirect" : "task://ask_for_input"
@@ -1535,6 +1719,14 @@ const autopilotDefinition = {
             },
             "fields" : [],
             "samples" : [
+                {
+                    "language" : "en-US",
+                    "taggedText" : "how do i know if im signed up"
+                },
+                {
+                    "language" : "en-US",
+                    "taggedText" : "How do I know if I am signed up?"
+                },
                 {
                     "language" : "en-US",
                     "taggedText" : "How can I help with this event?"
@@ -1627,8 +1819,8 @@ const autopilotDefinition = {
         }
     ],
     "modelBuild" : {
-        "uniqueName" : "Volunteer_FAQ_Chatbot_13-4-2021_3.45.53pm"
+        "uniqueName" : "Volunteer_FAQ_Chatbot_22-4-2021_2.42.20pm"
     }
-};
+}
 
 module.exports = autopilotDefinition;

@@ -6,11 +6,11 @@ const flowDefinition = {
       "type": "trigger",
       "transitions": [
         {
-          "next": "autopilot_2",
+          "next": "SMSAutopilot",
           "event": "incomingMessage"
         },
         {
-          "next": "autopilot_1",
+          "next": "VoiceAutopilot",
           "event": "incomingCall"
         },
         {
@@ -25,11 +25,11 @@ const flowDefinition = {
       }
     },
     {
-      "name": "autopilot_1",
+      "name": "VoiceAutopilot",
       "type": "send-to-auto-pilot",
       "transitions": [
         {
-          "next": "split_1",
+          "next": "VoiceCheckTask",
           "event": "sessionEnded"
         },
         {
@@ -53,20 +53,20 @@ const flowDefinition = {
       }
     },
     {
-      "name": "split_1",
+      "name": "VoiceCheckTask",
       "type": "split-based-on",
       "transitions": [
         {
           "event": "noMatch"
         },
         {
-          "next": "gather_1",
+          "next": "Confirmation",
           "event": "match",
           "conditions": [
             {
               "friendly_name": "If value equal_to talk-to-agent",
               "arguments": [
-                "{{widgets.autopilot_1.CurrentTask}}"
+                "{{widgets.VoiceAutopilot.CurrentTask}}"
               ],
               "type": "equal_to",
               "value": "send_to_agent"
@@ -75,15 +75,15 @@ const flowDefinition = {
         }
       ],
       "properties": {
-        "input": "{{widgets.autopilot_1.CurrentTask}}",
+        "input": "{{widgets.VoiceAutopilot.CurrentTask}}",
         "offset": {
-          "x": 210,
-          "y": 560
+          "x": 190,
+          "y": 460
         }
       }
     },
     {
-      "name": "send_to_flex_voice",
+      "name": "FlexCall",
       "type": "send-to-flex",
       "transitions": [
         {
@@ -98,8 +98,8 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": 710,
-          "y": 1360
+          "x": 280,
+          "y": 1340
         },
         "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
         "channel": "TC3452ca1f798eb88a0a6a8d85114093fd",
@@ -107,18 +107,18 @@ const flowDefinition = {
       }
     },
     {
-      "name": "gather_1",
+      "name": "Confirmation",
       "type": "gather-input-on-call",
       "transitions": [
         {
-          "next": "say_play_1",
+          "next": "PleaseHold",
           "event": "keypress"
         },
         {
           "event": "speech"
         },
         {
-          "next": "autopilot_4",
+          "next": "ReturnAutopilot",
           "event": "timeout"
         }
       ],
@@ -126,8 +126,8 @@ const flowDefinition = {
         "number_of_digits": 1,
         "speech_timeout": "auto",
         "offset": {
-          "x": 890,
-          "y": 820
+          "x": 260,
+          "y": 720
         },
         "loop": 1,
         "finish_on_key": "#",
@@ -139,29 +139,29 @@ const flowDefinition = {
       }
     },
     {
-      "name": "say_play_1",
+      "name": "PleaseHold",
       "type": "say-play",
       "transitions": [
         {
-          "next": "send_to_flex_voice",
+          "next": "FlexCall",
           "event": "audioComplete"
         }
       ],
       "properties": {
         "offset": {
-          "x": 810,
-          "y": 1120
+          "x": 250,
+          "y": 1030
         },
         "loop": 1,
         "say": "Now connecting you with a [coordinator]. Please hold."
       }
     },
     {
-      "name": "autopilot_2",
+      "name": "SMSAutopilot",
       "type": "send-to-auto-pilot",
       "transitions": [
         {
-          "next": "split_2",
+          "next": "SMSCheckTask",
           "event": "sessionEnded"
         },
         {
@@ -185,20 +185,20 @@ const flowDefinition = {
       }
     },
     {
-      "name": "split_2",
+      "name": "SMSCheckTask",
       "type": "split-based-on",
       "transitions": [
         {
-          "next": "send_and_reply_1",
           "event": "noMatch"
         },
         {
+          "next": "AskToCoordinator",
           "event": "match",
           "conditions": [
             {
               "friendly_name": "If value equal_to send_to_agent",
               "arguments": [
-                "{{widgets.autopilot_1.CurrentTask}}"
+                "{{widgets.VoiceAutopilot.CurrentTask}}"
               ],
               "type": "equal_to",
               "value": "send_to_agent"
@@ -207,19 +207,19 @@ const flowDefinition = {
         }
       ],
       "properties": {
-        "input": "{{widgets.autopilot_1.CurrentTask}}",
+        "input": "{{widgets.VoiceAutopilot.CurrentTask}}",
         "offset": {
-          "x": -342,
-          "y": 413
+          "x": -340,
+          "y": 460
         }
       }
     },
     {
-      "name": "send_and_reply_1",
+      "name": "AskToCoordinator",
       "type": "send-and-wait-for-reply",
       "transitions": [
         {
-          "next": "split_3",
+          "next": "CheckResponse",
           "event": "incomingMessage"
         },
         {
@@ -232,7 +232,7 @@ const flowDefinition = {
       "properties": {
         "offset": {
           "x": -300,
-          "y": 690
+          "y": 720
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
@@ -242,20 +242,20 @@ const flowDefinition = {
       }
     },
     {
-      "name": "split_3",
+      "name": "CheckResponse",
       "type": "split-based-on",
       "transitions": [
         {
           "event": "noMatch"
         },
         {
-          "next": "send_message_1",
+          "next": "IfCoordinator",
           "event": "match",
           "conditions": [
             {
               "friendly_name": "If value equal_to coordinator",
               "arguments": [
-                "{{widgets.send_and_reply_1.inbound.Body}}"
+                "{{widgets.AskToCoordinator.inbound.Body}}"
               ],
               "type": "equal_to",
               "value": "coordinator"
@@ -263,13 +263,13 @@ const flowDefinition = {
           ]
         },
         {
-          "next": "autopilot_3",
+          "next": "ReturnAutopilotSMS",
           "event": "match",
           "conditions": [
             {
               "friendly_name": "If value equal_to Henry",
               "arguments": [
-                "{{widgets.send_and_reply_1.inbound.Body}}"
+                "{{widgets.AskToCoordinator.inbound.Body}}"
               ],
               "type": "equal_to",
               "value": "Henry"
@@ -278,15 +278,15 @@ const flowDefinition = {
         }
       ],
       "properties": {
-        "input": "{{widgets.send_and_reply_1.inbound.Body}}",
+        "input": "{{widgets.AskToCoordinator.inbound.Body}}",
         "offset": {
-          "x": -331,
-          "y": 893
+          "x": -400,
+          "y": 1030
         }
       }
     },
     {
-      "name": "autopilot_3",
+      "name": "ReturnAutopilotSMS",
       "type": "send-to-auto-pilot",
       "transitions": [
         {
@@ -302,8 +302,8 @@ const flowDefinition = {
       "properties": {
         "chat_channel": "{{trigger.message.ChannelSid}}",
         "offset": {
-          "x": -22,
-          "y": 1117
+          "x": -120,
+          "y": 1350
         },
         "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
         "from": "{{flow.channel.address}}",
@@ -313,11 +313,11 @@ const flowDefinition = {
       }
     },
     {
-      "name": "send_message_1",
+      "name": "IfCoordinator",
       "type": "send-message",
       "transitions": [
         {
-          "next": "send_to_flex_sms",
+          "next": "GoToFlex",
           "event": "sent"
         },
         {
@@ -326,8 +326,8 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": -350,
-          "y": 1190
+          "x": -500,
+          "y": 1360
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
@@ -337,7 +337,7 @@ const flowDefinition = {
       }
     },
     {
-      "name": "send_to_flex_sms",
+      "name": "GoToFlex",
       "type": "send-to-flex",
       "transitions": [
         {
@@ -352,8 +352,8 @@ const flowDefinition = {
       ],
       "properties": {
         "offset": {
-          "x": -374,
-          "y": 1436
+          "x": -490,
+          "y": 1620
         },
         "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
         "channel": "TC1538a54edef5895fcc2115489151e390",
@@ -361,7 +361,7 @@ const flowDefinition = {
       }
     },
     {
-      "name": "autopilot_4",
+      "name": "ReturnAutopilot",
       "type": "send-to-auto-pilot",
       "transitions": [
         {
@@ -377,8 +377,8 @@ const flowDefinition = {
       "properties": {
         "chat_channel": "{{trigger.message.ChannelSid}}",
         "offset": {
-          "x": 1210,
-          "y": 1070
+          "x": 660,
+          "y": 1030
         },
         "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
         "from": "{{flow.channel.address}}",
