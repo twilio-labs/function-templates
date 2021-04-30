@@ -9,7 +9,7 @@ const { parser } = require('configure-env');
 
 // skipList is a list of function templates that don't pass verification
 // for now, but will in the long term
-const skipList = ['conversations', 'funlet-whisper', 'vaccine-standby'];
+const skipList = ['conversations', 'vaccine-standby'];
 const excludedPaths = ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
 const projectRoot = path.resolve(__dirname, '..');
 // Assemble a list of template directories here, since templates.json
