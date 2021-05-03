@@ -41,11 +41,30 @@
   <body>
     <div class="container">
       <h2>Twilio Verify Push</h2>
-      <p>
-        This example shows how to use
-        <a href="https://twilio.com/docs/verify/push">Twilio Verify Push</a>
-        and Twilio functions for serverless user verification.
-      </p>
+      <div>
+        <p>Welcome! Your live application with Twilio is ready to use!</p>
+        <p>This application has two uses:</p>
+        <ol>
+          <li>
+            <code>/access-token</code>
+            endpoint. Your mobile app (<a
+              href="https://www.twilio.com/docs/verify/quickstarts/push-android#obtain-a-verify-push-api-access-token-for-your-android-app"
+              >Android</a
+            >
+            or
+            <a
+              href="https://www.twilio.com/docs/verify/quickstarts/push-ios#obtain-a-verify-push-api-access-token-for-your-ios-app"
+              >iOS</a
+            >) needs to obtain an access token to make requests to the Verify
+            Push API. This endpoint creates the token and can be used in our
+            sample applications.
+          </li>
+          <li>
+            Create sample push challenges and send to a registered mobile
+            device. Form below.
+          </li>
+        </ol>
+      </div>
       <div class="content">
         <form id="login">
           <div class="form-group">
@@ -167,6 +186,16 @@
       addDetailRow();
     });
 
+    async function digestMessage(identity) {
+      const identityUint8 = new TextEncoder().encode(identity);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", identityUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hashHex;
+    }
+
     $("#login").submit(function (event) {
       event.preventDefault();
 
@@ -174,12 +203,8 @@
         identity: $("#identity").val(),
       });
 
-      fetch("./hash-identity", {
-        method: "POST",
-        body: identityData,
-      })
-        .then((resp) => resp.json())
-        .then(({ identity }) => {
+      digestMessage($("#identity").val())
+        .then((identity) => {
           const data = new URLSearchParams();
           data.append("identity", identity);
           data.append("message", $("#message").val());
@@ -212,15 +237,15 @@
             $("#loading").addClass("spinner");
             checkStatus(sid, identity);
           } else {
-            console.log(error);
+            console.error(error);
             showMessage(
               "danger",
               `${error.message} <a href="${error.moreInfo}">[more info]</a>`
             );
           }
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.error(error);
           showMessage("danger", "Error starting verification.");
         });
     });

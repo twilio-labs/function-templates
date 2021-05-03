@@ -27,21 +27,8 @@
  *  }
  */
 
-function requiredParameter(param, paramName, response, callback) {
-  if (typeof param === "undefined") {
-    response.setBody({
-      error: {
-        message: `Missing parameter; please provide a '${paramName}'.`,
-        moreInfo:
-          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
-      },
-    });
-    response.setStatusCode(400);
-    return callback(null, response);
-  } else {
-    return null;
-  }
-}
+const assets = Runtime.getAssets();
+const { detectMissingParams } = require(assets["/missing-params.js"].path);
 
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
@@ -52,14 +39,26 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  requiredParameter(event.identity, "identity", response, callback);
-  requiredParameter(event.sid, "sid", response, callback);
+  const missingParams = detectMissingParams(["identity", "sid"], event);
+  if (missingParams.length > 0) {
+    response.setStatusCode(400);
+    response.setBody({
+      error: {
+        message: `Missing parameter; please provide: '${missingParams.join(
+          ", "
+        )}'.`,
+        moreInfo:
+          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
+      },
+    });
+    return callback(null, response);
+  }
 
   const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
+  const serviceSid = context.VERIFY_SERVICE_SID;
 
   client.verify
-    .services(service)
+    .services(serviceSid)
     .entities(event.identity)
     .challenges(event.sid)
     .fetch()
@@ -69,7 +68,7 @@ exports.handler = function (context, event, callback) {
       callback(null, response);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       response.setStatusCode(error.status);
       response.setBody({
         success: false,

@@ -28,21 +28,8 @@
  *  }
  */
 
-function requiredParameter(param, paramName, response, callback) {
-  if (typeof param === "undefined") {
-    response.setBody({
-      error: {
-        message: `Missing parameter; please provide an ${paramName}.`,
-        moreInfo:
-          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
-      },
-    });
-    response.setStatusCode(400);
-    return callback(null, response);
-  } else {
-    return null;
-  }
-}
+const assets = Runtime.getAssets();
+const { detectMissingParams } = require(assets["/missing-params.js"].path);
 
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
@@ -53,12 +40,26 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  requiredParameter(event.identity, "identity", response, callback);
-  requiredParameter(event.message, "message", response, callback);
-  requiredParameter(event.factor, "factor", response, callback);
+  const missingParams = detectMissingParams(
+    ["identity", "message", "factor"],
+    event
+  );
+  if (missingParams.length > 0) {
+    response.setStatusCode(400);
+    response.setBody({
+      error: {
+        message: `Missing parameter; please provide: '${missingParams.join(
+          ", "
+        )}'.`,
+        moreInfo:
+          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
+      },
+    });
+    return callback(null, response);
+  }
 
   const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
+  const serviceSid = context.VERIFY_SERVICE_SID;
 
   let { identity, message, factor, ...details } = event;
   let fields = [];
@@ -67,7 +68,7 @@ exports.handler = function (context, event, callback) {
   }
 
   client.verify
-    .services(service)
+    .services(serviceSid)
     .entities(identity)
     .challenges.create({
       factorSid: event.factor,
@@ -80,7 +81,7 @@ exports.handler = function (context, event, callback) {
       callback(null, response);
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       response.setStatusCode(error.status);
       response.setBody({
         error: {
@@ -90,51 +91,4 @@ exports.handler = function (context, event, callback) {
       });
       callback(null, response);
     });
-
-  // client.verify
-  // .services(service)
-  // .entities(identity)
-  // .factors.list({ limit: 20 })
-  // .then((factors) => {
-  //   if (factors.length === 0) {
-  //     response.setBody({
-  //       error: {
-  //         message:
-  //           "No factors found for identity. Register a factor before continuing.",
-  //         moreInfo: "https://www.twilio.com/docs/verify/api/factor",
-  //       },
-  //     });
-  //     callback(null, response);
-  //   }
-  //
-  //   factors.forEach(({ sid }) =>
-  // const challenge = {
-  //   factorSid: event.factor,
-  //   "details.message": message,
-  // };
-
-  // if (fields.length > 0) challenge["details.fields"] = fields;
-
-  //     client.verify
-  //       .services(service)
-  //       .entities(identity)
-  //       .challenges.create(challenge)
-  //       .then((c) => {
-  //         response.setStatusCode(200);
-  //         response.setBody(c);
-  //         callback(null, response);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //         response.setStatusCode(error.status);
-  //         response.setBody({
-  //           error: {
-  //             message: error.message,
-  //             moreInfo: error.moreInfo,
-  //           },
-  //         });
-  //         callback(null, response);
-  //       })
-  //   );
-  // });
 };
