@@ -28,6 +28,8 @@
  *  }
  */
 var crypto = require("crypto");
+const assets = Runtime.getAssets();
+const { detectMissingParams } = require(assets["/missing-params.js"].path);
 
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
@@ -38,14 +40,18 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (typeof event.identity === "undefined") {
+  const missingParams = detectMissingParams(["identity"], event);
+  if (missingParams.length > 0) {
+    response.setStatusCode(400);
     response.setBody({
       error: {
-        message: "Missing parameter; please provide a unique user identity.",
-        moreInfo: "https://www.twilio.com/docs/verify/api/access-token",
+        message: `Missing parameter; please provide: '${missingParams.join(
+          ", "
+        )}'.`,
+        moreInfo:
+          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
       },
     });
-    response.setStatusCode(400);
     return callback(null, response);
   }
 

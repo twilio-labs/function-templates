@@ -1,4 +1,3 @@
-const accessTokenFunction = require("../functions/access-token").handler;
 const helpers = require("../../test/test-helper");
 
 const mockTokens = {
@@ -27,7 +26,19 @@ const testContext = {
 
 describe("verify/create-access-token", () => {
   beforeAll(() => {
-    helpers.setup({});
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset(
+      "/missing-params.js",
+      "../assets/missing-params.private.js"
+    );
+    helpers.setup(testContext, runtime);
+    jest.mock("../assets/missing-params.private.js", () => {
+      const missing = jest.requireActual("../assets/missing-params.private.js");
+      return {
+        detectMissingParams: missing.detectMissingParams,
+      };
+    });
+    accessTokenFunction = require("../functions/access-token").handler;
   });
   afterAll(() => {
     helpers.teardown();
@@ -37,7 +48,7 @@ describe("verify/create-access-token", () => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.error.message).toEqual(
-        "Missing parameter; please provide a unique user identity."
+        "Missing parameter; please provide: 'identity'."
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
