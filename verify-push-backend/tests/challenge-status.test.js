@@ -1,6 +1,6 @@
 const helpers = require("../../test/test-helper");
 
-const mockChalleges = {
+const mockFetch = {
   fetch: jest.fn(() =>
     Promise.resolve({
       status: "approved",
@@ -8,17 +8,17 @@ const mockChalleges = {
   ),
 };
 
-const mockEntities = {
-  challenges: jest.fn(() => mockChalleges),
+const mockChallenges = {
+  challenges: jest.fn(() => mockFetch),
 };
 
-const mockServices = {
-  entities: jest.fn(() => mockEntities),
+const mockEntities = {
+  entities: jest.fn(() => mockChallenges),
 };
 
 const mockClient = {
   verify: {
-    services: jest.fn(() => mockServices),
+    services: jest.fn(() => mockEntities),
   },
 };
 

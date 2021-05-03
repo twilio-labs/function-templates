@@ -1,6 +1,6 @@
 const helpers = require("../../test/test-helper");
 
-const mockEntities = {
+const mockChallenges = {
   challenges: {
     create: jest.fn(() =>
       Promise.resolve({
@@ -11,13 +11,13 @@ const mockEntities = {
   },
 };
 
-const mockServices = {
-  entities: jest.fn(() => mockEntities),
+const mockEntities = {
+  entities: jest.fn(() => mockChallenges),
 };
 
 const mockClient = {
   verify: {
-    services: jest.fn(() => mockServices),
+    services: jest.fn(() => mockEntities),
   },
 };
 
