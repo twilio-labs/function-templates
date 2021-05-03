@@ -1,6 +1,6 @@
 # Twilio Verify
 
-This project can be used as a sample backend for Verify Push and to issue push authentication challenges in combination with the [Android](https://github.com/twilio/twilio-verify-android) or [iOS](https://github.com/twilio/twilio-verify-ios) SDKs.
+This project can be used as a sample backend for [Verify Push](https://www.twilio.com/docs/verify/push) and to issue push authentication challenges in combination with the [Android](https://github.com/twilio/twilio-verify-android) or [iOS](https://github.com/twilio/twilio-verify-ios) SDKs.
 
 ## How to use the template
 
@@ -76,7 +76,7 @@ Make sure variables are populated in your `.env` file. See [Environment variable
 5. Start the server :
 
 ```
-twilio serverless:run
+twilio serverless:start
 ```
 
 5. Open the web page at https://localhost:3000/index.html and enter the required fields to send a challenge
