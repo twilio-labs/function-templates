@@ -31,7 +31,7 @@ In your `.env` file, set the following values:
 | :------------- | :------------------------------------------ | :------- |
 | `identity`     | Unique user ID, avoid PII                   | Yes |
 
-`hash-identity.js` expects the following parameters:
+`list-factors.js` expects the following parameters:
 
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
