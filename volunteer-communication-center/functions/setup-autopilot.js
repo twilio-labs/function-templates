@@ -19,6 +19,25 @@ exports.handler = async function (context, event, callback) {
     .catch((err) => { throw new Error(err.details) });
   }
 
+  function updateDefaults(assistant) {
+    return client.autopilot.assistants(assistant.sid)
+    .defaults()
+    .update({defaults: {
+       defaults: {
+         assistant_initiation: "task://greeting",
+         fallback: "task://fallback",
+         collect : {
+          validate_on_failure : "task://collect_fallback"
+      }
+       }
+     }})
+    .then(defaults => console.log(defaults.assistantSid))
+    .catch((err) => { throw new Error(err.details) });
+  }
+
+
+
+
   function setAutopilotSidEnvVar(environment, sid) {
     return setEnvironmentVariable(
       context,
@@ -29,6 +48,7 @@ exports.handler = async function (context, event, callback) {
   }
 
   const assistant = await createAssistant();
+  await updateDefaults(assistant);
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
   if(environment) {
