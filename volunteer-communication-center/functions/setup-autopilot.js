@@ -12,7 +12,7 @@ exports.handler = async function (context, event, callback) {
     return client.autopilot.assistants
     .create({
        friendlyName: autopilotDefinition["friendlyName"],
-       uniqueName: autopilotDefinition["uniqueName"] + Date.now(),
+       uniqueName: autopilotDefinition["uniqueName"],
        styleSheet: autopilotDefinition["styleSheet"]
      })
     .then(assistant => assistant)
