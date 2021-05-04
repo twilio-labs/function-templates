@@ -8,72 +8,35 @@ exports.handler = async function (context, event, callback) {
 
   const client = context.getTwilioClient();
 
-
   function createAssistant() {
     return client.autopilot.assistants
     .create({
        friendlyName: autopilotDefinition["friendlyName"],
-       uniqueName: autopilotDefinition["uniqueName"],
+       uniqueName: autopilotDefinition["uniqueName"] + Date.now(),
        styleSheet: autopilotDefinition["styleSheet"]
      })
     .then(assistant => assistant)
     .catch((err) => { throw new Error(err.details) });
   }
 
-  function createTask(assistant, task) {
+  function updateDefaults(assistant) {
     return client.autopilot.assistants(assistant.sid)
-        .tasks
-        .create({
-          actions: task["actions"],
-         uniqueName: task["uniqueName"]
-        })
-        .then(task => task)
-        .catch((err) => { throw new Error(err.details) });
-  }
-
-  function createSample(assistant, task, sample) {
-    return client.autopilot.assistants(assistant.sid)
-                .tasks(task.sid)
-                .samples
-                .create(sample)
-                .then(sample => sample)
-                .catch((err) => { throw new Error(err.details) });
-
-  }
-
-  async function configureTasksAndSamples(assistant, tasks) {
-
-    for (let i = 0; i < tasks.length; i++) {
-      const taskData = tasks[i];
-      const task = await createTask(assistant, taskData);
-
-      for (let j = 0; j < taskData["samples"].length; j++) {
-        await createSample(assistant, task, taskData["samples"][j]);
+    .defaults()
+    .update({defaults: {
+       defaults: {
+         assistant_initiation: "task://greeting",
+         fallback: "task://fallback",
+         collect : {
+          validate_on_failure : "task://collect_fallback"
       }
-    }
-  }
-
-  function modelBuild(assistant) {
-    return client.autopilot.assistants(assistant.sid)
-            .modelBuilds
-            .create()
-            .then(model_build => model_build.sid)
-            .catch((err) => { throw new Error(err.details) });
+       }
+     }})
+    .then(defaults => console.log(defaults.assistantSid))
+    .catch((err) => { throw new Error(err.details) });
   }
 
 
-  async function deployAutopilot() {
-    const assistant = await createAssistant();
-    
-    const tasks = autopilotDefinition["tasks"];
 
-    await configureTasksAndSamples(assistant, tasks);
-
-    await modelBuild(assistant);
-
-    return assistant;
-
-  }
 
   function setAutopilotSidEnvVar(environment, sid) {
     return setEnvironmentVariable(
@@ -84,7 +47,8 @@ exports.handler = async function (context, event, callback) {
     );
   }
 
-  const assistant = await deployAutopilot();
+  const assistant = await createAssistant();
+  await updateDefaults(assistant);
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
   if(environment) {
@@ -93,5 +57,5 @@ exports.handler = async function (context, event, callback) {
     process.env.AUTOPILOT_SID = assistant.sid;
   }
 
-  callback(null, 'success');
+  callback(null, assistant.sid);
 };
