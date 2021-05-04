@@ -1,7 +1,7 @@
 const helpers = require("../../test/test-helper");
 const missing = require("../assets/missing-params.private");
 
-describe("verify-push-backend/missing-params", () => {
+describe("verify-push-backend/private/missing-params", () => {
   beforeAll(() => {
     helpers.setup({});
   });

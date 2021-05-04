@@ -27,7 +27,7 @@ const testContext = {
   getTwilioClient: () => mockClient,
 };
 
-describe("verify/list-factors", () => {
+describe("verify-push-backend/list-factors", () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(

@@ -24,7 +24,7 @@ const testContext = {
   getTwilioClient: () => mockClient,
 };
 
-describe("verify/create-access-token", () => {
+describe("verify-push-backend/create-access-token", () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(
