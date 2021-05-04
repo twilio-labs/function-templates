@@ -85,6 +85,25 @@
       }
     }
 
+    .flex-img {
+      margin: 0 100px 20px 100px;
+    }
+
+
+
+    .help-img {
+      display: flex;
+      flex-direction: row;
+      margin: 0 100px 20px 100px;
+    }
+
+    .help-img img {
+      width: 300px;
+      padding: 20px;
+    }
+
+
+
     .deploy-component {
       margin: 10px 0;
       margin-bottom: 30px;
@@ -115,21 +134,6 @@
       <h3>Out of the Box</h3>
       <p>Congrats! You have successfully deployed your own instance of a volunteer communication center.</p>
 
-
-      <div class="component-container">
-        <h4>Twilio Flex</h4>
-        <p>While bots a great, they don't replace humans. When the bot cannot answer a question for the volunteer, the
-          Studio Flow passes the message on to a Flex console. The request will show up in as an incoming issue which a
-          coordinator can accept and address. They will continue the conversation where the Autopilot bot left off in
-          order to get the volunteer help as fast as possible. Click the button below to open up Flex in the console and
-          select the "Create My Flex Project" Button and follow the instructions. It will prompt you to name the project
-          and verify your phone number. Then it will set up your account and connect it with a phone number.</p>
-
-        <!-- TODO: view link and add url-->
-        <a id="open-flex" class="button" href="https://www.twilio.com/console/flex/overview" target="_blank">Go to
-          Flex</a>
-
-      </div>
 
       <div class="component-container">
 
@@ -169,14 +173,53 @@
         </div>
       </div>
 
+      <div class="component-container">
+        <h4>Twilio Flex</h4>
+        <p>While bots are great, they don't replace humans. When the bot cannot answer a question for the volunteer, the
+          Studio Flow passes the message on to a Flex console. The request will show up as an incoming issue which a
+          coordinator can accept and address. They will continue the conversation where the Autopilot bot left off in
+          order to get the volunteer help as fast as possible. There are just a few more setup steps.</p>
+
+          <p>Go to <a href="https://www.twilio.com/console/phone-numbers/">Phone Numbers</a> in the console and select <strong class="phone-number"></strong> to change the configuration settings for Voice and Messaging to connect the Studio Flow you just deployed and the Flex Proxy Service.</p>
+          <div class="flex-img">
+          <img src="flex-config-1.png">
+        </div>
+
+          <p>Next, go to the Flex tab in the console and select Messaging from the side bar. Click the edit icon for <strong class="phone-number"></strong> and make sure that "Integration Type" and "Studio Flow" are set to "Studio" and "Volunteer Communication Center" respectively.</p>
+
+          <div class="flex-img">
+          <img src="flex-config-2.png">
+          <img src="flex-config-3.png">
+        </div>
+          
+          
+          <p>You should be all set! Click the button below to open up your Flex Console to start accepting calls and messages.</p>
+
+        <!-- TODO: view link and add url-->
+        <a id="open-flex" class="button" href="https://flex.twilio.com/" target="_blank">Go to
+          Flex</a>
+
+      </div>
 
     </section>
 
     <section>
 
 
-      <h3>Next Steps</h3>
       <h3>Troubleshooting</h3>
+
+      <p>
+        <ul>
+          <li>Make sure that your Studio Flow is configured properly. Check the Autopilot and Flex widgets to ensure that they are pointing to the correct resources.</li>
+          <div class="help-img">
+            <img src="configure-bot.png">
+            <img src="configure-flex.png">
+          </div>
+          <li>Check your environment variables.</li>
+          <li>If you are using a trial account, some features might be limited.</li>
+
+        </ul></p>
+
     </section>
 
 
