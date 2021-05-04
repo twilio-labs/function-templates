@@ -15,6 +15,10 @@
       crossorigin="anonymous"
     ></script>
     <style>
+      .container {
+        margin-bottom: 200px;
+      }
+
       .spinner {
         border: 6px solid #f3f3f3;
         border-top: 6px solid #3498db;
@@ -43,7 +47,7 @@
       <h2>Twilio Verify Push</h2>
       <div>
         <p>Welcome! Your live application with Twilio is ready to use!</p>
-        <p>This application has two uses:</p>
+        <p>This application has multiple uses:</p>
         <ol>
           <li>
             <code>/access-token</code>
@@ -60,12 +64,14 @@
             sample applications.
           </li>
           <li>
-            Create sample push challenges and send to a registered mobile
-            device. Form below.
+            Create sample push challenges and send to a registered device. Form
+            below.
           </li>
+          <li>Fetch factors by identity. Form below.</li>
         </ol>
       </div>
       <div class="content">
+        <h3>Create a push challenge</h3>
         <form id="login">
           <div class="form-group">
             <label for="identity">Identity</label>
@@ -108,6 +114,22 @@
         </form>
         <div id="loading"></div>
         <span id="push-message"></span>
+      </div>
+      <div>
+        <h3>Factors</h3>
+        <p>
+          Fetch factors (devices) that have been registered for an identity.
+        </p>
+        <form id="list-factors">
+          <div class="form-group">
+            <label for="factor-identity">Identity</label>
+            <input type="text" id="factor-identity" class="form-control" />
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="List factors" />
+          </div>
+        </form>
+        <div id="factor-list"></div>
       </div>
     </div>
     <!-- EDIT_CODE -->
@@ -195,6 +217,36 @@
         .join("");
       return hashHex;
     }
+
+    $("#list-factors").submit(function (event) {
+      event.preventDefault();
+
+      digestMessage($("#factor-identity").val())
+        .then((identity) => {
+          const data = new URLSearchParams();
+          data.append("identity", identity);
+
+          return fetch("./list-factors", {
+            method: "POST",
+            body: data,
+          });
+        })
+        .then((resp) => resp.json())
+        .then((respJson) => {
+          respJson.forEach(({ friendlyName, identity, sid }) => {
+            $("#factor-list").append(
+              `<div>
+                <p><strong>${friendlyName}</strong></p>
+                <p><strong>Identity: </strong>${identity}</p>
+                <p><strong>Factor SID: </strong>${sid}</p>
+              </div>`
+            );
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
 
     $("#login").submit(function (event) {
       event.preventDefault();
