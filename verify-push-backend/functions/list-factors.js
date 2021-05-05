@@ -14,7 +14,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const missingParams = detectMissingParams(["identity"], event);
+  const missingParams = detectMissingParams(["entity"], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
@@ -34,7 +34,7 @@ exports.handler = function (context, event, callback) {
 
   client.verify
     .services(serviceSid)
-    .entities(event.identity)
+    .entities(event.entity)
     .factors.list({ limit: 20 })
     .then((factors) => {
       console.log(factors);

@@ -51,7 +51,7 @@ describe("verify-push-backend/list-factors", () => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.error.message).toEqual(
-        "Missing parameter; please provide: 'identity'."
+        "Missing parameter; please provide: 'entity'."
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
@@ -72,7 +72,7 @@ describe("verify-push-backend/list-factors", () => {
       done();
     };
     const event = {
-      identity: "super-unique-id",
+      entity: "super-unique-id",
     };
     listFactorsFunction(testContext, event, callback);
   });

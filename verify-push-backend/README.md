@@ -29,19 +29,19 @@ In your `.env` file, set the following values:
 
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
-| `identity`     | Unique user ID, avoid PII                   | Yes |
+| `entity`     | Unique user ID, avoid PII                   | Yes |
 
 `list-factors.js` expects the following parameters:
 
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
-| `identity`     | Unique user ID, avoid PII                   | Yes |
+| `entity`     | Unique user ID, avoid PII                   | Yes |
 
 `create-challenge.js` expects the following parameters:
 
 | Parameter           | Description                | Required |
 | :------------------ | :------------------------- | :------- |
-| `identity`          | Unique user ID, avoid PII  | Yes |
+| `entity`          | Unique user ID, avoid PII  | Yes |
 | `factor`            | Factor SID                 | Yes |
 | `message`           | Verification message       | Yes |
 | details             | Arbitrary key value pairs to demo additional verification context | Yes |
@@ -50,7 +50,7 @@ In your `.env` file, set the following values:
 
 | Parameter           | Description                | Required |
 | :------------------ | :------------------------- | :------- |
-| `identity`          | Unique user ID, avoid PII  | Yes |
+| `entity`          | Unique user ID, avoid PII  | Yes |
 | `sid`               | Challenge SID              | Yes |
 
 

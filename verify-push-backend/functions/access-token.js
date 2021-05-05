@@ -6,7 +6,7 @@
  *  - Create a Verify Service (https://www.twilio.com/console/verify/services)
  *
  *  Parameters
- *  - identity - required - unique user id, no PII
+ *  - entity - required - unique user id, no PII
  *
  *
  *  Returns JSON
@@ -15,7 +15,7 @@
  *  {
  *    "token": "eyJ6aXAiOiJERUYiLCJraWQiOiJTQVNfUzNfX19...."
  *    "serviceSid": "VAxxx...",
- *    "identity": "AXi7y....",
+ *    "entity": "AXi7y....",
  *    "factorType": "push"
  *  }
  *
@@ -40,7 +40,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const missingParams = detectMissingParams(["identity"], event);
+  const missingParams = detectMissingParams(["entity"], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
@@ -57,21 +57,18 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
-  const identity = crypto
-    .createHash("sha256")
-    .update(event.identity)
-    .digest("hex");
+  const entity = crypto.createHash("sha256").update(event.entity).digest("hex");
   const factorType = "push";
 
   client.verify
     .services(serviceSid)
-    .accessTokens.create({ identity, factorType })
+    .accessTokens.create({ entity, factorType })
     .then((resp) => {
       response.setStatusCode(200);
       response.setBody({
         token: resp.token,
         serviceSid,
-        identity,
+        entity,
         factorType,
       });
       callback(null, response);

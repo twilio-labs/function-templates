@@ -67,15 +67,15 @@
             Create sample push challenges and send to a registered device. Form
             below.
           </li>
-          <li>Fetch factors by identity. Form below.</li>
+          <li>Fetch factors by entity. Form below.</li>
         </ol>
       </div>
       <div class="content">
         <h3>Create a push challenge</h3>
         <form id="login">
           <div class="form-group">
-            <label for="identity">Identity</label>
-            <input type="text" id="identity" class="form-control" />
+            <label for="entity">entity</label>
+            <input type="text" id="entity" class="form-control" />
           </div>
           <div class="form-group">
             <label for="message">Message</label>
@@ -117,13 +117,11 @@
       </div>
       <div>
         <h3>Factors</h3>
-        <p>
-          Fetch factors (devices) that have been registered for an identity.
-        </p>
+        <p>Fetch factors (devices) that have been registered for an entity.</p>
         <form id="list-factors">
           <div class="form-group">
-            <label for="factor-identity">Identity</label>
-            <input type="text" id="factor-identity" class="form-control" />
+            <label for="factor-entity">entity</label>
+            <input type="text" id="factor-entity" class="form-control" />
           </div>
           <div class="form-group">
             <input type="submit" class="btn btn-primary" value="List factors" />
@@ -142,8 +140,8 @@
       content.addClass(`text-${alertType}`).append(message);
     }
 
-    function checkStatus(sid, identity) {
-      fetch("./challenge-status?" + new URLSearchParams({ sid, identity }))
+    function checkStatus(sid, entity) {
+      fetch("./challenge-status?" + new URLSearchParams({ sid, entity }))
         .then((resp) => resp.json())
         .then(({ status }) => {
           if (status == "approved") {
@@ -153,7 +151,7 @@
             $("#loading").removeClass("spinner");
             showMessage("danger", "Login request denied!");
           } else {
-            setTimeout(checkStatus(sid, identity), 5000);
+            setTimeout(checkStatus(sid, entity), 5000);
           }
         });
     }
@@ -208,9 +206,9 @@
       addDetailRow();
     });
 
-    async function digestMessage(identity) {
-      const identityUint8 = new TextEncoder().encode(identity);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", identityUint8);
+    async function digestMessage(entity) {
+      const entityUint8 = new TextEncoder().encode(entity);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", entityUint8);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       const hashHex = hashArray
         .map((b) => b.toString(16).padStart(2, "0"))
@@ -221,10 +219,10 @@
     $("#list-factors").submit(function (event) {
       event.preventDefault();
 
-      digestMessage($("#factor-identity").val())
-        .then((identity) => {
+      digestMessage($("#factor-entity").val())
+        .then((entity) => {
           const data = new URLSearchParams();
-          data.append("identity", identity);
+          data.append("entity", entity);
 
           return fetch("./list-factors", {
             method: "POST",
@@ -233,11 +231,11 @@
         })
         .then((resp) => resp.json())
         .then((respJson) => {
-          respJson.forEach(({ friendlyName, identity, sid }) => {
+          respJson.forEach(({ friendlyName, entity, sid }) => {
             $("#factor-list").append(
               `<div>
                 <p><strong>${friendlyName}</strong></p>
-                <p><strong>Identity: </strong>${identity}</p>
+                <p><strong>Hashed Entity: </strong>${entity}</p>
                 <p><strong>Factor SID: </strong>${sid}</p>
               </div>`
             );
@@ -251,14 +249,14 @@
     $("#login").submit(function (event) {
       event.preventDefault();
 
-      const identityData = new URLSearchParams({
-        identity: $("#identity").val(),
+      const entityData = new URLSearchParams({
+        entity: $("#entity").val(),
       });
 
-      digestMessage($("#identity").val())
-        .then((identity) => {
+      digestMessage($("#entity").val())
+        .then((entity) => {
           const data = new URLSearchParams();
-          data.append("identity", identity);
+          data.append("entity", entity);
           data.append("message", $("#message").val());
           data.append("factor", $("#factor").val());
 
@@ -280,14 +278,14 @@
           });
         })
         .then((resp) => resp.json())
-        .then(({ status, sid, identity, error }) => {
+        .then(({ status, sid, entity, error }) => {
           if (status === "pending") {
             showMessage(
               "success",
               "Successfully sent push notification. Check your device."
             );
             $("#loading").addClass("spinner");
-            checkStatus(sid, identity);
+            checkStatus(sid, entity);
           } else {
             console.error(error);
             showMessage(
