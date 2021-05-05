@@ -29,6 +29,7 @@ const testContext = {
 
 describe("verify-push-backend/list-factors", () => {
   beforeAll(() => {
+    jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(
       "/missing-params.js",
