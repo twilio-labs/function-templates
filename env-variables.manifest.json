@@ -912,6 +912,18 @@
         "contentKey": null
       }
     ],
+    "verify-push-backend": [
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
     "international-telephone-input": [],
     "forward-message-mailgun": [
       {
@@ -992,7 +1004,7 @@
         "key": "BROADCAST_NOTIFY_SERVICE_SID",
         "required": true,
         "format": "sid",
-        "description": "SID of your Twilio Notify Service",
+        "description": "SID of your Twilio Notify Service (starts with IS)",
         "link": "https://www.twilio.com/console/notify/services",
         "default": null,
         "configurable": true,

@@ -1,6 +1,6 @@
 {
   "name": "forward-message-mailgun",
   "dependencies": {
-    "mailgun-js": "0.22.0"
+    "mailgun.js": "^3.3.0"
   }
 }

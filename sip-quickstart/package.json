@@ -2,6 +2,6 @@
   "name": "sip-quickstart",
   "dependencies": {
     "common-tags": "^1.8.0",
-    "twilio": "^3.43.0"
+    "twilio": "^3.61.0"
   }
 }
