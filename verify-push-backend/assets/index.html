@@ -74,7 +74,7 @@
         <h3>Create a push challenge</h3>
         <form id="login">
           <div class="form-group">
-            <label for="entity">entity</label>
+            <label for="entity">Entity</label>
             <input type="text" id="entity" class="form-control" />
           </div>
           <div class="form-group">
@@ -120,7 +120,7 @@
         <p>Fetch factors (devices) that have been registered for an entity.</p>
         <form id="list-factors">
           <div class="form-group">
-            <label for="factor-entity">entity</label>
+            <label for="factor-entity">Entity</label>
             <input type="text" id="factor-entity" class="form-control" />
           </div>
           <div class="form-group">
@@ -231,11 +231,11 @@
         })
         .then((resp) => resp.json())
         .then((respJson) => {
-          respJson.forEach(({ friendlyName, entity, sid }) => {
+          respJson.forEach(({ friendlyName, identity, sid }) => {
             $("#factor-list").append(
               `<div>
                 <p><strong>${friendlyName}</strong></p>
-                <p><strong>Hashed Entity: </strong>${entity}</p>
+                <p><strong>Hashed Entity: </strong>${identity}</p>
                 <p><strong>Factor SID: </strong>${sid}</p>
               </div>`
             );
@@ -278,14 +278,14 @@
           });
         })
         .then((resp) => resp.json())
-        .then(({ status, sid, entity, error }) => {
+        .then(({ status, sid, identity, error }) => {
           if (status === "pending") {
             showMessage(
               "success",
               "Successfully sent push notification. Check your device."
             );
             $("#loading").addClass("spinner");
-            checkStatus(sid, entity);
+            checkStatus(sid, identity);
           } else {
             console.error(error);
             showMessage(
