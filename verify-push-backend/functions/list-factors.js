@@ -1,5 +1,26 @@
 /**
-
+ *  List factors for a given identity
+ *
+ *
+ *  Pre-requisites
+ *  - Create a Verify Service (https://www.twilio.com/console/verify/services)
+ *  - Create a Factor on a device
+ *
+ *  Parameters
+ *  - identity - required
+ *
+ *  Returns JSON
+ *
+ *  on Success:
+ *  Array of Factors. See: https://www.twilio.com/docs/verify/api/factor#read-multiple-factor-resources
+ *
+ *  on Error:
+ *  {
+ *    "error" {
+ *       "message": "Details about your error",
+ *       "moreInfo": "Link to error"
+ *    }
+ *  }
  */
 
 const assets = Runtime.getAssets();
@@ -14,7 +35,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const missingParams = detectMissingParams(["entity"], event);
+  const missingParams = detectMissingParams(["identity"], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
@@ -34,10 +55,9 @@ exports.handler = function (context, event, callback) {
 
   client.verify
     .services(serviceSid)
-    .entities(event.entity)
+    .entities(event.identity)
     .factors.list({ limit: 20 })
     .then((factors) => {
-      console.log(factors);
       response.setStatusCode(200);
       response.setBody(factors);
       callback(null, response);

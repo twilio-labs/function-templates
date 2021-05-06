@@ -9,7 +9,7 @@
  *  - Create a Factor on a device
  *
  *  Parameters
- *  - entity - required
+ *  - identity - required
  *  - factor SID - required
  *  - message - required
  *  - details like IP, Location, etc. - optional
@@ -41,7 +41,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   const missingParams = detectMissingParams(
-    ["entity", "message", "factor"],
+    ["identity", "message", "factor"],
     event
   );
   if (missingParams.length > 0) {
@@ -61,7 +61,7 @@ exports.handler = function (context, event, callback) {
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
 
-  let { entity, message, factor, ...details } = event;
+  let { identity, message, factor, ...details } = event;
   let fields = [];
   for (const [key, value] of Object.entries(details)) {
     fields.push({ label: key, value: value });
@@ -69,7 +69,7 @@ exports.handler = function (context, event, callback) {
 
   client.verify
     .services(serviceSid)
-    .entities(entity)
+    .entities(identity)
     .challenges.create({
       factorSid: event.factor,
       "details.message": message,

@@ -9,7 +9,7 @@
  *  - Create a Challenge (https://www.twilio.com/docs/verify/api/challenge)
  *
  *  Parameters
- *  - entity - required
+ *  - identity - required
  *  - sid - required - challenge SID
  *
  *
@@ -39,7 +39,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const missingParams = detectMissingParams(["entity", "sid"], event);
+  const missingParams = detectMissingParams(["identity", "sid"], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
@@ -59,7 +59,7 @@ exports.handler = function (context, event, callback) {
 
   client.verify
     .services(serviceSid)
-    .entities(event.entity)
+    .entities(event.identity)
     .challenges(event.sid)
     .fetch()
     .then((challenge) => {

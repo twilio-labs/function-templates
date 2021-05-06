@@ -50,7 +50,7 @@ describe("verify-push-backend/create-challenge", () => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.error.message).toEqual(
-        "Missing parameter; please provide: 'entity, message, factor'."
+        "Missing parameter; please provide: 'identity, message, factor'."
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
@@ -71,7 +71,7 @@ describe("verify-push-backend/create-challenge", () => {
       done();
     };
     const event = {
-      entity: "super-unique-id",
+      identity: "super-unique-id",
       message: "login request",
       factor: "YFXXX",
     };
