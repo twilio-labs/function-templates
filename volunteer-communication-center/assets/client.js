@@ -74,28 +74,74 @@ function setupFlow(e) {
   fetch('/setup-flow').then(() => {
     checkStudioFlow();
   })
-  .catch((err) => {
-    console.log('An error ocurred creating Studio Flow', err);
-    $('#deploy-flow .button').removeClass('loading');
-    $('.loader.button-loader').hide();
-  });
+    .catch((err) => {
+      console.log('An error ocurred creating Studio Flow', err);
+      $('#deploy-flow .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
 }
 
-// eslint-disable-next-line no-unused-vars
+function addTask(task) {
+
+  fetch('/add-task', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(task)
+  })
+    .then(() => res)
+    .catch((err) => {
+      console.log('An error ocurred creating Assistant', err);
+      $('#deploy-bot .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
+}
+
+
+
+function addTasks(sid) {
+  fetch('/get-autopilot')
+    .then((response) =>
+      response.json()
+    )
+    .then((data) => {
+      const tasks = data["tasks"];
+
+      for (let i = 0; i < tasks.length; i++) {
+        const taskObj = {
+          sid: sid,
+          task: tasks[i]
+        }
+        addTask(taskObj);
+      }
+    })
+    .catch((err) => {
+      console.log('An error ocurred creating Assistant', err);
+      $('#deploy-bot .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
+}
+
 function setupAutopilot(e) {
-  
+
   e.preventDefault();
   $('#deploy-bot .button').addClass('loading');
   $('#bot-loader').show();
-
-  fetch('/setup-autopilot').then(() => {
-    checkAutopilot();
+  fetch('/setup-autopilot').then((res) => {
+    return res.text();
   })
-  .catch((err) => {
-    console.log('An error ocurred creating Assistant', err);
-    $('#deploy-bot .button').removeClass('loading');
-    $('.loader.button-loader').hide();
-  });
+    .then((sid) => {
+      addTasks(sid);
+    })
+    .then(() => {
+      checkAutopilot();
+    })
+    .catch((err) => {
+      console.log('An error ocurred creating Assistant', err);
+      $('#deploy-bot .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
 
 }
 

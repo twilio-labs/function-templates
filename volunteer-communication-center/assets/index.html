@@ -118,9 +118,18 @@
 
     <section>
       <h3>Out of the Box</h3>
-      <p>Congrats! You have successfully deployed your own instance of a volunteer communication center. You're almost
-        there, just a few more steps.</p>
-        <p>
+      <p>Congrats! You have successfully deployed your own instance of a volunteer communication center.</p>
+
+
+      <div class="component-container">
+        <h4>Twilio Flex</h4>
+        <p>Your Twilio project should be a Flex project. While bots are great, they don't replace humans. When the bot cannot answer a question for the volunteer, the Studio Flow passes the message on to a Flex console. The request will show up in as an incoming issue which a coordinator can accept and address. They will continue the conversation where the Autopilot bot left off in order to get the volunteer help as fast as possible. Click the button below to lean more about Flex and visit the console.</p>
+
+        <!-- TODO: view link and add url-->
+        <a id="open-flex" class="button" href="https://www.twilio.com/console/flex/overview" target="_blank">Go to
+          Flex</a>
+
+      </div>
 
       <div class="component-container">
         <div id="bot-loader-container" class="loader"></div>
@@ -134,8 +143,7 @@
         </div>
         <div id="bot-deployed" style="display: none;" class="deploy-component">
           <h3><span class="checkmark">&#10003;</span> Your Bot is deployed</h3>
-          <p>Your autopilot assistant, Henry, has been deployed to your Twilio project. Click the button below to see
-            the Autopilot assistant on the Twilio Console.</p>
+          <p>An Autopilot assistant, Henry, has been deployed. He is all trained with questions and samples. There are placeholders in the responses that you can replace with your organization specific information. The button below will take you to the console where you can edit the information using Twilio's Autopilot interface.</p>
           <a id="open-bot" class="button button-outline" href="" target="_blank">Meet Henry</a>
         </div>
       </div>

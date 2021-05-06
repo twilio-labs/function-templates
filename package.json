@@ -15,10 +15,14 @@
   "devDependencies": {
     "@twilio-labs/serverless-api": "^1.1.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "airtable": "^0.10.1",
 =======
     "airtable": "^0.11.0",
 >>>>>>> 56056fcc5d885360915a7cd483a2feb023b52b92
+=======
+    "airtable": "^0.11.0",
+>>>>>>> autopilot-function
     "common-tags": "^1.8.0",
     "configure-env": "^2.0.0-1",
     "copy-template-dir": "^1.4.0",
@@ -30,10 +34,14 @@
     "listr": "^0.14.3",
     "log-symbols": "^3.0.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "mailgun-js": "^0.6.7",
 =======
     "mailgun.js": "^3.3.0",
 >>>>>>> 56056fcc5d885360915a7cd483a2feb023b52b92
+=======
+    "mailgun.js": "^3.3.0",
+>>>>>>> autopilot-function
     "moment": "^2.24.0",
     "node-fetch": "^2.6.1",
     "stripe": "^8.20.0",
@@ -52,6 +60,7 @@
     ]
   },
   "dependencies": {
-    "got": "^6.7.1"
+    "got": "^6.7.1",
+    "jest": "^26.6.3"
   }
 }

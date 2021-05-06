@@ -254,6 +254,11 @@
       "id": "google-sheets",
       "name": "Google Sheets SMS Log",
       "description": "Logs incoming SMS numbers and messages into a Google Sheets table"
+    },
+    {
+      "id": "volunteer-communication-center",
+      "name": "Volunteer Communication Center",
+      "description": "Creates a studio flow to accept incoming messages and voice calls of disaster and crisis response volunteers. An autopilot assistant helps answer their questions and redirects them to Flex when it cannot. "
     }
   ]
 }

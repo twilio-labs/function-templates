@@ -35,9 +35,6 @@ exports.handler = async function (context, event, callback) {
     .catch((err) => { throw new Error(err.details) });
   }
 
-
-
-
   function setAutopilotSidEnvVar(environment, sid) {
     return setEnvironmentVariable(
       context,
