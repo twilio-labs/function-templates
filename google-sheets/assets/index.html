@@ -8,7 +8,31 @@
 
         <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
         <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
+        <script>
+         async function showGoogleSheetsStatus() {
+             const message = document.getElementById('status-message');
 
+             if(!message) {
+                 throw new Error('Missing "status-message" element');
+             }
+
+             message.className = '';
+             message.textContent = 'Checking Google Sheets status...';
+
+             try {
+                 const res = await fetch('./check-sheets-config', {
+                     method: 'POST',
+                 });
+                 const resData = await res.json();
+
+                 message.className = resData.success ? 'status-success' : 'status-failure';
+                 message.textContent = resData.message;
+             } catch (err) {
+                 message.className = 'status-failure';
+                 message.textContent = `Google Sheets error: ${err}`;
+             }
+         }
+        </script>
         <script src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js" defer></script>
         <script>
          window.addEventListener('DOMContentLoaded', (_event) => {
@@ -49,25 +73,23 @@
                         Follow these steps to try out your new app:
                     </p>
                     <p>
-                        This app takes an array of numbers and will return the
-                        <a href="https://www.twilio.com/docs/voice/twiml" target="_blank" rel="noopener">
-                            TwiML
-                        </a>
-                        required to dial each number in order until one answers. This is an initial
-                        implementation of the
-                        <a href="https://www.twilio.com/labs/twimlets/findme" target="_blank" rel="noopener">
-                            "Find Me" Twimlet
-                        </a>.
+                        This app automatically logs text messages sent to your Twilio phone number into the
+                        specified Google Sheets document.
                     </p>
                     <ol class="steps">
+                        <li>Open the Google Sheets document whose ID you configured for use with this app.</li>
                         <li>
-                            <a href="/hunt" target="_blank" rel="noopener">
-                                Click here to start calling the phone numbers in your list
-                            </a>
+                            Click the <b>Share</b> button in the toolbar of your Google Sheets document, enter the
+                            <a href="https://console.cloud.google.com/iam-admin/serviceaccounts"
+                               target="_blank" rel="noopener">
+                                email address belonging to your service account
+                            </a>, and press Enter to give your service account access to your Google Sheets
+                            document.
                         </li>
+                        <li>Text your Twilio phone number with a message.</li>
                         <li>
-                            If you entered your own phone number, answer the call from your Twilio phone
-                            number when it rings!
+                            Your spreadsheet should now contain the SID, phone number, and content of
+                            the text you sent.
                         </li>
                     </ol>
                 </section>
@@ -78,20 +100,37 @@
                 <section>
                     <h2>Troubleshooting</h2>
                     <ul>
-                        <li>
-                            Check the
-                            <a href="https://www.twilio.com/console/phone-numbers/incoming"
-                               target="_blank"
-                               rel="noopener">
-                                phone number configuration
-                            </a>
-                            and make sure the Twilio phone number you want for your app has a voice webhook
-                            configured to point at the following URL
-                            <form>
-                                <label for="twilio-webhook">Webhook URL</label>
-                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/hunt">
-                            </form>
-                        </li>
+                        <p>
+                            <li>
+                                Verify your Google Sheets configuration:
+                                <div id="check-status">
+                                    <button onclick="showGoogleSheetsStatus()">Verify Configuration</button>
+                                    <span id="status-message"></span>
+                                </div>
+                                If the above check reveals problems, edit this function's <code>.env</code> file via the <code>Edit This Code</code> button above, if available, and ensure that all values are correct.
+                            </li>
+                        </p>
+                        <p>
+                            If you see "Google Sheets integration error: The caller does not have permission" in your
+                            Twilio console debugger, ensure you have shared your Google Sheets document with the email
+                            address associated with your Service Account.
+                        </p>
+                        <p>
+                            <li>
+                                Check the
+                                <a href="https://www.twilio.com/console/phone-numbers/incoming"
+                                   target="_blank"
+                                   rel="noopener">
+                                    phone number configuration
+                                </a>
+                                and make sure the Twilio phone number you want for your app has a SMS webhook
+                                configured to point at the following URL
+                                <form>
+                                    <label for="twilio-webhook">Webhook URL</label>
+                                    <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/google-sheets">
+                                </form>
+                            </li>
+                        </p>
                     </ul>
                 </section>
             </div>
