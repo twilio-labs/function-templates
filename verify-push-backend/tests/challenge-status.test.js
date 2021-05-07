@@ -51,7 +51,7 @@ describe("verify-push-backend/challenge-status", () => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.error.message).toEqual(
-        "Missing parameter; please provide: 'entity, sid'."
+        "Missing parameter; please provide: 'identity, sid'."
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
@@ -71,7 +71,7 @@ describe("verify-push-backend/challenge-status", () => {
       );
       done();
     };
-    const event = { entity: "super-unique-id", sid: "my-sid" };
+    const event = { identity: "super-unique-id", sid: "my-sid" };
     challengeStatusFunction(testContext, event, callback);
   });
 });
