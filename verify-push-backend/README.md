@@ -1,4 +1,4 @@
-# Twilio Verify
+# Twilio Verify Push Sample Backend
 
 This project can be used as a sample backend for [Verify Push](https://www.twilio.com/docs/verify/push) and to issue push authentication challenges in combination with the [Android](https://github.com/twilio/twilio-verify-android) or [iOS](https://github.com/twilio/twilio-verify-ios) SDKs.
 
