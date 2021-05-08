@@ -6,12 +6,15 @@ exports.handler = function(context, event, callback) {
     response.appendHeader('Content-Type', 'application/json');
 
     let body = {
+        logoUrl: context.LOGO_URL,
         title: context.TITLE,
         subtitle: context.SUBTITLE,
         description: context.DESCRIPTION,
         messagesPerMonth: context.MESSAGES_PER_MONTH,
         buttonCta: context.BUTTON_CTA,
-        optInKeyword: context.OPT_IN_KEYWORD
+        optInKeyword: context.OPT_IN_KEYWORD,
+        privacyPolicyLink: context.PRIVACY_POLICY_LINK,
+        tosLink: context.TOS_LINK
     }
 
     response.setStatusCode(200);

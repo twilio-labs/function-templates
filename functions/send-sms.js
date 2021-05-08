@@ -3,7 +3,7 @@ exports.handler = function(context, event, callback) {
 
   client.messages
     .create({
-      body: `Thanks for your interest in our campaign, reply with ${context.OPT_IN_KEYWORD} to get started`,
+      body: `Thanks for your interest in ${context.TITLE}, reply with ${context.OPT_IN_KEYWORD} to get started. Message and data rates may apply, ${context.MESSAGES_PER_MONTH} msgs / month.`,
       from: event.from,
       to: event.to
     })

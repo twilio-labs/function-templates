@@ -21,7 +21,7 @@ function sendSMS() {
   fetch(`/send-sms?to=${inputValue}&from=14155344095`)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
+      document.getElementById('sms-confirmation').style.display = 'block';
     });
 }
 
@@ -47,11 +47,15 @@ function getText() {
         `
       }
 
+      document.getElementById('logo').src = data.logoUrl;
       document.getElementById('title').innerHTML=data.title;
       document.getElementById('subtitle').innerHTML=data.subtitle; 
       document.getElementById('description').innerHTML=data.description; 
       document.getElementById('messagesPerMonth').innerHTML=data.messagesPerMonth;
-      document.getElementById('buttonCta').innerHTML=data.buttonCta; 
+      document.getElementById('buttonCta').innerHTML=data.buttonCta;
+
+      document.getElementById('privacy-policy-link').href = data.privacyPolicyLink;
+      document.getElementById('tos-link').href = data.tosLink;
 
       el.parentNode.removeChild( el );
       main.style.display = 'block';

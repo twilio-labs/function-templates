@@ -17,11 +17,14 @@
         <div class="col-md-4 offset-md-4">
           <div class="card mt-5 mb-5">
             <div class="card-body">
+              <img id="logo" width="200px" height="auto" src="" />
               <h1 id="title" class="card-title"></h1>
               <h2 id="subtitle" class="card-subtitle mb-4 text-muted"></h2>
               <p id="description" class="card-text mb-4"></p>
               <p class="card-text mb-4">Message and data rates may apply, <span id="messagesPerMonth"></span> messages / month.</p>
-              <div id="cta-button">
+              <div id="cta-button"></div>
+              <div id="sms-confirmation" class="alert alert-success" role="alert" style="display:none">
+                We've sent you an SMS to confirm your registration.
               </div>
             </div>
           </div>
@@ -30,7 +33,10 @@
 
       <footer>
         <p class="">
-          Made with ❤️ by your friends at
+          <a id="privacy-policy-link" href="">Privacy Policy</a> | <a id="tos-link" href="">Terms of Service</a>
+        </p>
+        <p class="">
+          Made with <span style="margin-right: 10px">❤️</span> by your friends at
           <a href="https://www.twilio.com">Twilio</a>
         </p>
       </footer>
