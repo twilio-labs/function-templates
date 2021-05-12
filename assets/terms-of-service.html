@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="./style.css" />
+    <title>Twilio Keyword - Terms of Service</title>
+  </head>
+  <body class="container">    
+    <main id="main">
+      <div class="row">
+        <div class="col-md-6 offset-md-3">
+          <div class="card mt-5 mb-5">
+            <div class="card-body">
+              <h1 id="title" class="card-title text-center">{Program name}</h1>
+
+              <p>1. <span id="description"></span></p>
+
+              <p>2. You can cancel the SMS service at any time. Just text "STOP" to the short code. After you send the SMS message "STOP" to us, we will send you an SMS message to confirm that you have been unsubscribed. After this, you will no longer receive SMS messages from us. If you want to join again, just sign up as you did the first time and we will start sending SMS messages to you again.</p>
+
+              <p>3. If you are experiencing issues with the messaging program you can reply with the keyword HELP for more assistance, or you can get help directly at {support email address or toll-free number}.</p>
+
+              <p>4. Carriers are not liable for delayed or undelivered messages</p>
+
+              <p>5. As always, message and data rates may apply for any messages sent to you from us and to us from you. You will receive <span id="messageQuantity"></span> messages per XYZ. If you have any questions about your text plan or data plan, it is best to contact your wireless provider.</p>
+
+              <p>6. If you have any questions regarding privacy, please read our <a id="privacy-policy-link" href="">privacy policy</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="text-center">
+        <p class="">
+          <a id="privacy-policy-link" href="">Privacy Policy</a> | <a id="home" href="/index.html">Home</a>
+        </p>
+        <p class="">
+          Made with <span style="margin-right: 10px">❤️</span> by your friends at
+          <a href="https://www.twilio.com">Twilio</a>
+        </p>
+      </footer>
+    </main>
+  </body>
+  <script type="text/javascript" src="/public.js"></script>
+</html>

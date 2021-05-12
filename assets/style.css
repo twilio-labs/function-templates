@@ -1,5 +1,25 @@
 /* Custom styles here */
 
+
+body {
+  font-family: 'Inter var experimental', 'Inter var', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+}
+
+#settings {
+  color: #fff;
+  background: rgb(6, 3, 58);
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+#settings-scroll {
+  margin-bottom: 20px;
+}
+
+#save-button {
+  margin-bottom: 20px;
+}
+
 .lds-ellipsis {
   display: inline-block;
   position: relative;

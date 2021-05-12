@@ -8,38 +8,116 @@
     <link rel="stylesheet" href="./style.css" />
     <title>Twilio Keyword</title>
   </head>
-  <body class="container text-center">
-
-    <div id="loading" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+  <body class="container-fluid">
     
+    <div id="loading" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     <main id="main" style="display:none">
       <div class="row">
-        <div class="col-md-4 offset-md-4">
+        <aside id="settings" class="col-md-3" style="display:none">
+          <div id="settings-scroll" class="mt-5">
+            <h1 class="mb-5 text-center">Settings</h1>
+            <form action="save-settings" method="get">
+              <ol class="list-group list-group-numbered">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="logo-url" class="fw-bold mb-2">Logo Link</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="logo-url" name="logo-url" placeholder="https://www.mysite.com/logo.png">
+                    Provide a publicly available link to your logo. You can also host your logo on Twilio by uploading it to <a href="https://www.twilio.com/console/assets/public">Assets</a>.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="campaign-title" class="fw-bold mb-2">Campaign Title</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="campaign-title" name="campaign-title" placeholder="Volunteer Alerts">
+                    Also called the "Program Name". It should be brief and indicate the type of messages you'll be sending.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="campaign-description" class="fw-bold mb-2">Campaign Description</label>
+                    <textarea oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="campaign-description" name="campaign-description" placeholder="Receive SMS notifications about relevant volunteer opportunities in your community."></textarea>
+                    Provide some more context about the types of messages you'll be sending.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <div class="fw-bold">Message Quantity and Interval</div>
+                    <div class="input-group mb-3">
+                      <input oninput="settingsUpdate(this)" type="number" id="message-quantity" name="message-quantity" class="form-control" placeholder="1">
+                      <span class="input-group-text">message /</span>
+                      <select onchange="settingsUpdate(this)" class="form-select" id="interval-select" name="interval-select" aria-label="Example select with button addon">
+                        <option selected>Choose interval...</option>
+                        <option value="Month">Month</option>
+                        <option value="Login">Login</option>
+                        <option value="Delivery">Delivery</option>
+                        <option value="Appointment">Appointment</option>
+                      </select>
+                    </div>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="opt-in-keyword" class="fw-bold mb-2">Opt-In Keyword</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="Join">
+                    We'll prompt users to text this keyword back to show they've opted in.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="opt-in-keyword" class="fw-bold mb-2">Contact Information</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="contact-information" name="contact-information" placeholder="support@mydomain.com">
+                    Include your support email or phone number.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="opt-in-keyword" class="fw-bold mb-2">Privacy Policy Link</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="privacy-policy-link" name="privacy-policy-link" placeholder="https://www.mysite.com/privacy-policy">
+                    Include a link to your privacy policy on your website.
+                  </div>
+                </li>
+              </ol>
+              <ol class="list-group mt-2">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="ms-2 me-auto">
+                    <label for="opt-in-keyword" class="fw-bold mb-2">Embed Code</label>
+                    <pre><code>&lt;iframe src="https://twilio-keyword-5843-dev.twil.io/index.html"&gt;&lt;/iframe&gt;</code></pre>
+                  </div>
+                </li>
+              </ol>
+              <div id="save-button" class="d-grid mt-2">
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </aside>
+        <div id="card-container" class="col-md-4 offset-md-4 text-center">
           <div class="card mt-5 mb-5">
             <div class="card-body">
               <img id="logo" width="200px" height="auto" src="" />
               <h1 id="title" class="card-title"></h1>
-              <h2 id="subtitle" class="card-subtitle mb-4 text-muted"></h2>
               <p id="description" class="card-text mb-4"></p>
-              <p class="card-text mb-4">Message and data rates may apply, <span id="messagesPerMonth"></span> messages / month.</p>
+              <p class="card-text mb-4">Message and data rates may apply. Reply STOP to opt-out, reply HELP for  <span id="messageQuantity"></span> messages / <span id="messageInterval"></span>.</p>
               <div id="cta-button"></div>
               <div id="sms-confirmation" class="alert alert-success" role="alert" style="display:none">
                 We've sent you an SMS to confirm your registration.
               </div>
             </div>
           </div>
+
+          <footer>
+            <p class="">
+              <a id="privacy-policy-link" href="">Privacy Policy</a> | <a id="tos-link" href="/terms-of-service.html">Terms of Service</a>
+            </p>
+            <p class="">
+              Made with <span style="margin-right: 10px">❤️</span> by your friends at
+              <a href="https://www.twilio.com">Twilio</a>
+            </p>
+          </footer>
+
         </div>
       </div>
 
-      <footer>
-        <p class="">
-          <a id="privacy-policy-link" href="">Privacy Policy</a> | <a id="tos-link" href="">Terms of Service</a>
-        </p>
-        <p class="">
-          Made with <span style="margin-right: 10px">❤️</span> by your friends at
-          <a href="https://www.twilio.com">Twilio</a>
-        </p>
-      </footer>
     </main>
   </body>
   <script type="text/javascript" src="/public.js"></script>

@@ -8,9 +8,9 @@ exports.handler = function(context, event, callback) {
     let body = {
         logoUrl: context.LOGO_URL,
         title: context.TITLE,
-        subtitle: context.SUBTITLE,
         description: context.DESCRIPTION,
-        messagesPerMonth: context.MESSAGES_PER_MONTH,
+        messageQuantity: context.MESSAGE_QUANTITY,
+        messageInterval: context.MESSAGE_INTERVAL,
         buttonCta: context.BUTTON_CTA,
         optInKeyword: context.OPT_IN_KEYWORD,
         privacyPolicyLink: context.PRIVACY_POLICY_LINK,
