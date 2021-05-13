@@ -1129,17 +1129,17 @@
     ],
     "google-sheets": [
       {
-        "key": "SHEETS_AUTH_JSON",
+        "key": "GOOGLE_CREDENTIALS",
         "required": true,
         "format": "file(json)",
         "description": "A JSON key file for your Google Sheets service account",
         "link": "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys",
         "default": "/auth.json",
         "configurable": true,
-        "contentKey": "SHEETS_AUTH_JSON_CONTENT"
+        "contentKey": "GOOGLE_CREDENTIALS_CONTENT"
       },
       {
-        "key": "SHEETS_DOC_ID",
+        "key": "DOCUMENT_ID",
         "required": true,
         "format": "text",
         "description": "The document ID for your Google Sheets spreadsheet (from its URL: https://docs.google.com/spreadsheets/d/[id]/edit)",
@@ -1149,7 +1149,7 @@
         "contentKey": null
       },
       {
-        "key": "SHEETS_SHEET_NAME",
+        "key": "SHEET_NAME",
         "required": true,
         "format": "text",
         "description": "The spreadsheet name to log to within your Google Sheets document",
