@@ -16,9 +16,9 @@ google.sheets.mockReturnValue({
 });
 
 const context = {
-  SHEETS_AUTH_JSON: '/auth.json',
-  SHEETS_DOC_ID: 'appAbcD12efG3HijK',
-  SHEETS_SHEET_NAME: 'Sheet1',
+  GOOGLE_CREDENTIALS: '/auth.json',
+  DOCUMENT_ID: 'appAbcD12efG3HijK',
+  SHEET_NAME: 'Sheet1',
 };
 
 beforeAll(() => {

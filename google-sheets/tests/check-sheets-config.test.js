@@ -16,9 +16,9 @@ google.sheets.mockReturnValue({
 });
 
 const context = {
-  SHEETS_AUTH_JSON: '/auth.json',
-  SHEETS_DOC_ID: 'appAbcD12efG3HijK',
-  SHEETS_SHEET_NAME: 'Sheet1',
+  GOOGLE_CREDENTIALS: '/auth.json',
+  DOCUMENT_ID: 'appAbcD12efG3HijK',
+  SHEET_NAME: 'Sheet1',
 };
 
 beforeAll(() => {
@@ -76,7 +76,7 @@ it('should handle a missing Google Sheets document', done => {
 
   const callback = (_err, res) => {
     expect(res._body.success).toBeFalsy();
-    expect(res._body.message).toEqual('Could not find your Google Sheets document. Please ensure SHEETS_DOC_ID is correct.');
+    expect(res._body.message).toEqual('Could not find your Google Sheets document. Please ensure DOCUMENT_ID is correct.');
     done();
   };
 

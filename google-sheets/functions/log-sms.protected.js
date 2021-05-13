@@ -11,7 +11,7 @@ exports.handler = async function(context, event, callback) {
   const twiml = new Twilio.twiml.MessagingResponse();
   try {
     const authJson = JSON.parse(await fs.readFile(
-      Runtime.getAssets()[context.SHEETS_AUTH_JSON].path));
+      Runtime.getAssets()[context.GOOGLE_CREDENTIALS].path));
 
     if(!isAuthValid(authJson)) {
       throw new Error('Invalid authentication JSON file');
@@ -28,8 +28,8 @@ exports.handler = async function(context, event, callback) {
     });
 
     await sheets.spreadsheets.values.append({
-      spreadsheetId: context.SHEETS_DOC_ID,
-      range: `'${context.SHEETS_SHEET_NAME}'`,
+      spreadsheetId: context.DOCUMENT_ID,
+      range: `'${context.SHEET_NAME}'`,
       valueInputOption: 'USER_ENTERED',
       requestBody: {
         values: [
@@ -40,10 +40,10 @@ exports.handler = async function(context, event, callback) {
     twiml.message('The SMS was successfully saved.');
   } catch (error) {
     if (error.code === 404) {
-      console.error('Could not find your Google Sheets document. Please ensure SHEETS_DOC_ID is correct.');
+      console.error('Could not find your Google Sheets document. Please ensure DOCUMENT_ID is correct.');
     }
     else if (error.code === 400 && error.errors && error.errors[0] && error.errors[0].message) {
-      console.error(`Google sheets error: ${error.errors[0].message}. Please ensure SHEETS_SHEET_NAME is a valid spreadsheet inside your document.`);
+      console.error(`Google sheets error: ${error.errors[0].message}. Please ensure SHEET_NAME is a valid spreadsheet inside your document.`);
     }
     else {
       console.error(`Google Sheets integration error: ${error.message || error}`);
