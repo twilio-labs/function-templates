@@ -84,7 +84,7 @@ exports.handler = async function (context, event, callback) {
       for (let i = 0; i < states.length; i++) {
         if (states[i]["properties"].hasOwnProperty("autopilot_assistant_sid")) {
           
-          states[i]["properties"]["autopilot_assistant_sid"] = process.env.AUTOPILOT_SID;
+          states[i]["properties"]["autopilot_assistant_sid"] = context.AUTOPILOT_SID;
         }
       }
       flowDefinition["states"] = states;
