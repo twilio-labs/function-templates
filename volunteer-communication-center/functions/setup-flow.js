@@ -2,7 +2,7 @@
 exports.handler = async function (context, event, callback) {
 
   const assets = Runtime.getAssets();
-  const flowDefinition = require(assets["/studio_flow.js"].path);
+  const flowDefinition = require(assets["/studio-flow.js"].path);
   const path = Runtime.getFunctions()['auth'].path;
   const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
 
@@ -78,7 +78,7 @@ exports.handler = async function (context, event, callback) {
 
 
   function configureFlowWithAssistant() {
-    if (process.env.AUTOPILOT_SID) {
+    if (context.AUTOPILOT_SID) {
       const states = flowDefinition["states"];
 
       for (let i = 0; i < states.length; i++) {
@@ -98,8 +98,11 @@ exports.handler = async function (context, event, callback) {
       client.incomingPhoneNumbers
         .list({ phoneNumber: context.TWILIO_PHONE_NUMBER, limit: 20 })
         .then((incomingPhoneNumbers) => {
-          const n = incomingPhoneNumbers[0];
-          resolve(n.sid);
+          if (incomingPhoneNumbers.length) {
+            const n = incomingPhoneNumbers[0];
+            resolve(n.sid);
+          } 
+          
         })
         .catch((err) => reject(err));
     });

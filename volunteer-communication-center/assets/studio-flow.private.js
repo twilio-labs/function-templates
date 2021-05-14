@@ -45,7 +45,7 @@ const flowDefinition = {
           "x": 170,
           "y": 210
         },
-        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
+        "autopilot_assistant_sid": "",
         "from": "{{flow.channel.address}}",
         "chat_service": "{{trigger.message.InstanceSid}}",
         "body": "{{trigger.message.Body}}",
@@ -101,8 +101,8 @@ const flowDefinition = {
           "x": 280,
           "y": 1340
         },
-        "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
-        "channel": "TC3452ca1f798eb88a0a6a8d85114093fd",
+        "workflow": "",
+        "channel": "",
         "attributes": "{ \"type\": \"inbound\", \"name\": \"{{trigger.call.From}}\" }"
       }
     },
@@ -177,7 +177,7 @@ const flowDefinition = {
           "x": -286,
           "y": 188
         },
-        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
+        "autopilot_assistant_sid": "",
         "from": "{{flow.channel.address}}",
         "chat_service": "{{trigger.message.InstanceSid}}",
         "body": "{{trigger.message.Body}}",
@@ -305,7 +305,7 @@ const flowDefinition = {
           "x": -120,
           "y": 1350
         },
-        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
+        "autopilot_assistant_sid": "",
         "from": "{{flow.channel.address}}",
         "chat_service": "{{trigger.message.InstanceSid}}",
         "body": "{{trigger.message.Body}}",
@@ -355,8 +355,8 @@ const flowDefinition = {
           "x": -490,
           "y": 1620
         },
-        "workflow": "WW2cc9ef4cbd96328adf7e90e4e1fef1c0",
-        "channel": "TC1538a54edef5895fcc2115489151e390",
+        "workflow": "",
+        "channel": "",
         "attributes": "{\"name\": \"{{trigger.message.ChannelAttributes.from}}\", \"channelType\": \"{{trigger.message.ChannelAttributes.channel_type}}\", \"channelSid\": \"{{trigger.message.ChannelSid}}\"}"
       }
     },
@@ -380,7 +380,7 @@ const flowDefinition = {
           "x": 660,
           "y": 1030
         },
-        "autopilot_assistant_sid": "UA232372d4ebf310e2eedd7bcc099966e1",
+        "autopilot_assistant_sid": "",
         "from": "{{flow.channel.address}}",
         "chat_service": "{{trigger.message.InstanceSid}}",
         "body": "{{trigger.message.Body}}",
