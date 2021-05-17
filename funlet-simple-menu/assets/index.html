@@ -15,6 +15,11 @@
              inputPrependBaseURL();
          });
         </script>
+        <style>
+         thead {
+             text-align: left;
+         }
+        </style>
     </head>
     <body>
         <div class="page-top">
@@ -78,6 +83,34 @@
                             for that menu option
                         </li>
                     </ol>
+                    <p>
+                        The following URL parameters may be sent to this Funlet to override the defaults it was
+                        configured to use:
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Allowed Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Message</td>
+                                    <td>
+                                        The URL of a media file to &lt;Play&gt;, or a string to &lt;Say&gt; to
+                                        greet the caller.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Options[n]</td>
+                                    <td>
+                                        The URL to which call flow should be directed, if n is pressed. See
+                                        examples below.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
                 </section>
 
                 <section>

@@ -15,6 +15,11 @@
              inputPrependBaseURL();
          });
         </script>
+        <style>
+         thead {
+             text-align: left;
+         }
+        </style>
     </head>
     <body>
         <div class="page-top">
@@ -67,6 +72,40 @@
                             section of its source code using the "Edit this code" button below
                         </li>
                     </ol>
+                    <p>
+                        The following URL parameters may be sent to this Funlet to override the defaults it was
+                        configured to use:
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Allowed Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PhoneNumber</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                                <tr>
+                                    <td>FailUrl</td>
+                                    <td>Any Url</td>
+                                </tr>
+                                <tr>
+                                    <td>Message</td>
+                                    <td>
+                                        A URL or a string to play or read to the person who answers the second leg
+                                        of the phone call. It should tell them to press any key to accept the call.
+                                        If not provided, a default message will be played.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Timeout</td>
+                                    <td>How long, in seconds, should the phone be allowed to ring.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
                 </section>
 
                 <section>

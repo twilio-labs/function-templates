@@ -15,6 +15,11 @@
              inputPrependBaseURL();
          });
         </script>
+        <style>
+         thead {
+             text-align: left;
+         }
+        </style>
     </head>
     <body>
         <div class="page-top">
@@ -65,6 +70,59 @@
                             section of its source code using the "Edit this code" button below
                         </li>
                     </ol>
+                    <p>
+                        The following URL parameters may be sent to this Funlet to override the defaults it was
+                        configured to use:
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Allowed Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PhoneNumber</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                                <tr>
+                                    <td>CallerId</td>
+                                    <td>
+                                        The phone number you'd like to appear as the Caller ID when forwarding. Must
+                                        be a Twilio phone number or a verified number.
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>FailUrl</td>
+                                    <td>Any URL</td>
+                                </tr>
+                                <tr>
+                                    <td>Timeout</td>
+                                    <td>How long, in seconds, should the phone be allowed to ring.</td>
+                                </tr>
+                                <tr>
+                                    <td>AllowedCallers[0]</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                                <tr>
+                                    <td>AllowedCallers[1]</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                                <tr>
+                                    <td>AllowedCallers[2]</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                                <tr>
+                                    <td>AllowedCallers[3]</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                                <tr>
+                                    <td>AllowedCallers[4]</td>
+                                    <td>Any 10 digit phone number</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
                 </section>
 
                 <section>

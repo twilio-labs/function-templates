@@ -15,6 +15,11 @@
              inputPrependBaseURL();
          });
         </script>
+        <style>
+         thead {
+             text-align: left;
+         }
+        </style>
     </head>
     <body>
         <div class="page-top">
@@ -62,6 +67,38 @@
                         <li>Call your Twilio phone number </li>
                         <li>You should hear each of your greetings in order</li>
                     </ol>
+                    <p>
+                        The following URL parameters may be sent to this Funlet to override the defaults it was
+                        configured to use:
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Allowed Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Message[0]</td>
+                                    <td>
+                                        The URL of a media file to &lt;Play&gt;, or a string to &lt;Say&gt;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Message[1]</td>
+                                    <td>
+                                        The URL of a media file to &lt;Play&gt;, or a string to &lt;Say&gt;
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Message[n]</td>
+                                    <td>
+                                        The URL of a media file to &lt;Play&gt;, or a string to &lt;Say&gt;
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
                 </section>
 
                 <section>

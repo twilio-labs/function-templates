@@ -15,6 +15,11 @@
              inputPrependBaseURL();
          });
         </script>
+        <style>
+         thead {
+             text-align: left;
+         }
+        </style>
     </head>
     <body>
         <div class="page-top">
@@ -68,6 +73,32 @@
                         <li>Call your Twilio phone number </li>
                         <li>You should hear the result of your TwiML</li>
                     </ol>
+                    <p>
+                        The following URL parameters may be sent to this Funlet to override the defaults it was
+                        configured to use:
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute Name</th>
+                                    <th>Allowed Values</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Twiml</td>
+                                    <td>
+                                        A chunk of
+                                        <a href="https://www.twilio.com/docs/api/twiml"
+                                           target="_blank"
+                                           rel="noopener">
+                                            TwiML
+                                        </a>
+                                        to echo back. Remember to URL encode the TwiML.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
                 </section>
 
                 <section>
