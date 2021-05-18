@@ -546,6 +546,16 @@
     ],
     "funlet-echo": [
       {
+        "key": "FUNLET_ECHO_TWIML",
+        "required": true,
+        "format": "text",
+        "description": "The default TwiML to echo back (can be overridden by the Twiml URL parameter)",
+        "link": "https://www.twilio.com/docs/voice/twiml",
+        "default": "<Response><Say>Hello, world!</Say></Response>",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -557,6 +567,56 @@
       }
     ],
     "funlet-simple-message": [
+      {
+        "key": "FUNLET_MESSAGE_1",
+        "required": true,
+        "format": "text",
+        "description": "The first URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": "Hello, world!",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_2",
+        "required": true,
+        "format": "text",
+        "description": "The second URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_3",
+        "required": true,
+        "format": "text",
+        "description": "The third URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_4",
+        "required": true,
+        "format": "text",
+        "description": "The fourth URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_5",
+        "required": true,
+        "format": "text",
+        "description": "The fifth URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -570,6 +630,16 @@
     ],
     "funlet-simple-menu": [
       {
+        "key": "FUNLET_MENU_MESSAGE",
+        "required": true,
+        "format": "text",
+        "description": "The URL of a media file to <Play>, or a string to <Say>, to greet the caller. Can be overridden by the Message URL parameter.",
+        "link": null,
+        "default": "Hello! Please select an option.",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -581,6 +651,16 @@
       }
     ],
     "funlet-whisper": [
+      {
+        "key": "FUNLET_WHISPER_HUMAN_CHECK",
+        "required": true,
+        "format": "text",
+        "description": "If \"true\", check that the recipient is human by having them press a button.",
+        "link": null,
+        "default": "false",
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -594,6 +674,16 @@
     ],
     "funlet-forward": [
       {
+        "key": "FUNLET_FORWARD_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Calls made to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -605,6 +695,16 @@
       }
     ],
     "funlet-call-me": [
+      {
+        "key": "FUNLET_CALLME_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Calls made to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -618,6 +718,16 @@
     ],
     "funlet-simulring": [
       {
+        "key": "FUNLET_SIMULRING_PHONE_NUMBERS",
+        "required": true,
+        "format": "list(phone_number)",
+        "description": "The phone numbers in this comma-separated list will be called simultaneously. All phone numbers must follow the E.164 format",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12345551234,+12345556789",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -629,6 +739,16 @@
       }
     ],
     "funlet-find-me": [
+      {
+        "key": "FUNLET_FINDME_PHONE_NUMBERS",
+        "required": true,
+        "format": "list(phone_number)",
+        "description": "The phone numbers in this comma-separated list will be called in order. All phone numbers must follow the E.164 format",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12345551234,+12345556789",
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
