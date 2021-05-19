@@ -6,7 +6,7 @@
 
 ### Environment variables
 
-This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. New templates will only have a `.env` file, but it's possible to create a `.env.example` full of defaults and example values, suitable for committing to source control. On deployment, if `.env` does not exist, the values from `.env.example` will be used instead. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
+This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
 In your `.env` file, set the following values:
 
