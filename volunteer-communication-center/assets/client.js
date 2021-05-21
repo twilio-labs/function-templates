@@ -99,11 +99,11 @@ function setupFlow(e) {
   fetch('/setup-flow').then(() => {
     checkStudioFlow();
   })
-    .catch((err) => {
-      console.log('An error ocurred creating Studio Flow', err);
-      $('#deploy-flow .button').removeClass('loading');
-      $('.loader.button-loader').hide();
-    });
+  .catch((err) => {
+    console.log('An error ocurred creating Studio Flow', err);
+    $('#deploy-flow .button').removeClass('loading');
+    $('.loader.button-loader').hide();
+  });
 }
 
 function addTask(task) {
@@ -115,12 +115,12 @@ function addTask(task) {
     },
     body: JSON.stringify(task)
   })
-    .then(() => res)
-    .catch((err) => {
-      console.log('An error ocurred creating Assistant', err);
-      $('#deploy-bot .button').removeClass('loading');
-      $('.loader.button-loader').hide();
-    });
+  .then(() => res)
+  .catch((err) => {
+    console.log('An error ocurred creating Assistant', err);
+    $('#deploy-bot .button').removeClass('loading');
+    $('.loader.button-loader').hide();
+  });
 }
 
 
@@ -156,17 +156,17 @@ function setupAutopilot(e) {
   fetch('/setup-autopilot').then((res) => {
     return res.text();
   })
-    .then((sid) => {
-      addTasks(sid);
-    })
-    .then(() => {
-      checkAutopilot();
-    })
-    .catch((err) => {
-      console.log('An error ocurred creating Assistant', err);
-      $('#deploy-bot .button').removeClass('loading');
-      $('.loader.button-loader').hide();
-    });
+  .then((sid) => {
+    addTasks(sid);
+  })
+  .then(() => {
+    checkAutopilot();
+  })
+  .catch((err) => {
+    console.log('An error ocurred creating Assistant', err);
+    $('#deploy-bot .button').removeClass('loading');
+    $('.loader.button-loader').hide();
+  });
 
 }
 
