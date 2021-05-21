@@ -2,6 +2,17 @@
 
 ## Pre-requisites
 
+### Flex instance
+
+This template requires a Twilio Flex Project. Twilio's Flex programmable
+contact center can't be accessed from an existing Twilio project, or
+from a subaccount. Instead, it requires you to create a new Twilio
+project.
+
+Please see [this
+guide](https://support.twilio.com/hc/en-us/articles/360020442333-Setup-a-Twilio-Flex-Project)
+for how to create a Flex Project in the Twilio Console.
+
 ### Environment variables
 
 This project requires some environment variables to be set. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
