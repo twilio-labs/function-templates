@@ -317,7 +317,7 @@ const flowDefinition = {
       "type": "send-message",
       "transitions": [
         {
-          "next": "GoToFlex",
+          "next": "FlexSMS",
           "event": "sent"
         },
         {
@@ -337,7 +337,7 @@ const flowDefinition = {
       }
     },
     {
-      "name": "GoToFlex",
+      "name": "FlexSMS",
       "type": "send-to-flex",
       "transitions": [
         {

@@ -63,9 +63,9 @@ exports.handler = async function (context, event, callback) {
           
           states[i]["properties"]["workflow"] = workflow.sid;
 
-          if (states[i].hasOwnProperty("name") && states[i]["name"] == "send_to_flex_sms") {
+          if (states[i].hasOwnProperty("name") && states[i]["name"] == "FlexSMS") {
             states[i]["properties"]["channel"] = smsChannel.sid;
-          } else if (states[i].hasOwnProperty("name") && states[i]["name"] == "send_to_flex_voice") {
+          } else if (states[i].hasOwnProperty("name") && states[i]["name"] == "FlexCall") {
             states[i]["properties"]["channel"] = voiceChannel.sid;
           }
         }
