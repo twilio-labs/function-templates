@@ -117,13 +117,17 @@
     </section>
 
     <section>
-      <h3>Out of the Box</h3>
-      <p>Congrats! You have successfully deployed your own instance of a volunteer communication center.</p>
-
+      <h3>Finish configuring your app</h3>
+      <p>Congrats! You have successfully deployed your own instance of a volunteer communication center. There are a few steps you must take to finish configuring your vaccine communications center app:</p>
+      <ol>
+        <li><strong>Confirm you have deployed this template to a Flex Project</strong></li>
+        <li><strong>Deploy Autopilot Bot</strong></li>
+        <li><strong>Deploy Studio Flow</strong></li>
+      </ol>
 
       <div class="component-container">
-        <h4>Twilio Flex</h4>
-        <p>This template requires an account with a Flex project. Check that your account has been configured correctly by going to the Flex tab in the console. You should see a blue button that says "Launch Flex", if you don't, you'll have to create a new flex project and deploy this template with those credentials.</p>
+        <h4>1. Confirm Flex Project</h4>
+        <p>This template requires an account with a Flex project. Check that your account has been configured correctly by going to the Flex tab in the console. You should see a blue button that says "Launch Flex", if you don't, you'll have to create a new Flex project and deploy this template with those credentials.</p>
 
         <!-- TODO: view link and add url-->
         <a id="open-flex" class="button" href="https://www.twilio.com/console/flex/overview" target="_blank">Check for Flex</a>
@@ -133,7 +137,7 @@
       <div class="component-container">
         <div id="bot-loader-container" class="loader"></div>
         <div id="deploy-bot" style="display: none;" class="deploy-component">
-          <h4>Autopilot</h3>
+          <h4>2. Deploy Autopilot Bot</h3>
             <p>Click the button below to import the autopilot assistant, Henry. He is trained and read to answer
               incoming questions.</p>
 
@@ -150,7 +154,7 @@
       <div class="component-container">
         <div id="flow-loader-container" class="loader"></div>
         <div id="deploy-flow" style="display: none;" class="deploy-component">
-          <h4>Studio Flow</h3>
+          <h4>3. Deploy Studio Flow</h3>
             <p>Click the button below to set up the Studio Flow. This flow handles incoming calls and messages.</p>
             <a class="button" onclick="setupFlow(event)">Deploy Studio Flow</a>
             <div id="flow-loader" class="loader button-loader" style="display: none;"></div>
