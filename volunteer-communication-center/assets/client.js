@@ -16,17 +16,31 @@ const fullUrl = baseUrl
   .substr(0, baseUrl.href.length - 1);
 
 fetch(`${fullUrl}/return-config`)
-  .then((response) => response.json())
+  .then((response) => {
+      if (!response.ok) {
+        throw 'An error occured when attempting to retrieve template configuration. To debug, check out the network response to the /return-config API endpoint.';
+      }
+      return response.json();
+    })
   .then((json) => {
     phoneNumber = json.phone_number;
     // Grab the phone number being used and display it to help the user test their app
     const phoneNumberElements = $('.phone-number');
     phoneNumberElements.html(phoneNumber);
+  })
+  .catch((err) => {
+    console.error(err);
+    alert(err);
   });
 
 function checkStudioFlow() {
   fetch('/check-existing-flow')
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) {
+        throw 'An error occured when attempting to check the Studio Flow. To debug, check out the network response to the /check-existing-flow API endpoint.';
+      }
+      return response.text();
+    })
     .then((sid) => {
       $('#deploy-flow .button').removeClass('loading');
       $('#flow-loader-container').hide();
@@ -40,13 +54,21 @@ function checkStudioFlow() {
       }
     })
     .catch((err) => {
-      console.log('An error occurred when attempting to check the Studio Flow', err);
+      console.error(err);
+      $('#flow-loader-container').hide();
+      $('#deploy-flow').html(`<p style="color:red;">${err}</p>`)
+      $('#deploy-flow').show();
     });
 }
 
 function checkAutopilot() {
   fetch('/check-existing-bot')
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) {
+        throw 'An error occured when attempting to check the Autopilot Assistant. To debug, check out the network response to the /check-existing-bot API endpoint.';
+      }
+      return response.text();
+    })
     .then((sid) => {
       $('#deploy-bot .button').removeClass('loading');
       $('#bot-loader-container').hide();
@@ -60,7 +82,10 @@ function checkAutopilot() {
       }
     })
     .catch((err) => {
-      console.log('An error occurred when attempting to check the Autopilot Assistant', err);
+      console.error(err);
+      $('#bot-loader-container').hide();
+      $('#deploy-bot').html(`<p style="color:red;">${err}</p>`)
+      $('#deploy-bot').show();
     });
 }
 
