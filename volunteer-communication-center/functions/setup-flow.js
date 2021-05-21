@@ -101,8 +101,9 @@ exports.handler = async function (context, event, callback) {
           if (incomingPhoneNumbers.length) {
             const n = incomingPhoneNumbers[0];
             resolve(n.sid);
-          } 
-          
+          } else {
+            throw new Error('Phone number does not exist on the account');
+          }
         })
         .catch((err) => reject(err));
     });
@@ -113,6 +114,7 @@ exports.handler = async function (context, event, callback) {
       client.incomingPhoneNumbers(numberSid)
         .update({
           smsUrl: studioWebhook,
+          voiceUrl: studioWebhook
         })
         .then(() => {
           resolve('success');
@@ -141,8 +143,12 @@ exports.handler = async function (context, event, callback) {
   } else {
     process.env.FLOW_SID = flow.sid;
   }
-  const phoneNumberSid = await getPhoneNumberSid();
-  await updatePhoneNumberWebhook(flow.webhookUrl, phoneNumberSid);
+  try {
+    const phoneNumberSid = await getPhoneNumberSid();
+    await updatePhoneNumberWebhook(flow.webhookUrl, phoneNumberSid);
+    callback(null, 'success');
+  } catch(e) {
+    callback(e);
+  }
 
-  callback(null, 'success');
 };
