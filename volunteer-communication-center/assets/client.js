@@ -115,7 +115,7 @@ function addTask(task) {
     },
     body: JSON.stringify(task)
   })
-  .then(() => res)
+  .then((res) => res)
   .catch((err) => {
     console.log('An error ocurred creating Assistant', err);
     $('#deploy-bot .button').removeClass('loading');
@@ -126,20 +126,22 @@ function addTask(task) {
 
 
 function addTasks(sid) {
-  fetch('/get-autopilot')
-    .then((response) =>
-      response.json()
-    )
+  return fetch('/get-autopilot')
+    .then((response) => {
+      return response.json()
+    })
     .then((data) => {
       const tasks = data["tasks"];
+      const promises = [];
 
       for (let i = 0; i < tasks.length; i++) {
         const taskObj = {
           sid: sid,
           task: tasks[i]
         }
-        addTask(taskObj);
+        promises.push(addTask(taskObj));
       }
+      return Promise.all(promises);
     })
     .catch((err) => {
       console.log('An error ocurred creating Assistant', err);
@@ -148,26 +150,38 @@ function addTasks(sid) {
     });
 }
 
-function setupAutopilot(e) {
+function buildModel() {
+  return fetch('/build-autopilot-bot').then((response) => {
+    if (!response.ok) {
+      throw 'An error occured when attempting to build the Autopilot model.';
+    }
+    return response.text();
+  })
+}
 
+function deployAutopilot() {
+  return fetch('/setup-autopilot').then((res) => {
+    if (!res.ok) {
+      throw 'An error occured when attempting to create the Autopilot bot.';
+    }
+    return res.text();
+  })
+}
+
+async function setupAutopilot(e) {
   e.preventDefault();
   $('#deploy-bot .button').addClass('loading');
   $('#bot-loader').show();
-  fetch('/setup-autopilot').then((res) => {
-    return res.text();
-  })
-  .then((sid) => {
-    addTasks(sid);
-  })
-  .then(() => {
+  try {
+    const botSid = await deployAutopilot();
+    await addTasks(botSid);
+    await buildModel();
     checkAutopilot();
-  })
-  .catch((err) => {
+  } catch(err) {
     console.log('An error ocurred creating Assistant', err);
     $('#deploy-bot .button').removeClass('loading');
     $('.loader.button-loader').hide();
-  });
-
+  }
 }
 
 checkStudioFlow();
