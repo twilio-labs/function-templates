@@ -1,19 +1,23 @@
-'use strict';
-
-// These tests  verify that some important guarantees hold for all the functions
-// in the repository.
+/*
+ * These tests  verify that some important guarantees hold for all the functions
+ * in the repository.
+ */
 
 const path = require('path');
 const fs = require('fs');
 const { parser } = require('configure-env');
 
-// skipList is a list of function templates that don't pass verification
-// for now, but will in the long term
+/*
+ * skipList is a list of function templates that don't pass verification
+ * for now, but will in the long term
+ */
 const skipList = ['conversations', 'vaccine-standby'];
 const excludedPaths = ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
 const projectRoot = path.resolve(__dirname, '..');
-// Assemble a list of template directories here, since templates.json
-// may not have all of them:
+/*
+ * Assemble a list of template directories here, since templates.json
+ * may not have all of them:
+ */
 const templates = fs
       .readdirSync(projectRoot, { withFileTypes: true })
       .filter(

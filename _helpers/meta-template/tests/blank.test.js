@@ -1,4 +1,4 @@
-const handler = require('../functions/blank').handler;
+const { handler } = require('../functions/blank');
 
 describe('{{name}} function template', () => {
   it('Calls callback with empty JSON', () => {
