@@ -31,12 +31,28 @@ function settingsUpdate(input) {
       document.getElementById('description').innerHTML = input.value;
       break;
 
+    case 'background-color':
+      document.getElementById('body').style.background = input.value;
+      break;
+    
+    case 'font-color':
+      document.getElementById('card-container').style.color = input.value;
+      break;
+
     case 'message-quantity':
       document.getElementById('messageQuantity').innerHTML = input.value;
       break;
 
     case 'interval-select':
       document.getElementById('messageInterval').innerHTML = input.value;
+      break;
+
+    case 'button-cta':
+      document.getElementById('buttonCta').innerHTML = input.value;
+      break;
+    
+    case 'privacy-policy-link':
+      document.getElementById('privacyPolicyLink').href = input.value;
       break;
   
     default:
@@ -47,22 +63,37 @@ function settingsUpdate(input) {
 function sendSMS() {
   let inputValue = document.getElementById('phone-number').value;
   fetch(`/send-sms?to=${inputValue}&from=14155344095`)
-    .then(response => response.json())
     .then(data => {
       document.getElementById('sms-confirmation').style.display = 'block';
     });
 }
 
-function displaySettings() {
+function displaySettings(data) {
   if (window.location.href.indexOf('context=iframe') < 1) {
     document.getElementById('card-container').classList.remove('offset-md-4');
     document.getElementById('card-container').classList.toggle('offset-md-2');
     document.getElementById('settings').style.display = 'block';
+
+    document.getElementById('logo-url').value = data.logoUrl;
+    document.getElementById('campaign-title').value = data.title;
+    document.getElementById('campaign-description').value = data.campaignDescription;
+    document.getElementById('message-quantity').value = data.messageQuantity;
+    document.getElementById('interval-select').value = data.messageInterval;
+    document.getElementById('button-cta').value = data.buttonCta;
+    document.getElementById('opt-in-keyword').value = data.optInKeyword;
+    document.getElementById('contact-information').value = data.contactInformation;
+    document.getElementById('privacy-policy-link').value = data.privacyPolicyLink;
+
+    let iframeTemplate = `<code>
+    &lt;iframe style="border:0" height="500px" width="100%" src="${data.domainName}/index.html?context=iframe"&gt;&lt;/iframe&gt;
+    </code>`
+
+    document.getElementById('iframe-panel').innerHTML = iframeTemplate;
   }
 }
 
 function setHomeConfig(data) {
-  displaySettings();
+  displaySettings(data);
 
   const el = document.querySelector( '#loading' );
   const main = document.getElementById("main");
@@ -83,12 +114,11 @@ function setHomeConfig(data) {
 
   document.getElementById('logo').src = data.logoUrl;
   document.getElementById('title').innerHTML=data.title;
-  document.getElementById('description').innerHTML=data.description; 
+  document.getElementById('description').innerHTML=data.campaignDescription; 
   document.getElementById('messageQuantity').innerHTML=data.messageQuantity;
   document.getElementById('messageInterval').innerHTML=data.messageInterval;
   document.getElementById('buttonCta').innerHTML=data.buttonCta;
-
-  document.getElementById('privacy-policy-link').href = data.privacyPolicyLink;
+  document.getElementById('privacyPolicyLink').href = data.privacyPolicyLink;
 
   el.parentNode.removeChild( el );
   main.style.display = 'block';
@@ -97,14 +127,15 @@ function setHomeConfig(data) {
 function updateTos(data) {
   //document.getElementById('logo').src = data.logoUrl;
   document.getElementById('title').innerHTML=data.title;
-  document.getElementById('description').innerHTML=data.description; 
+  document.getElementById('description').innerHTML=data.campaignDescription;
+  document.getElementById('contact-information').innerHTML = data.contactInformation;
   document.getElementById('messageQuantity').innerHTML=data.messageQuantity;
   document.getElementById('privacy-policy-link').href = data.privacyPolicyLink;
 
 }
 
 function getText() {
-  fetch('/get-config')
+  fetch('/get-settings')
     .then(response => response.json())
     .then(data => {
       if (window.location.href.indexOf('index.html') > 0) {

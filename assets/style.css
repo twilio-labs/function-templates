@@ -16,6 +16,24 @@ body {
   margin-bottom: 20px;
 }
 
+.code-panel {
+  background-color: #233659;
+  color: #BDDCDC;
+}
+
+.code-panel-container {
+  padding: 10px;
+  border-radius: 3px;
+}
+
+.tab-content {
+  color: #000;
+}
+
+code {
+  color: #BDDCDC;
+}
+
 #save-button {
   margin-bottom: 20px;
 }

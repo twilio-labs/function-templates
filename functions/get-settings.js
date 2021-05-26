@@ -8,13 +8,15 @@ exports.handler = function(context, event, callback) {
     let body = {
         logoUrl: context.LOGO_URL,
         title: context.TITLE,
-        description: context.DESCRIPTION,
+        campaignDescription: context.CAMPAIGN_DESCRIPTION,
         messageQuantity: context.MESSAGE_QUANTITY,
         messageInterval: context.MESSAGE_INTERVAL,
+        contactInformation: context.CONTACT_INFORMATION,
         buttonCta: context.BUTTON_CTA,
         optInKeyword: context.OPT_IN_KEYWORD,
         privacyPolicyLink: context.PRIVACY_POLICY_LINK,
-        tosLink: context.TOS_LINK
+        tosLink: context.TOS_LINK,
+        domainName: context.DOMAIN_NAME
     }
 
     response.setStatusCode(200);

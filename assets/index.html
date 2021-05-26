@@ -8,92 +8,203 @@
     <link rel="stylesheet" href="./style.css" />
     <title>Twilio Keyword</title>
   </head>
-  <body class="container-fluid">
-    
-    <div id="loading" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+  <body id="body" class="container-fluid">
+    <div class="text-center">
+      <div id="loading" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+    </div>
     <main id="main" style="display:none">
       <div class="row">
         <aside id="settings" class="col-md-3" style="display:none">
-          <div id="settings-scroll" class="mt-5">
-            <h1 class="mb-5 text-center">Settings</h1>
+          <div id="settings-scroll" class="mt-3">
+            <h1 class="mb-3 text-center">Settings</h1>
             <form action="save-settings" method="get">
-              <ol class="list-group list-group-numbered">
+              <ol class="list-group mb-3">
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
-                    <label for="logo-url" class="fw-bold mb-2">Logo Link</label>
-                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="logo-url" name="logo-url" placeholder="https://www.mysite.com/logo.png">
-                    Provide a publicly available link to your logo. You can also host your logo on Twilio by uploading it to <a href="https://www.twilio.com/console/assets/public">Assets</a>.
+                  <div class="me-auto">
+                    <h5 class="mt-2">Logo & Text</h5>
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
+                  <div class="me-auto">
+                    <label for="logo-url" class="fw-bold mb-2">Logo Link</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="logo-url" name="logo-url" placeholder="https://www.mysite.com/logo.png">
+                    Provide a publicly accesible link to your logo. You can also host your logo on Twilio by uploading it to <a href="https://www.twilio.com/console/assets/public">Assets</a>.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
                     <label for="campaign-title" class="fw-bold mb-2">Campaign Title</label>
                     <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="campaign-title" name="campaign-title" placeholder="Volunteer Alerts">
                     Also called the "Program Name". It should be brief and indicate the type of messages you'll be sending.
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
+                  <div class="me-auto">
                     <label for="campaign-description" class="fw-bold mb-2">Campaign Description</label>
                     <textarea oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="campaign-description" name="campaign-description" placeholder="Receive SMS notifications about relevant volunteer opportunities in your community."></textarea>
                     Provide some more context about the types of messages you'll be sending.
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
+                  <div class="me-auto">
+                    <label for="button-cta" class="fw-bold mb-2">Button Call-To-Action</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="button-cta" name="button-cta" placeholder="Join Now">
+                    Text to display on the button call-to-action.
+                  </div>
+                </li>
+              </ol>
+              <ol class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
+                    <h5 class="mt-2">Colors & Styles</h5>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
+                    <label for="background-color" class="fw-bold mb-2">Background Color</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="background-color" name="background-color" placeholder="#ffffff">
+                    Hex color code for the background of the opt-in page.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
+                    <label for="font-color" class="fw-bold mb-2">Font Color</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="font-color" name="font-color" placeholder="#212529">
+                    Hex color code for the font color.
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
+                    <label for="custom-css" class="fw-bold mb-2">Custom Styles Link</label>
+                    <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="custom-css" name="custom-css" placeholder="https://twil.io/assets/my-styles.css">
+                    Upload custom CSS to Twilio <a href="https://www.twilio.com/console/assets/public">Assets</a> and save the public link to the file here.
+                  </div>
+                </li>
+              </ol>
+              <ol class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
+                    <h5 class="mt-2">Compliance Information</h5>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                  <div class="me-auto">
                     <div class="fw-bold">Message Quantity and Interval</div>
                     <div class="input-group mb-3">
                       <input oninput="settingsUpdate(this)" type="number" id="message-quantity" name="message-quantity" class="form-control" placeholder="1">
                       <span class="input-group-text">message /</span>
                       <select onchange="settingsUpdate(this)" class="form-select" id="interval-select" name="interval-select" aria-label="Example select with button addon">
                         <option selected>Choose interval...</option>
-                        <option value="Month">Month</option>
-                        <option value="Login">Login</option>
-                        <option value="Delivery">Delivery</option>
-                        <option value="Appointment">Appointment</option>
+                        <option value="month">month</option>
+                        <option value="login">login</option>
+                        <option value="delivery">delivery</option>
+                        <option value="appointment">appointment</option>
                       </select>
                     </div>
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
+                  <div class="me-auto">
                     <label for="opt-in-keyword" class="fw-bold mb-2">Opt-In Keyword</label>
                     <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="Join">
                     We'll prompt users to text this keyword back to show they've opted in.
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
-                    <label for="opt-in-keyword" class="fw-bold mb-2">Contact Information</label>
+                  <div class="me-auto">
+                    <label for="contact-information" class="fw-bold mb-2">Contact Information</label>
                     <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="contact-information" name="contact-information" placeholder="support@mydomain.com">
                     Include your support email or phone number.
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
-                    <label for="opt-in-keyword" class="fw-bold mb-2">Privacy Policy Link</label>
+                  <div class="me-auto">
+                    <label for="privacy-policy-link" class="fw-bold mb-2">Privacy Policy Link</label>
                     <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="privacy-policy-link" name="privacy-policy-link" placeholder="https://www.mysite.com/privacy-policy">
                     Include a link to your privacy policy on your website.
                   </div>
                 </li>
               </ol>
-              <ol class="list-group mt-2">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Webhook</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Segment </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Airtable</button>
+                    </li>
+                  </ul>
+                  <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="https://mysite.com/api/create-contact">
+                      <p>Sample POST body:</p>
+                      <div class="code-panel code-panel-container">
+                        <pre><code>{
+  phoneNumber: '+1234567890',
+  optInStatus: 'active'
+}</code></pre></div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                      <p>Add your SMS opt-in page as a <a href="https://segment.com/docs/connections/sources/catalog/libraries/server/node/quickstart/#step-1-create-a-source-in-the-segment-app" target="_blank">source in Segment.</a></p>
+                      <label for="privacy-policy-link" class="fw-bold mb-2">Segment Write Key</label>
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="aBc123">
+                      <p>Sample tracking event:</p>
+                      <div class="code-panel code-panel-container">
+                        <pre><code>analytics.track("SMS Opt In", {
+  phone: event.from,
+  opt_in_status: "active"
+});</code></pre></div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                      <p>Save opt-in data to Airtable.</p>
+                      <label for="privacy-policy-link" class="fw-bold mb-2">Airtable API Key</label>
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="key123">
+
+                      <label for="privacy-policy-link" class="fw-bold mb-2">Airtable Base ID</label>
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="app123">
+
+                      <label for="privacy-policy-link" class="fw-bold mb-2">Table Name</label>
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="Campaign Contacts">
+
+                      <label for="privacy-policy-link" class="fw-bold mb-2">Phone Number Column Name</label>
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="Phone">
+
+                      <label for="privacy-policy-link" class="fw-bold mb-2">Opt-In Column Name</label>
+                      <input oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="opt-in-keyword" name="opt-in-keyword" placeholder="Opt Ins">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <ol class="list-group mb-3">
                 <li class="list-group-item d-flex justify-content-between align-items-start">
-                  <div class="ms-2 me-auto">
-                    <label for="opt-in-keyword" class="fw-bold mb-2">Embed Code</label>
-                    <pre><code>&lt;iframe src="https://twilio-keyword-5843-dev.twil.io/index.html"&gt;&lt;/iframe&gt;</code></pre>
+                  <div class="me-auto">
+                    <label for="iframe-code" class="fw-bold mb-2">Embed Code</label>
+                    <div class="form-control mb-2 code-panel" id="iframe-panel">
+                      <code>
+                        &lt;iframe style="border:0" height="500px" width="100%" src="/index.html?context=iframe"&gt;&lt;/iframe&gt;
+                      </code>
+                    </div>
+                    <p>Copy this embed code and add it to your website.</p>
                   </div>
                 </li>
               </ol>
               <div id="save-button" class="d-grid mt-2">
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Save Settings</button>
               </div>
             </form>
+            <p class="text-center">
+              Made with <span style="margin-right: 10px">❤️</span> by your friends at
+              <a href="https://www.twilio.com">Twilio</a>
+            </p>
           </div>
         </aside>
         <div id="card-container" class="col-md-4 offset-md-4 text-center">
           <div class="card mt-5 mb-5">
-            <div class="card-body">
+            <div id="main-card" class="card-body">
               <img id="logo" width="200px" height="auto" src="" />
               <h1 id="title" class="card-title"></h1>
               <p id="description" class="card-text mb-4"></p>
@@ -106,19 +217,12 @@
           </div>
 
           <footer>
-            <p class="">
-              <a id="privacy-policy-link" href="">Privacy Policy</a> | <a id="tos-link" href="/terms-of-service.html">Terms of Service</a>
-            </p>
-            <p class="">
-              Made with <span style="margin-right: 10px">❤️</span> by your friends at
-              <a href="https://www.twilio.com">Twilio</a>
-            </p>
+            <a id="privacyPolicyLink" target="_blank" href="">Privacy Policy</a> | <a id="tos-link" href="/terms-of-service.html">Terms of Service</a>
           </footer>
-
         </div>
       </div>
-
     </main>
   </body>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
   <script type="text/javascript" src="/public.js"></script>
 </html>
