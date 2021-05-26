@@ -8,5 +8,5 @@ module.exports = {
         process.nextTick(reject(new Error()));
       }
     });
-  }
+  },
 };

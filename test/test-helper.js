@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const Twilio = require("twilio");
+const fs = require('fs');
+const path = require('path');
+const Twilio = require('twilio');
 
 class MockRuntime {
   constructor(context) {
@@ -10,29 +10,32 @@ class MockRuntime {
   }
 
   _addAsset(key, filePath) {
-    const resolved = path.resolve(path.dirname(module.parent.filename), filePath);
+    const resolved = path.resolve(
+      path.dirname(module.parent.filename),
+      filePath
+    );
     this._assets[key] = {
       path: resolved,
-      open: () => fs.readFileSync(resolved)
+      open: () => fs.readFileSync(resolved),
     };
   }
 
   _addFunction(key, filePath) {
     this._functions[key] = {
-      path: path.resolve(filePath)
+      path: path.resolve(filePath),
     };
   }
 
   getAssets() {
     if (Object.keys(this._assets).length === 0) {
-      throw new Error("You must explicitly add assets using MockRuntime");
+      throw new Error('You must explicitly add assets using MockRuntime');
     }
     return this._assets;
   }
 
   getFunctions() {
     if (Object.keys(this._functions).length === 0) {
-      throw new Error("You must explicitly add functions using MockRuntime");
+      throw new Error('You must explicitly add functions using MockRuntime');
     }
     return this._functions;
   }
@@ -74,7 +77,7 @@ const teardown = () => {
 };
 
 const backupEnv = () => {
-  return {...process.env};
+  return { ...process.env };
 };
 
 const restoreEnv = (backupEnv) => {
@@ -96,5 +99,5 @@ module.exports = {
   teardown,
   MockRuntime,
   backupEnv,
-  restoreEnv
+  restoreEnv,
 };
