@@ -19,9 +19,18 @@ async function writeResult(templates) {
 }
 
 async function getVariablesForTemplate(templateId) {
-  const envFilePath = path.resolve(__dirname, '..', templateId, '.env');
-  const result = await parser.parseFile(envFilePath);
-  return result.variables;
+  try {
+    // Look for a .env.example file first
+    const envFilePath = path.resolve(__dirname, '..', templateId, '.env.example');
+    const result = await parser.parseFile(envFilePath);
+    return result.variables;
+  }
+  catch (_e) {
+    // If .env.example doesn't exist, try .env
+    const envFilePath = path.resolve(__dirname, '..', templateId, '.env');
+    const result = await parser.parseFile(envFilePath);
+    return result.variables;
+  }
 }
 
 async function getTemplateIds() {
