@@ -87,10 +87,10 @@ $(function() {
   document.getElementById("button-call").onclick = function() {
     // get the phone number to connect the call to
     var params = {
-      To: document.getElementById("phone-number").value
+      PhoneNumber: document.getElementById("phone-number").value
     };
 
-    console.log("Calling " + params.To + "...");
+    console.log("Calling " + params.PhoneNumber + "...");
     if (device) {
       var outgoingConnection = device.connect(params);
       outgoingConnection.on("ringing", function() {

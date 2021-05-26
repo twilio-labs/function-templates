@@ -1,28 +1,30 @@
-exports.handler = function(context, event, callback) {
-  let twiml = new Twilio.twiml.VoiceResponse();
-
-  if (event.To) {
-    // Wrap the phone number or client name in the appropriate TwiML verb
-    // if is a valid phone number
-    const attr = isAValidPhoneNumber(event.To) ? "number" : "client";
-
-    const dial = twiml.dial({
-      answerOnBridge: true,
-      callerId: process.env.CALLER_ID
-    });
-    dial[attr]({}, event.To);
-  } else {
-    twiml.say("Thanks for calling!");
-  }
-
-  callback(null, twiml);
-};
-
 /**
  * Checks if the given value is valid as phone number
  * @param {Number|String} number
  * @return {Boolean}
  */
-function isAValidPhoneNumber(number) {
+ function isAValidPhoneNumber(number) {
   return /^[\d\+\-\(\) ]+$/.test(number);
 }
+
+exports.handler = function (context, event, callback) {
+  const twiml = new Twilio.twiml.VoiceResponse();
+
+  // PhoneNumber is a Custom Parameter passed in from the Client
+  // If it is present we should call out...
+  if (event.PhoneNumber) {
+    // Wrap the phone number or client name in the appropriate TwiML verb
+    // if is a valid phone number
+    const attr = isAValidPhoneNumber(event.PhoneNumber) ? "number" : "client";
+
+    const dial = twiml.dial({
+      answerOnBridge: true,
+      callerId: context.CALLER_ID,
+    });
+    dial[attr]({}, event.PhoneNumber);
+  } else {
+    // ...Otherwise we can assume it's an inbound call to our Twilio Incoming Number
+    twiml.dial().client(context.DEFAULT_CLIENT_NAME);
+  }
+  callback(null, twiml);
+};

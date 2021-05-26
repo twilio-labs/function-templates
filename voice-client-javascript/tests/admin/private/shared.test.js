@@ -8,19 +8,21 @@ const mockTwilioClient = {
 const mockVariables = [{
   key: "LAST_NAME",
   value: "Lovelace",
-  update: jest.fn()
+  update: jest.fn(),
+  remove: jest.fn()
 },
 {
   key: "FIRST_NAME",
   value: "Ada",
-  update: jest.fn()
+  update: jest.fn(),
+  remove: jest.fn()
 }];
 
 const mockEnvironment = {
   serviceSid: "SERVICE_SID",
   sid: "ENVIRONMENT_SID",
-
 };
+
 const mockServicesList = jest.fn(() => Promise.resolve([]));
 const mockEnvironmentList = jest.fn(() => Promise.resolve([]));
 const mockEnvironmentVariablesList = jest.fn(() => Promise.resolve(mockVariables));
@@ -35,9 +37,12 @@ const mockEnvironments = jest.fn(() => {
   };
 });
 
+// TODO: Add uiEditable for the test of usesFunctionUi
+const mockServiceFetch = jest.fn();
 mockTwilioClient.serverless.services = jest.fn(() => {
   const inner = {
     environments: mockEnvironments,
+    fetch: mockServiceFetch
   };
   inner.environments.list = mockEnvironmentList;
   return inner;
@@ -51,6 +56,11 @@ const CONTEXT = {
   DOMAIN_NAME: "testing-domain-123.com",
   getTwilioClient: jest.fn(() => mockTwilioClient),
 };
+
+function createContext(additional = {}) {
+  return { ...additional, ...CONTEXT };
+}
+
 
 let origAdminPassword;
 
@@ -92,14 +102,15 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
 
   test("checkAuthorization passes thru on success", () => {
+    const context = createContext({ADMIN_PASSWORD: "testing"});
     //Arrange
     const event = {
-      token: shared.createToken(CONTEXT, process.env.ADMIN_PASSWORD),
+      token: shared.createToken(context, "testing"),
     };
     const cb = jest.fn();
 
     // Act
-    const result = shared.checkAuthorization(CONTEXT, event, cb);
+    const result = shared.checkAuthorization(context, event, cb);
 
     // Assert
     expect(result).toBeTruthy();
@@ -147,7 +158,7 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
   test("getCurrentEnvironment returns undefined if no matching environments are found", async () => {
     // Arrange
-    mockServicesList.mockReturnValue(
+    mockServicesList.mockReturnValueOnce(
       Promise.resolve([
         {
           sid: "SERVICE_SID",
@@ -170,7 +181,7 @@ describe("voice-client-javascript/admin/private/shared", () => {
 
   test("getCurrentEnvironment returns matching environment", async () => {
     // Arrange
-    mockServicesList.mockReturnValue(
+    mockServicesList.mockReturnValueOnce(
       Promise.resolve([
         {
           sid: "SERVICE_SID",
@@ -273,11 +284,30 @@ describe("voice-client-javascript/admin/private/shared", () => {
   });
 
 
-  
+  test("setEnvironmentVariable will remove a variable", async () => {
+    // Act
+    const result = await shared.setEnvironmentVariable(CONTEXT, mockEnvironment, "LAST_NAME", undefined, true);
 
-  /*
-    getEnvironmentVariables,
-    getEnvironmentVariable,
-   setEnvironmentVariable,
- */
+    expect(result).toBeTruthy();
+    expect(mockVariables[0].remove).toHaveBeenCalled();
+  });
+
+  test("usesFunctionUi is true when service is editable", async() => {
+    // Arrange
+    const service = {
+      sid: "SERVICE_SID",
+      uiEditable: true
+    };
+    mockServicesList.mockReturnValueOnce(Promise.resolve([service]));
+    mockServiceFetch.mockReturnValueOnce(service);
+
+    // Act
+    const result = await shared.usesFunctionUi(CONTEXT);
+
+    // Assert
+    expect(result).toBeDefined();
+    expect(result).toBeTruthy();
+    expect(mockServicesList).toHaveBeenCalled();
+    expect(mockServiceFetch).toHaveBeenCalled();
+  });
 });

@@ -7,6 +7,7 @@ let token;
 const baseContext = {
   ACCOUNT_SID: "ACXXX",
   AUTH_TOKEN: "abcdef",
+  ADMIN_PASSWORD: "supersekret",
   getTwilioClient: jest.fn(),
 };
 const mockStatuses = {
@@ -25,7 +26,6 @@ const mockStatuses = {
 
 describe("voice-client-javascript/admin/check-status", () => {
   beforeAll(() => {
-    process.env.ADMIN_PASSWORD = "supersekret";
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(
       "/admin/shared.js",
@@ -38,7 +38,7 @@ describe("voice-client-javascript/admin/check-status", () => {
     helpers.setup(baseContext, runtime);
     jest.mock("../../assets/admin/statuses.private.js", () => mockStatuses);
     const { createToken } = require("../../assets/admin/shared.private.js");
-    token = createToken(baseContext, process.env.ADMIN_PASSWORD);
+    token = createToken(baseContext, baseContext.ADMIN_PASSWORD);
     checkStatusFunction = require("../../functions/admin/check-status")
       .handler;
   });

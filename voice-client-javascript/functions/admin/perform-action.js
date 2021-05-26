@@ -13,7 +13,9 @@ exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
   const environment = await getCurrentEnvironment(context);
   const actions = new Actions(client, {
-    friendlyName: process.env.APP_NAME,
+    friendlyName: context.APP_NAME,
+    // This is a special reserved Code Exchange environment variable
+    CHOSEN_TWILIO_NUMBER: context.TWILIO_PHONE_NUMBER,
     DOMAIN_NAME: context.DOMAIN_NAME,
     PATH: context.PATH,
   });

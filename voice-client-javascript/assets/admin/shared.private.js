@@ -16,7 +16,7 @@ function createToken(context, password) {
 
 function isAllowed(context, token) {
   // Create the token with the environment password
-  const masterToken = createToken(context, process.env.ADMIN_PASSWORD);
+  const masterToken = createToken(context, context.ADMIN_PASSWORD);
   return masterToken === token;
 }
 
@@ -30,6 +30,16 @@ function checkAuthorization(context, event, callback) {
     return false;
   }
   return true;
+}
+
+async function usesFunctionUi(context) {
+  const environment = getCurrentEnvironment(context);
+  if (environment === undefined) {
+    return false;
+  }
+  const client = context.getTwilioClient();
+  const service = await client.serverless.services(environment.serviceSid).fetch();
+  return service.uiEditable;
 }
 
 async function getCurrentEnvironment(context) {
@@ -61,11 +71,20 @@ async function getEnvironmentVariables(context, environment) {
 }
 
 async function getEnvironmentVariable(context, environment, key) {
-  const client = context.getTwilioClient();
   // The list filter method isn't implemented yet.
   const envVars = await getEnvironmentVariables(context, environment);
   return envVars.find(variable => variable.key === key);
 }
+
+/**
+ * 
+ * @param {*} context Function Context
+ * @param {*} environment Serverless Environment
+ * @param {*} key Name of the variable
+ * @param {*} value The value to set. Using `undefined` will unset/remove the variable
+ * @param {*} override Should existing values be overridden. Default is true.
+ * @returns 
+ */
 
 async function setEnvironmentVariable(context, environment, key, value, override=true) {
   const client = context.getTwilioClient();
@@ -78,8 +97,14 @@ async function setEnvironmentVariable(context, environment, key, value, override
     if (currentVariable) {
       if (currentVariable.value !== value) {
         if (override) {
-          console.log(`Updating ${key}...`);
-          await currentVariable.update({ value });
+          // undefined is a special value that means to unset environment variables
+          if (value === undefined) {
+            console.log(`Removing ${key}...`);
+            await currentVariable.remove();
+          } else {
+            console.log(`Updating ${key}...`);
+            await currentVariable.update({ value });
+          }
           return true;
         } else {
           console.log(`Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`);
@@ -121,5 +146,6 @@ module.exports = {
   getEnvironmentVariables,
   getEnvironmentVariable,
   setEnvironmentVariable,
-  urlForSiblingPage
+  urlForSiblingPage,
+  usesFunctionUi,
 };

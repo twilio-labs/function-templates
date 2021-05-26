@@ -8,7 +8,7 @@
 
 exports.handler = function(context, event, callback) {
   // REMINDER: This identity is only for prototyping purposes
-  const IDENTITY = "the_user_id";
+  const IDENTITY = context.DEFAULT_CLIENT_NAME;
 
   const ACCOUNT_SID = context.ACCOUNT_SID;
 

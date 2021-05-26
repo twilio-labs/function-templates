@@ -2,6 +2,7 @@ class AdminClient {
 
   constructor() {
     this.isReady = this.token !== null;
+    this.isProcessing = false;
   }
 
   async _handleResponse(response) {
@@ -10,6 +11,7 @@ class AdminClient {
         console.warn('Invalid token, resetting client');
         this.token = null;
         this.isReady = false;
+        this.isProcessing = false;
       }
       // Throw an error
       throw {
@@ -20,6 +22,7 @@ class AdminClient {
   }
 
   async _post(url, obj) {
+    this.isProcessing = true;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -29,7 +32,9 @@ class AdminClient {
       body: JSON.stringify(obj)
     });
     await this._handleResponse(response);
-    return await response.json();
+    const result = await response.json();
+    this.isProcessing = false;
+    return result;
   }
   
   async login(password) {
@@ -52,11 +57,14 @@ class AdminClient {
   }
 
   async fetchState() {
+    this.isProcessing = true;
     const response = await fetch(
       `./check-status?token=${encodeURIComponent(this.token)}`
     );
     await this._handleResponse(response);
-    return await response.json();
+    const result = await response.json();
+    this.isProcessing = false;
+    return result;
   }
 
   get token() {
