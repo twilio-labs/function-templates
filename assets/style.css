@@ -34,10 +34,8 @@ code {
   color: #BDDCDC;
 }
 
-#save-button {
-  margin-bottom: 20px;
-}
 
+/* Loading Animation */
 .lds-ellipsis {
   display: inline-block;
   position: relative;

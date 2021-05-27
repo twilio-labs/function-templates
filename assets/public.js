@@ -16,43 +16,55 @@ function getMobileOperatingSystem() {
     return "Desktop";
 }
 
+function appendCustomCss(cssUrl) {
+  if (cssUrl !== undefined) {
+    var link = document.createElement( "link" );
+    link.href = cssUrl;
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.media = "screen,print";
+  
+    document.getElementsByTagName( "head" )[0].appendChild( link );
+  }
+}
+
 function settingsUpdate(input) {
   console.log(input.id, input.value);
   switch (input.id) {
     case 'logo-url':
-      document.getElementById('logo').src = input.value;
+      $('#logo').src = input.value;
       break;
 
     case 'campaign-title':
-      document.getElementById('title').innerHTML = input.value;
+      $('#title').html(input.value);
       break;
     
     case 'campaign-description':
-      document.getElementById('description').innerHTML = input.value;
+      $('#description').html(input.value);
       break;
 
     case 'background-color':
-      document.getElementById('body').style.background = input.value;
+      $('#body').style.background = input.value;
       break;
     
     case 'font-color':
-      document.getElementById('card-container').style.color = input.value;
+      $('#card-container').style.color = input.value;
       break;
 
     case 'message-quantity':
-      document.getElementById('messageQuantity').innerHTML = input.value;
+      $('#messageQuantity').html(input.value);
       break;
 
-    case 'interval-select':
-      document.getElementById('messageInterval').innerHTML = input.value;
+    case 'message-interval':
+      $('#messageInterval').html(input.value);
       break;
 
     case 'button-cta':
-      document.getElementById('buttonCta').innerHTML = input.value;
+      $('#buttonCta').html(input.value);
       break;
     
     case 'privacy-policy-link':
-      document.getElementById('privacyPolicyLink').href = input.value;
+      $('#privacyPolicyLink').href = input.value;
       break;
   
     default:
@@ -61,34 +73,60 @@ function settingsUpdate(input) {
 }
 
 function sendSMS() {
-  let inputValue = document.getElementById('phone-number').value;
+  let inputValue = $('#phone-number').value;
   fetch(`/send-sms?to=${inputValue}&from=14155344095`)
     .then(data => {
-      document.getElementById('sms-confirmation').style.display = 'block';
+      $('#sms-confirmation').style.display = 'block';
     });
 }
 
 function displaySettings(data) {
-  if (window.location.href.indexOf('context=iframe') < 1) {
-    document.getElementById('card-container').classList.remove('offset-md-4');
-    document.getElementById('card-container').classList.toggle('offset-md-2');
-    document.getElementById('settings').style.display = 'block';
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('error')) {
+    $('#danger-alert').css('display', 'block');
+    $('#danger-alert').html(urlParams.get('error'));
+  }
 
-    document.getElementById('logo-url').value = data.logoUrl;
-    document.getElementById('campaign-title').value = data.title;
-    document.getElementById('campaign-description').value = data.campaignDescription;
-    document.getElementById('message-quantity').value = data.messageQuantity;
-    document.getElementById('interval-select').value = data.messageInterval;
-    document.getElementById('button-cta').value = data.buttonCta;
-    document.getElementById('opt-in-keyword').value = data.optInKeyword;
-    document.getElementById('contact-information').value = data.contactInformation;
-    document.getElementById('privacy-policy-link').value = data.privacyPolicyLink;
+  if (urlParams.has('success')) {
+    $('#success-alert').css('display', 'block');
+    $('#success-alert').html(urlParams.get('success'));
+  }
+
+  if (window.location.href.indexOf('context=iframe') < 1) {
+    $('#card-container').removeClass('offset-md-4');
+    $('#card-container').toggleClass('offset-md-2');
+    $('#settings').css('display', 'block');
+
+    $('#logo-url').val(data.logoUrl);
+    $('#campaign-title').val(data.campaignTitle);
+    $('#campaign-description').val(data.campaignDescription);
+    $('#button-cta').val(data.buttonCta);
+
+    $('#background-color').val(data.backgroundColor);
+    $('#font-color').val(data.fontColor);
+    $('#custom-css').val(data.customCss);
+
+    $('#message-quantity').val(data.messageQuantity);
+    $('#message-interval').val(data.messageInterval);
+    $('#opt-in-keyword').val(data.optInKeyword);
+    $('#contact-information').val(data.contactInformation);
+    $('#privacy-policy-link').val(data.privacyPolicyLink);
+
+    $('#webhook-url').val(data.webhookUrl);
+
+    $('#segment-write-key').attr('placeholder', data.segmentWriteKey);
+
+    $('#airtable-api-key').attr('placeholder', data.airtableApiKey);
+    $('#airtable-base-id').attr('placeholder', data.airtableBaseId);
+    $('#airtable-table-name').val(data.airtableTableName);
+    $('#airtable-phone-column-name').val(data.airtablePhoneColumnName);
+    $('#airtable-opt-in-column-name').val(data.airtableOptInColumnName);
 
     let iframeTemplate = `<code>
     &lt;iframe style="border:0" height="500px" width="100%" src="${data.domainName}/index.html?context=iframe"&gt;&lt;/iframe&gt;
     </code>`
 
-    document.getElementById('iframe-panel').innerHTML = iframeTemplate;
+    $('#iframe-panel').html(iframeTemplate);
   }
 }
 
@@ -96,41 +134,48 @@ function setHomeConfig(data) {
   displaySettings(data);
 
   const el = document.querySelector( '#loading' );
-  const main = document.getElementById("main");
+  const main = $("#main");
   
   let deviceType = getMobileOperatingSystem();
   if (deviceType === 'Windows Phone' || deviceType === 'Android') {
-    document.getElementById('cta-button').innerHTML = `<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095?body=${data.optInKeyword}">Join Us</a>`
+    $('#cta-button').html(`<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095?body=${data.optInKeyword}">Join Us</a>`)
   } else if (deviceType === 'iOS') {
-    document.getElementById('cta-button').innerHTML = `<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095&body=${data.optInKeyword}">Join Us</a>`
+    $('#cta-button').html(`<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095&body=${data.optInKeyword}">Join Us</a>`)
   } else if (deviceType === 'Desktop') {
-    document.getElementById('cta-button').innerHTML = `
+    $('#cta-button').html(`
     <div class="input-group mb-3">
       <input id="phone-number" type="text" class="form-control" placeholder="Your phone number" aria-label="Recipient's username" aria-describedby="button-addon2">
       <button class="btn btn-outline-primary" type="button" id="buttonCta" onClick="sendSMS()"></button>
     </div>
-    `
+    `)
   }
 
-  document.getElementById('logo').src = data.logoUrl;
-  document.getElementById('title').innerHTML=data.title;
-  document.getElementById('description').innerHTML=data.campaignDescription; 
-  document.getElementById('messageQuantity').innerHTML=data.messageQuantity;
-  document.getElementById('messageInterval').innerHTML=data.messageInterval;
-  document.getElementById('buttonCta').innerHTML=data.buttonCta;
-  document.getElementById('privacyPolicyLink').href = data.privacyPolicyLink;
+  $('#logo').src = data.logoUrl;
+  $('#title').html(data.campaignTitle);
+  $('#description').html(data.campaignDescription); 
+  $('#buttonCta').html(data.buttonCta);
+
+  $('#body').css('background', data.backgroundColor);
+  $('#card-container').css('color', data.fontColor);
+  appendCustomCss(data.customCss);
+
+  $('#messageQuantity').html(data.messageQuantity);
+  $('#messageInterval').html(data.messageInterval);
+  $('#privacyPolicyLink').href = data.privacyPolicyLink;
+
 
   el.parentNode.removeChild( el );
-  main.style.display = 'block';
+  main.css('display', 'block');
 }
 
 function updateTos(data) {
-  //document.getElementById('logo').src = data.logoUrl;
-  document.getElementById('title').innerHTML=data.title;
-  document.getElementById('description').innerHTML=data.campaignDescription;
-  document.getElementById('contact-information').innerHTML = data.contactInformation;
-  document.getElementById('messageQuantity').innerHTML=data.messageQuantity;
-  document.getElementById('privacy-policy-link').href = data.privacyPolicyLink;
+  //$('#logo').src = data.logoUrl;
+  $('#title').html(data.campaignTitle);
+  $('#description').html(data.campaignDescription);
+  $('#contact-information').html( data.contactInformation);
+  $('#messageQuantity').html(data.messageQuantity);
+  $('#privacy-policy-link').href = data.privacyPolicyLink;
+  
 
 }
 
