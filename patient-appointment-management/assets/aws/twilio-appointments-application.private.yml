@@ -1,0 +1,202 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Twilio Patient Appointments Management Application'
+
+
+Parameters:
+
+
+  ParamCustomerCode:
+    Description: 'short name of customer that will be suffixed to many resource names'
+    Type: String
+
+  ParamAppointmentsS3BucketName:
+    Description: 's3 bucket name for this application e.g., twilio-appointments-owlhealth'
+    Type: String
+
+  ParamTwilioAccountSID:
+    Type: String
+
+  ParamTwilioAuthToken:
+    Type: String
+
+  ParamTwilioFlowSID:
+    Type: String
+
+  ParamTwilioPhoneNumber:
+    Type: String
+
+  ParamLambdaFunctionName:
+    Type: String
+
+  ParamAppointmentFilenamePattern:
+    Type: String
+
+  ParamReminderOutreachStart:
+    Type: String
+    Default: '0000'
+
+  ParamReminderOutreachFinish:
+    Type: String
+    Default: '2400'
+
+  ParamReminderFirstOffset:
+    Type: String
+    Default: '4800'
+
+  ParamReminderSecondOffset:
+    Type: String
+    Default: '2400'
+
+
+Outputs:
+
+
+  AppointmentsS3BucketName:
+    Value: !Ref ParamAppointmentsS3BucketName
+
+  AppointmentFilenamePattern:
+    Value: !Ref ParamAppointmentFilenamePattern
+
+  AWSAccessKeyId:
+    Value: !Ref UserAccessKey
+
+  AWSSecretAccessKey:
+    Value: !GetAtt UserAccessKey.SecretAccessKey
+
+  AWSRegion:
+    Value: !Ref AWS::Region
+
+  ReminderOutreachStart:
+    Value: !Ref ParamReminderOutreachStart
+
+  ReminderOutreachFinish:
+    Value: !Ref ParamReminderOutreachFinish
+
+  ReminderFirstOffset:
+    Value: !Ref ParamReminderFirstOffset
+
+  ReminderSecondOffset:
+    Value: !Ref ParamReminderSecondOffset
+
+
+Resources:
+
+
+  UserForExecution:
+    Type: AWS::IAM::User
+    DeletionPolicy: Delete
+    Properties:
+      UserName: !Sub 'twilio-appointments-${ParamCustomerCode}'
+
+  UserAccessKey:
+    Type: AWS::IAM::AccessKey
+    DeletionPolicy: Delete
+    Properties:
+      UserName:
+        !Ref UserForExecution
+
+  RoleForExecution:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Delete
+    Properties:
+      RoleName: !Sub 'twilio-appointments-role-${ParamCustomerCode}'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - events.amazonaws.com
+                - lambda.amazonaws.com
+                - glue.amazonaws.com
+
+  PolicyForStack:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    Properties:
+      ManagedPolicyName: !Sub 'twilio-appointments-policy-${ParamCustomerCode}'
+      Roles:
+        - !Ref RoleForExecution
+      Users:
+        - !Ref UserForExecution
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'S3Permissions'
+            Effect: Allow
+            Action: s3:*
+            Resource:
+              - !Sub 'arn:aws:s3:::${ParamAppointmentsS3BucketName}'
+              - !Sub 'arn:aws:s3:::${ParamAppointmentsS3BucketName}/*'
+
+  CrawlerAppointments:
+    Type: AWS::Glue::Crawler
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub 'twilio-appointments-${ParamCustomerCode}'
+      DatabaseName: !Sub 'twilio_appointments_${ParamCustomerCode}'
+      Role: !GetAtt RoleForExecution.Arn
+      SchemaChangePolicy:
+        UpdateBehavior: 'UPDATE_IN_DATABASE'
+        DeleteBehavior: 'DELETE_FROM_DATABASE'
+      Configuration: "{\"Version\":1.0,\"CrawlerOutput\":{\"Partitions\":{\"AddOrUpdateBehavior\":\"InheritFromTable\"}}}"
+      Targets:
+        S3Targets:
+          - Path: !Sub 's3://${ParamAppointmentsS3BucketName}/queue'
+          - Path: !Sub 's3://${ParamAppointmentsS3BucketName}/history'
+
+  AthenaWorkGroupAppointments:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Sub 'twilio-appointments-${ParamCustomerCode}'
+      State: ENABLED
+      WorkGroupConfiguration:
+        ResultConfiguration:
+          OutputLocation: !Sub 's3://${ParamAppointmentsS3BucketName}/query-results/'
+
+  LambdaLayerTwilioNodeLibrary:
+    Type: AWS::Lambda::LayerVersion
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      LayerName: !Sub 'twilioNodeLibrary-${ParamCustomerCode}'
+      Content:
+        S3Bucket: !Ref ParamAppointmentsS3BucketName
+        S3Key: 'artifacts/twilioNodeLibrary.zip'
+      CompatibleRuntimes:
+        - 'nodejs12.x'
+
+  LambdaSendReminders:
+    Type: AWS::Lambda::Function
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !Ref ParamLambdaFunctionName
+      Environment:
+        Variables:
+          ACCOUNT_SID: !Ref ParamTwilioAccountSID
+          AUTH_TOKEN: !Ref ParamTwilioAuthToken
+          FLOW_SID: !Ref ParamTwilioFlowSID
+          TWILIO_PHONE_NUMBER: !Ref ParamTwilioPhoneNumber
+          APPOINTMENTS_S3_BUCKET: !Ref ParamAppointmentsS3BucketName
+          APPOINTMENT_FILENAME_PATTERN: !Ref ParamAppointmentFilenamePattern
+          REMINDER_OUTREACH_START: !Ref ParamReminderOutreachStart
+          REMINDER_OUTREACH_FINISH: !Ref ParamReminderOutreachFinish
+          REMINDER_FIRST_OFFSET: !Ref ParamReminderFirstOffset
+          REMINDER_SECOND_OFFSET: !Ref ParamReminderSecondOffset
+      MemorySize: 256
+      Timeout: 60
+      ReservedConcurrentExecutions: 1
+      Role: !GetAtt RoleForExecution.Arn
+      Runtime: 'nodejs12.x'
+      Layers:
+        - !Ref LambdaLayerTwilioNodeLibrary
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref ParamAppointmentsS3BucketName
+        S3Key: 'artifacts/send_appointment_reminders.zip'

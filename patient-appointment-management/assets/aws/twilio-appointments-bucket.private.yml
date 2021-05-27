@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Twilio Patient Appointment Management Bucket'
+
+
+Parameters:
+
+
+  ParamCustomerName:
+    Description: 'name of customer that will be suffixed to many resource names'
+    Type: String
+
+  ParamAppointmentsS3BucketName:
+    Description: 's3 bucket name for this application'
+    Type: String
+
+
+Outputs:
+
+  AppointmentsS3BucketName:
+    Value: !Ref S3Bucket
+
+
+Resources:
+
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Sub '${ParamAppointmentsS3BucketName}'
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: 'DenyUnencryptedPut'
+            Effect: Deny
+            Action:
+              - s3:PutObject
+            Principal: '*'
+            Resource:
+              - !Sub 'arn:aws:s3:::${S3Bucket}/*'
+            Condition:
+              'Null':
+                s3:x-amz-server-side-encryption: true
+          - Sid: 'ForceSecureTransport'
+            Effect: Deny
+            Action:
+              - s3:*
+            Principal: '*'
+            Resource:
+              - !Sub 'arn:aws:s3:::${S3Bucket}'
+              - !Sub 'arn:aws:s3:::${S3Bucket}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: false

@@ -1,0 +1,785 @@
+{
+  "states": [
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest",
+          "next": "set_global_variables"
+        }
+      ],
+      "type": "trigger",
+      "name": "Trigger",
+      "properties": {
+        "offset": {
+          "y": 10,
+          "x": -410
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "next",
+          "next": "split_on_event_type"
+        }
+      ],
+      "type": "set-variables",
+      "name": "set_global_variables",
+      "properties": {
+        "variables": [
+          {
+            "key": "CUSTOMER_NAME",
+            "value": "YOUR_HEALTH_SYSTEM_NAME"
+          },
+          {
+            "key": "IE_ENDPOINT",
+            "value": "YOUR_EHR_ENDPOINT_URL"
+          }
+        ],
+        "offset": {
+          "y": 220,
+          "x": 260
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Remind",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Remind"
+            }
+          ],
+          "event": "match",
+          "next": "save-remind"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Optedin",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Optedin"
+            }
+          ],
+          "event": "match",
+          "next": "send_optedin"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Optedout",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Optedout"
+            }
+          ],
+          "event": "match",
+          "next": "send_optedout"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Booked",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Booked"
+            }
+          ],
+          "event": "match",
+          "next": "save-booked"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Cancelled",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Canceled"
+            }
+          ],
+          "event": "match",
+          "next": "save-canceled"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Modified",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Modified"
+            }
+          ],
+          "event": "match",
+          "next": "save-modified"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Noshow",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Noshow"
+            }
+          ],
+          "event": "match",
+          "next": "save-noshow"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Confirmed",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Confirmed"
+            }
+          ],
+          "event": "match",
+          "next": "save-confirmed"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "RESCHEDULED",
+              "arguments": [
+                "{{flow.data.event_type}}"
+              ],
+              "value": "Rescheduled"
+            }
+          ],
+          "event": "match",
+          "next": "save-rescheduled"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_on_event_type",
+      "properties": {
+        "input": "{{flow.data.event_type}}",
+        "offset": {
+          "y": 480,
+          "x": 260
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_canceled",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment has been canceled.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to reschedule.\nFrom {{flow.variables.CUSTOMER_NAME}}",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1260,
+          "x": 880
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_modified",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr {{flow.data.provider_last_name}} has been modified to on {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1160,
+          "x": 1200
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_noshow",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. You missed your appointment with Dr {{flow.data.provider_last_name}} on {{flow.data.appointment_date}}\nat {{flow.data.appointment_time_of_day}} at {{flow.data.appointment_location}}.\n\nPlease call {{flow.data.provider_callback_phone}} to reschedule.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1090,
+          "x": 1520
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_confirmed",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment is confirmed.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1030,
+          "x": 1850
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Confirm",
+              "arguments": [
+                "{{widgets.send_remind.inbound.Body}}"
+              ],
+              "value": "CF1"
+            }
+          ],
+          "event": "match",
+          "next": "confirm_remind"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Cancel",
+              "arguments": [
+                "{{widgets.send_remind.inbound.Body}}"
+              ],
+              "value": "CX2"
+            }
+          ],
+          "event": "match",
+          "next": "cancel_remind"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_remind_reply",
+      "properties": {
+        "input": "{{widgets.send_remind.inbound.Body}}",
+        "offset": {
+          "y": 1410,
+          "x": -230
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "make-http-request",
+      "name": "confirm_remind",
+      "properties": {
+        "body": "{\n\"flow_sid\": \"{{flow.flow_sid}}\",\n\"event_type\": \"Confirm\",\n\"appointment_id\": \"{{flow.data.appointment_id}}\",\n\"provider_id\": \"{{flow.data.provider_id}}\",\n\"patient_id\": \"{{flow.data.patient_id}}\"\n}",
+        "url": "{{flow.variables.IE_ENDPOINT}}",
+        "method": "POST",
+        "content_type": "application/json;charset=utf-8",
+        "offset": {
+          "y": 1860,
+          "x": -300
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "make-http-request",
+      "name": "cancel_remind",
+      "properties": {
+        "body": "{\n\"flow_sid\": \"{{flow.flow_sid}}\",\n\"event_type\": \"Cancel\",\n\"appointment_id\": \"{{flow.data.appointment_id}}\",\n\"provider_id\": \"{{flow.data.provider_id}}\",\n\"patient_id\": \"{{flow.data.patient_id}}\"\n}",
+        "url": "{{flow.variables.IE_ENDPOINT}}",
+        "method": "POST",
+        "content_type": "application/json;charset=utf-8",
+        "offset": {
+          "y": 1850,
+          "x": 80
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "split_remind_reply"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "send_remind",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. \nThis is a reminder for your appointment with Dr {{flow.data.provider_last_name}}  on {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease type CF1 to confirm or CX2 to cancel.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "120",
+        "offset": {
+          "y": 1110,
+          "x": -150
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_booked"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-booked",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-booked",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 980,
+          "x": 550
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-booked]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_canceled"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-canceled",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-canceled",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 930,
+          "x": 870
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-canceled]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_modified"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-modified",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-modified",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 880,
+          "x": 1190
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-modified]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_noshow"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-noshow",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-noshow",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 820,
+          "x": 1520
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-noshow]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_confirmed"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-confirmed",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-confirmed",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 780,
+          "x": 1840
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-confirmed]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_rescheduled"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-rescheduled",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-rescheduled",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 730,
+          "x": 2170
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-rescheduled]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_rescheduled",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr {{flow.data.provider_last_name}} is rescheduled for {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 970,
+          "x": 2170
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "send_remind"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save-remind",
+      "properties": {
+        "parameters": [
+          {
+            "key": "appointment",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "flow_sid",
+            "value": "{{flow.flow_sid}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-remind",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 770,
+          "x": -140
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-remind]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_optedout",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. You have opted out of receiving reminders.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1580,
+          "x": 490
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "send_optedin",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. You have opted in to receive reminders.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1850,
+          "x": 440
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "split_booked"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "send_booked",
+      "properties": {
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr {{flow.data.provider_last_name}} is booked on {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease type CF1 to confirm or call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "120",
+        "offset": {
+          "y": 1310,
+          "x": 560
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "Confirm",
+              "arguments": [
+                "{{widgets.send_booked.inbound.Body}}"
+              ],
+              "value": "CF1"
+            }
+          ],
+          "event": "match",
+          "next": "confirm_booked"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_booked",
+      "properties": {
+        "input": "{{widgets.send_booked.inbound.Body}}",
+        "offset": {
+          "y": 1564,
+          "x": 843
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "make-http-request",
+      "name": "confirm_booked",
+      "properties": {
+        "body": "{\n\"flow_sid\": \"{{flow.flow_sid}}\",\n\"event_type\": \"Confirm\",\n\"appointment_id\": \"{{flow.data.appointment_id}}\",\n\"provider_id\": \"{{flow.data.provider_id}}\",\n\"patient_id\": \"{{flow.data.patient_id}}\"\n}",
+        "url": "{{flow.variables.IE_ENDPOINT}}",
+        "method": "POST",
+        "content_type": "application/json;charset=utf-8",
+        "offset": {
+          "y": 1840,
+          "x": 850
+        }
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  },
+  "description": "template appointment reminders flow"
+}
