@@ -50,11 +50,11 @@
                     <p>This app allows you to broadcast SMS messages to large numbers of people.</p>
                     <ol class="steps">
                         <li>
-                            In the Twilio Console page for your Notify Service,
+                            In the Twilio Console, create a new
                             <a href="https://www.twilio.com/console/sms/services"
                                target="_blank"
                                rel="noopener">
-                                create a new Messaging Service
+                                Messaging Service
                             </a>
                             with use case <b>Not listed here</b>, and add your Twilio phone number
                             to its sender pool
@@ -66,6 +66,16 @@
                                 <label for="twilio-webhook">Webhook URL</label>
                                 <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/broadcast">
                             </form>
+                        </li>
+                        <li>
+                            Connect your Messaging Service to your Notify Service. In the Twilio Console
+                            section for your
+                            <a href="https://www.twilio.com/console/notify/services"
+                               target="_blank"
+                               rel="noopener">
+                                Notify Service,
+                            </a>
+                             select the Messaging Service under "Configure" and save.
                         </li>
                         <li>Text anything to your Twilio phone number</li>
                         <li>
