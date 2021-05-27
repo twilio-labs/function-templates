@@ -2,7 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 
 echo -e "Running prettier...\n"
-npm run format:staged && format_status=$? || format_status=$?
+npm run format:changed && format_status=$? || format_status=$?
 
 if [ "$format_status" -eq "0" ]; then
 	echo -e "\nprettier finished.\n"

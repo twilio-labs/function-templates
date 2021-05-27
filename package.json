@@ -12,7 +12,7 @@
     "lint": "eslint --ext js .",
     "lint:all": "npm run lint -- --no-ignore",
     "format": "prettier --write .",
-    "format:staged": "pretty-quick --staged",
+    "format:changed": "pretty-quick --branch main",
     "format:check": "prettier --check .",
     "prepare": "husky install"
   },
