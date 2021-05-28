@@ -31,6 +31,7 @@ const templates = fs
   .map((dir) => dir.name);
 
 describe('CI template verification', () => {
+  // eslint-disable-next-line sonarjs/cognitive-complexity
   describe.each(templates)('the "%s" function template', (template) => {
     it('should have a populated functions directory', (done) => {
       const functionsDir = path.join(projectRoot, template, 'functions');
