@@ -13,7 +13,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('returns a VoiceResponse', done => {
+test('returns a VoiceResponse', (done) => {
   const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     done();
@@ -22,7 +22,7 @@ test('returns a VoiceResponse', done => {
   helloVoice(context, event, callback);
 });
 
-test('says Hello World', done => {
+test('says Hello World', (done) => {
   const callback = (_err, result) => {
     expect(result.toString()).toMatch('<Message>Hello World</Message>');
     done();

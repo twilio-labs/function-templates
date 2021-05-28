@@ -11,6 +11,9 @@
     "ci:generate-manifest": "npm run env-manifest -- --write",
     "lint": "eslint --ext js .",
     "lint:all": "npm run lint -- --no-ignore",
+    "format": "prettier --write .",
+    "format:changed": "pretty-quick --branch main",
+    "format:check": "prettier --check .",
     "prepare": "husky install"
   },
   "author": "Twilio <open-source@twilio.com>",
@@ -32,6 +35,8 @@
     "mailgun.js": "^3.3.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.1",
+    "prettier": "2.3.0",
+    "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
     "twilio": "^3.61.0"
   },
