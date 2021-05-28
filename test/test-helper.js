@@ -81,19 +81,19 @@ const restoreEnv = (backupEnv) => {
   if (backupEnv === undefined) {
     return;
   }
-  for (let key of Object.keys(process.env)) {
+  for (const key of Object.keys(process.env)) {
     if (backupEnv[key] === undefined) {
       delete process.env[key];
     }
   }
-  for (let key of Object.keys(backupEnv)) {
+  for (const key of Object.keys(backupEnv)) {
     process.env[key] = backupEnv[key];
   }
 };
 
 module.exports = {
-  setup: setup,
-  teardown: teardown,
+  setup,
+  teardown,
   MockRuntime,
   backupEnv,
   restoreEnv

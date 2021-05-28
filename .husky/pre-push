@@ -1,0 +1,23 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo -e "Running eslint...\n"
+npm run lint && lint_status=$? || lint_status=$?
+
+if [ "$lint_status" -eq "0" ]; then
+	echo -e "\neslint finished.\n"
+else
+	cat <<EOF
+
+Linting with eslint found some issues. The output above should give some
+details.
+
+If this looks like a false negative, you can skip this test by adding the
+"--no-verify" flag to your "git push" command. Please consider opening a
+new issue at https://github.com/twilio-labs/function-templates if you need
+to repeatedly use the "--no-verify" flag for valid code.
+
+EOF
+fi
+
+exit $lint_status

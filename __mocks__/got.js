@@ -1,6 +1,6 @@
 module.exports = {
   shouldSucceed: true,
-  post: function(url, options) {
+  post (url, options) {
     return new Promise((resolve, reject) => {
       if (this.shouldSucceed) {
         process.nextTick(resolve());
