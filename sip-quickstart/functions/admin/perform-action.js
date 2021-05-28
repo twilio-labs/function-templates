@@ -1,10 +1,10 @@
 const assets = Runtime.getAssets();
-const Actions = require(assets["/admin/actions.js"].path);
+const Actions = require(assets['/admin/actions.js'].path);
 const {
   getCurrentEnvironment,
   setEnvironmentVariable,
   checkAuthorization,
-} = require(assets["/admin/shared.js"].path);
+} = require(assets['/admin/shared.js'].path);
 
 exports.handler = async function (context, event, callback) {
   if (!checkAuthorization(context, event, callback)) {
@@ -30,7 +30,7 @@ exports.handler = async function (context, event, callback) {
           // Do not override if we are in initialization
           envVars.INITIALIZED === undefined
         );
-        logs.push(`${result ? "Successfully set" : "Did not set"} "${key}"`);
+        logs.push(`${result ? 'Successfully set' : 'Did not set'} "${key}"`);
       }
     }
     callback(null, { success: true, logs });

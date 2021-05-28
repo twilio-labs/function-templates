@@ -29,11 +29,11 @@
  */
 
 const assets = Runtime.getAssets();
-const { detectMissingParams } = require(assets["/missing-params.js"].path);
+const { detectMissingParams } = require(assets['/missing-params.js'].path);
 
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
 
   // uncomment to support CORS
   // response.appendHeader('Access-Control-Allow-Origin', '*');
@@ -41,7 +41,7 @@ exports.handler = function (context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   const missingParams = detectMissingParams(
-    ["identity", "message", "factor"],
+    ['identity', 'message', 'factor'],
     event
   );
   if (missingParams.length > 0) {
@@ -49,10 +49,10 @@ exports.handler = function (context, event, callback) {
     response.setBody({
       error: {
         message: `Missing parameter; please provide: '${missingParams.join(
-          ", "
+          ', '
         )}'.`,
         moreInfo:
-          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
+          'https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource',
       },
     });
     return callback(null, response);
@@ -72,8 +72,8 @@ exports.handler = function (context, event, callback) {
     .entities(identity)
     .challenges.create({
       factorSid: event.factor,
-      "details.message": message,
-      "details.fields": fields,
+      'details.message': message,
+      'details.fields': fields,
     })
     .then((challenge) => {
       response.setStatusCode(200);

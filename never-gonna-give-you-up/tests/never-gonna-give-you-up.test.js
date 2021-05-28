@@ -1,5 +1,5 @@
-const neverGonnaGiveYouUp = require('../functions/never-gonna-give-you-up')
-  .handler;
+const neverGonnaGiveYouUp =
+  require('../functions/never-gonna-give-you-up').handler;
 const helpers = require('../../test/test-helper');
 
 describe('', () => {
@@ -10,7 +10,7 @@ describe('', () => {
     helpers.teardown();
   });
 
-  test('returns the right song', done => {
+  test('returns the right song', (done) => {
     const callback = (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(

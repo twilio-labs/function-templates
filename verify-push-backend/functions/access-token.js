@@ -27,29 +27,29 @@
  *    }
  *  }
  */
-var crypto = require("crypto");
+var crypto = require('crypto');
 const assets = Runtime.getAssets();
-const { detectMissingParams } = require(assets["/missing-params.js"].path);
+const { detectMissingParams } = require(assets['/missing-params.js'].path);
 
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
 
   // uncomment to support CORS
   // response.appendHeader('Access-Control-Allow-Origin', '*');
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const missingParams = detectMissingParams(["identity"], event);
+  const missingParams = detectMissingParams(['identity'], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
       error: {
         message: `Missing parameter; please provide: '${missingParams.join(
-          ", "
+          ', '
         )}'.`,
         moreInfo:
-          "https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource",
+          'https://www.twilio.com/docs/verify/api/challenge#create-a-challenge-resource',
       },
     });
     return callback(null, response);
@@ -58,10 +58,10 @@ exports.handler = function (context, event, callback) {
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
   const identity = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(event.identity)
-    .digest("hex");
-  const factorType = "push";
+    .digest('hex');
+  const factorType = 'push';
 
   client.verify
     .services(serviceSid)

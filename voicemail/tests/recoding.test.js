@@ -56,7 +56,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('sends an sms', done => {
+test('sends an sms', (done) => {
   const callback = (err, result) => {
     expect(err).toBe(null);
     expect(mockClient.messages.create.mock.calls.length).toBe(1);
@@ -64,8 +64,7 @@ test('sends an sms', done => {
       {
         from: '+1234567890',
         to: '+12223334444',
-        body:
-          'You have a new message to your Twilio voicemail from +9998887777.\nhttp://localhost/demo',
+        body: 'You have a new message to your Twilio voicemail from +9998887777.\nhttp://localhost/demo',
       },
     ]);
     expect(result).toBeUndefined();
@@ -75,7 +74,7 @@ test('sends an sms', done => {
   recordingFunction(context, event, callback);
 });
 
-test('handles error', done => {
+test('handles error', (done) => {
   shouldFail = true;
   const callback = (err, result) => {
     expect(err).toBeInstanceOf(Error);

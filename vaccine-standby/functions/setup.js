@@ -1,8 +1,7 @@
 /* eslint-disable no-console, func-names */
 exports.handler = async function (context, event, callback) {
-
   const assets = Runtime.getAssets();
-  const flowDefinition = require(assets["/studio_flow.js"].path);
+  const flowDefinition = require(assets['/studio_flow.js'].path);
   const path = Runtime.getFunctions()['auth'].path;
   const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
 
@@ -11,14 +10,16 @@ exports.handler = async function (context, event, callback) {
   // Deploy Twilio Studio Flow
   function deployStudio() {
     return client.studio.flows
-        .create({
-          commitMessage: 'Code Exchange automatic deploy',
-          friendlyName: 'Vaccine Standby Intake',
-          status: 'published',
-          definition: flowDefinition,
-        })
-        .then((flow) => flow)
-        .catch((err) => { throw new Error(err.details) });
+      .create({
+        commitMessage: 'Code Exchange automatic deploy',
+        friendlyName: 'Vaccine Standby Intake',
+        status: 'published',
+        definition: flowDefinition,
+      })
+      .then((flow) => flow)
+      .catch((err) => {
+        throw new Error(err.details);
+      });
   }
 
   function getPhoneNumberSid() {
@@ -35,7 +36,8 @@ exports.handler = async function (context, event, callback) {
 
   function updatePhoneNumberWebhook(studioWebhook, numberSid) {
     return new Promise((resolve, reject) => {
-      client.incomingPhoneNumbers(numberSid)
+      client
+        .incomingPhoneNumbers(numberSid)
         .update({
           smsUrl: studioWebhook,
         })
@@ -47,18 +49,13 @@ exports.handler = async function (context, event, callback) {
   }
 
   function setFlowSidEnvVar(environment, sid) {
-    return setEnvironmentVariable(
-      context,
-      environment,
-      'FLOW_SID',
-      sid
-    );
+    return setEnvironmentVariable(context, environment, 'FLOW_SID', sid);
   }
 
   const flow = await deployStudio(flowDefinition);
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
-  if(environment) {
+  if (environment) {
     await setFlowSidEnvVar(environment, flow.sid);
   } else {
     process.env.FLOW_SID = flow.sid;

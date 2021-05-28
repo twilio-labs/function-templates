@@ -1,8 +1,8 @@
-const lookupFunction = require("../functions/lookup").handler;
-const helpers = require("../../test/test-helper");
+const lookupFunction = require('../functions/lookup').handler;
+const helpers = require('../../test/test-helper');
 
 const mockFetch = {
-  fetch: jest.fn(() => Promise.resolve({ sid: "sid" })),
+  fetch: jest.fn(() => Promise.resolve({ sid: 'sid' })),
 };
 
 const mockClient = {
@@ -15,7 +15,7 @@ const testContext = {
   getTwilioClient: () => mockClient,
 };
 
-describe("international-telephone-input/lookup", () => {
+describe('international-telephone-input/lookup', () => {
   beforeAll(() => {
     helpers.setup({});
   });
@@ -23,7 +23,7 @@ describe("international-telephone-input/lookup", () => {
     helpers.teardown();
   });
 
-  test("returns an error response when required parameter is missing", (done) => {
+  test('returns an error response when required parameter is missing', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
@@ -33,26 +33,26 @@ describe("international-telephone-input/lookup", () => {
     lookupFunction(testContext, event, callback);
   });
 
-  test("returns an error response when required parameter is empty", (done) => {
+  test('returns an error response when required parameter is empty', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       done();
     };
     const event = {
-      phone: "",
+      phone: '',
     };
     lookupFunction(testContext, event, callback);
   });
 
-  test("returns success with valid request", (done) => {
+  test('returns success with valid request', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       done();
     };
     const event = {
-      phone: "+17341234567",
+      phone: '+17341234567',
     };
     lookupFunction(testContext, event, callback);
   });

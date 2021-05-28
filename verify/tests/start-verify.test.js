@@ -1,11 +1,11 @@
-const startVerifyFunction = require("../functions/start-verify").handler;
-const helpers = require("../../test/test-helper");
+const startVerifyFunction = require('../functions/start-verify').handler;
+const helpers = require('../../test/test-helper');
 
 const mockService = {
   verifications: {
     create: jest.fn(() =>
       Promise.resolve({
-        sid: "my-new-sid",
+        sid: 'my-new-sid',
       })
     ),
   },
@@ -18,11 +18,11 @@ const mockClient = {
 };
 
 const testContext = {
-  VERIFY_SERVICE_SID: "default",
+  VERIFY_SERVICE_SID: 'default',
   getTwilioClient: () => mockClient,
 };
 
-describe("verify/start-verification", () => {
+describe('verify/start-verification', () => {
   beforeAll(() => {
     helpers.setup({});
   });
@@ -30,12 +30,12 @@ describe("verify/start-verification", () => {
     helpers.teardown();
   });
 
-  test("returns an error response when required parameters are missing", (done) => {
+  test('returns an error response when required parameters are missing', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(result._body.error.message).toEqual(
-        "Missing parameter; please provide a phone number or email."
+        'Missing parameter; please provide a phone number or email.'
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
@@ -51,7 +51,7 @@ describe("verify/start-verification", () => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(result._body.error.message).toEqual(
-        "Calls disabled by default. Update the code in <code>start-verify.js</code> to enable."
+        'Calls disabled by default. Update the code in <code>start-verify.js</code> to enable.'
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
@@ -59,13 +59,13 @@ describe("verify/start-verification", () => {
       done();
     };
     const event = {
-      to: "+17341234567",
-      channel: "call",
+      to: '+17341234567',
+      channel: 'call',
     };
     startVerifyFunction(testContext, event, callback);
   });
 
-  test("returns success with valid request", (done) => {
+  test('returns success with valid request', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
@@ -74,7 +74,7 @@ describe("verify/start-verification", () => {
       );
       done();
     };
-    const event = { to: "+17341234567" };
+    const event = { to: '+17341234567' };
     startVerifyFunction(testContext, event, callback);
   });
 });

@@ -32,29 +32,29 @@
 
 let config = {
   // the forwarding number
-  phoneNumber: "",
+  phoneNumber: '',
 
   // duration in seconds to let the call ring before the recipient picks up
   timeout: 20,
 
   // recording URL or text message to say,
   // e.g. asking the recipient to press a key to accept the call
-  message: fromNumber =>
-  `You are receiving a call from ${fromNumber}. Press any key to accept.`,
+  message: (fromNumber) =>
+    `You are receiving a call from ${fromNumber}. Press any key to accept.`,
 
   // language code for conversion of text-to-speech messages,
   // e.g. 'en' or 'en-gb'
-  language: "en",
+  language: 'en',
 
   // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
-  voice: "alice",
+  voice: 'alice',
 
   // whether to request the recipient to press a key to accept the call
   humanCheck: false,
 
   // fallback URL where further instructions are requested
   // when the forwarding call fails
-  fallbackUrl: ""
+  fallbackUrl: '',
 };
 
 /*
@@ -75,32 +75,32 @@ let config = {
 */
 
 function getPhoneNumber(params, env, config) {
-  return params.PhoneNumber ||
-    env.FUNLET_CALLME_PHONE_NUMBER ||
-    config.phoneNumber;
+  return (
+    params.PhoneNumber || env.FUNLET_CALLME_PHONE_NUMBER || config.phoneNumber
+  );
 }
 
 function getTimeout(params, env, config) {
   let timeout = params.Timeout || env.FUNLET_CALLME_TIMEOUT;
-  if ( typeof timeout === "string" && !isNaN(timeout) ) {
+  if (typeof timeout === 'string' && !isNaN(timeout)) {
     return Number(timeout);
   }
   return config.timeout;
 }
 
 function isWhisper(params, env, config) {
-  return ( typeof params.Whisper === "string" );
+  return typeof params.Whisper === 'string';
 }
 
 function getMessage(params, env, config) {
-  const caller = params.From || params.Caller || "";
-  return params.Message ||
+  const caller = params.From || params.Caller || '';
+  return (
+    params.Message ||
     env.FUNLET_CALLME_MESSAGE ||
-    (
-      typeof config.message==="function"?
-        config.message( spell(caller) ):
-        config.message
-    );
+    (typeof config.message === 'function'
+      ? config.message(spell(caller))
+      : config.message)
+  );
 }
 
 function getLanguage(params, env, config) {
@@ -112,36 +112,34 @@ function getVoice(params, env, config) {
 }
 
 function isHumanCheckRequired(params, env, config) {
-  if ( typeof params.HumanCheck === "string" ) {
-    return params.HumanCheck !== "false";
+  if (typeof params.HumanCheck === 'string') {
+    return params.HumanCheck !== 'false';
   }
-  if ( typeof env.FUNLET_CALLME_HUMAN_CHECK === "string" ) {
-    return env.FUNLET_CALLME_HUMAN_CHECK !== "false";
+  if (typeof env.FUNLET_CALLME_HUMAN_CHECK === 'string') {
+    return env.FUNLET_CALLME_HUMAN_CHECK !== 'false';
   }
   return config.humanCheck;
 }
 
 function getDigits(params, env, config) {
-  if ( typeof params.Digits === "string" ) {
-   return params.Digits;
+  if (typeof params.Digits === 'string') {
+    return params.Digits;
   }
   return null;
 }
 
 function isDialDone(params, env, config) {
-  return (typeof params.Dial === "string" );
+  return typeof params.Dial === 'string';
 }
 
 // Copied from Forward Funlet
 function getCallStatus(params, env, config) {
-  const NO_CALL_STATUS = "";
+  const NO_CALL_STATUS = '';
   return params.DialStatus || params.DialCallStatus || NO_CALL_STATUS;
 }
 
 function getFallbackUrl(params, env, config) {
-  return params.FailUrl ||
-    env.FUNLET_CALLME_FALLBACK_URL ||
-    config.fallbackUrl;
+  return params.FailUrl || env.FUNLET_CALLME_FALLBACK_URL || config.fallbackUrl;
 }
 
 /*
@@ -154,17 +152,17 @@ function getFallbackUrl(params, env, config) {
 */
 
 // Copied from Whisper Funlet
-function spell( numberString ) {
+function spell(numberString) {
   const PAUSE = '. ';
-  return numberString.split('').join(PAUSE)+PAUSE;
+  return numberString.split('').join(PAUSE) + PAUSE;
 }
 
 // Copied from Forward Funlet
-function getForwardActionUrl( fallbackUrl ) {
-  const BASE_URL = ".";
-  let actionUrl = BASE_URL + "?Dial=true";
-  if ( fallbackUrl !== "" ) {
-    actionUrl += "&" + encodeURIComponent(fallbackUrl);
+function getForwardActionUrl(fallbackUrl) {
+  const BASE_URL = '.';
+  let actionUrl = BASE_URL + '?Dial=true';
+  if (fallbackUrl !== '') {
+    actionUrl += '&' + encodeURIComponent(fallbackUrl);
   }
   return actionUrl;
 }
@@ -179,24 +177,23 @@ function getForwardActionUrl( fallbackUrl ) {
     string, the URL with parameters to play a message to the recipient of
     the forwarded call using the Whisper Funlet
 */
-function getWhisperUrl( params ) {
-  const
-   BASE_WHISPER_URL=".?Whisper=true",
-   SEP="&";
+function getWhisperUrl(params) {
+  const BASE_WHISPER_URL = '.?Whisper=true',
+    SEP = '&';
 
   let whisperUrl = BASE_WHISPER_URL;
 
-  function copyStringParam( name ) {
+  function copyStringParam(name) {
     let value = params[name];
-    if ( typeof value === "string" ) {
-      whisperUrl += SEP + name + "=" + encodeURIComponent( value );
+    if (typeof value === 'string') {
+      whisperUrl += SEP + name + '=' + encodeURIComponent(value);
     }
   }
 
-  copyStringParam( "Message" );
-  copyStringParam( "Language" );
-  copyStringParam( "Voice" );
-  copyStringParam( "HumanCheck" );
+  copyStringParam('Message');
+  copyStringParam('Language');
+  copyStringParam('Voice');
+  copyStringParam('HumanCheck');
 
   return whisperUrl;
 }
@@ -221,31 +218,35 @@ function getWhisperUrl( params ) {
     given fallback URL if the forwarding call fails.
 */
 function callMeStage1(
-  response, forwardingNumber, timeout, whisperUrl, fallbackUrl
+  response,
+  forwardingNumber,
+  timeout,
+  whisperUrl,
+  fallbackUrl
 ) {
   let dial = response.dial({
-    action: getForwardActionUrl( fallbackUrl ),
-    timeout: timeout
+    action: getForwardActionUrl(fallbackUrl),
+    timeout: timeout,
   });
-  dial.number( {url:whisperUrl}, forwardingNumber );
+  dial.number({ url: whisperUrl }, forwardingNumber);
 }
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
-  if ( message.length === 0 ) {
+  if (message.length === 0) {
     return;
   }
-  if ( message.startsWith("http") ) {
+  if (message.startsWith('http')) {
     response.play({}, message);
   } else {
-    response.say({language:language, voice:voice}, message);
+    response.say({ language: language, voice: voice }, message);
   }
 }
 
 // Copied from Simple Menu Funlet
 function gatherDigits(response, maxDigits, message, language, voice) {
   simpleMessage(
-    response.gather({numDigits: maxDigits}),
+    response.gather({ numDigits: maxDigits }),
     message,
     language,
     voice
@@ -255,7 +256,7 @@ function gatherDigits(response, maxDigits, message, language, voice) {
 // Copied from Whisper Funlet
 function whisperStage1(response, humanCheck, message, language, voice) {
   gatherDigits(response, 1, message, language, voice);
-  if ( humanCheck ) {
+  if (humanCheck) {
     response.hangup();
   }
 }
@@ -263,10 +264,10 @@ let callMeStage2 = whisperStage1;
 
 // Copied from Whisper Funlet
 function whisperStage2(response, digits) {
-  if ( digits === null ) {
+  if (digits === null) {
     return false;
   }
-  if ( digits==="" ) {
+  if (digits === '') {
     response.hangup();
   }
   return true;
@@ -277,11 +278,11 @@ let callMeStage3 = whisperStage2;
 function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
   if (isDialDone) {
     if (
-      callStatus !== "answered" &&
-      callStatus !== "completed" &&
-      fallbackUrl !== ""
+      callStatus !== 'answered' &&
+      callStatus !== 'completed' &&
+      fallbackUrl !== ''
     ) {
-      response.redirect( fallbackUrl );
+      response.redirect(fallbackUrl);
     } else {
       response.hangup();
     }
@@ -298,11 +299,10 @@ let callMeStage4 = forwardStage2;
   such as the ones generated by Twilio events.
 */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const NO_ERROR = null;
 
-  let
-    response = new Twilio.twiml.VoiceResponse(),
+  let response = new Twilio.twiml.VoiceResponse(),
     isDial = isDialDone(event, context, config),
     callStatus = getCallStatus(event, context, config),
     fallbackUrl = getFallbackUrl(event, context, config),
@@ -316,11 +316,16 @@ exports.handler = function(context, event, callback) {
     whisperUrl = getWhisperUrl(event);
 
   callMeStage4(response, isDial, callStatus, fallbackUrl) ||
-  callMeStage3(response, digits) ||
-  (isWhisper(event, context, config)?
-    callMeStage2(response, humanCheckRequired, message, language, voice):
-    callMeStage1(response, forwardingNumber, timeout, whisperUrl, fallbackUrl)
-  );
+    callMeStage3(response, digits) ||
+    (isWhisper(event, context, config)
+      ? callMeStage2(response, humanCheckRequired, message, language, voice)
+      : callMeStage1(
+          response,
+          forwardingNumber,
+          timeout,
+          whisperUrl,
+          fallbackUrl
+        ));
 
   callback(NO_ERROR, response);
 };
@@ -343,7 +348,7 @@ exports.input = {
   isHumanCheckRequired: isHumanCheckRequired,
   getDigits: getDigits,
   isDialDone: isDialDone,
-  getFallbackUrl: getFallbackUrl
+  getFallbackUrl: getFallbackUrl,
 };
 
 exports.output = {
@@ -351,7 +356,7 @@ exports.output = {
   callMeStage1: callMeStage1,
   callMeStage2: callMeStage2,
   callMeStage3: callMeStage3,
-  callMeStage4: callMeStage4
+  callMeStage4: callMeStage4,
 };
 
 /*

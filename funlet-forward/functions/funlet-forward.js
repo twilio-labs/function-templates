@@ -34,15 +34,15 @@
 
 let config = {
   // the forwarding number
-  phoneNumber: "",
+  phoneNumber: '',
 
   // one of the verified phone numbers of your account
   // that you want to appear as caller ID for the forwarded call
-  callerId: "",
+  callerId: '',
 
   // fallback URL where further instructions are requested
   // when the forwarding call fails
-  fallbackUrl: "",
+  fallbackUrl: '',
 
   // duration in seconds to let the call ring before the recipient picks up
   timeout: 20,
@@ -54,13 +54,13 @@ let config = {
   // recording URL or a text to say
   // when the calling number is not one of the allowed callers configured
   accessRestricted:
-    "Sorry, you are calling from a restricted number. Good bye.",
+    'Sorry, you are calling from a restricted number. Good bye.',
 
   // language code for text messages, e.g. 'en' or 'en-gb'
-  language: "en",
+  language: 'en',
 
   // voice for text messages, one of 'man', 'woman' or 'alice'
-  voice: "alice"
+  voice: 'alice',
 };
 
 /*
@@ -70,24 +70,24 @@ let config = {
 */
 
 // Copied from Simple Message Funlet
-function readListParam( name, params ) {
+function readListParam(name, params) {
   let array = [];
 
-  const INDEXED_PARAM_REGEX = new RegExp( '^' + name + '\\[([0-9]+)\\]$' );
-  for( let property of Object.keys(params) ) {
-    let matches = INDEXED_PARAM_REGEX.exec( property );
-    if( matches !== null ) {
+  const INDEXED_PARAM_REGEX = new RegExp('^' + name + '\\[([0-9]+)\\]$');
+  for (let property of Object.keys(params)) {
+    let matches = INDEXED_PARAM_REGEX.exec(property);
+    if (matches !== null) {
       let index = matches[1];
-      array[ index ] = params[ property ];
+      array[index] = params[property];
     }
   }
 
-  if ( params.hasOwnProperty( name ) ) {
-    let value = params[ name ];
-    if ( typeof value === "string" ) {
-      array.push( value );
-    } else if ( Array.isArray( value ) ) {
-      array = array.concat( value );
+  if (params.hasOwnProperty(name)) {
+    let value = params[name];
+    if (typeof value === 'string') {
+      array.push(value);
+    } else if (Array.isArray(value)) {
+      array = array.concat(value);
     }
   }
 
@@ -95,15 +95,14 @@ function readListParam( name, params ) {
 }
 
 // Copied from Simple Message Funlet
-function readEnvList( name, start, end, env ) {
+function readEnvList(name, start, end, env) {
   let array = [];
 
-  for ( let i=start; i<=end; i++ ) {
-    let
-      key = name + i,
-      value = env[ key ];
-    if ( typeof value === "string" ) {
-      array.push( value );
+  for (let i = start; i <= end; i++) {
+    let key = name + i,
+      value = env[key];
+    if (typeof value === 'string') {
+      array.push(value);
     }
   }
 
@@ -128,26 +127,24 @@ function readEnvList( name, start, end, env ) {
 */
 
 function getPhoneNumber(params, env, config) {
-  return params.PhoneNumber ||
-    env.FUNLET_FORWARD_PHONE_NUMBER ||
-    config.phoneNumber;
+  return (
+    params.PhoneNumber || env.FUNLET_FORWARD_PHONE_NUMBER || config.phoneNumber
+  );
 }
 
 function getCallerId(params, env, config) {
-  return params.CallerId ||
-    env.FUNLET_FORWARD_CALLER_ID ||
-    config.callerId;
+  return params.CallerId || env.FUNLET_FORWARD_CALLER_ID || config.callerId;
 }
 
 function getFallbackUrl(params, env, config) {
-  return params.FailUrl ||
-    env.FUNLET_FORWARD_FALLBACK_URL ||
-    config.fallbackUrl;
+  return (
+    params.FailUrl || env.FUNLET_FORWARD_FALLBACK_URL || config.fallbackUrl
+  );
 }
 
 function getTimeout(params, env, config) {
   let timeout = params.Timeout || env.FUNLET_FORWARD_TIMEOUT;
-  if ( typeof timeout === "string" && !isNaN(timeout) ) {
+  if (typeof timeout === 'string' && !isNaN(timeout)) {
     return Number(timeout);
   }
   return config.timeout;
@@ -156,40 +153,42 @@ function getTimeout(params, env, config) {
 function getAllowedCallers(params, env, config) {
   let allowedCallers = [];
 
-  function formatNumber( phoneNumber ) {
-    let digitsOnly = phoneNumber.replace(/[^0-9]/g,"");
+  function formatNumber(phoneNumber) {
+    let digitsOnly = phoneNumber.replace(/[^0-9]/g, '');
     if (
-      params.ApiVersion === "2008-08-01" &&
+      params.ApiVersion === '2008-08-01' &&
       digitsOnly.length === 11 &&
-      digitsOnly[0]==='1'
+      digitsOnly[0] === '1'
     ) {
       return digitsOnly.slice(1);
     }
     return digitsOnly;
   }
 
-  function addIfNotEmpty( phoneNumber ) {
-    if ( typeof phoneNumber === "string" && phoneNumber !== "" ) {
-      allowedCallers.push( formatNumber(phoneNumber) );
+  function addIfNotEmpty(phoneNumber) {
+    if (typeof phoneNumber === 'string' && phoneNumber !== '') {
+      allowedCallers.push(formatNumber(phoneNumber));
     }
   }
 
-  readListParam( "AllowedCallers", params )
-    .forEach( addIfNotEmpty );
-  readEnvList( "FUNLET_FORWARD_ALLOWED_CALLER", 1, 5, env )
-    .forEach( addIfNotEmpty );
+  readListParam('AllowedCallers', params).forEach(addIfNotEmpty);
+  readEnvList('FUNLET_FORWARD_ALLOWED_CALLER', 1, 5, env).forEach(
+    addIfNotEmpty
+  );
 
-  if ( Array.isArray(config.allowedCallers) ) {
-    config.allowedCallers.forEach( addIfNotEmpty );
+  if (Array.isArray(config.allowedCallers)) {
+    config.allowedCallers.forEach(addIfNotEmpty);
   }
 
   return allowedCallers;
 }
 
 function getAccessRestrictedErrorMessage(params, env, config) {
-  return params.AccessRestricted ||
+  return (
+    params.AccessRestricted ||
     env.FUNLET_FORWARD_ACCESS_RESTRICTED ||
-    config.accessRestricted;
+    config.accessRestricted
+  );
 }
 
 function getLanguage(params, env, config) {
@@ -209,11 +208,11 @@ function getPhoneNumberCalled(params, env, config) {
 }
 
 function isDialDone(params, env, config) {
-  return (typeof params.Dial === "string" );
+  return typeof params.Dial === 'string';
 }
 
 function getCallStatus(params, env, config) {
-  const NO_CALL_STATUS = "";
+  const NO_CALL_STATUS = '';
   return params.DialStatus || params.DialCallStatus || NO_CALL_STATUS;
 }
 
@@ -235,7 +234,7 @@ function getCallStatus(params, env, config) {
     false otherwise.
 */
 function isForwardingAllowed(caller, called, allowedCallers) {
-  if ( allowedCallers.length === 0 ) {
+  if (allowedCallers.length === 0) {
     return true;
   }
   return allowedCallers.includes(caller) || allowedCallers.includes(called);
@@ -252,13 +251,13 @@ function isForwardingAllowed(caller, called, allowedCallers) {
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
-  if ( message.length === 0 ) {
+  if (message.length === 0) {
     return;
   }
-  if ( message.startsWith("http") ) {
+  if (message.startsWith('http')) {
     response.play({}, message);
   } else {
-    response.say({language:language, voice:voice}, message);
+    response.say({ language: language, voice: voice }, message);
   }
 }
 
@@ -273,11 +272,11 @@ function simpleMessage(response, message, language, voice) {
     string, the action URL to get back to this script and redirect
     to the fallback URL, if any, when the forwarding call has failed.
 */
-function getForwardActionUrl( fallbackUrl ) {
-  const BASE_URL = ".";
-  let actionUrl = BASE_URL + "?Dial=true";
-  if ( fallbackUrl !== "" ) {
-    actionUrl += "&" + encodeURIComponent(fallbackUrl);
+function getForwardActionUrl(fallbackUrl) {
+  const BASE_URL = '.';
+  let actionUrl = BASE_URL + '?Dial=true';
+  if (fallbackUrl !== '') {
+    actionUrl += '&' + encodeURIComponent(fallbackUrl);
   }
   return actionUrl;
 }
@@ -315,21 +314,27 @@ function getForwardActionUrl( fallbackUrl ) {
 */
 function forwardStage1(
   response,
-  isForwardingAllowed, accessRestrictedErrorMessage, language, voice,
-  callerId, forwardingNumber, timeout, fallbackUrl
+  isForwardingAllowed,
+  accessRestrictedErrorMessage,
+  language,
+  voice,
+  callerId,
+  forwardingNumber,
+  timeout,
+  fallbackUrl
 ) {
-  if ( !isForwardingAllowed ) {
-    simpleMessage(response, accessRestrictedErrorMessage, language, voice)
+  if (!isForwardingAllowed) {
+    simpleMessage(response, accessRestrictedErrorMessage, language, voice);
     return;
   }
   let dialOptions = {
-    action: getForwardActionUrl( fallbackUrl ),
+    action: getForwardActionUrl(fallbackUrl),
   };
-  if ( callerId !== "" ) {
+  if (callerId !== '') {
     dialOptions.callerId = callerId;
   }
   dialOptions.timeout = timeout;
-  response.dial( dialOptions, forwardingNumber );
+  response.dial(dialOptions, forwardingNumber);
 }
 
 /*
@@ -354,11 +359,11 @@ function forwardStage1(
 function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
   if (isDialDone) {
     if (
-      callStatus !== "answered" &&
-      callStatus !== "completed" &&
-      fallbackUrl !== ""
+      callStatus !== 'answered' &&
+      callStatus !== 'completed' &&
+      fallbackUrl !== ''
     ) {
-      response.redirect( fallbackUrl );
+      response.redirect(fallbackUrl);
     } else {
       response.hangup();
     }
@@ -374,33 +379,38 @@ function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
   such as the ones generated by Twilio events.
 */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const NO_ERROR = null;
 
-  let
-    response = new Twilio.twiml.VoiceResponse(),
+  let response = new Twilio.twiml.VoiceResponse(),
     isDial = isDialDone(event, context, config),
     callStatus = getCallStatus(event, context, config),
     fallbackUrl = getFallbackUrl(event, context, config),
     caller = getCaller(event, context, config),
     called = getPhoneNumberCalled(event, context, config),
     allowedCallers = getAllowedCallers(event, context, config),
-    accessRestrictedErrorMessage =
-      getAccessRestrictedErrorMessage(event, context, config),
+    accessRestrictedErrorMessage = getAccessRestrictedErrorMessage(
+      event,
+      context,
+      config
+    ),
     language = getLanguage(event, context, config),
     voice = getVoice(event, context, config),
     callerId = getCallerId(event, context, config),
     forwardingNumber = getPhoneNumber(event, context, config),
     timeout = getTimeout(event, context, config);
 
-  if (
-    !forwardStage2( response, isDial, callStatus, fallbackUrl )
-  ) {
+  if (!forwardStage2(response, isDial, callStatus, fallbackUrl)) {
     forwardStage1(
       response,
       isForwardingAllowed(caller, called, allowedCallers),
-      accessRestrictedErrorMessage, language, voice,
-      callerId, forwardingNumber, timeout, fallbackUrl
+      accessRestrictedErrorMessage,
+      language,
+      voice,
+      callerId,
+      forwardingNumber,
+      timeout,
+      fallbackUrl
     );
   }
 
@@ -427,17 +437,17 @@ exports.input = {
   getCaller: getCaller,
   getPhoneNumberCalled: getPhoneNumberCalled,
   isDialDone: isDialDone,
-  getCallStatus: getCallStatus
+  getCallStatus: getCallStatus,
 };
 
 exports.utils = {
-  isForwardingAllowed: isForwardingAllowed
+  isForwardingAllowed: isForwardingAllowed,
 };
 
 exports.output = {
   getForwardActionUrl: getForwardActionUrl,
   forwardStage1: forwardStage1,
-  forwardStage2: forwardStage2
+  forwardStage2: forwardStage2,
 };
 
 /*

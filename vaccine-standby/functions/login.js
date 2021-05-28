@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line func-names
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
@@ -18,7 +17,7 @@ exports.handler = function (context, event, callback) {
 
   // eslint-disable-next-line no-undef
   response.setStatusCode(401);
-  response.setBody({ 'message': 'Unauthorized' });
+  response.setBody({ message: 'Unauthorized' });
 
   callback(null, response);
 };
