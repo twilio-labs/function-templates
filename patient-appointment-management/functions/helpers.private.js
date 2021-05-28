@@ -19,6 +19,7 @@ const CONSTANTS = {
   'CF_BUCKET_STACK_BASE_NAME': 'twilio-appointments-bucket',
   'CF_APPLICATION_STACK_BASE_NAME': 'twilio-appointments-application',
   'LAMBDA_SEND_REMINDERS_BASE_NAME': 'twilio-send-appointment-reminders',
+  'GLUE_CRAWLER_BASE_NAME': 'twilio-appointments',
   'CODE_SEND_REMINDERS': '/aws/send_appointment_reminders.js',
   'APPOINTMENT_FILENAME_PATTERN': 'appointment{appointment_id}-patient{patient_id}.json'
 };
@@ -211,6 +212,13 @@ async function retrieveParameter(context, key) {
       } else {
         return null;
       }
+    }
+    case 'GLUE_CRAWLER':
+    {
+      const CUSTOMER_CODE = await retrieveParameter(context, 'CUSTOMER_CODE');
+      const crawler_name = CONSTANTS.GLUE_CRAWLER_BASE_NAME + '-' + CUSTOMER_CODE;
+      await assignParameter(context,'GLUE_CRAWLER', crawler_name);
+      return crawler_name;
     }
     case 'LAMBDA_SEND_REMINDERS':
     {

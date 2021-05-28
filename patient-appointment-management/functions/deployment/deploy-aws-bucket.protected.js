@@ -110,6 +110,7 @@ exports.handler = async function(context, event, callback) {
       }
 
       console.log('Emptying ', APPOINTMENTS_S3_BUCKET, 'S3 Bucket...');
+
       async function _deleteKeys(params, s3client) {
         const response = await s3client.listObjectsV2(params).promise();
         console.log('deleting:', response.KeyCount);
@@ -123,7 +124,7 @@ exports.handler = async function(context, event, callback) {
 
         if (response.NextContinuationToken) {
           params.ContinuationToken = response.NextContinuationToken;
-          await _deleteKeys(params); // recursive synchronous call
+          await _deleteKeys(params, s3client); // recursive synchronous call
         }
       }
       await _deleteKeys({ Bucket: APPOINTMENTS_S3_BUCKET, Prefix: '' }, s3);

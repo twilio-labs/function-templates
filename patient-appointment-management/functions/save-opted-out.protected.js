@@ -17,12 +17,12 @@ const { retrieveParameter, assignParameter} = require(path);
 async function getAppointmentsForPatient(params, patient_id, s3client, allKeys = []){
     const response = await s3client.listObjectsV2(params).promise();
     response.Contents.forEach(function(obj) {
-        if (obj.includes(patient_id + '.json')) allKeys.push(obj.Key);
+        if (obj.Key.includes(patient_id + '.json')) allKeys.push(obj.Key);
     });
 
     if (response.NextContinuationToken) {
         params.ContinuationToken = response.NextContinuationToken;
-        await getAllKeys(params, allKeys); // recursive synchronous call
+        await getAppointmentsForPatient(params, patient_id, s3client, allKeys); // recursive synchronous call
     }
     return allKeys;
 }
@@ -59,7 +59,7 @@ exports.handler = async function(context, event, callback) {
     // ----------- find all appointments for patient_id
     let params = {
         Bucket: APPOINTMENTS_S3_BUCKET,
-        Key: [
+        Prefix: [
             'state',
             'flow='+TWILIO_FLOW_SID,
             'disposition=QUEUED',

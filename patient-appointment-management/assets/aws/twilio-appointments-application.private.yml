@@ -28,6 +28,12 @@ Parameters:
   ParamLambdaFunctionName:
     Type: String
 
+  ParamGlueCrawlerName:
+    Type: String
+
+  ParamGlueDatabaseName:
+    Type: String
+
   ParamAppointmentFilenamePattern:
     Type: String
 
@@ -138,8 +144,8 @@ Resources:
     Type: AWS::Glue::Crawler
     DeletionPolicy: Delete
     Properties:
-      Name: !Sub 'twilio-appointments-${ParamCustomerCode}'
-      DatabaseName: !Sub 'twilio_appointments_${ParamCustomerCode}'
+      Name: !Ref ParamGlueCrawlerName
+      DatabaseName: !Ref ParamGlueDatabaseName
       Role: !GetAtt RoleForExecution.Arn
       SchemaChangePolicy:
         UpdateBehavior: 'UPDATE_IN_DATABASE'
@@ -147,7 +153,7 @@ Resources:
       Configuration: "{\"Version\":1.0,\"CrawlerOutput\":{\"Partitions\":{\"AddOrUpdateBehavior\":\"InheritFromTable\"}}}"
       Targets:
         S3Targets:
-          - Path: !Sub 's3://${ParamAppointmentsS3BucketName}/queue'
+          - Path: !Sub 's3://${ParamAppointmentsS3BucketName}/state'
           - Path: !Sub 's3://${ParamAppointmentsS3BucketName}/history'
 
   AthenaWorkGroupAppointments:

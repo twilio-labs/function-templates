@@ -26,6 +26,8 @@ exports.handler = async function(context, event, callback) {
   const TWILIO_FLOW_SID                  = await retrieveParameter(context, 'FLOW_SID');
   const TWILIO_PHONE_NUMBER              = await retrieveParameter(context, 'TWILIO_PHONE_NUMBER');
   const LAMBDA_SEND_REMINDERS            = await retrieveParameter(context, 'LAMBDA_SEND_REMINDERS');
+  const GLUE_CRAWLER                     = await retrieveParameter(context, 'GLUE_CRAWLER');
+  const GLUE_DATABASE                    = await retrieveParameter(context, 'GLUE_DATABASE');
   const APPOINTMENT_FILENAME_PATTERN     = await retrieveParameter(context, 'APPOINTMENT_FILENAME_PATTERN');
   const CLOUDFORMATION_BUCKET_STACK      = await retrieveParameter(context, 'CLOUDFORMATION_BUCKET_STACK');
   const CLOUDFORMATION_APPLICATION_STACK = await retrieveParameter(context, 'CLOUDFORMATION_APPLICATION_STACK');
@@ -88,6 +90,8 @@ exports.handler = async function(context, event, callback) {
             { ParameterKey: 'ParamTwilioFlowSID', UsePreviousValue: true },
             { ParameterKey: 'ParamTwilioPhoneNumber', UsePreviousValue: true },
             { ParameterKey: 'ParamLambdaFunctionName', UsePreviousValue: true },
+            { ParameterKey: 'ParamGlueCrawlerName', UsePreviousValue: true },
+            { ParameterKey: 'ParamGlueDatabaseName', UsePreviousValue: true },
             { ParameterKey: 'ParamAppointmentFilenamePattern', UsePreviousValue: true },
             { ParameterKey: 'ParamReminderOutreachStart', UsePreviousValue: true },
             { ParameterKey: 'ParamReminderOutreachFinish', UsePreviousValue: true },
@@ -123,6 +127,7 @@ exports.handler = async function(context, event, callback) {
           { ParameterKey: 'ParamTwilioFlowSID', ParameterValue: TWILIO_FLOW_SID },
           { ParameterKey: 'ParamTwilioPhoneNumber', ParameterValue: TWILIO_PHONE_NUMBER },
           { ParameterKey: 'ParamLambdaFunctionName', ParameterValue: LAMBDA_SEND_REMINDERS },
+          { ParameterKey: 'ParamGlueCrawlerName', ParameterValue: GLUE_CRAWLER },
           { ParameterKey: 'ParamAppointmentFilenamePattern', ParameterValue: APPOINTMENT_FILENAME_PATTERN },
           { ParameterKey: 'ParamReminderOutreachStart', ParameterValue: REMINDER_OUTREACH_START },
           { ParameterKey: 'ParamReminderOutreachFinish', ParameterValue: REMINDER_OUTREACH_FINISH },

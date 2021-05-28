@@ -7,14 +7,14 @@ const aws = require('aws-sdk');
 async function getAppointmentsByPhone(params, phone, s3client, allKeys = []){
   const response = await s3client.listObjectsV2(params).promise();
   response.Contents.forEach(function(obj) {
-    if (obj.includes(patient_id + '.json')) {
+    if (obj.Key.includes(patient_id + '.json')) {
       allKeys.push(obj.Key);
     }
   });
 
   if (response.NextContinuationToken) {
     params.ContinuationToken = response.NextContinuationToken;
-    await getAllKeys(params, allKeys); // recursive synchronous call
+    await getAppointmentsByPhone(params, phone, s3client, allKeys); // recursive synchronous call
   }
   return allKeys;
 }
