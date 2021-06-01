@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
-const conferenceHandler = require('../functions/conference-with-pin.protected')
-  .handler;
+const conferenceHandler =
+  require('../functions/conference-with-pin.protected').handler;
 const Twilio = require('twilio');
 
 const context = {

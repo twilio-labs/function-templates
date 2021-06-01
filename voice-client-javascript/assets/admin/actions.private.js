@@ -1,6 +1,5 @@
 const assets = Runtime.getAssets();
-const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
-
+const { urlForSiblingPage } = require(assets['/admin/shared.js'].path);
 
 class Actions {
   constructor(client, options) {
@@ -10,27 +9,28 @@ class Actions {
 
   async initialize() {
     let env = {};
-    console.log("Creating TwiML Application");
+    console.log('Creating TwiML Application');
     let results = await this.createTwimlApp(this.options);
     env = Object.assign(env, results);
     const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
-      "client-voice-twiml-app",
-      this.options.PATH, 
-      "..")}`;
+      'client-voice-twiml-app',
+      this.options.PATH,
+      '..'
+    )}`;
     console.log(
       `Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`
     );
     await this.updateTwimlAppVoiceUrl({
       twimlApplicationSid: env.TWIML_APPLICATION_SID,
-      voiceUrl
+      voiceUrl,
     });
-    console.log("Generating new REST API Key");
+    console.log('Generating new REST API Key');
     results = await this.generateNewKey(this.options);
     env = Object.assign(env, results);
     const number = await this.chooseLogicalCallerId();
     results = await this.setCallerId({ number });
     env = Object.assign(env, results);
-    env.INITIALIZED = "voice-client-quickstart";
+    env.INITIALIZED = 'voice-client-quickstart';
     env.INITIALIZATION_DATE = new Date().toISOString();
     return env;
   }
@@ -38,7 +38,7 @@ class Actions {
   async createTwimlApp({ friendlyName }) {
     const result = await this.client.applications.create({ friendlyName });
     return {
-      TWIML_APPLICATION_SID: result.sid
+      TWIML_APPLICATION_SID: result.sid,
     };
   }
 
@@ -52,20 +52,20 @@ class Actions {
     const result = await this.client.newKeys.create({ friendlyName });
     return {
       API_KEY: result.sid,
-      API_SECRET: result.secret
+      API_SECRET: result.secret,
     };
   }
 
   async chooseLogicalCallerId() {
     const incomingNumbers = await this.client.incomingPhoneNumbers.list({
-      limit: 1
+      limit: 1,
     });
     let number;
     if (incomingNumbers.length > 0) {
       number = incomingNumbers[0].phoneNumber;
     } else {
       const outgoingCallerIds = await this.client.outgoingCallerIds.list({
-        limit: 1
+        limit: 1,
       });
       // Required right?
       number = outgoingCallerIds[0].phoneNumber;
@@ -75,13 +75,13 @@ class Actions {
 
   async setCallerId({ number }) {
     return {
-      CALLER_ID: number
+      CALLER_ID: number,
     };
   }
 
   async useExistingTwimlApp({ twimlApplicationSid }) {
     return {
-      TWIML_APPLICATION_SID: twimlApplicationSid
+      TWIML_APPLICATION_SID: twimlApplicationSid,
     };
   }
 }

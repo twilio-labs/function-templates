@@ -9,7 +9,7 @@ describe('', () => {
     helpers.teardown();
   });
 
-  test('returns the right song', done => {
+  test('returns the right song', (done) => {
     const callback = (err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(

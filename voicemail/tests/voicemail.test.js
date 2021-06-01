@@ -26,7 +26,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('returns a VoiceResponse', done => {
+test('returns a VoiceResponse', (done) => {
   const callback = (err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
@@ -35,7 +35,7 @@ test('returns a VoiceResponse', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('forwards calls during business hours', done => {
+test('forwards calls during business hours', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -51,7 +51,7 @@ test('forwards calls during business hours', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('allows to configure business week start', done => {
+test('allows to configure business week start', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -70,7 +70,7 @@ test('allows to configure business week start', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('allows to configure business hours start', done => {
+test('allows to configure business hours start', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -89,7 +89,7 @@ test('allows to configure business hours start', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('allows to configure business week end', done => {
+test('allows to configure business week end', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -108,7 +108,7 @@ test('allows to configure business week end', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('allows to configure business hours end', done => {
+test('allows to configure business hours end', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -127,7 +127,7 @@ test('allows to configure business hours end', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('handles timezone offset', done => {
+test('handles timezone offset', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -146,7 +146,7 @@ test('handles timezone offset', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('handles timezone offset outside business hours', done => {
+test('handles timezone offset outside business hours', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -165,7 +165,7 @@ test('handles timezone offset outside business hours', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('sends default message outside of business hours', done => {
+test('sends default message outside of business hours', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',
@@ -183,7 +183,7 @@ test('sends default message outside of business hours', done => {
   voicemailFunction(context, event, callback);
 });
 
-test('sends translated message outside of business hours', done => {
+test('sends translated message outside of business hours', (done) => {
   context = {
     PATH: '/demo/voicemail',
     MY_PHONE_NUMBER: '+12223334444',

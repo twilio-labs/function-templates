@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
-const gatedConferenceHandler = require('../functions/gated-conference.protected')
-  .handler;
+const gatedConferenceHandler =
+  require('../functions/gated-conference.protected').handler;
 const Twilio = require('twilio');
 
 const context = {

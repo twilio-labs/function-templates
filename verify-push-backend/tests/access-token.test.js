@@ -1,13 +1,13 @@
-const helpers = require("../../test/test-helper");
+const helpers = require('../../test/test-helper');
 
 const mockTokens = {
   accessTokens: {
     create: jest.fn(() =>
       Promise.resolve({
-        token: "my-new-token",
-        serviceSid: "sid",
-        identity: "identity",
-        factorType: "push",
+        token: 'my-new-token',
+        serviceSid: 'sid',
+        identity: 'identity',
+        factorType: 'push',
       })
     ),
   },
@@ -20,31 +20,31 @@ const mockClient = {
 };
 
 const testContext = {
-  VERIFY_SERVICE_SID: "default",
+  VERIFY_SERVICE_SID: 'default',
   getTwilioClient: () => mockClient,
 };
 
-describe("verify-push-backend/create-access-token", () => {
+describe('verify-push-backend/create-access-token', () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(
-      "/missing-params.js",
-      "../assets/missing-params.private.js"
+      '/missing-params.js',
+      '../assets/missing-params.private.js'
     );
     helpers.setup(testContext, runtime);
-    jest.mock("../assets/missing-params.private.js", () => {
-      const missing = jest.requireActual("../assets/missing-params.private.js");
+    jest.mock('../assets/missing-params.private.js', () => {
+      const missing = jest.requireActual('../assets/missing-params.private.js');
       return {
         detectMissingParams: missing.detectMissingParams,
       };
     });
-    accessTokenFunction = require("../functions/access-token").handler;
+    accessTokenFunction = require('../functions/access-token').handler;
   });
   afterAll(() => {
     helpers.teardown();
   });
 
-  test("returns an error response when required parameters are missing", (done) => {
+  test('returns an error response when required parameters are missing', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(result._body.error.message).toEqual(
@@ -59,16 +59,16 @@ describe("verify-push-backend/create-access-token", () => {
     accessTokenFunction(testContext, event, callback);
   });
 
-  test("returns success with valid request", (done) => {
+  test('returns success with valid request', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
-      expect(result._body.token).toEqual("my-new-token");
+      expect(result._body.token).toEqual('my-new-token');
       expect(mockClient.verify.services).toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
       done();
     };
-    const event = { identity: "super-unique-id" };
+    const event = { identity: 'super-unique-id' };
     accessTokenFunction(testContext, event, callback);
   });
 });

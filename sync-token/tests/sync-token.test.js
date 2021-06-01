@@ -17,7 +17,7 @@ describe('sync-token/token', () => {
     helpers.teardown();
   });
 
-  test('returns a valid token with defined sync service sid', done => {
+  test('returns a valid token with defined sync service sid', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
@@ -37,7 +37,7 @@ describe('sync-token/token', () => {
     tokenFunction(baseContext, {}, callback);
   });
 
-  test('returns a valid token with fallback inline service sid', done => {
+  test('returns a valid token with fallback inline service sid', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');

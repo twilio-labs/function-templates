@@ -4,8 +4,7 @@ function sendMessage(context, event) {
     .create({
       from: event.To,
       to: event.From,
-      body:
-        'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
+      body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
     })
     .then(
       (resp) => resp,
@@ -40,7 +39,9 @@ exports.handler = function (context, event, callback) {
 
   switch (UserInput) {
     case '1':
-      twiml.say("Thank you. You will now be forwarded to our sales department.")
+      twiml.say(
+        'Thank you. You will now be forwarded to our sales department.'
+      );
       twiml.dial(context.MY_PHONE_NUMBER);
       break;
     case '2':

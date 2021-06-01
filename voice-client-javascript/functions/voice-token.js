@@ -6,9 +6,9 @@
  *  the identity when minting the Token.
  */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   // REMINDER: This identity is only for prototyping purposes
-  const IDENTITY = "the_user_id";
+  const IDENTITY = 'the_user_id';
 
   const ACCOUNT_SID = context.ACCOUNT_SID;
 
@@ -24,7 +24,7 @@ exports.handler = function(context, event, callback) {
   accessToken.identity = IDENTITY;
   const grant = new VoiceGrant({
     outgoingApplicationSid: TWIML_APPLICATION_SID,
-    incomingAllow: true
+    incomingAllow: true,
   });
   accessToken.addGrant(grant);
 
@@ -35,10 +35,10 @@ exports.handler = function(context, event, callback) {
   // response.appendHeader('Access-Control-Allow-Methods', 'GET');
   // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
   response.setBody({
     identity: IDENTITY,
-    token: accessToken.toJwt()
+    token: accessToken.toJwt(),
   });
   callback(null, response);
 };

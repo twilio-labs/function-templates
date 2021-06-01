@@ -1,8 +1,8 @@
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
 
   try {
-    if(event.type === 'track' && event.event === context.SEGMENT_EVENT) {
+    if (event.type === 'track' && event.event === context.SEGMENT_EVENT) {
       let body = `The Segment event "${event.event}" occurred.`;
 
       if (event.properties && Object.keys(event.properties).length > 0) {
@@ -19,8 +19,7 @@ exports.handler = async function(context, event, callback) {
         body,
       });
     }
-  }
-  catch (err) {
+  } catch (err) {
     callback(err);
   }
 
