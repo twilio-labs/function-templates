@@ -13,6 +13,7 @@
   "author": "Twilio <open-source@twilio.com>",
   "license": "MIT",
   "devDependencies": {
+    "@google-cloud/dialogflow": "^3.5.0",
     "@twilio-labs/serverless-api": "^1.1.0",
     "airtable": "^0.8.1",
     "common-tags": "^1.8.0",
@@ -29,13 +30,19 @@
     "moment": "^2.24.0",
     "node-fetch": "^2.6.1",
     "stripe": "^8.20.0",
-    "twilio": "^3.43.0"
+    "twilio": "^3.63.1"
   },
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
-    "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
-    "testPathIgnorePatterns": ["/_helpers/", "/node_modules/"]
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "testPathIgnorePatterns": [
+      "/_helpers/",
+      "/node_modules/"
+    ]
   },
   "dependencies": {
     "got": "^6.7.1"
