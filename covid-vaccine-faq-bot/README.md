@@ -27,7 +27,7 @@ conversational user interfaces.
 You may import the pre-built Dialogflow chatbot agents included in this
 repository, or configure your own chatbot agent.
 
-**Follow [this guide](prerequisites/google-cloud-platform-config.md) for step-by-step instructions on how to do
+**Follow [this guide](prerequisites/dialogflow-config.md) for step-by-step instructions on how to do
 this.**
 
 ## Environment variables
