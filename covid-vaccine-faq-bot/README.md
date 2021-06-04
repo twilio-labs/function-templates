@@ -30,7 +30,7 @@ repository, or configure your own chatbot agent.
 **Follow [this guide](prerequisites/google-cloud-platform-config.md) for step-by-step instructions on how to do
 this.**
 
-### Environment variables
+## Environment variables
 
 This application requires some environment variables to be set. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
@@ -43,7 +43,7 @@ In your `.env` file, set the following values:
 | `FLOW_SID`                       | SID of Studio Flow for chatbot. Will be set automatically                                                                        | No  |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Service account key file (json) to authenticate into dialogflow API                                                      | No  |
 
-### Create a new project with the template
+## Create a new project with the template
 
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
@@ -72,7 +72,7 @@ twilio serverless:deploy
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
-### Studio Flow
+## Studio Flow
 This app includes a [Twilio Studio](https://www.twilio.com/studio) Flow that orchestrates the SMS chatbot. You will be prompted to deploy the Studio flow as part of the steps included in `index.html`. Once deployed, you can view your flow [here](https://www.twilio.com/console/studio/dashboard) — it will be named "Vaccine FAQ Bot".
 
 You are encouraged to edit the Studio Flow in accordance with your organization's unique needs.
