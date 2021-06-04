@@ -20,4 +20,4 @@ Messaging around vaccine hesitancy should be tailored to specific audiences for 
 
 You can find more specific instructions in the `studioflow-agent-generator.ipynb` Jupyter notebook. 
 
-Once you have your agent read, follow Steps 2 and 3 from Option 1 to configure your Dialogflow agent in your Google project.
+Once you have your agent ready, follow Steps 2 and 3 from Option 1 to configure your Dialogflow agent in your Google project.
