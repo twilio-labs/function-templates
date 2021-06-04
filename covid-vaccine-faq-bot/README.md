@@ -59,7 +59,11 @@ When prompted, make sure that you select *JSON* as the Key Type and click *Creat
 
 The JSON Authentication Key will then be downloaded to your local machine.
 
-5. **Save JSON Authentication Key as a Private Asset**. Take the JSON file you just downloaded, and save it to a file named `service-account-key.private.json` under the `assets` directory for this function template.
+5. **Save JSON Authentication Key as a Private Asset**. Take the JSON file you just downloaded, and save it to a file named `service-account-key.private.json` under the `assets` directory for this function template. Here is a one-line command you can run from the root of the template directory to help do that:
+
+```
+mv path/to/downloaded/key.json assets/service-account-key.private.json
+```
 
 **II. [OPTION 1] Configure pre-built Dialogflow chatbot agent:**
 
