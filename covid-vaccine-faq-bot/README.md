@@ -10,13 +10,14 @@ Note that this app is designed for prototyping purposes only and you should <a h
 
 ## Prerequisites
 
-### Configure Google Cloud Platform Account
+### 1. Configure Google Cloud Platform and Generate JSON Auth Key
 
 This template uses Google Dialogflow to power the conversational chatbot
-agent that interacts with the user. To use the template, you will need
-to setup a Google Dialogflow project and configure it correctly by
-following the steps
-[here](prerequisites/google-cloud-platform-config.md)
+agent that interacts with the user. You will need to setup a Google Cloud project, enable the Dialogflow API, and generate a JSON authentication key from a GCP Service Account for Twilio to use to interact with Dialogflow. Place the GCP JSON authentication key at the following path: `/assets/service-account-key.json`.
+
+**Follow [this guide](prerequisites/google-cloud-platform-config.md) for step-by-step instructions on how to do this.**
+
+### 2. Create a Dialogflow Chatbot Agent
 
 **II. [OPTION 1] Configure pre-built Dialogflow chatbot agent:**
 
