@@ -69,7 +69,7 @@ Follow the below steps to configure your Dialogflow pre-built agent in your Goog
 2. Go to Agent Settings ([documentation](https://cloud.google.com/dialogflow/es/docs/agents-settings)) under [Google Dialogflow ES Console](https://dialogflow.cloud.google.com/). 
 3. Import one of the pre-built agents (zip file) into your Google Dialogflow project (more information [here](https://cloud.google.com/dialogflow/es/docs/agents-settings#export)).
 
-![Image](screenshots/import_agent.png "Import Agent Screenshot")
+![import_agent](https://user-images.githubusercontent.com/4605360/120849443-f682d600-c52a-11eb-9bfc-b6bd29bc0d9a.png)
 
 **II. [OPTION 2] Configure your own Dialogflow chatbot agent:**
 
