@@ -16,7 +16,7 @@ This template uses Google Dialogflow to power the conversational chatbot
 agent that interacts with the user. To use the template, you will need
 to setup a Google Dialogflow project and configure it correctly by
 following the steps
-[here](covid-vaccine-faq-bot/prerequisites/google-cloud-platform-config.md)
+[here](prerequisites/google-cloud-platform-config.md)
 
 **II. [OPTION 1] Configure pre-built Dialogflow chatbot agent:**
 
