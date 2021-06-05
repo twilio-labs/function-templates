@@ -1,6 +1,5 @@
 node_modules
 /docs
-/blocklist-call
 /chat-token
 /conference
 /conference-caller-gated
