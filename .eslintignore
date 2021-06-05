@@ -1,6 +1,5 @@
 node_modules
 /docs
-/chat-token
 /conference
 /conference-caller-gated
 /conference-pin
