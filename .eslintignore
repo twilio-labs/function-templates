@@ -1,6 +1,5 @@
 node_modules
 /docs
-/conference-verify
 /conversations
 /forward-call
 /forward-message
