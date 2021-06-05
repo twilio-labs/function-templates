@@ -1,6 +1,5 @@
 node_modules
 /docs
-/conference-pin
 /conference-verify
 /conversations
 /forward-call
