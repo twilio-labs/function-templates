@@ -1,6 +1,5 @@
 node_modules
 /docs
-/forward-call
 /forward-message
 /forward-message-mailgun
 /forward-message-multiple
