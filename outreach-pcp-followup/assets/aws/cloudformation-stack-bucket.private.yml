@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Twilio Outreach PCP Followup Bucket'
+
+
+Parameters:
+
+
+  ParameterCustomerCode:
+    Type: String
+
+  ParameterS3Bucket:
+    Type: String
+
+  ParameterLambdaSendOutreach:
+    Type: String
+
+
+Outputs:
+
+  OutreachPCPFollowupS3BucketName:
+    Value: !Ref ParameterS3Bucket
+
+
+Resources:
+
+  ResourceS3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Retain
+    Properties:
+      BucketName: !Ref ParameterS3Bucket
+      AccessControl: Private
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  ResourceBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DeletionPolicy: Delete
+    Properties:
+      Bucket: !Ref ResourceS3Bucket
+      PolicyDocument:
+        Statement:
+          - Sid: 'DenyUnencryptedPut'
+            Effect: Deny
+            Action:
+              - s3:PutObject
+            Principal: '*'
+            Resource:
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}/*'
+            Condition:
+              'Null':
+                s3:x-amz-server-side-encryption: true
+          - Sid: 'ForceSecureTransport'
+            Effect: Deny
+            Action:
+              - s3:*
+            Principal: '*'
+            Resource:
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}'
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}/*'
+            Condition:
+              Bool:
+                aws:SecureTransport: false

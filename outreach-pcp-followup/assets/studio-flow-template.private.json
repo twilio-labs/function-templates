@@ -1,0 +1,728 @@
+{
+  "states": [
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest",
+          "next": "Outreach"
+        }
+      ],
+      "type": "trigger",
+      "name": "Trigger",
+      "properties": {
+        "offset": {
+          "y": -390,
+          "x": 50
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "save_Outreach"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "Outreach",
+      "properties": {
+        "body": "This is the Cardiology department at Owl Health. Have you scheduled a follow-up appointment with your PCP following your discharge?\n\nReply YES or NO",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "360",
+        "offset": {
+          "y": -180,
+          "x": 120
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "YES",
+              "arguments": [
+                "{{widgets.save_Outreach.body}}"
+              ],
+              "value": "YES"
+            }
+          ],
+          "event": "match",
+          "next": "PainLevel"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "NO",
+              "arguments": [
+                "{{widgets.save_Outreach.body}}"
+              ],
+              "value": "NO"
+            }
+          ],
+          "event": "match",
+          "next": "PCPAppt"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_Outreach",
+      "properties": {
+        "input": "{{widgets.save_Outreach.body}}",
+        "offset": {
+          "y": 351,
+          "x": 131
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "save_PCPAppt"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "PCPAppt",
+      "properties": {
+        "body": "Do you need help making an appointment with your PCP?\n\nPlease reply YES or NO",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "360",
+        "offset": {
+          "y": 691,
+          "x": 740
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "save_PainLevel"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "PainLevel",
+      "properties": {
+        "body": "Are you experiencing any pain of discomfort?\n\nPlease reply YES or NO",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "360",
+        "offset": {
+          "y": 710,
+          "x": -340
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch",
+          "next": "PCPAppt2"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "YES",
+              "arguments": [
+                "{{widgets.save_PCPAppt.body}}"
+              ],
+              "value": "YES"
+            }
+          ],
+          "event": "match",
+          "next": "RequestPN"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "NO",
+              "arguments": [
+                "{{widgets.save_PCPAppt.body}}"
+              ],
+              "value": "NO"
+            }
+          ],
+          "event": "match",
+          "next": "PainLevel"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_pcpappt",
+      "properties": {
+        "input": "{{widgets.save_PCPAppt.body}}",
+        "offset": {
+          "y": 1200,
+          "x": 740
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "save_RequestPN"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "RequestPN",
+      "properties": {
+        "body": "One of our schedulers will reach out to help schedule your appointment.\n\nIs {{widgets.Outreach.outbound.To}} the best number to reach you?\n\nReply YES or NO",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "360",
+        "offset": {
+          "y": 1530,
+          "x": 1100
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "YES",
+              "arguments": [
+                "{{widgets.save_PainLevel.body}}"
+              ],
+              "value": "YES"
+            }
+          ],
+          "event": "match",
+          "next": "CallNurse"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "NO",
+              "arguments": [
+                "{{widgets.save_PainLevel.body}}"
+              ],
+              "value": "NO"
+            }
+          ],
+          "event": "match",
+          "next": "SpeedyRecovery"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_PainLevel",
+      "properties": {
+        "input": "{{widgets.save_PainLevel.body}}",
+        "offset": {
+          "y": 1300,
+          "x": -340
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "CallNurse",
+      "properties": {
+        "body": "Please call (415) 326-1980 at your earliest convenience to talk to one of our nurses.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1830,
+          "x": -520
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "SpeedyRecovery",
+      "properties": {
+        "body": "Thank you for letting us check in. We hope you have a speedy recovery.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 1840,
+          "x": -140
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "save_PCPAppt2"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "PCPAppt2",
+      "properties": {
+        "body": "Do you need help making an appointment with your PCP?\n\nPlease reply YES or NO",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "360",
+        "offset": {
+          "y": 1530,
+          "x": 440
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "YES",
+              "arguments": [
+                "{{widgets.save_PCPAppt2.body}}"
+              ],
+              "value": "YES"
+            }
+          ],
+          "event": "match",
+          "next": "RequestPN"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "NO",
+              "arguments": [
+                "{{widgets.save_PCPAppt2.body}}"
+              ],
+              "value": "NO"
+            }
+          ],
+          "event": "match",
+          "next": "PainLevel"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_pcpappt2",
+      "properties": {
+        "input": "{{widgets.save_PCPAppt2.body}}",
+        "offset": {
+          "y": 2000,
+          "x": 450
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "YES",
+              "arguments": [
+                "{{widgets.save_RequestPN.body}}"
+              ],
+              "value": "YES"
+            }
+          ],
+          "event": "match",
+          "next": "Thankyou"
+        },
+        {
+          "conditions": [
+            {
+              "type": "equal_to",
+              "friendly_name": "NO",
+              "arguments": [
+                "{{widgets.save_RequestPN.body}}"
+              ],
+              "value": "NO"
+            }
+          ],
+          "event": "match",
+          "next": "GetPN"
+        }
+      ],
+      "type": "split-based-on",
+      "name": "split_RequestPN",
+      "properties": {
+        "input": "{{widgets.save_RequestPN.body}}",
+        "offset": {
+          "y": 2090,
+          "x": 1130
+        }
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "type": "send-message",
+      "name": "Thankyou",
+      "properties": {
+        "body": "Thank you. We'll be in touch soon.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "to": "{{contact.channel.address}}",
+        "offset": {
+          "y": 2400,
+          "x": 940
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "incomingMessage",
+          "next": "save_GetPN"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "type": "send-and-wait-for-reply",
+      "name": "GetPN",
+      "properties": {
+        "body": "Please text the 10-digit phone number that you would like for us to call you to schedule an appointment.",
+        "from": "{{flow.channel.address}}",
+        "service": "{{trigger.message.InstanceSid}}",
+        "timeout": "360",
+        "offset": {
+          "y": 2390,
+          "x": 1500
+        },
+        "channel": "{{trigger.message.ChannelSid}}"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "split_Outreach"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save_Outreach",
+      "properties": {
+        "parameters": [
+          {
+            "key": "patient",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "response",
+            "value": "{{widgets.Outreach.inbound.Body}}"
+          },
+          {
+            "key": "question",
+            "value": "{{widgets.Outreach.outbound.Body}}"
+          },
+          {
+            "key": "question_id",
+            "value": "Outreach"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-response",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 50,
+          "x": 120
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-response]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "split_PainLevel"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save_PainLevel",
+      "properties": {
+        "parameters": [
+          {
+            "key": "patient",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "question_id",
+            "value": "PainLevel"
+          },
+          {
+            "key": "question",
+            "value": "{{widgets.PainLevel.outbound.Body}}"
+          },
+          {
+            "key": "response",
+            "value": "{{widgets.PainLevel.inbound.Body}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-response",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 1000,
+          "x": -340
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-response]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save_GetPN",
+      "properties": {
+        "parameters": [
+          {
+            "key": "patient",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "question_id",
+            "value": "GetPN"
+          },
+          {
+            "key": "question",
+            "value": "{{widgets.GetPN.outbound.Body}}"
+          },
+          {
+            "key": "response",
+            "value": "{{widgets.GetPN.inbound.Body}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-response",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 2640,
+          "x": 1510
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-response]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "split_RequestPN"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save_RequestPN",
+      "properties": {
+        "parameters": [
+          {
+            "key": "patient",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "question_id",
+            "value": "RequestPN"
+          },
+          {
+            "key": "question",
+            "value": "{{widgets.RequestPN.outbound.Body}}"
+          },
+          {
+            "key": "response",
+            "value": "{{widgets.RequestPN.inbound.Body}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-response",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 1790,
+          "x": 1110
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-response]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "split_pcpappt2"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save_PCPAppt2",
+      "properties": {
+        "parameters": [
+          {
+            "key": "patient",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "response",
+            "value": "{{widgets.PCPAppt2.inbound.Body}}"
+          },
+          {
+            "key": "question",
+            "value": "{{widgets.PCPAppt2.outbound.Body}}"
+          },
+          {
+            "key": "question_id",
+            "value": "PCPAppt2"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-response",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 1770,
+          "x": 450
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-response]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "split_pcpappt"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "save_PCPAppt",
+      "properties": {
+        "parameters": [
+          {
+            "key": "patient",
+            "value": "{{flow.data}}"
+          },
+          {
+            "key": "question",
+            "value": "{{widgets.PCPAppt.outbound.Body}}"
+          },
+          {
+            "key": "question_id",
+            "value": "PCPAppt"
+          },
+          {
+            "key": "response",
+            "value": "{{widgets.PCPAppt.inbound.Body}}"
+          }
+        ],
+        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-response",
+        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "offset": {
+          "y": 940,
+          "x": 750
+        },
+        "function_sid": "YOUR_FUNCTION_SID[save-response]",
+        "service_sid": "YOUR_SERVICE_SID"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  },
+  "description": "template broadcast flow"
+}

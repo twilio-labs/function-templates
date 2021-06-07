@@ -1,0 +1,201 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Twilio Outreach PCP Followup Application'
+
+
+Parameters:
+
+
+  ParameterApplicationName:
+    Type: String
+
+  ParameterCustomerCode:
+    Type: String
+
+  ParameterS3Bucket:
+    Type: String
+
+  ParameterTwilioAccountSID:
+    Type: String
+
+  ParameterTwilioAuthToken:
+    NoEcho: true
+    Type: String
+
+  ParameterTwilioFlowSID:
+    Type: String
+
+  ParameterTwilioPhoneNumber:
+    Type: String
+
+  ParameterLambdaSendOutreach:
+    Type: String
+
+  ParameterGlueCrawler:
+    Type: String
+
+  ParameterGlueDatabase:
+    Type: String
+
+  ParameterFilenamePatternQueue:
+    Type: String
+
+  ParameterFilenamePatternOutreach:
+    Type: String
+
+  ParameterFilenamePatternResponse:
+    Type: String
+
+
+Outputs:
+
+  OutreachPCPFollowupAWSAccountKeyId:
+    Value: !Ref ResourceUserAccessKey
+
+  OutreachPCPFollowupAWSSecretAccessKey:
+    Value: !GetAtt ResourceUserAccessKey.SecretAccessKey
+
+  OutreachPCPFollowupAWSRegion:
+    Value: !Ref AWS::Region
+
+
+Resources:
+
+
+  ResourceSecretTwilioAccountAuthToken:
+    Type: 'AWS::SecretsManager::Secret'
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub 'twilio/${ParameterApplicationName}-${ParameterCustomerCode}/TwilioAccountAuthToken'
+      SecretString: !Sub '{"value":"${ParameterTwilioAuthToken}"}'
+
+  ResourceSecretAWSSecretAccessKey:
+    Type: 'AWS::SecretsManager::Secret'
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub 'twilio/${ParameterApplicationName}-${ParameterCustomerCode}/AWSSecretAccessKey'
+      SecretString: !Sub '{"value":"${ResourceUserAccessKey.SecretAccessKey}"}'
+
+  ResourceUserForExecution:
+    Type: AWS::IAM::User
+    DeletionPolicy: Delete
+    Properties:
+      UserName: !Sub 'twilio-${ParameterApplicationName}-${ParameterCustomerCode}'
+
+  ResourceUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    DeletionPolicy: Delete
+    Properties:
+      UserName:
+        !Ref ResourceUserForExecution
+
+  ResourceRoleForExecution:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Delete
+    Properties:
+      RoleName: !Sub 'twilio-${ParameterApplicationName}-role-${ParameterCustomerCode}'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - events.amazonaws.com
+                - lambda.amazonaws.com
+                - glue.amazonaws.com
+
+  ResourcePolicyForStack:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    Properties:
+      ManagedPolicyName: !Sub 'twilio-${ParameterApplicationName}-policy-${ParameterCustomerCode}'
+      Roles:
+        - !Ref ResourceRoleForExecution
+      Users:
+        - !Ref ResourceUserForExecution
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'S3Permissions'
+            Effect: Allow
+            Action: s3:*
+            Resource:
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}'
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}/*'
+
+  ResourceGlueCrawler:
+    Type: AWS::Glue::Crawler
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Ref ParameterGlueCrawler
+      DatabaseName: !Ref ParameterGlueDatabase
+      Role: !GetAtt ResourceRoleForExecution.Arn
+      SchemaChangePolicy:
+        UpdateBehavior: 'UPDATE_IN_DATABASE'
+        DeleteBehavior: 'DELETE_FROM_DATABASE'
+      Configuration: "{\"Version\":1.0,\"CrawlerOutput\":{\"Partitions\":{\"AddOrUpdateBehavior\":\"InheritFromTable\"}}}"
+      Targets:
+        S3Targets:
+          - Path: !Sub 's3://${ParameterS3Bucket}/outreach'
+          - Path: !Sub 's3://${ParameterS3Bucket}/response'
+
+  ResourceAthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: !Sub 'twilio-${ParameterApplicationName}-${ParameterCustomerCode}'
+      State: ENABLED
+      WorkGroupConfiguration:
+        ResultConfiguration:
+          OutputLocation: !Sub 's3://${ParameterS3Bucket}/query-results/'
+
+  ResourceLambdaLayerTwilioPhythonLibrary:
+    Type: AWS::Lambda::LayerVersion
+    DeletionPolicy: Delete
+    Properties:
+      LayerName: !Sub 'twilioPythonLibrary-${ParameterCustomerCode}'
+      Content:
+        S3Bucket: !Ref ParameterS3Bucket
+        S3Key: 'artifacts/twilioPython.zip'
+      CompatibleRuntimes:
+        - 'python3.8'
+
+  ResourceLambdaSendOutreach:
+    Type: AWS::Lambda::Function
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !Ref ParameterLambdaSendOutreach
+      Environment:
+        Variables:
+          TWILIO_ACCOUNT_SID: !Ref ParameterTwilioAccountSID
+          TWILIO_AUTH_TOKEN: !Ref ParameterTwilioAuthToken
+          TWILIO_FLOW_SID: !Ref ParameterTwilioFlowSID
+          TWILIO_PHONE_NUMBER: !Ref ParameterTwilioPhoneNumber
+          AWS_S3_BUCKET: !Ref ParameterS3Bucket
+          AWS_FILENAME_PATTERN_OUTREACH: !Ref ParameterFilenamePatternOutreach
+          AWS_FILENAME_PATTERN_QUEUE: !Ref ParameterFilenamePatternQueue
+          AWS_FILENAME_PATTERN_RESPONSE: !Ref ParameterFilenamePatternResponse
+      MemorySize: 128
+      Timeout: 60
+      ReservedConcurrentExecutions: 1
+      Role: !GetAtt ResourceRoleForExecution.Arn
+      Runtime: 'python3.8'
+      Layers:
+        - !Ref ResourceLambdaLayerTwilioPhythonLibrary
+      Handler: lambda_function.lambda_handler
+      Code:
+        S3Bucket: !Ref ParameterS3Bucket
+        S3Key: !Sub 'artifacts/send_outreach_pcp_followup.zip'
+
+  ResourceLambdaS3InvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ResourceLambdaSendOutreach
+      Principal: s3.amazonaws.com
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: !Sub 'arn:aws:s3:::${ParameterS3Bucket}'
