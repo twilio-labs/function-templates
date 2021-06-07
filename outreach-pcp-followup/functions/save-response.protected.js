@@ -66,15 +66,15 @@ exports.handler = async function(context, event, callback) {
             Body: JSON.stringify(patient),
             ServerSideEncryption: 'AES256'
         };
-        //let results = await s3.putObject(params).promise();
+        let results = await s3.putObject(params).promise();
         console.log('PUT - ', params.Key);
 
         callback(null, { 'code': 200 });
 
     } catch (err) {
-        if (err.code === 'ERR_ASSERTION') callback(err.code, { 'code': 400 });
-        else throw new Error(err);
+      if (err.code === 'ERR_ASSERTION') callback(err.code, { 'code': 400 });
+      else callback(err.code);
     } finally {
-        console.timeEnd(THIS);
+      console.timeEnd(THIS);
     }
 };

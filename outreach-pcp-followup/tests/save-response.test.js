@@ -57,9 +57,9 @@ test('normal flow of events',async () => {
   };
 
   mockS3PutObject.mockImplementation(params => {
-    return {
+    return { promise: () => Promise.resolve({
       Body: params.Key
-    };
+    })};
   });
 
   const callback = jest.fn();
