@@ -1,35 +1,41 @@
 const THIS = 'save-booked:';
 // --------------------------------------------------------------------------------
+// saves appointment booked event to s3
+//
 // event.appointment - flow.data that will be parenthesis enclosed comma-separated
 //                     key=value string. Note that values will not be enclosed in quotes.
 //                     (eg., {k1=v1, k2=v2, k3=v3} )
 //
+// returns
+// . code = 200, if successful
+// . code = 400, if input parameter error
+// . throws Error, otherwise
+//
 // . PUT in STATE   (disposition=QUEUED)
 // . PUT in HISTORY (disposition=QUEUED)
 // --------------------------------------------------------------------------------
-const assert = require('assert');
-const aws = require('aws-sdk');
-const path = Runtime.getFunctions()['helpers'].path;
-const { retrieveParameter, assignParameter} = require(path);
 
 exports.handler = async function(context, event, callback) {
-    console.log(THIS, 'Started');
-    // ---------- validate environment variables & input event
-    const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
-    const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
-    const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-    const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
-    const TWILIO_FLOW_SID                     = await retrieveParameter(context, 'TWILIO_FLOW_SID');
-    assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
+  console.log(THIS, 'Begin');
+  console.time(THIS);
+  try {
+    const assert = require('assert');
+    const aws = require('aws-sdk');
+    const path = Runtime.getFunctions()['helpers'].path;
+    const { retrieveParameter, assignParameter} = require(path);
 
-    console.log(AWS_REGION);
-    // initialize s3 client
-    const s3 = new aws.S3({
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-        region: AWS_REGION
-    });
+//    console.log(THIS, 'Finish');
+//    callback(null, null);
+//    return;
+
+    // ---------- validate environment variables & input event
+    const AWS_ACCESS_KEY_ID                        = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
+    const AWS_SECRET_ACCESS_KEY                    = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
+    const AWS_REGION                               = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_S3_BUCKET                            = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                          = await retrieveParameter(context, 'TWILIO_FLOW_SID');
+    assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
 
     // convert appointment string to json
     let appointment = {};
@@ -42,7 +48,13 @@ exports.handler = async function(context, event, callback) {
     assert (appointment.hasOwnProperty('patient_id')          , 'missing appointment.patient_id');
     assert (appointment.hasOwnProperty('appointment_datetime'), 'missing appointment.appointment_datetime');
     appointment.event_type = 'BOOKED'; // over-ride
-    // console.log(THIS, 'appointment=', appointment);
+
+    // initialize s3 client
+    const s3 = new aws.S3({
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        region: AWS_REGION
+    });
 
     const state_file_s3key = [
         'state',
@@ -56,40 +68,37 @@ exports.handler = async function(context, event, callback) {
     const disposition = 'QUEUED'
     const new_state_file_s3key = state_file_s3key.replace('{DISPOSITION}', disposition);
 
-    let params = null;
-    try {
-        params = {
-            Bucket: AWS_S3_BUCKET,
-            Key: new_state_file_s3key,
-            Body: JSON.stringify(appointment),
-            ServerSideEncryption: 'AES256'
-        };
-        let results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
+    let params = {
+      Bucket: AWS_S3_BUCKET,
+      Key: new_state_file_s3key,
+      Body: JSON.stringify(appointment),
+      ServerSideEncryption: 'AES256'
+    };
+    let results = await s3.putObject(params).promise();
+    console.log(THIS, 'PUT - ', params.Key);
 
-        params = {
-            Bucket: AWS_S3_BUCKET,
-            Key: new_state_file_s3key
-              .replace('state', 'history')
-              .replace('.json', '-' + new Date().getTime() + '.json'),
-            Body: JSON.stringify(appointment),
-            ServerSideEncryption: 'AES256'
-        };
-        results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
-
-    } catch (err) {
-        console.log(THIS, 'params=', params);
-        console.log(err, err.stack);
-        callback(err);
-    }
+    params = {
+        Bucket: AWS_S3_BUCKET,
+        Key: new_state_file_s3key
+          .replace('state', 'history')
+          .replace('.json', '-' + new Date().getTime() + '.json'),
+        Body: JSON.stringify(appointment),
+        ServerSideEncryption: 'AES256'
+    };
+    results = await s3.putObject(params).promise();
+    console.log(THIS, 'PUT - ', params.Key);
 
     const response = {
-        status: 'saved',
+        code: 200,
         event_type: appointment.event_type,
         appointment_s3key: new_state_file_s3key,
-        appointment: appointment
     };
+    callback(null, response);
 
-    return callback(null, response);
+  } catch (err) {
+    if (err.code === 'ERR_ASSERTION') callback(err.code, { 'code': 400 });
+    else throw new Error(err);
+  } finally {
+    console.timeEnd(THIS);
+  }
 };

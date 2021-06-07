@@ -25,6 +25,21 @@ const CONSTANTS = {
   'AWS_GLUE_DATABASE': 'patient_appointments',
 };
 
+function determineRuntimeEnvironment(context) {
+  if (context == null || Object.keys(context).length == 0)
+  {
+    return 'local';
+  }
+  else if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost'))
+  {
+    return 'localhost';
+  }
+  else
+  {
+    return 'server';
+  }
+}
+
 // --------------------------------------------------------------------------------
 //
 // --------------------------------------------------------------------------------
@@ -32,43 +47,47 @@ async function assignParameter(context, key, value) {
   const onLocalhost = (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')) ? true : false;
   console.debug('Runtime environment is localhost:', onLocalhost);
 
-  if (onLocalhost)
+  switch (determineRuntimeEnvironment(context))
   {
-    process.env[key] = value;
-  }
-  else
-  {
-    const client = context.getTwilioClient();
-    const service_sid = await retrieveParameter(context, 'TWILIO_SERVICE_SID');
-    const environment_sid = await retrieveParameter(contenxt, 'TWILIO_ENVIRONMENT_SID');
+    case 'local':
+      process.env[key] = value;
+      break;
+    case 'localhost':
+      process.env[key] = value;
+      break;
+    case 'server':
+      const client = context.getTwilioClient();
+      const service_sid = await retrieveParameter(context, 'TWILIO_SERVICE_SID');
+      const environment_sid = await retrieveParameter(contenxt, 'TWILIO_ENVIRONMENT_SID');
 
-    let variable_sid = null;
-    await client.serverless
-      .services(service_sid)
-      .environments(environment_sid)
-      .variables
-      .list()
-      .then(
-        variables => variables.forEach(v => {
-            if (v.key == key) variable_sid = v.sid;
-          })
-      );
-
-    if (variable_sid != null) {
-      await client.serverless
-        .services(service_sid)
-        .environments(environment_sid)
-        .variables(variable_sid)
-        .update({ value: value })
-        .then(v => console.log('Updated variable', v.key));
-    } else {
+      let variable_sid = null;
       await client.serverless
         .services(service_sid)
         .environments(environment_sid)
         .variables
-        .create({ key: key, value: value })
-        .then(v => console.log('Created variable', v.key));
-    }
+        .list()
+        .then(
+          variables => variables.forEach(v => {
+              if (v.key == key) variable_sid = v.sid;
+            })
+        );
+
+      if (variable_sid != null) {
+        await client.serverless
+          .services(service_sid)
+          .environments(environment_sid)
+          .variables(variable_sid)
+          .update({ value: value })
+          .then(v => console.log('Updated variable', v.key));
+      } else {
+        await client.serverless
+          .services(service_sid)
+          .environments(environment_sid)
+          .variables
+          .create({ key: key, value: value })
+          .then(v => console.log('Created variable', v.key));
+      }
+      break;
   }
   console.log('Assigned', key, '=', value);
 }
@@ -83,36 +102,18 @@ async function assignParameter(context, key, value) {
 //   . TWILIO_ENVIRONMENT_DOMAIN_NAME from TWILIO_SERVICE_SID
 // --------------------------------------------------------------------------------
 async function retrieveParameter(context, key) {
-  if (context[key] != undefined
-   && context[key] != null
-   && context[key] != '')
-  {
-    // if key is available in context, return it 1st
-    return context[key];
-  }
-
-  if (CONSTANTS[key] != undefined
-    && CONSTANTS[key] != null
-    && CONSTANTS[key] != '')
-  {
-    // if key is available in CONSTANTS, return it 2nd
-    return CONSTANTS[key];
-  }
+  if (CONSTANTS[key]) return CONSTANTS[key];
+  if (context[key]) return context[key];
+  if (process.env[key]) return process.env[key];
 
   const account_sid = context.ACCOUNT_SID ? context.ACCOUNT_SID: process.env.ACCOUNT_SID;
   const auth_token  = context.AUTH_TOKEN  ? context.AUTH_TOKEN: process.env.AUTH_TOKEN;
-  const onLocalhost = (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')) ? true : false;
-  const client = (onLocalhost) ? require('twilio')(account_sid, auth_token) : context.getTwilioClient();
+  const client = (determineRuntimeEnvironment(context) === 'localhost')
+    ? require('twilio')(account_sid, auth_token)
+    : context.getTwilioClient();
 
   switch (key)
   {
-    case 'AWS_S3_BUCKET':
-    {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
-      const bucket_name = CONSTANTS.AWS_S3_BUCKET_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE;
-      await assignParameter(context,'AWS_S3_BUCKET', bucket_name);
-      return bucket_name;
-    }
     case 'AWS_ACCESS_KEY_ID':
     {
       // ---------- get aws clients
@@ -171,6 +172,34 @@ async function retrieveParameter(context, key) {
       await assignParameter(context,'AWS_CF_STACK_BUCKET', stack_name);
       return stack_name;
     }
+    case 'AWS_GLUE_CRAWLER':
+    {
+      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
+      const crawler_name = CONSTANTS.AWS_GLUE_CRAWLER_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE;
+      return crawler_name;
+    }
+    case 'AWS_LAMBDA_SEND_REMINDERS':
+    {
+      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
+      const lambda_name = CONSTANTS.AWS_LAMBDA_SEND_REMINDERS + '-' + APPLICATION_CUSTOMER_CODE;
+      await assignParameter(context,'AWS_LAMBDA_SEND_REMINDERS', lambda_name);
+      return lambda_name;
+    }
+    case 'AWS_S3_BUCKET':
+    {
+      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
+      const bucket_name = CONSTANTS.AWS_S3_BUCKET_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE;
+      await assignParameter(context,'AWS_S3_BUCKET', bucket_name);
+      return bucket_name;
+    }
+    case 'TWILIO_ACCOUNT_SID':
+    {
+      return await retrieveParameter(context, 'ACCOUNT_SID');
+    }
+    case 'TWILIO_AUTH_TOKEN':
+    {
+      return await retrieveParameter(context, 'AUTH_TOKEN');
+    }
     case 'TWILIO_ENVIRONMENT_SID':
     {
       const service_sid = await retrieveParameter(context, 'TWILIO_SERVICE_SID');
@@ -214,19 +243,6 @@ async function retrieveParameter(context, key) {
         return null;
       }
     }
-    case 'AWS_GLUE_CRAWLER':
-    {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
-      const crawler_name = CONSTANTS.AWS_GLUE_CRAWLER_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE;
-      return crawler_name;
-    }
-    case 'AWS_LAMBDA_SEND_REMINDERS':
-    {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
-      const lambda_name = CONSTANTS.AWS_LAMBDA_SEND_REMINDERS + '-' + APPLICATION_CUSTOMER_CODE;
-      await assignParameter(context,'AWS_LAMBDA_SEND_REMINDERS', lambda_name);
-      return lambda_name;
-    }
     case 'TWILIO_SERVICE_SID':
     {
       let service_sid = null;
@@ -246,7 +262,7 @@ async function retrieveParameter(context, key) {
       }
     }
     default:
-      return null;
+      throw new Error(`Undefined variables ${key}!!!`);
   }
 }
 
