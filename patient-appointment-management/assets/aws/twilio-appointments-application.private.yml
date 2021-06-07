@@ -17,6 +17,7 @@ Parameters:
     Type: String
 
   ParamTwilioAuthToken:
+    NoEcho: True
     Type: String
 
   ParamTwilioFlowSID:
@@ -187,10 +188,10 @@ Resources:
         Variables:
           ACCOUNT_SID: !Ref ParamTwilioAccountSID
           AUTH_TOKEN: !Ref ParamTwilioAuthToken
-          FLOW_SID: !Ref ParamTwilioFlowSID
+          TWILIO_FLOW_SID: !Ref ParamTwilioFlowSID
           TWILIO_PHONE_NUMBER: !Ref ParamTwilioPhoneNumber
-          APPOINTMENTS_S3_BUCKET: !Ref ParamAppointmentsS3BucketName
-          APPOINTMENT_FILENAME_PATTERN: !Ref ParamAppointmentFilenamePattern
+          AWS_S3_BUCKET: !Ref ParamAppointmentsS3BucketName
+          APPLICATION_FILENAME_PATTERN_APPOINTMENT: !Ref ParamAppointmentFilenamePattern
           REMINDER_OUTREACH_START: !Ref ParamReminderOutreachStart
           REMINDER_OUTREACH_FINISH: !Ref ParamReminderOutreachFinish
           REMINDER_FIRST_OFFSET: !Ref ParamReminderFirstOffset

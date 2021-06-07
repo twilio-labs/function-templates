@@ -16,9 +16,9 @@ done
 APPLICATION_NAME="patient-appointment-management"
 AUTHENTICATION="${ACCOUNT_SID}:${AUTH_TOKEN}"
 
-FLOW_SID=$(curl "https://studio.twilio.com/v2/Flows" --silent --user ${AUTHENTICATION} \
+TWILIO_FLOW_SID=$(curl "https://studio.twilio.com/v2/Flows" --silent --user ${AUTHENTICATION} \
   | jq --raw-output '.flows[] | select(.friendly_name | contains("'${APPLICATION_NAME}'")) | .sid')
-echo "FLOW_SID=${FLOW_SID}"
+echo "TWILIO_FLOW_SID=${TWILIO_FLOW_SID}"
 
 
 function test_function {
@@ -62,7 +62,7 @@ response=$(curl --silent --request POST http://localhost:3000/${FUNCTION_NAME} -
 # echo $response | jq .
 [ $(echo $response | jq .status) != $STATUS ] || exit 1
 [ $(echo $response | jq .event_type) != $EVENT_TYPE ] || exit 1
-[ $(echo $response | jq .appointment_s3key) != "state/flow=${FLOW_SID}/disposition=${DISPOSITION}/appointment2000-patient1000.json" ] || exit 1
+[ $(echo $response | jq .appointment_s3key) != "state/flow=${TWILIO_FLOW_SID}/disposition=${DISPOSITION}/appointment2000-patient1000.json" ] || exit 1
 
 echo "passed"
 echo ". status =" $(echo $response | jq .event_type)

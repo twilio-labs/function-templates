@@ -20,28 +20,28 @@ exports.handler = async function (context, event, callback) {
   const CUSTOMER_EHR_ENDPOINT_URL = await retrieveParameter(context, 'CUSTOMER_EHR_ENDPOINT_URL');
   const APPLICATION_NAME          = await retrieveParameter(context, 'APPLICATION_NAME');
   const TWILIO_PHONE_NUMBER       = await retrieveParameter(context, 'TWILIO_PHONE_NUMBER');
-  const SERVICE_SID               = await retrieveParameter(context, 'SERVICE_SID');
-  const ENVIRONMENT_SID           = await retrieveParameter(context, 'ENVIRONMENT_SID');
-  const ENVIRONMENT_DOMAIN_NAME   = await retrieveParameter(context, 'ENVIRONMENT_DOMAIN_NAME');
-  const FLOW_SID                  = await retrieveParameter(context, 'FLOW_SID');
+  const TWILIO_SERVICE_SID               = await retrieveParameter(context, 'TWILIO_SERVICE_SID');
+  const TWILIO_ENVIRONMENT_SID           = await retrieveParameter(context, 'TWILIO_ENVIRONMENT_SID');
+  const TWILIO_ENVIRONMENT_DOMAIN_NAME   = await retrieveParameter(context, 'TWILIO_ENVIRONMENT_DOMAIN_NAME');
+  const TWILIO_FLOW_SID                  = await retrieveParameter(context, 'TWILIO_FLOW_SID');
 
   // ---------- load & configure studio flow definition
   console.log(THIS, 'Replacing YOUR_HEALTH_SYSTEM_NAME      ->', CUSTOMER_NAME);
   console.log(THIS, 'Replacing YOUR_EHR_ENDPOINT_URL        ->', CUSTOMER_EHR_ENDPOINT_URL);
-  console.log(THIS, 'Replacing YOUR_SERVICE_SID             ->', SERVICE_SID);
-  console.log(THIS, 'Replacing YOUR_ENVIRONMENT_SID         ->', ENVIRONMENT_SID);
-  console.log(THIS, 'Replacing YOUR_ENVIRONMENT_DOMAIN_NAME ->', ENVIRONMENT_DOMAIN_NAME);
+  console.log(THIS, 'Replacing YOUR_TWILIO_SERVICE_SID             ->', TWILIO_SERVICE_SID);
+  console.log(THIS, 'Replacing YOUR_TWILIO_ENVIRONMENT_SID         ->', TWILIO_ENVIRONMENT_SID);
+  console.log(THIS, 'Replacing YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME ->', TWILIO_ENVIRONMENT_DOMAIN_NAME);
   const flow_definition_file = Runtime.getAssets()['/studio-flow-template.json'].path;
   let flow_definition =  fs.readFileSync(flow_definition_file).toString('utf-8')
     .replace('YOUR_HEALTH_SYSTEM_NAME', CUSTOMER_NAME)
     .replace('YOUR_EHR_ENDPOINT_URL'  , CUSTOMER_EHR_ENDPOINT_URL)
-    .replaceAll('YOUR_SERVICE_SID', SERVICE_SID)
-    .replaceAll('YOUR_ENVIRONMENT_SID', ENVIRONMENT_SID)
-    .replaceAll('YOUR_ENVIRONMENT_DOMAIN_NAME', ENVIRONMENT_DOMAIN_NAME);
+    .replaceAll('YOUR_TWILIO_SERVICE_SID', TWILIO_SERVICE_SID)
+    .replaceAll('YOUR_TWILIO_ENVIRONMENT_SID', TWILIO_ENVIRONMENT_SID)
+    .replaceAll('YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME', TWILIO_ENVIRONMENT_DOMAIN_NAME);
 
   const client = context.getTwilioClient();
   let functions = await client.serverless
-    .services(SERVICE_SID)
+    .services(TWILIO_SERVICE_SID)
     .functions.list();
   functions.forEach(function(f) {
     const fname = 'YOUR_FUNCTION_SID[' + f.friendlyName.replace('/', '') + ']';
@@ -53,7 +53,7 @@ exports.handler = async function (context, event, callback) {
   let action = null;
   if (event.hasOwnProperty('action') && event.action === 'DELETE') {
     action = 'DELETE';
-  } else if (FLOW_SID != null && FLOW_SID.startsWith('FW')) {
+  } else if (TWILIO_FLOW_SID != null && TWILIO_FLOW_SID.startsWith('FW')) {
     action = 'UPDATE';
   } else {
     action = 'CREATE';
@@ -91,9 +91,9 @@ exports.handler = async function (context, event, callback) {
 
     case 'UPDATE':
     {
-      console.log(THIS, 'Updating flow FLOW_SID=', FLOW_SID);
+      console.log(THIS, 'Updating flow TWILIO_FLOW_SID=', TWILIO_FLOW_SID);
       flow = await client.studio
-        .flows(FLOW_SID)
+        .flows(TWILIO_FLOW_SID)
         .update({
           friendlyName: APPLICATION_NAME,
           status: 'published',
@@ -120,7 +120,7 @@ exports.handler = async function (context, event, callback) {
           commitMessage: 'Code Exchange automatic deploy',
           definition: `${flow_definition}`
         });
-      assignParameter(context, 'FLOW_SID', flow.sid);
+      assignParameter(context, 'TWILIO_FLOW_SID', flow.sid);
 
       console.log(THIS, 'TWILIO_PHONE_NUMBER=', TWILIO_PHONE_NUMBER);
       const phoneNumberSid = await getPhoneNumberSid(TWILIO_PHONE_NUMBER);
@@ -132,8 +132,8 @@ exports.handler = async function (context, event, callback) {
 
     case 'DELETE':
     {
-      console.log(THIS, 'Deleting FLOW_SID=', FLOW_SID);
-      await client.studio.flows(FLOW_SID).remove();
+      console.log(THIS, 'Deleting TWILIO_FLOW_SID=', TWILIO_FLOW_SID);
+      await client.studio.flows(TWILIO_FLOW_SID).remove();
     }
     break;
 

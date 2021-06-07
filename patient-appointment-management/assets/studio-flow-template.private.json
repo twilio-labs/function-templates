@@ -420,14 +420,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-booked",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-booked",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 980,
           "x": 550
         },
         "function_sid": "YOUR_FUNCTION_SID[save-booked]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {
@@ -453,14 +453,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-canceled",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-canceled",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 930,
           "x": 870
         },
         "function_sid": "YOUR_FUNCTION_SID[save-canceled]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {
@@ -486,14 +486,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-modified",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-modified",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 880,
           "x": 1190
         },
         "function_sid": "YOUR_FUNCTION_SID[save-modified]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {
@@ -519,14 +519,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-noshow",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-noshow",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 820,
           "x": 1520
         },
         "function_sid": "YOUR_FUNCTION_SID[save-noshow]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {
@@ -552,14 +552,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-confirmed",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-confirmed",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 780,
           "x": 1840
         },
         "function_sid": "YOUR_FUNCTION_SID[save-confirmed]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {
@@ -585,14 +585,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-rescheduled",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-rescheduled",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 730,
           "x": 2170
         },
         "function_sid": "YOUR_FUNCTION_SID[save-rescheduled]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {
@@ -641,14 +641,14 @@
             "value": "{{flow.flow_sid}}"
           }
         ],
-        "url": "https://YOUR_ENVIRONMENT_DOMAIN_NAME/save-remind",
-        "environment_sid": "YOUR_ENVIRONMENT_SID",
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/save-remind",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
         "offset": {
           "y": 770,
           "x": -140
         },
         "function_sid": "YOUR_FUNCTION_SID[save-remind]",
-        "service_sid": "YOUR_SERVICE_SID"
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
       }
     },
     {

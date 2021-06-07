@@ -30,8 +30,8 @@ exports.handler = async function(context, event, callback) {
   const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'DEPLOYER_AWS_ACCESS_KEY_ID');
   const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY');
   const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-  const APPOINTMENTS_S3_BUCKET       = await retrieveParameter(context, 'APPOINTMENTS_S3_BUCKET');
-  const APPOINTMENT_FILENAME_PATTERN = await retrieveParameter(context, 'APPOINTMENT_FILENAME_PATTERN');
+  const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
+  const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
   assert (event.hasOwnProperty('flow_sid')   , 'missing input event.flow_sid');
   assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
   assert (event.hasOwnProperty('flow_sid')                          , 'missing input event.flow_sid');
@@ -47,10 +47,10 @@ exports.handler = async function(context, event, callback) {
     console.log(THIS, 'find active appointments for phone=', event.phone);
     // ----------- find all appointments for patient_id
     let params = {
-        Bucket: APPOINTMENTS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: [
             'state',
-            'flow='+TWILIO_FLOW_SID,
+            'flow='+TWILIO_TWILIO_FLOW_SID,
             'disposition=QUEUED',
             ''
         ].join('/')
@@ -58,7 +58,7 @@ exports.handler = async function(context, event, callback) {
     keys_q = await getAppointmentsByPhone(params, event.phone, s3);
 
     params = {
-        Bucket: APPOINTMENTS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: [
             'state',
             'flow=' + event.flow_sid,
@@ -69,7 +69,7 @@ exports.handler = async function(context, event, callback) {
     keys_r1 = await getAppointmentsByPhone(params, event.phone, s3);
 
     params = {
-        Bucket: APPOINTMENTS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: [
             'state',
             'flow=' + event.flow_sid,

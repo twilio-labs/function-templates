@@ -32,9 +32,9 @@ exports.handler = async function(context, event, callback) {
     const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
     const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
     const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-    const APPOINTMENTS_S3_BUCKET       = await retrieveParameter(context, 'APPOINTMENTS_S3_BUCKET');
-    const APPOINTMENT_FILENAME_PATTERN = await retrieveParameter(context, 'APPOINTMENT_FILENAME_PATTERN');
-    const FLOW_SID                     = await retrieveParameter(context, 'FLOW_SID');
+    const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                     = await retrieveParameter(context, 'TWILIO_FLOW_SID');
     assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
 
     // initialize s3 client
@@ -58,10 +58,10 @@ exports.handler = async function(context, event, callback) {
     console.log(THIS, 'find active appointments for patient_id=', appointment.patient_id);
     // ----------- find all appointments for patient_id
     let params = {
-        Bucket: APPOINTMENTS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Prefix: [
             'state',
-            'flow='+TWILIO_FLOW_SID,
+            'flow='+TWILIO_TWILIO_FLOW_SID,
             'disposition=QUEUED',
             ''
         ].join('/')
@@ -69,7 +69,7 @@ exports.handler = async function(context, event, callback) {
     keys_q = await getAppointmentsForPatient(params, appointment.patient_id, s3);
 
     params = {
-        Bucket: APPOINTMENTS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: [
             'state',
             'flow=' + event.flow_sid,
@@ -80,7 +80,7 @@ exports.handler = async function(context, event, callback) {
     keys_r1 = await getAppointmentsForPatient(params, appointment.patient_id, s3);
 
     params = {
-        Bucket: APPOINTMENTS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: [
             'state',
             'flow=' + event.flow_sid,
@@ -107,7 +107,7 @@ exports.handler = async function(context, event, callback) {
         try {
 
             params = {
-                Bucket: APPOINTMENTS_S3_BUCKET,
+                Bucket: AWS_S3_BUCKET,
                 Key: s3key
             }
             let results = await s3.getObject(params).promise();
@@ -117,7 +117,7 @@ exports.handler = async function(context, event, callback) {
             appointment.event_type = 'OPTED-OUT';
 
             params = {
-                Bucket: APPOINTMENTS_S3_BUCKET,
+                Bucket: AWS_S3_BUCKET,
                 Key: s3key.replace(disposition, 'OPTED-OUT'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -126,14 +126,14 @@ exports.handler = async function(context, event, callback) {
             console.log('  PUT - ', params.Key);
 
             params = {
-                Bucket: APPOINTMENTS_S3_BUCKET,
+                Bucket: AWS_S3_BUCKET,
                 Key: s3key
             }
             results = await s3.deleteObject(params).promise();
             console.log('  DELETE - ', params.Key);
 
             params = {
-                Bucket: APPOINTMENTS_S3_BUCKET,
+                Bucket: AWS_S3_BUCKET,
                 Key: s3key.replace('state', 'history').replace(disposition, 'OPTED-OUT').replace('.json', new Date().getTime() +'.json'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'

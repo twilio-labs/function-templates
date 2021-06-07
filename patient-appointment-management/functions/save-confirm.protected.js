@@ -18,9 +18,9 @@ exports.handler = async function(context, event, callback) {
     const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
     const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
     const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-    const APPOINTMENTS_S3_BUCKET       = await retrieveParameter(context, 'APPOINTMENTS_S3_BUCKET');
-    const APPOINTMENT_FILENAME_PATTERN = await retrieveParameter(context, 'APPOINTMENT_FILENAME_PATTERN');
-    const FLOW_SID                     = await retrieveParameter(context, 'FLOW_SID');
+    const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                     = await retrieveParameter(context, 'TWILIO_FLOW_SID');
     assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
 
     // initialize s3 client
@@ -46,9 +46,9 @@ exports.handler = async function(context, event, callback) {
 
     const state_file_s3key = [
         'state',
-        'flow=' + FLOW_SID,
+        'flow=' + TWILIO_FLOW_SID,
         'disposition={DISPOSITION}',
-        APPOINTMENT_FILENAME_PATTERN
+        APPLICATION_FILENAME_PATTERN_APPOINTMENT
           .replace('{appointment_id}', appointment.appointment_id)
           .replace('{patient_id}'    , appointment.patient_id)
     ].join('/');
@@ -58,7 +58,7 @@ exports.handler = async function(context, event, callback) {
     for (let d of ['QUEUED', 'REMINDED-1', 'REMINDED-2']) {
         try {
             const params = {
-                Bucket: APPOINTMENTS_S3_BUCKET,
+                Bucket: AWS_S3_BUCKET,
                 Key: state_file_s3key.replace('{DISPOSITION}', d)
             }
             const results = await s3.headObject(params).promise();
@@ -77,7 +77,7 @@ exports.handler = async function(context, event, callback) {
     try {
 
         params = {
-            Bucket: APPOINTMENTS_S3_BUCKET,
+            Bucket: AWS_S3_BUCKET,
             Key: new_state_file_s3key,
             Body: JSON.stringify(appointment),
             ServerSideEncryption: 'AES256'
@@ -86,7 +86,7 @@ exports.handler = async function(context, event, callback) {
         console.log(THIS, 'PUT - ', params.Key);
 
         params = {
-            Bucket: APPOINTMENTS_S3_BUCKET,
+            Bucket: AWS_S3_BUCKET,
             Key: new_state_file_s3key
               .replace('state', 'history')
               .replace('.json', '-' + new Date().getTime() + '.json'),

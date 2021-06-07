@@ -17,7 +17,6 @@ async function getAllKeys(params, s3client, allKeys = []){
 }
 
 // --------------------------------------------------------------------------------
-//
 // Note that exports.handler is changed to 'async' allow use of 'await' to serialize execution.
 // Therefore, all asnychronous s3 functions must be called in this function body.
 // --------------------------------------------------------------------------------
@@ -25,11 +24,11 @@ exports.handler = async function(event, context) {
     console.log('Started', THIS);
 
     // ---------- validate enviroment variables & input event
-    assert(process.env.hasOwnProperty('APPOINTMENTS_S3_BUCKET')      , 'missing process.env.APPOINTMENTS_S3_BUCKET');
-    assert(process.env.hasOwnProperty('APPOINTMENT_FILENAME_PATTERN'), 'missing process.env.APPOINTMENT_FILENAME_PATTERN');
+    assert(process.env.hasOwnProperty('AWS_S3_BUCKET')      , 'missing process.env.AWS_S3_BUCKET');
+    assert(process.env.hasOwnProperty('APPLICATION_FILENAME_PATTERN_APPOINTMENT'), 'missing process.env.APPLICATION_FILENAME_PATTERN_APPOINTMENT');
     assert(process.env.hasOwnProperty('ACCOUNT_SID')                 , 'missing process.env.ACCOUNT_SID');
     assert(process.env.hasOwnProperty('AUTH_TOKEN')                  , 'missing process.env.AUTH_TOKEN');
-    assert(process.env.hasOwnProperty('FLOW_SID')                    , 'missing process.env.FLOW_SID');
+    assert(process.env.hasOwnProperty('TWILIO_FLOW_SID')                    , 'missing process.env.TWILIO_FLOW_SID');
     assert(process.env.hasOwnProperty('TWILIO_PHONE_NUMBER')         , 'missing process.env.TWILIO_PHONE_NUMBER');
     assert(process.env.hasOwnProperty('REMINDER_OUTREACH_START')     , 'missing process.env.REMINDER_OUTREACH_START');
     assert(process.env.hasOwnProperty('REMINDER_OUTREACH_FINISH')    , 'missing process.env.REMINDER_OUTREACH_FINISH');
@@ -56,10 +55,10 @@ exports.handler = async function(event, context) {
 
     // ---------- find all appointments in QUEUED & REMINDED-1
     let params = {
-        Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+        Bucket: process.env.AWS_S3_BUCKET,
         Prefix: [
             'state',
-            'flow='+process.env.TWILIO_FLOW_SID,
+            'flow='+process.env.TWILIO_TWILIO_FLOW_SID,
             'disposition=QUEUED',
             ''
         ].join('/')
@@ -67,10 +66,10 @@ exports.handler = async function(event, context) {
     const keys_q = await getAllKeys(params, s3);
 
     params = {
-        Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+        Bucket: process.env.AWS_S3_BUCKET,
         Prefix: [
             'state',
-            'flow=' + process.env.TWILIO_FLOW_SID,
+            'flow=' + process.env.TWILIO_TWILIO_FLOW_SID,
             'disposition=REMINDED-1',
             ''
         ].join('/')
@@ -86,7 +85,7 @@ exports.handler = async function(event, context) {
         console.log('appointment_s3key=', s3key);
 
         let params = {
-            Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+            Bucket: process.env.AWS_S3_BUCKET,
             Key: s3key
         }
         let results = await s3.getObject(params).promise();
@@ -137,7 +136,7 @@ exports.handler = async function(event, context) {
             appointment.event_type = 'EXPIRE';
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key.replace(disposition, 'EXPIRED'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -146,14 +145,14 @@ exports.handler = async function(event, context) {
             console.log('  PUT - ', params.Key);
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key
             }
             results = await s3.deleteObject(params).promise();
             console.log('  DELETE - ', params.Key);
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key.replace('state', 'history').replace(disposition, 'EXPIRED').replace('.json', new Date().getTime() +'.json'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -173,7 +172,7 @@ exports.handler = async function(event, context) {
             console.log('  send reminder-2: reminder_2_utc <= current_utc');
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key.replace(disposition, 'REMINDED-2'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -182,14 +181,14 @@ exports.handler = async function(event, context) {
             console.log('  PUT - ', params.Key);
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key
             }
             results = await s3.deleteObject(params).promise();
             console.log('  DELETE - ', params.Key);
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key.replace('state', 'history').replace(disposition, 'REMINDED-2').replace('.json', new Date().getTime() +'.json'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -207,7 +206,7 @@ exports.handler = async function(event, context) {
             console.log('  send reminder-1: reminder_1_utc <= current_utc');
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key.replace(disposition, 'REMINDED-1'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -216,14 +215,14 @@ exports.handler = async function(event, context) {
             console.log('  PUT - ', params.Key);
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key
             }
             results = await s3.deleteObject(params).promise();
             console.log('  DELETE - ', params.Key);
 
             params = {
-                Bucket: process.env.APPOINTMENTS_S3_BUCKET,
+                Bucket: process.env.AWS_S3_BUCKET,
                 Key: s3key.replace('state', 'history').replace(disposition, 'REMINDED-1').replace('.json', new Date().getTime() +'.json'),
                 Body: JSON.stringify(appointment),
                 ServerSideEncryption: 'AES256'
@@ -244,7 +243,7 @@ exports.handler = async function(event, context) {
             // ---------- execute twilio studio flow
             const twlo = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN);
 
-            console.log('  executing twilio flow=', process.env.TWILIO_FLOW_SID);
+            console.log('  executing twilio flow=', process.env.TWILIO_TWILIO_FLOW_SID);
             reminder_count += 1
             appointment.event_type = 'REMIND';
             params = {
@@ -252,7 +251,7 @@ exports.handler = async function(event, context) {
               from: process.env.TWILIO_FROM_NUMBER,
               parameters: appointment
             }
-            results = await twlo.studio.v1.flows(process.env.TWILIO_FLOW_SID).executions.create(params);
+            results = await twlo.studio.v1.flows(process.env.TWILIO_TWILIO_FLOW_SID).executions.create(params);
             console.log('  response twilio flow=', results);
 
         } catch (err) {

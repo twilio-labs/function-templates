@@ -16,12 +16,12 @@ exports.handler = async function(context, event, callback) {
   console.time(THIS);
   try {
 
-  const CUSTOMER_CODE                  = await retrieveParameter(context, 'CUSTOMER_CODE');
-  const APPOINTMENTS_S3_BUCKET         = await retrieveParameter(context, 'APPOINTMENTS_S3_BUCKET');
+  const APPLICATION_CUSTOMER_CODE                  = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
+  const AWS_S3_BUCKET         = await retrieveParameter(context, 'AWS_S3_BUCKET');
   const DEPLOYER_AWS_ACCESS_KEY_ID     = await retrieveParameter(context, 'DEPLOYER_AWS_ACCESS_KEY_ID');
   const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY');
   const AWS_REGION                     = await retrieveParameter(context, 'AWS_REGION');
-  const CLOUDFORMATION_BUCKET_STACK    = await retrieveParameter(context, 'CLOUDFORMATION_BUCKET_STACK');
+  const AWS_CF_STACK_BUCKET    = await retrieveParameter(context, 'AWS_CF_STACK_BUCKET');
 
   const assets = Runtime.getAssets();
   const CF_TEMPLATE_PATH = assets['/aws/twilio-appointments-bucket.yml'].path;
@@ -38,7 +38,7 @@ exports.handler = async function(context, event, callback) {
   // ---------- look for stack
   let action = null;
   try {
-      await cf.describeStacks({ StackName: CLOUDFORMATION_BUCKET_STACK }).promise();
+      await cf.describeStacks({ StackName: AWS_CF_STACK_BUCKET }).promise();
       if (event.hasOwnProperty('action') && event.action === 'DELETE') {
         action = 'DELETE';
       } else {
@@ -50,17 +50,17 @@ exports.handler = async function(context, event, callback) {
 
   // ---------- read & validate CF template
   const definition = fs.readFileSync(CF_TEMPLATE_PATH);
-  console.log('Validating', CLOUDFORMATION_BUCKET_STACK, 'CloudFormation Stack...');
+  console.log('Validating', AWS_CF_STACK_BUCKET, 'CloudFormation Stack...');
   let response = await cf.validateTemplate({ TemplateBody: `${definition}` }).promise();
 
   switch (action) {
 
     case 'UPDATE':
     {
-      console.log('Updating', CLOUDFORMATION_BUCKET_STACK, 'CloudFormation Stack ...');
+      console.log('Updating', AWS_CF_STACK_BUCKET, 'CloudFormation Stack ...');
       try {
        let params = {
-          StackName: CLOUDFORMATION_BUCKET_STACK,
+          StackName: AWS_CF_STACK_BUCKET,
           TemplateBody: `${definition}`,
           Parameters: [
             {ParameterKey: 'ParamCustomerName', UsePreviousValue: true},
@@ -83,13 +83,13 @@ exports.handler = async function(context, event, callback) {
 
     case 'CREATE':
     {
-      console.log('Creating', CLOUDFORMATION_BUCKET_STACK, 'CloudFormation Stack...');
+      console.log('Creating', AWS_CF_STACK_BUCKET, 'CloudFormation Stack...');
       let params = {
-        StackName: CLOUDFORMATION_BUCKET_STACK,
+        StackName: AWS_CF_STACK_BUCKET,
         TemplateBody: `${definition}`,
         Parameters: [
-          {ParameterKey: 'ParamCustomerName', ParameterValue: CUSTOMER_CODE},
-          {ParameterKey: 'ParamAppointmentsS3BucketName', ParameterValue: APPOINTMENTS_S3_BUCKET}
+          {ParameterKey: 'ParamCustomerName', ParameterValue: APPLICATION_CUSTOMER_CODE},
+          {ParameterKey: 'ParamAppointmentsS3BucketName', ParameterValue: AWS_S3_BUCKET}
         ],
         OnFailure: 'ROLLBACK',
         Capabilities: ['CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM', 'CAPABILITY_AUTO_EXPAND']
@@ -104,12 +104,12 @@ exports.handler = async function(context, event, callback) {
     {
       // ---------- look for dependent stack
       try {
-        await cf.describeStacks({ StackName: 'twilio-appointments-application-' + CUSTOMER_CODE }).promise();
-        throw new Error('exists dependent twilio-appointments-application-' + CUSTOMER_CODE + 'stack!');
+        await cf.describeStacks({ StackName: 'twilio-appointments-application-' + APPLICATION_CUSTOMER_CODE }).promise();
+        throw new Error('exists dependent twilio-appointments-application-' + APPLICATION_CUSTOMER_CODE + 'stack!');
       } catch (AmazonCloudFormationException) {
       }
 
-      console.log('Emptying ', APPOINTMENTS_S3_BUCKET, 'S3 Bucket...');
+      console.log('Emptying ', AWS_S3_BUCKET, 'S3 Bucket...');
 
       async function _deleteKeys(params, s3client) {
         const response = await s3client.listObjectsV2(params).promise();
@@ -127,11 +127,11 @@ exports.handler = async function(context, event, callback) {
           await _deleteKeys(params, s3client); // recursive synchronous call
         }
       }
-      await _deleteKeys({ Bucket: APPOINTMENTS_S3_BUCKET, Prefix: '' }, s3);
+      await _deleteKeys({ Bucket: AWS_S3_BUCKET, Prefix: '' }, s3);
 
-      console.log('Deleting', CLOUDFORMATION_BUCKET_STACK, 'CloudFormation Stack...');
+      console.log('Deleting', AWS_CF_STACK_BUCKET, 'CloudFormation Stack...');
       let params = {
-        StackName: CLOUDFORMATION_BUCKET_STACK
+        StackName: AWS_CF_STACK_BUCKET
       }
       response = await cf.deleteStack(params).promise();
       console.log('Successfully initiated stack deletion')

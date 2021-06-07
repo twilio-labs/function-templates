@@ -11,8 +11,8 @@ exports.handler = async function(context, event, callback) {
   console.time(THIS);
   try {
 
-  const CUSTOMER_CODE = await retrieveParameter(context, 'CUSTOMER_CODE');
-  const APPOINTMENTS_S3_BUCKET = await retrieveParameter(context, 'APPOINTMENTS_S3_BUCKET');
+  const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
+  const AWS_S3_BUCKET = await retrieveParameter(context, 'AWS_S3_BUCKET');
   const DEPLOYER_AWS_ACCESS_KEY_ID = await retrieveParameter(context, 'DEPLOYER_AWS_ACCESS_KEY_ID');
   const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY');
   const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
@@ -28,14 +28,14 @@ exports.handler = async function(context, event, callback) {
 
   // ---------- look for dependent stack
   try {
-    const STACK = 'twilio-appointments-bucket-' + CUSTOMER_CODE;
+    const STACK = 'twilio-appointments-bucket-' + APPLICATION_CUSTOMER_CODE;
     const response = await cf.describeStacks({ StackName: STACK }).promise();
     const status = response.Stacks[0].StackStatus;
 
     if ( status.endsWith('_COMPLETE')) {
       console.log(THIS, 'StackStatus=', status);
-      console.log(THIS, 'Returning=', APPOINTMENTS_S3_BUCKET);
-      callback(null, APPOINTMENTS_S3_BUCKET);
+      console.log(THIS, 'Returning=', AWS_S3_BUCKET);
+      callback(null, AWS_S3_BUCKET);
     } else if ( status.endsWith('_IN_PROGRESS')) {
       console.log(THIS, 'StackStatus=', status);
       callback(null, 'DEPLOYING');

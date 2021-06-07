@@ -14,7 +14,7 @@ exports.handler = async function(context, event, callback) {
   console.time(THIS);
   try {
 
-  const CUSTOMER_CODE = await retrieveParameter(context, 'CUSTOMER_CODE');
+  const APPLICATION_CUSTOMER_CODE = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
   const DEPLOYER_AWS_ACCESS_KEY_ID = await retrieveParameter(context, 'DEPLOYER_AWS_ACCESS_KEY_ID');
   const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY');
   const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
@@ -29,7 +29,7 @@ exports.handler = async function(context, event, callback) {
 
   // ---------- look for dependent stack
   try {
-    const STACK = 'twilio-appointments-application-' + CUSTOMER_CODE;
+    const STACK = 'twilio-appointments-application-' + APPLICATION_CUSTOMER_CODE;
     const response = await cf.describeStacks({ StackName: STACK }).promise();
     const status = response.Stacks[0].StackStatus;
 

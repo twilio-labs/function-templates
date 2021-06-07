@@ -18,12 +18,12 @@ exports.handler = async function(context, event, callback) {
   try {
 
   // ---------- parameters
-  const CUSTOMER_CODE                  = await retrieveParameter(context, 'CUSTOMER_CODE');
-  const APPOINTMENTS_S3_BUCKET         = await retrieveParameter(context, 'APPOINTMENTS_S3_BUCKET');
+  const APPLICATION_CUSTOMER_CODE                  = await retrieveParameter(context, 'APPLICATION_CUSTOMER_CODE');
+  const AWS_S3_BUCKET         = await retrieveParameter(context, 'AWS_S3_BUCKET');
   const DEPLOYER_AWS_ACCESS_KEY_ID     = await retrieveParameter(context, 'DEPLOYER_AWS_ACCESS_KEY_ID');
   const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY');
   const AWS_REGION                     = await retrieveParameter(context, 'AWS_REGION');
-  const LAMBDA_SEND_REMINDERS          = await retrieveParameter(context, 'LAMBDA_SEND_REMINDERS');
+  const AWS_LAMBDA_SEND_REMINDERS          = await retrieveParameter(context, 'AWS_LAMBDA_SEND_REMINDERS');
 
   // ---------- get aws clients
   const options = {
@@ -41,7 +41,7 @@ exports.handler = async function(context, event, callback) {
 
     let needs_upload = false;
     let params = {
-      Bucket: APPOINTMENTS_S3_BUCKET,
+      Bucket: AWS_S3_BUCKET,
       Key: 'artifacts/twilioNodeLibrary.zip'
     }
     try {
@@ -75,7 +75,7 @@ exports.handler = async function(context, event, callback) {
 
     const content = fs.readFileSync('send_appointment_reminders.zip');
     let params = {
-      Bucket: APPOINTMENTS_S3_BUCKET,
+      Bucket: AWS_S3_BUCKET,
       Key: 'artifacts/send_appointment_reminders.zip',
       Body: content,
       ServerSideEncryption: 'AES256'
@@ -85,7 +85,7 @@ exports.handler = async function(context, event, callback) {
 
     let found_function = false;
     params = {
-      FunctionName: LAMBDA_SEND_REMINDERS
+      FunctionName: AWS_LAMBDA_SEND_REMINDERS
     }
     try {
       response = await lambda.getFunction(params).promise();
@@ -98,8 +98,8 @@ exports.handler = async function(context, event, callback) {
 
     if (found_function) {
       params = {
-        FunctionName: LAMBDA_SEND_REMINDERS,
-        S3Bucket: APPOINTMENTS_S3_BUCKET,
+        FunctionName: AWS_LAMBDA_SEND_REMINDERS,
+        S3Bucket: AWS_S3_BUCKET,
         S3Key: 'artifacts/send_appointment_reminders.zip'
       }
       response = await lambda.updateFunctionCode(params).promise();
