@@ -2,6 +2,7 @@
 // common helper function used by functions & client-side javascript
 //
 // retrieveParameter(context, key)
+// retrieveParameter(context, key)
 // assignParameter(context, key, value)
 //
 // include via:
@@ -11,7 +12,6 @@
 //
 //
 // --------------------------------------------------------------------------------
-const aws = require('aws-sdk');
 
 const APPLICATION_NAME = 'patient-appointment-management';
 const CONSTANTS = {
@@ -102,6 +102,8 @@ async function assignParameter(context, key, value) {
 //   . TWILIO_ENVIRONMENT_DOMAIN_NAME from TWILIO_SERVICE_SID
 // --------------------------------------------------------------------------------
 async function retrieveParameter(context, key) {
+  const aws = require('aws-sdk');
+
   if (CONSTANTS[key]) return CONSTANTS[key];
   if (context[key]) return context[key];
   if (process.env[key]) return process.env[key];
