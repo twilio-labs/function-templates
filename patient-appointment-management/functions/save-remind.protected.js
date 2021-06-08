@@ -1,34 +1,35 @@
 const THIS = 'save-remind:';
 // --------------------------------------------------------------------------------
+// saves appointment remind event to s3
+//
 // event.appointment - flow.data that will be parenthesis enclosed comma-separated
 //                     key=value string. Note that values will not be enclosed in quotes.
 //                     (eg., {k1=v1, k2=v2, k3=v3} )
+//
+// returns
+// . code = 200, if successful
 //
 // . find appointment file in STATE
 // . REPLACE in STATE   (disposition QUEUED->REMINDED-1->REMINDED-2)
 // . PUT     in HISTORY (disposition QUEUED->REMINDED-1->REMINDED-2)
 // --------------------------------------------------------------------------------
-const assert = require('assert');
-const aws = require('aws-sdk');
-const path   = Runtime.getFunctions()['helpers'].path;
-const { retrieveParameter, assignParameter} = require(path);
-
 exports.handler = async function(context, event, callback) {
-    // ---------- validate enviroment variables & input event
-    const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
-    const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
-    const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-    const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
-    const TWILIO_FLOW_SID                     = await retrieveParameter(context, 'TWILIO_FLOW_SID');
-    assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
+  console.log(THIS, 'Begin');
+  console.time(THIS);
+  try {
+    const assert = require('assert');
+    const AWS = require('aws-sdk');
+    const path = Runtime.getFunctions()['helpers'].path;
+    const { retrieveParameter, assignParameter} = require(path);
 
-    // initialize s3 client
-    const s3 = new aws.S3({
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-        region: AWS_REGION
-    });
+    // ---------- validate environment variables & input event
+    const AWS_ACCESS_KEY_ID                        = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
+    const AWS_SECRET_ACCESS_KEY                    = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
+    const AWS_REGION                               = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_S3_BUCKET                            = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                          = await retrieveParameter(context, 'TWILIO_FLOW_SID');
+    assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
 
     // convert appointment string to json
     let appointment = {};
@@ -37,12 +38,19 @@ exports.handler = async function(context, event, callback) {
       kv = a.split('=');
       appointment[kv[0].trim()] = kv[1].trim();
     });
+    assert (appointment.hasOwnProperty('event_type')          , 'missing appointment.event_type');
     assert (appointment.hasOwnProperty('appointment_id')      , 'missing appointment.appointment_id');
     assert (appointment.hasOwnProperty('patient_id')          , 'missing appointment.patient_id');
     assert (appointment.hasOwnProperty('appointment_datetime'), 'missing appointment.appointment_datetime');
     appointment.event_type = 'REMIND'; // over-ride
     appointment.appointment_datetime = new Date(); // over-ride
-    // console.log(THIS, 'appointment=', appointment);
+
+    // initialize s3 client
+    const s3 = new AWS.S3({
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        region: AWS_REGION
+    });
 
     const state_file_s3key = [
         'state',
@@ -69,6 +77,16 @@ exports.handler = async function(context, event, callback) {
         }
     }
 
+    if (disposition == null) {
+        const response = {
+            error: 'NO_APPOINTMENT_FOUND',
+            event_type: appointment.event_type,
+            appointment_s3key: null,
+        };
+        callback(response);
+        return;
+    }
+
     // advance disposition per reminder rule
     console.log(THIS, 'current disposition=', disposition);
     const next_disposition
@@ -80,57 +98,57 @@ exports.handler = async function(context, event, callback) {
 
     if (next_disposition == null) {
         const response = {
-            status: 'max-reminders-reached',
+            error: 'MAX_REMINDERS_REACHED',
             event_type: appointment.event_type,
             appointment_s3key: state_file_s3key.replace('{DISPOSITION}', disposition),
-            appointment: appointment
         };
-        return callback(null, response);
+        callback(response);
+        return;
     }
 
     const new_state_file_s3key = state_file_s3key.replace('{DISPOSITION}', next_disposition);
 
-    let params = null;
-    try {
+    let params = {
+      Bucket: AWS_S3_BUCKET,
+      Key: new_state_file_s3key,
+      Body: JSON.stringify(appointment),
+      ServerSideEncryption: 'AES256'
+    };
+    let results = await s3.putObject(params).promise();
+    console.log(THIS, 'PUT - ', params.Key);
 
-        params = {
-            Bucket: AWS_S3_BUCKET,
-            Key: new_state_file_s3key,
-            Body: JSON.stringify(appointment),
-            ServerSideEncryption: 'AES256'
-        };
-        let results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
-
-        params = {
-            Bucket: AWS_S3_BUCKET,
-            Key: state_file_s3key.replace('{DISPOSITION}', disposition),
-        }
-        results = await s3.deleteObject(params).promise();
-        console.log(THIS, 'DELETE - ', params.Key);
-
-        params = {
-            Bucket: AWS_S3_BUCKET,
-            Key: new_state_file_s3key
-              .replace('state', 'history')
-              .replace('.json', '-' + new Date().getTime() + '.json'),
-            Body: JSON.stringify(appointment),
-            ServerSideEncryption: 'AES256'
-        };
-        results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
-
-    } catch (err) {
-        console.log(THIS, 'params=', params);
-        console.log(err, err.stack);
-        callback(err);
+    params = {
+      Bucket: AWS_S3_BUCKET,
+      Key: state_file_s3key.replace('{DISPOSITION}', disposition),
     }
+    results = await s3.deleteObject(params).promise();
+    console.log(THIS, 'DELETE - ', params.Key);
+
+    params = {
+      Bucket: AWS_S3_BUCKET,
+      Key: new_state_file_s3key
+        .replace('state', 'history')
+        .replace('.json', '-' + new Date().getTime() + '.json'),
+      Body: JSON.stringify(appointment),
+      ServerSideEncryption: 'AES256'
+    };
+    results = await s3.putObject(params).promise();
+    console.log(THIS, 'PUT - ', params.Key);
 
     const response = {
-        status: 'saved',
+        code: 200,
         event_type: appointment.event_type,
         appointment_s3key: new_state_file_s3key,
-        appointment: appointment
     };
-    return callback(null, response);
+    callback(null, response);
+
+  } catch (err) {
+    console.log(err);
+    if (err.code === 'ERR_ASSERTION')
+      callback({ 'error': 'ERR_ASSERTION', 'message': err.message });
+    else
+      callback(err);
+  } finally {
+    console.timeEnd(THIS);
+  }
 };

@@ -1,7 +1,17 @@
 const THIS = 'find-by-phone:'
-
-const assert = require('assert');
-const aws = require('aws-sdk');
+// --------------------------------------------------------------------------------
+// find appointments via patient phone
+//
+// TODO: Note that functionality wrt opted-out is incomplete
+//
+// events.flow_sid   - flow sid (eg, FWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
+// event.appointment - flow.data that will be parenthesis enclosed comma-separated
+//                     key=value string. Note that values will not be enclosed in quotes.
+//                     (eg., {k1=v1, k2=v2, k3=v3} )
+// returns
+// . code = 200, if successful
+//
+// --------------------------------------------------------------------------------
 
 // --------------------------------------------------------------------------------
 async function getAppointmentsByPhone(params, phone, s3client, allKeys = []){
@@ -20,29 +30,31 @@ async function getAppointmentsByPhone(params, phone, s3client, allKeys = []){
 }
 
 // --------------------------------------------------------------------------------
-// events.flow_sid   - flow sid (eg, FWxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx)
-// event.appointment - flow.data that will be parenthesis enclosed comma-separated
-//                     key=value string. Note that values will not be enclosed in quotes.
-//                     (eg., {k1=v1, k2=v2, k3=v3} )
-// --------------------------------------------------------------------------------
 exports.handler = async function(context, event, callback) {
-  // ---------- validate enviroment variables & input event
-  const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'DEPLOYER_AWS_ACCESS_KEY_ID');
-  const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY');
-  const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-  const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
-  const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
-  assert (event.hasOwnProperty('flow_sid')   , 'missing input event.flow_sid');
-  assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
-  assert (event.hasOwnProperty('flow_sid')                          , 'missing input event.flow_sid');
-  assert (event.hasOwnProperty('phone')                             , 'missing input event.phone');
+  console.log(THIS, 'Begin');
+  console.time(THIS);
+  try {
+    const assert = require('assert');
+    const AWS = require('aws-sdk');
+    const path = Runtime.getFunctions()['helpers'].path;
+    const { retrieveParameter, assignParameter} = require(path);
 
-  // initialize s3 client
-  const s3 = new aws.S3({
-    accessKeyId: AWS_ACCESS_KEY_ID,
-    secretAccessKey: AWS_SECRET_ACCESS_KEY,
-    region: AWS_REGION
-  });
+    // ---------- validate environment variables & input event
+    const AWS_ACCESS_KEY_ID                        = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
+    const AWS_SECRET_ACCESS_KEY                    = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
+    const AWS_REGION                               = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_S3_BUCKET                            = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                          = await retrieveParameter(context, 'TWILIO_FLOW_SID');
+    assert (event.hasOwnProperty('appointment')  , 'missing input event.appointment');
+    assert (event.hasOwnProperty('patient_phone'), 'missing input event.phone');
+  
+    // initialize s3 client
+    const s3 = new AWS.S3({
+      accessKeyId: AWS_ACCESS_KEY_ID,
+      secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      region: AWS_REGION
+    });
 
     console.log(THIS, 'find active appointments for phone=', event.phone);
     // ----------- find all appointments for patient_id
@@ -50,7 +62,7 @@ exports.handler = async function(context, event, callback) {
         Bucket: AWS_S3_BUCKET,
         Key: [
             'state',
-            'flow='+TWILIO_TWILIO_FLOW_SID,
+            'flow='+TWILIO_FLOW_SID,
             'disposition=QUEUED',
             ''
         ].join('/')
@@ -93,7 +105,7 @@ exports.handler = async function(context, event, callback) {
     // look through matches to find earliest appointment
 
     const response = {
-        status: 'found',
+        code: 200,
         appointment_count: n,
         appointment: appointment
     };

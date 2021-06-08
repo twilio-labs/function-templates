@@ -1,17 +1,20 @@
 const THIS = 'save-opted-out:';
 // --------------------------------------------------------------------------------
+// saves appointment opted-out event to s3
+//
+// TODO: Note that functionality wrt opted-out is incomplete
+//
 // event.appointment - flow.data that will be parenthesis enclosed comma-separated
 //                     key=value string. Note that values will not be enclosed in quotes.
 //                     (eg., {k1=v1, k2=v2, k3=v3} )
+//
+// returns
+// . code = 200, if successful
 //
 // . find active appointments for patient_id
 //   . REPLACE in STATE   (disposition=OPTED-OUT)
 //   . PUT     in HISTORY (disposition=OPTED-OUT)
 // --------------------------------------------------------------------------------
-const assert = require('assert');
-const aws = require('aws-sdk');
-const path = Runtime.getFunctions()['helpers'].path;
-const { retrieveParameter, assignParameter} = require(path);
 
 // --------------------------------------------------------------------------------
 async function getAppointmentsForPatient(params, patient_id, s3client, allKeys = []){
@@ -27,22 +30,24 @@ async function getAppointmentsForPatient(params, patient_id, s3client, allKeys =
     return allKeys;
 }
 
+// --------------------------------------------------------------------------------
 exports.handler = async function(context, event, callback) {
-    // ---------- validate environment variables & input event
-    const AWS_ACCESS_KEY_ID            = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
-    const AWS_SECRET_ACCESS_KEY        = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
-    const AWS_REGION                   = await retrieveParameter(context, 'AWS_REGION');
-    const AWS_S3_BUCKET       = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
-    const TWILIO_FLOW_SID                     = await retrieveParameter(context, 'TWILIO_FLOW_SID');
-    assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
+  console.log(THIS, 'Begin');
+  console.time(THIS);
+  try {
+    const assert = require('assert');
+    const AWS = require('aws-sdk');
+    const path = Runtime.getFunctions()['helpers'].path;
+    const { retrieveParameter, assignParameter} = require(path);
 
-    // initialize s3 client
-    const s3 = new aws.S3({
-        accessKeyId: AWS_ACCESS_KEY_ID,
-        secretAccessKey: AWS_SECRET_ACCESS_KEY,
-        region: AWS_REGION
-    });
+    // ---------- validate environment variables & input event
+    const AWS_ACCESS_KEY_ID                        = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
+    const AWS_SECRET_ACCESS_KEY                    = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
+    const AWS_REGION                               = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_S3_BUCKET                            = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                          = await retrieveParameter(context, 'TWILIO_FLOW_SID');
+    assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
 
     // convert appointment (placeholder) string to json
     let appointment = {};
@@ -51,9 +56,16 @@ exports.handler = async function(context, event, callback) {
       kv = a.split('=');
       appointment[kv[0].trim()] = kv[1].trim();
     });
+    assert (appointment.hasOwnProperty('event_type')          , 'missing appointment.event_type');
     assert (appointment.hasOwnProperty('patient_id')          , 'missing appointment.patient_id');
     appointment.event_type = 'OPTED-OUT'; // over-ride
-    // console.log(THIS, 'appointment=', appointment);
+
+    // initialize s3 client
+    const s3 = new AWS.S3({
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        region: AWS_REGION
+    });
 
     console.log(THIS, 'find active appointments for patient_id=', appointment.patient_id);
     // ----------- find all appointments for patient_id
@@ -61,7 +73,7 @@ exports.handler = async function(context, event, callback) {
         Bucket: AWS_S3_BUCKET,
         Prefix: [
             'state',
-            'flow='+TWILIO_TWILIO_FLOW_SID,
+            'flow='+TWILIO_FLOW_SID,
             'disposition=QUEUED',
             ''
         ].join('/')
@@ -104,56 +116,58 @@ exports.handler = async function(context, event, callback) {
             : null;
         if (disposition == null) continue; // error case, skip for now
 
-        try {
-
-            params = {
-                Bucket: AWS_S3_BUCKET,
-                Key: s3key
-            }
-            let results = await s3.getObject(params).promise();
-            let appointment = JSON.parse(results.Body.toString('utf-8'));
-            console.log('appointment=', appointment);
-
-            appointment.event_type = 'OPTED-OUT';
-
-            params = {
-                Bucket: AWS_S3_BUCKET,
-                Key: s3key.replace(disposition, 'OPTED-OUT'),
-                Body: JSON.stringify(appointment),
-                ServerSideEncryption: 'AES256'
-            };
-            results = await s3.putObject(params).promise();
-            console.log('  PUT - ', params.Key);
-
-            params = {
-                Bucket: AWS_S3_BUCKET,
-                Key: s3key
-            }
-            results = await s3.deleteObject(params).promise();
-            console.log('  DELETE - ', params.Key);
-
-            params = {
-                Bucket: AWS_S3_BUCKET,
-                Key: s3key.replace('state', 'history').replace(disposition, 'OPTED-OUT').replace('.json', new Date().getTime() +'.json'),
-                Body: JSON.stringify(appointment),
-                ServerSideEncryption: 'AES256'
-            };
-            results = await s3.putObject(params).promise();
-            console.log(THIS, 'PUT - ', params.Key);
-
-        } catch (err) {
-            console.log(THIS, 'params=', params);
-            console.log(err, err.stack);
-            callback(err);
+        params = {
+            Bucket: AWS_S3_BUCKET,
+            Key: s3key
         }
+        let results = await s3.getObject(params).promise();
+        let appointment = JSON.parse(results.Body.toString('utf-8'));
+        console.log('appointment=', appointment);
+
+        appointment.event_type = 'OPTED-OUT';
+
+        params = {
+            Bucket: AWS_S3_BUCKET,
+            Key: s3key.replace(disposition, 'OPTED-OUT'),
+            Body: JSON.stringify(appointment),
+            ServerSideEncryption: 'AES256'
+        };
+        results = await s3.putObject(params).promise();
+        console.log('  PUT - ', params.Key);
+
+        params = {
+            Bucket: AWS_S3_BUCKET,
+            Key: s3key
+        }
+        results = await s3.deleteObject(params).promise();
+        console.log('  DELETE - ', params.Key);
+
+        params = {
+            Bucket: AWS_S3_BUCKET,
+            Key: s3key.replace('state', 'history').replace(disposition, 'OPTED-OUT').replace('.json', new Date().getTime() +'.json'),
+            Body: JSON.stringify(appointment),
+            ServerSideEncryption: 'AES256'
+        };
+        results = await s3.putObject(params).promise();
+        console.log(THIS, 'PUT - ', params.Key);
+
     }
 
-
     const response = {
-        status: 'saved',
-        event_type: 'OPTED-OUT',
+        code: 200,
+        event_type: appointment.event_type,
         patient_id: patient_id,
         appointment_count: appointment_s3keys.length
     };
-    return callback(null, response);
+    callback(null, response);
+
+  } catch (err) {
+    console.log(err);
+    if (err.code === 'ERR_ASSERTION')
+      callback({ 'error': 'ERR_ASSERTION', 'message': err.message });
+    else
+      callback(err);
+  } finally {
+    console.timeEnd(THIS);
+  }
 };

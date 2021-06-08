@@ -8,39 +8,26 @@ const THIS = 'save-booked:';
 //
 // returns
 // . code = 200, if successful
-// . code = 400, if input parameter error
-// . throws Error, otherwise
 //
 // . PUT in STATE   (disposition=QUEUED)
 // . PUT in HISTORY (disposition=QUEUED)
 // --------------------------------------------------------------------------------
-
 exports.handler = async function(context, event, callback) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
     const assert = require('assert');
     const AWS = require('aws-sdk');
-//    const path = Runtime.getFunctions()['helpers'].path;
-//    const { retrieveParameter, assignParameter} = require(path);
-
-//    console.log(THIS, 'Finish');
-//    callback(null, null);
-//    return;
+    const path = Runtime.getFunctions()['helpers'].path;
+    const { retrieveParameter, assignParameter} = require(path);
 
     // ---------- validate environment variables & input event
-//    const AWS_ACCESS_KEY_ID                        = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
-//    const AWS_SECRET_ACCESS_KEY                    = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
-//    const AWS_REGION                               = await retrieveParameter(context, 'AWS_REGION');
-//    const AWS_S3_BUCKET                            = await retrieveParameter(context, 'AWS_S3_BUCKET');
-//    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
-//    const TWILIO_FLOW_SID                          = await retrieveParameter(context, 'TWILIO_FLOW_SID');
-    const AWS_ACCESS_KEY_ID = 'YourAWSAccessKeyId';
-    const AWS_SECRET_ACCESS_KEY = 'YourAWSSecretAccessKey';
-    const AWS_REGION = 'us-west-2';
-    const AWS_S3_BUCKET = 'twilio-patient-appointment-management-owlhealth';
-    const APPLICATION_FILENAME_PATTERN_APPOINTMENT=  'appointment{appointment_id}-patient{patient_id}.json';
-    const TWILIO_FLOW_SID = 'YourStudioFlowSID';
+    const AWS_ACCESS_KEY_ID                        = await retrieveParameter(context, 'AWS_ACCESS_KEY_ID');
+    const AWS_SECRET_ACCESS_KEY                    = await retrieveParameter(context, 'AWS_SECRET_ACCESS_KEY');
+    const AWS_REGION                               = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_S3_BUCKET                            = await retrieveParameter(context, 'AWS_S3_BUCKET');
+    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(context, 'APPLICATION_FILENAME_PATTERN_APPOINTMENT');
+    const TWILIO_FLOW_SID                          = await retrieveParameter(context, 'TWILIO_FLOW_SID');
     assert (event.hasOwnProperty('appointment'), 'missing input event.appointment');
 
     // convert appointment string to json
@@ -51,8 +38,8 @@ exports.handler = async function(context, event, callback) {
       appointment[kv[0].trim()] = kv[1].trim();
     });
     assert (appointment.hasOwnProperty('event_type')          , 'missing appointment.event_type');
-    assert (appointment.hasOwnProperty('appointment_id')      , 'missing appointment.appointment_id');
     assert (appointment.hasOwnProperty('patient_id')          , 'missing appointment.patient_id');
+    assert (appointment.hasOwnProperty('appointment_id')      , 'missing appointment.appointment_id');
     assert (appointment.hasOwnProperty('appointment_datetime'), 'missing appointment.appointment_datetime');
     appointment.event_type = 'BOOKED'; // over-ride
 
@@ -103,11 +90,11 @@ exports.handler = async function(context, event, callback) {
     callback(null, response);
 
   } catch (err) {
-    if (err.code === 'ERR_ASSERTION') callback(err.code, { 'code': 400 });
-    else {
-      console.log(err, err.details);
+    console.log(err);
+    if (err.code === 'ERR_ASSERTION')
+      callback({ 'error': 'ERR_ASSERTION', 'message': err.message });
+    else
       callback(err);
-    }
   } finally {
     console.timeEnd(THIS);
   }
