@@ -37,10 +37,8 @@ const NO_FALLBACK_URL = '';
 const DEFAULT_FALLBACK_URL = NO_FALLBACK_URL;
 
 const BASE_ACTION_URL = '.?Dial=true';
-const ACTION_URL_WITH_FALLBACK_URL =
-  BASE_ACTION_URL + '&' + FALLBACK_URL_ENCODED;
-const XML_ACTION_URL_WITH_FALLBACK_URL =
-  BASE_ACTION_URL + '&amp;' + FALLBACK_URL_ENCODED;
+const ACTION_URL_WITH_FALLBACK_URL = `${BASE_ACTION_URL}&${FALLBACK_URL_ENCODED}`;
+const XML_ACTION_URL_WITH_FALLBACK_URL = `${BASE_ACTION_URL}&amp;${FALLBACK_URL_ENCODED}`;
 
 const TIMEOUT_STRING = '42';
 const TIMEOUT = 42;
@@ -73,73 +71,40 @@ const IS_RESTRICTED_NUMBER = false;
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
 const FULL_RESPONSE_FORWARD_1_1 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action="' +
-  BASE_ACTION_URL +
-  '" ' +
-  'timeout="' +
-  DEFAULT_TIMEOUT +
-  '"' +
-  '>' +
-  PHONE_NUMBER +
-  '</Dial>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Dial ` +
+  `action="${BASE_ACTION_URL}" ` +
+  `timeout="${DEFAULT_TIMEOUT}"` +
+  `>${PHONE_NUMBER}</Dial>` +
+  `</Response>`;
 
 const FULL_RESPONSE_FORWARD_1_2 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action="' +
-  XML_ACTION_URL_WITH_FALLBACK_URL +
-  '" ' +
-  'timeout="' +
-  DEFAULT_TIMEOUT +
-  '"' +
-  '>' +
-  PHONE_NUMBER +
-  '</Dial>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Dial ` +
+  `action="${XML_ACTION_URL_WITH_FALLBACK_URL}" ` +
+  `timeout="${DEFAULT_TIMEOUT}"` +
+  `>${PHONE_NUMBER}</Dial>` +
+  `</Response>`;
 
 const FULL_RESPONSE_FORWARD_1_4 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Say language="' +
-  FRENCH +
-  '" voice="' +
-  MAN +
-  '">' +
-  ACCESS_RESTRICTED +
-  '</Say>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Say language="${FRENCH}" voice="${MAN}">${ACCESS_RESTRICTED}</Say>` +
+  `</Response>`;
 
 const FULL_RESPONSE_FORWARD_1_7 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action="' +
-  BASE_ACTION_URL +
-  '" ' +
-  'callerId="' +
-  CALLER_ID +
-  '" ' +
-  'timeout="' +
-  TIMEOUT +
-  '">' +
-  PHONE_NUMBER +
-  '</Dial>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Dial ` +
+  `action="${BASE_ACTION_URL}" ` +
+  `callerId="${CALLER_ID}" ` +
+  `timeout="${TIMEOUT}">${PHONE_NUMBER}</Dial>` +
+  `</Response>`;
 
-const HANG_UP = XML_DECLARATION + '<Response>' + '<Hangup/>' + '</Response>';
+const HANG_UP = `${XML_DECLARATION}<Response><Hangup/></Response>`;
 
 const FULL_RESPONSE_FORWARD_2_4 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Redirect>' +
-  FALLBACK_URL +
-  '</Redirect>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Redirect>${FALLBACK_URL}</Redirect>` +
+  `</Response>`;
 
 beforeAll(() => runtime.setup());
 
@@ -595,17 +560,17 @@ test('[FORWARD-UTILS-IS-FORWARDING-ALLOWED-4] Allowed Called Number', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-ACTION-URL-0] Action URL without Fallback URL', () => {
-  let actionUrl = funlet.output.getForwardActionUrl(NO_FALLBACK_URL);
+  const actionUrl = funlet.output.getForwardActionUrl(NO_FALLBACK_URL);
   expect(actionUrl).toEqual(BASE_ACTION_URL);
 });
 
 test('[FORWARD-OUTPUT-FORWARD-ACTION-URL-1] Action URL with Fallback URL', () => {
-  let actionUrl = funlet.output.getForwardActionUrl(FALLBACK_URL);
+  const actionUrl = funlet.output.getForwardActionUrl(FALLBACK_URL);
   expect(actionUrl).toEqual(ACTION_URL_WITH_FALLBACK_URL);
 });
 
 test('[FORWARD-OUTPUT-FORWARD-1-1] Forward without Fallback URL', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.forwardStage1(
     response,
     IS_ALLOWED_CALLER,
@@ -621,7 +586,7 @@ test('[FORWARD-OUTPUT-FORWARD-1-1] Forward without Fallback URL', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-1-2] Forward with Fallback URL', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.forwardStage1(
     response,
     IS_ALLOWED_CALLER,
@@ -637,7 +602,7 @@ test('[FORWARD-OUTPUT-FORWARD-1-2] Forward with Fallback URL', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-1-4] Restricted Number', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.forwardStage1(
     response,
     IS_RESTRICTED_NUMBER,
@@ -653,7 +618,7 @@ test('[FORWARD-OUTPUT-FORWARD-1-4] Restricted Number', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-1-7] Custom Timeout and Caller Id', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.forwardStage1(
     response,
     IS_ALLOWED_CALLER,
@@ -669,10 +634,10 @@ test('[FORWARD-OUTPUT-FORWARD-1-7] Custom Timeout and Caller Id', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-2-0] Call Ongoing', () => {
-  const EMPTY_RESPONSE = XML_DECLARATION + '<Response/>';
+  const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
 
-  let response = new Twilio.twiml.VoiceResponse();
-  let isFinished = funlet.output.forwardStage2(
+  const response = new Twilio.twiml.VoiceResponse();
+  const isFinished = funlet.output.forwardStage2(
     response,
     DIAL_NOT_DONE,
     NO_CALL_STATUS,
@@ -683,8 +648,8 @@ test('[FORWARD-OUTPUT-FORWARD-2-0] Call Ongoing', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-2-1] Call Completed', () => {
-  let response = new Twilio.twiml.VoiceResponse();
-  let isFinished = funlet.output.forwardStage2(
+  const response = new Twilio.twiml.VoiceResponse();
+  const isFinished = funlet.output.forwardStage2(
     response,
     DIAL_DONE,
     CALL_COMPLETED,
@@ -695,8 +660,8 @@ test('[FORWARD-OUTPUT-FORWARD-2-1] Call Completed', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-2-2] Call Answered', () => {
-  let response = new Twilio.twiml.VoiceResponse();
-  let isFinished = funlet.output.forwardStage2(
+  const response = new Twilio.twiml.VoiceResponse();
+  const isFinished = funlet.output.forwardStage2(
     response,
     DIAL_DONE,
     CALL_ANSWERED,
@@ -707,8 +672,8 @@ test('[FORWARD-OUTPUT-FORWARD-2-2] Call Answered', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-2-3] Failure with No Fallback URL', () => {
-  let response = new Twilio.twiml.VoiceResponse();
-  let isFinished = funlet.output.forwardStage2(
+  const response = new Twilio.twiml.VoiceResponse();
+  const isFinished = funlet.output.forwardStage2(
     response,
     DIAL_DONE,
     CALL_BUSY,
@@ -719,8 +684,8 @@ test('[FORWARD-OUTPUT-FORWARD-2-3] Failure with No Fallback URL', () => {
 });
 
 test('[FORWARD-OUTPUT-FORWARD-2-4] Failure with Fallback URL', () => {
-  let response = new Twilio.twiml.VoiceResponse();
-  let isFinished = funlet.output.forwardStage2(
+  const response = new Twilio.twiml.VoiceResponse();
+  const isFinished = funlet.output.forwardStage2(
     response,
     DIAL_DONE,
     CALL_BUSY,
@@ -731,7 +696,7 @@ test('[FORWARD-OUTPUT-FORWARD-2-4] Failure with Fallback URL', () => {
 });
 
 test('[FORWARD-1-2] Successful Forward + Fallback URL (from Example 2)', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_FORWARD_1_2);
     done();
@@ -747,7 +712,7 @@ test('[FORWARD-1-2] Successful Forward + Fallback URL (from Example 2)', (done) 
 });
 
 test('[FORWARD-2-4] Failure with Fallback URL', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_FORWARD_2_4);
     done();
