@@ -1,6 +1,5 @@
 node_modules
 /docs
-/forward-message-mailgun
 /forward-message-multiple
 /forward-message-sendgrid
 /forward-message-sparkpost
