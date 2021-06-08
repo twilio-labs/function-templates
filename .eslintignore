@@ -1,6 +1,5 @@
 node_modules
 /docs
-/forward-message-sparkpost
 /funlet-call-me
 /funlet-echo
 /funlet-find-me
