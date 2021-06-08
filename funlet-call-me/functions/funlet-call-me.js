@@ -1,49 +1,53 @@
 /*
-  Call Me Funlet
-
-  Description:
-    Forward the call to your forwarding number (stage 1)
-    then hang up, or if the call failed, redirect the caller
-    to a fallback URL/Funlet (stage 2).
-
-    This is an upgrade of the Call Me Twimlet [1].
-    Designed to be backward-compatible with the Twimlet, it was
-    extended to offer better support for internationalization.
-
-  Contents:
-    1. Configuration
-    2. Input Parameters
-    3. Output Helpers
-    4. Main Handler
-    5. Other Exports
-    6. References
-*/
+ * Call Me Funlet
+ *
+ * Description:
+ * Forward the call to your forwarding number (stage 1)
+ * then hang up, or if the call failed, redirect the caller
+ * to a fallback URL/Funlet (stage 2).
+ *
+ * This is an upgrade of the Call Me Twimlet [1].
+ * Designed to be backward-compatible with the Twimlet, it was
+ * extended to offer better support for internationalization.
+ *
+ * Contents:
+ * 1. Configuration
+ * 2. Input Parameters
+ * 3. Output Helpers
+ * 4. Main Handler
+ * 5. Other Exports
+ * 6. References
+ */
 
 /*
-  1. Configuration
+ * 1. Configuration
+ *
+ * Here you can change values for the input parameters,
+ * directly in the script.
+ *
+ * These values will be superseded by HTTP parameters and properties
+ * defined in the environment. You can customize the names and priorities
+ * of these various parameters in the next section: Input Parameters.
+ */
 
-  Here you can change values for the input parameters,
-  directly in the script.
-
-  These values will be superseded by HTTP parameters and properties
-  defined in the environment. You can customize the names and priorities
-  of these various parameters in the next section: Input Parameters.
-*/
-
-let config = {
+const config = {
   // the forwarding number
   phoneNumber: '',
 
   // duration in seconds to let the call ring before the recipient picks up
   timeout: 20,
 
-  // recording URL or text message to say,
-  // e.g. asking the recipient to press a key to accept the call
+  /*
+   * recording URL or text message to say,
+   * e.g. asking the recipient to press a key to accept the call
+   */
   message: (fromNumber) =>
     `You are receiving a call from ${fromNumber}. Press any key to accept.`,
 
-  // language code for conversion of text-to-speech messages,
-  // e.g. 'en' or 'en-gb'
+  /*
+   * language code for conversion of text-to-speech messages,
+   * e.g. 'en' or 'en-gb'
+   */
   language: 'en',
 
   // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
@@ -52,27 +56,29 @@ let config = {
   // whether to request the recipient to press a key to accept the call
   humanCheck: false,
 
-  // fallback URL where further instructions are requested
-  // when the forwarding call fails
+  /*
+   * fallback URL where further instructions are requested
+   * when the forwarding call fails
+   */
   fallbackUrl: '',
 };
 
 /*
-  2. Input Parameters
-
-  Each input parameter Foo is read by a separate function getFoo()
-  which takes one parameter for each source:
-
-    * params - object, the set of HTTP parameters
-               from the URL (GET) or the body (POST) of the query
-    * env - object, the set of environment properties
-            defined in the Twilio account
-    * config - object, the configuration object
-               defined above in this script
-
-  The HTTP parameters are considered first, then environment properties,
-  then the script parameters. This can be customized in the functions below.
-*/
+ * 2. Input Parameters
+ *
+ * Each input parameter Foo is read by a separate function getFoo()
+ * which takes one parameter for each source:
+ *
+ * params - object, the set of HTTP parameters
+ * from the URL (GET) or the body (POST) of the query
+ * env - object, the set of environment properties
+ * defined in the Twilio account
+ * config - object, the configuration object
+ * defined above in this script
+ *
+ * The HTTP parameters are considered first, then environment properties,
+ * then the script parameters. This can be customized in the functions below.
+ */
 
 function getPhoneNumber(params, env, config) {
   return (
@@ -81,7 +87,7 @@ function getPhoneNumber(params, env, config) {
 }
 
 function getTimeout(params, env, config) {
-  let timeout = params.Timeout || env.FUNLET_CALLME_TIMEOUT;
+  const timeout = params.Timeout || env.FUNLET_CALLME_TIMEOUT;
   if (typeof timeout === 'string' && !isNaN(timeout)) {
     return Number(timeout);
   }
@@ -98,7 +104,8 @@ function getMessage(params, env, config) {
     params.Message ||
     env.FUNLET_CALLME_MESSAGE ||
     (typeof config.message === 'function'
-      ? config.message(spell(caller))
+      ? // eslint-disable-next-line no-use-before-define
+        config.message(spell(caller))
       : config.message)
   );
 }
@@ -143,13 +150,13 @@ function getFallbackUrl(params, env, config) {
 }
 
 /*
-  3. Output Helpers
-
-  These helper functions build part of the output.
-
-  This is where you can fine-tune the TwiML elements and attributes
-  produced in response to each stage of the Funlet.
-*/
+ * 3. Output Helpers
+ *
+ * These helper functions build part of the output.
+ *
+ * This is where you can fine-tune the TwiML elements and attributes
+ * produced in response to each stage of the Funlet.
+ */
 
 // Copied from Whisper Funlet
 function spell(numberString) {
@@ -160,33 +167,33 @@ function spell(numberString) {
 // Copied from Forward Funlet
 function getForwardActionUrl(fallbackUrl) {
   const BASE_URL = '.';
-  let actionUrl = BASE_URL + '?Dial=true';
+  let actionUrl = `${BASE_URL}?Dial=true`;
   if (fallbackUrl !== '') {
-    actionUrl += '&' + encodeURIComponent(fallbackUrl);
+    actionUrl += `&${encodeURIComponent(fallbackUrl)}`;
   }
   return actionUrl;
 }
 
 /*
-  Function: getWhisperUrl()
-
-  Parameter:
-    params - object, the set of HTTP parameters received by the Funlet
-
-  Returns:
-    string, the URL with parameters to play a message to the recipient of
-    the forwarded call using the Whisper Funlet
-*/
+ * Function: getWhisperUrl()
+ *
+ * Parameter:
+ * params - object, the set of HTTP parameters received by the Funlet
+ *
+ * Returns:
+ * string, the URL with parameters to play a message to the recipient of
+ * the forwarded call using the Whisper Funlet
+ */
 function getWhisperUrl(params) {
-  const BASE_WHISPER_URL = '.?Whisper=true',
-    SEP = '&';
+  const BASE_WHISPER_URL = '.?Whisper=true';
+  const SEP = '&';
 
   let whisperUrl = BASE_WHISPER_URL;
 
   function copyStringParam(name) {
-    let value = params[name];
+    const value = params[name];
     if (typeof value === 'string') {
-      whisperUrl += SEP + name + '=' + encodeURIComponent(value);
+      whisperUrl += `${SEP + name}=${encodeURIComponent(value)}`;
     }
   }
 
@@ -199,24 +206,24 @@ function getWhisperUrl(params) {
 }
 
 /*
-  Function: callMeStage1()
-
-  Parameters:
-    * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
-    * forwardingNumber - string, the forwarding number
-    * timeout - number, duration in seconds to let the forwarding call ring
-                before the recipient picks up
-    * whisperUrl - string, action URL to trigger the Whisper Funlet and get
-                   instructions which ask the recipient to accept the call
-    * fallbackUrl - string, URL of a script with further instructions
-                    in case the forwarding call fails
-
-  Response:
-    The response is modified with instructions to forward the call to the
-    given forwarding number, with given timeout, to play a message asking the
-    recipient to accept the call by pressing a key, and to redirect to the
-    given fallback URL if the forwarding call fails.
-*/
+ * Function: callMeStage1()
+ *
+ * Parameters:
+ * response - Twilio.twiml.VoiceResponse, Twilio Voice response in progress
+ * forwardingNumber - string, the forwarding number
+ * timeout - number, duration in seconds to let the forwarding call ring
+ * before the recipient picks up
+ * whisperUrl - string, action URL to trigger the Whisper Funlet and get
+ * instructions which ask the recipient to accept the call
+ * fallbackUrl - string, URL of a script with further instructions
+ * in case the forwarding call fails
+ *
+ * Response:
+ * The response is modified with instructions to forward the call to the
+ * given forwarding number, with given timeout, to play a message asking the
+ * recipient to accept the call by pressing a key, and to redirect to the
+ * given fallback URL if the forwarding call fails.
+ */
 function callMeStage1(
   response,
   forwardingNumber,
@@ -224,9 +231,9 @@ function callMeStage1(
   whisperUrl,
   fallbackUrl
 ) {
-  let dial = response.dial({
+  const dial = response.dial({
     action: getForwardActionUrl(fallbackUrl),
-    timeout: timeout,
+    timeout,
   });
   dial.number({ url: whisperUrl }, forwardingNumber);
 }
@@ -239,7 +246,7 @@ function simpleMessage(response, message, language, voice) {
   if (message.startsWith('http')) {
     response.play({}, message);
   } else {
-    response.say({ language: language, voice: voice }, message);
+    response.say({ language, voice }, message);
   }
 }
 
@@ -260,7 +267,7 @@ function whisperStage1(response, humanCheck, message, language, voice) {
     response.hangup();
   }
 }
-let callMeStage2 = whisperStage1;
+const callMeStage2 = whisperStage1;
 
 // Copied from Whisper Funlet
 function whisperStage2(response, digits) {
@@ -272,7 +279,7 @@ function whisperStage2(response, digits) {
   }
   return true;
 }
-let callMeStage3 = whisperStage2;
+const callMeStage3 = whisperStage2;
 
 // Copied from Forward Funlet
 function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
@@ -289,32 +296,33 @@ function forwardStage2(response, isDialDone, callStatus, fallbackUrl) {
   }
   return isDialDone;
 }
-let callMeStage4 = forwardStage2;
+const callMeStage4 = forwardStage2;
 
 /*
-  4. Main Handler
-
-  This is the entry point to your Twilio Function,
-  which will run to process an incoming HTTP request
-  such as the ones generated by Twilio events.
-*/
+ * 4. Main Handler
+ *
+ * This is the entry point to your Twilio Function,
+ * which will run to process an incoming HTTP request
+ * such as the ones generated by Twilio events.
+ */
 
 exports.handler = function (context, event, callback) {
   const NO_ERROR = null;
 
-  let response = new Twilio.twiml.VoiceResponse(),
-    isDial = isDialDone(event, context, config),
-    callStatus = getCallStatus(event, context, config),
-    fallbackUrl = getFallbackUrl(event, context, config),
-    digits = getDigits(event, context, config),
-    humanCheckRequired = isHumanCheckRequired(event, context, config),
-    message = getMessage(event, context, config),
-    language = getLanguage(event, context, config),
-    voice = getVoice(event, context, config),
-    forwardingNumber = getPhoneNumber(event, context, config),
-    timeout = getTimeout(event, context, config),
-    whisperUrl = getWhisperUrl(event);
+  const response = new Twilio.twiml.VoiceResponse();
+  const isDial = isDialDone(event, context, config);
+  const callStatus = getCallStatus(event, context, config);
+  const fallbackUrl = getFallbackUrl(event, context, config);
+  const digits = getDigits(event, context, config);
+  const humanCheckRequired = isHumanCheckRequired(event, context, config);
+  const message = getMessage(event, context, config);
+  const language = getLanguage(event, context, config);
+  const voice = getVoice(event, context, config);
+  const forwardingNumber = getPhoneNumber(event, context, config);
+  const timeout = getTimeout(event, context, config);
+  const whisperUrl = getWhisperUrl(event);
 
+  // eslint-disable-next-line no-unused-expressions
   callMeStage4(response, isDial, callStatus, fallbackUrl) ||
     callMeStage3(response, digits) ||
     (isWhisper(event, context, config)
@@ -331,44 +339,44 @@ exports.handler = function (context, event, callback) {
 };
 
 /*
-  5. Other Exports
-
-  These internal features are exported too, for the purpose of unit tests.
-*/
+ * 5. Other Exports
+ *
+ * These internal features are exported too, for the purpose of unit tests.
+ */
 
 exports.config = config;
 
 exports.input = {
-  getPhoneNumber: getPhoneNumber,
-  getTimeout: getTimeout,
-  isWhisper: isWhisper,
-  getMessage: getMessage,
-  getLanguage: getLanguage,
-  getVoice: getVoice,
-  isHumanCheckRequired: isHumanCheckRequired,
-  getDigits: getDigits,
-  isDialDone: isDialDone,
-  getFallbackUrl: getFallbackUrl,
+  getPhoneNumber,
+  getTimeout,
+  isWhisper,
+  getMessage,
+  getLanguage,
+  getVoice,
+  isHumanCheckRequired,
+  getDigits,
+  isDialDone,
+  getFallbackUrl,
 };
 
 exports.output = {
-  getWhisperUrl: getWhisperUrl,
-  callMeStage1: callMeStage1,
-  callMeStage2: callMeStage2,
-  callMeStage3: callMeStage3,
-  callMeStage4: callMeStage4,
+  getWhisperUrl,
+  callMeStage1,
+  callMeStage2,
+  callMeStage3,
+  callMeStage4,
 };
 
 /*
-  6. References
-
-    [1] Call Me Twimlet
-    https://www.twilio.com/labs/twimlets/callme
-
-    [2] Call Me Funlet
-    https://github.com/twilio-labs/function-templates
-                                  /tree/master/funlet-call-me
-
-    [3] Call Me Funlet: Discussion
-    https://github.com/twilio-labs/function-templates/issues/17
-*/
+ * 6. References
+ *
+ * [1] Call Me Twimlet
+ * https://www.twilio.com/labs/twimlets/callme
+ *
+ * [2] Call Me Funlet
+ * https://github.com/twilio-labs/function-templates
+ * /tree/master/funlet-call-me
+ *
+ * [3] Call Me Funlet: Discussion
+ * https://github.com/twilio-labs/function-templates/issues/17
+ */

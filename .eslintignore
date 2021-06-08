@@ -1,6 +1,5 @@
 node_modules
 /docs
-/funlet-call-me
 /funlet-echo
 /funlet-find-me
 /funlet-forward

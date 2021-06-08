@@ -19,10 +19,8 @@ const RECORDED_MESSAGE = 'https://example.com/recorded-message.mp3';
 const TEXT_MESSAGE = 'Text message';
 const MESSAGE = TEXT_MESSAGE;
 const DEFAULT_MESSAGE =
-  'You are receiving a call from ' +
-  SPELLED_FROM_NUMBER +
-  '. ' +
-  'Press any key to accept.';
+  `You are receiving a call from ${SPELLED_FROM_NUMBER}. ` +
+  `Press any key to accept.`;
 
 const CUSTOM_MESSAGE = 'Custom Message';
 const CUSTOM_MESSAGE_ENCODED = 'Custom%20Message';
@@ -56,64 +54,43 @@ const NO_FALLBACK_URL = '';
 const DEFAULT_FALLBACK_URL = NO_FALLBACK_URL;
 
 const DEFAULT_WHISPER_URL = '.?Whisper=true';
-const WHISPER_URL_WITH_CUSTOM_MESSAGE =
-  DEFAULT_WHISPER_URL + '&amp;Message=' + CUSTOM_MESSAGE_ENCODED;
+const WHISPER_URL_WITH_CUSTOM_MESSAGE = `${DEFAULT_WHISPER_URL}&amp;Message=${CUSTOM_MESSAGE_ENCODED}`;
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
 const FULL_RESPONSE_CALL_ME_1_1 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action=".?Dial=true" ' +
-  'timeout="' +
-  DEFAULT_TIMEOUT +
-  '"' +
-  '>' +
-  '<Number url="' +
-  DEFAULT_WHISPER_URL +
-  '">' +
-  PHONE_NUMBER +
-  '</Number>' +
-  '</Dial>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Dial ` +
+  `action=".?Dial=true" ` +
+  `timeout="${DEFAULT_TIMEOUT}"` +
+  `>` +
+  `<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER}</Number>` +
+  `</Dial>` +
+  `</Response>`;
 
 const FULL_RESPONSE_CALL_ME_1_3 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action=".?Dial=true" ' +
-  'timeout="' +
-  TIMEOUT +
-  '"' +
-  '>' +
-  '<Number url="' +
-  WHISPER_URL_WITH_CUSTOM_MESSAGE +
-  '">' +
-  PHONE_NUMBER +
-  '</Number>' +
-  '</Dial>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Dial ` +
+  `action=".?Dial=true" ` +
+  `timeout="${TIMEOUT}"` +
+  `>` +
+  `<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER}</Number>` +
+  `</Dial>` +
+  `</Response>`;
 
 const FULL_RESPONSE_CALL_ME_2_1 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Gather numDigits="1">' +
-  '<Play>' +
-  RECORDED_MESSAGE +
-  '</Play>' +
-  '</Gather>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Gather numDigits="1">` +
+  `<Play>${RECORDED_MESSAGE}</Play>` +
+  `</Gather>` +
+  `</Response>`;
 
-const FULL_RESPONSE_CALL_ME_3_1 = XML_DECLARATION + '<Response/>';
+const FULL_RESPONSE_CALL_ME_3_1 = `${XML_DECLARATION}<Response/>`;
 
 const FULL_RESPONSE_CALL_ME_4_3 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Redirect>' +
-  FALLBACK_URL +
-  '</Redirect>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Redirect>${FALLBACK_URL}</Redirect>` +
+  `</Response>`;
 
 beforeAll(() => runtime.setup());
 
@@ -334,8 +311,7 @@ test('[CALLME-OUTPUT-WHISPER-URL-1] Get Default Whisper URL', () => {
 });
 
 test('[CALLME-OUTPUT-WHISPER-URL-2] Get Whisper URL with Custom Message', () => {
-  const WHISPER_URL =
-    DEFAULT_WHISPER_URL + '&Message=' + CUSTOM_MESSAGE_ENCODED;
+  const WHISPER_URL = `${DEFAULT_WHISPER_URL}&Message=${CUSTOM_MESSAGE_ENCODED}`;
 
   expect(funlet.output.getWhisperUrl({ Message: CUSTOM_MESSAGE })).toEqual(
     WHISPER_URL
@@ -346,8 +322,7 @@ test(
   '[CALLME-OUTPUT-WHISPER-URL-3] ' +
     'Get Whisper URL with Custom Voice and Language',
   () => {
-    const WHISPER_URL =
-      DEFAULT_WHISPER_URL + '&Language=' + FRENCH + '&Voice=' + WOMAN;
+    const WHISPER_URL = `${DEFAULT_WHISPER_URL}&Language=${FRENCH}&Voice=${WOMAN}`;
 
     expect(
       funlet.output.getWhisperUrl({ Language: FRENCH, Voice: WOMAN })
@@ -356,7 +331,7 @@ test(
 );
 
 test('[CALLME-OUTPUT-WHISPER-URL-4] Get Whisper URL with Human Check', () => {
-  const WHISPER_URL = DEFAULT_WHISPER_URL + '&HumanCheck=true';
+  const WHISPER_URL = `${DEFAULT_WHISPER_URL}&HumanCheck=true`;
 
   expect(funlet.output.getWhisperUrl({ HumanCheck: 'true' })).toEqual(
     WHISPER_URL
@@ -364,7 +339,7 @@ test('[CALLME-OUTPUT-WHISPER-URL-4] Get Whisper URL with Human Check', () => {
 });
 
 test('[CALLME-OUTPUT-CALLME-1-1] Call Me with Phone Number Only', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.callMeStage1(
     response,
     PHONE_NUMBER,
@@ -376,7 +351,7 @@ test('[CALLME-OUTPUT-CALLME-1-1] Call Me with Phone Number Only', () => {
 });
 
 test('[CALL-ME-1-3] Call Me with Custom Timeout and Message', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_CALL_ME_1_3);
     done();
@@ -393,7 +368,7 @@ test('[CALL-ME-1-3] Call Me with Custom Timeout and Message', (done) => {
 });
 
 test('[CALL-ME-2-1] Whisper: Recorded Message', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_CALL_ME_2_1);
     done();
@@ -402,7 +377,7 @@ test('[CALL-ME-2-1] Whisper: Recorded Message', (done) => {
 });
 
 test('[CALL-ME-3-1] Whisper: A Digit was Pressed', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_CALL_ME_3_1);
     done();
@@ -411,7 +386,7 @@ test('[CALL-ME-3-1] Whisper: A Digit was Pressed', (done) => {
 });
 
 test('[CALL-ME-4-3] Failure with Fallback URL', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_CALL_ME_4_3);
     done();
