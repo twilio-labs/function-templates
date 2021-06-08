@@ -1,17 +1,2 @@
 node_modules
 /docs
-/funlet-echo
-/funlet-find-me
-/funlet-forward
-/funlet-simple-menu
-/funlet-simple-message
-/funlet-simulring
-/funlet-whisper
-/google-sheets
-/hello-messaging
-/hello-voice
-/hello-world
-/http-redirect
-/hunt
-/international-telephone-input
-/json-webhook
