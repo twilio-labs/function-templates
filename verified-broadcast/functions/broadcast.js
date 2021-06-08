@@ -20,6 +20,7 @@ exports.handler = (context, event, callback) => {
       to: context.BROADCAST_ADMIN_NUMBER,
       code: event.code,
     })
+    // eslint-disable-next-line
     .then((check) => {
       if (check.status === 'approved') {
         client.notify
@@ -33,7 +34,7 @@ exports.handler = (context, event, callback) => {
             response.setBody({
               success: true,
             });
-            callback(null, response);
+            return callback(null, response);
           })
           .catch((error) => {
             console.log(error);
@@ -42,7 +43,7 @@ exports.handler = (context, event, callback) => {
               success: false,
               error: error.message,
             });
-            callback(null, response);
+            return callback(null, response);
           });
       } else {
         response.setStatusCode(401);
@@ -50,7 +51,7 @@ exports.handler = (context, event, callback) => {
           success: false,
           error: 'Incorrect token.',
         });
-        callback(null, response);
+        return callback(null, response);
       }
     })
     .catch((error) => {

@@ -8,12 +8,12 @@
  *  }
  */
 
-var crypto = require('crypto');
+const crypto = require('crypto');
 
 function sendSubscribedNotification(notifyService, identity, tags) {
   notifyService.notifications
     .create({
-      identity: identity,
+      identity,
       body: `Thank you for subscribing for updates on ${tags.join(
         ' and '
       )}. Reply STOP to unsubscribe at any time.`,
@@ -31,22 +31,20 @@ exports.handler = (context, event, callback) => {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  const to = event.to;
+  const { to, code } = event;
   const identity = crypto.createHash('sha256').update(to).digest('hex');
   const tags = typeof event.tags === 'object' ? event.tags : [event.tags];
 
   console.log(`SUBSCRIBING TO: ${tags}`);
 
   verifyService.verificationChecks
-    .create({
-      to: to,
-      code: event.code,
-    })
+    .create({ to, code })
+    // eslint-disable-next-line
     .then((check) => {
       if (check.status === 'approved') {
         notifyService.bindings
           .create({
-            identity: identity,
+            identity,
             bindingType: 'sms',
             address: to,
             tag: tags,

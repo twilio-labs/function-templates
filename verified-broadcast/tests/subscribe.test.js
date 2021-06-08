@@ -1,7 +1,7 @@
 const subscribeFunction = require('../functions/subscribe').handler;
 const helpers = require('../../test/test-helper');
 
-const mockService = {
+const mockVerificationCheck = {
   verificationChecks: {
     create: jest.fn(() =>
       Promise.resolve({
@@ -11,9 +11,22 @@ const mockService = {
   },
 };
 
+const mockNotificationSubscribe = {
+  bindings: {
+    create: jest.fn(() =>
+      Promise.resolve({
+        identity: 'my-new-identity',
+      })
+    ),
+  },
+};
+
 const mockClient = {
   verify: {
-    services: jest.fn(() => mockService),
+    services: jest.fn(() => mockVerificationCheck),
+  },
+  notify: {
+    services: jest.fn(() => mockNotificationSubscribe),
   },
 };
 
@@ -30,5 +43,13 @@ describe('verified-broadcast/subscribe', () => {
     helpers.teardown();
   });
 
-  // TODO
+  test('checks verification before subscribing', (done) => {
+    const callback = (err, result) => {
+      expect(err).toBeNull();
+      expect(result).toBeDefined();
+      done();
+    };
+    const event = { to: '+12223334444' };
+    subscribeFunction(testContext, event, callback);
+  });
 });

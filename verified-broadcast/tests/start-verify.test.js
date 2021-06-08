@@ -33,6 +33,7 @@ describe('verified-broadcast/start-verify', () => {
 
   test("uses admin number if 'to' parameter isn't provided", (done) => {
     const callback = (err, result) => {
+      expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(
@@ -53,6 +54,7 @@ describe('verified-broadcast/start-verify', () => {
 
   test('returns success with valid request', (done) => {
     const callback = (err, result) => {
+      expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(

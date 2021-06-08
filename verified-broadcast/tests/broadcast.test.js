@@ -30,4 +30,14 @@ describe('verified-broadcast/broadcast', () => {
   afterAll(() => {
     helpers.teardown();
   });
+
+  test('checks verification before broadcasting', (done) => {
+    const callback = (err, result) => {
+      expect(err).toBeNull();
+      expect(result).toBeDefined();
+      done();
+    };
+    const event = {};
+    broadcastFunction(testContext, event, callback);
+  });
 });

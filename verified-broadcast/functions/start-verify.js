@@ -19,7 +19,7 @@ exports.handler = function (context, event, callback) {
   client.verify
     .services(service)
     .verifications.create({
-      to: to,
+      to,
       channel: 'sms',
     })
     .then((verification) => {
@@ -37,6 +37,6 @@ exports.handler = function (context, event, callback) {
         success: false,
         error: error.message,
       });
-      callback(null, response);
+      return callback(null, response);
     });
 };
