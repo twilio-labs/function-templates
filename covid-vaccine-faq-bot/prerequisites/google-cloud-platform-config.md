@@ -25,7 +25,12 @@ Ensure that *Dialogflow API* is selected in the *Which API are you using?* dropd
 
  ![Create Service Account](https://user-images.githubusercontent.com/4605360/120539852-dfae7900-c39c-11eb-8c0a-a7953671419a.png)
 
-You may want to scope user and role level access to the service account, but these two steps are optional and can be skipped. Click *Done* to create the Service Account. 
+**Important** — you must grant your Service Account access to your Google Cloud Project to successfully authenticate with Dialogflow. We recommend choosing the **Dialogflow Service Agent** Role to scope access just to what is needed:
+
+![Scoping access to Service Key](https://user-images.githubusercontent.com/4605360/121431793-b65a9380-c92e-11eb-8834-0c11ce1e49b3.png)
+
+
+You may want to scope user level access to the service account, but this step is optional and can be skipped. Click *Done* to create the Service Account. 
 
 For more information on creating and managing service accounts, please see this [documentation](https://cloud.google.com/iam/docs/creating-managing-service-accounts).
 
