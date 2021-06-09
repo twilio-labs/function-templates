@@ -15,22 +15,24 @@ exports.handler = function (context, event, callback) {
   }
 
   const ROOM_NAME = 'demo'; // fixed room name
-  const AccessToken = Twilio.jwt.AccessToken;
-  const VideoGrant = AccessToken.VideoGrant;
-  // only tokens are available for participating rooms
-  // Create a Video grant enabling client to use Video, only for this room
+  const { AccessToken } = Twilio.jwt;
+  const { VideoGrant } = AccessToken;
+  /*
+   * only tokens are available for participating rooms
+   * Create a Video grant enabling client to use Video, only for this room
+   */
   const videoGrant = new VideoGrant({
     room: ROOM_NAME,
   });
-  //Create an access token to sign and return to the client with the grant we just created
+  // Create an access token to sign and return to the client with the grant we just created
   const accessToken = new AccessToken(
     TWILIO_ACCOUNT_SID,
     TWILIO_API_KEY,
     TWILIO_API_SECRET
   );
-  accessToken.addGrant(videoGrant); //Add the grant to the token
+  accessToken.addGrant(videoGrant); // Add the grant to the token
   accessToken.identity = ACCESS_TOKEN_IDENTITY;
-  callback(null, {
-    token: accessToken.toJwt(), //Serialize the token to a JWT string
+  return callback(null, {
+    token: accessToken.toJwt(), // Serialize the token to a JWT string
   });
 };
