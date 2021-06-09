@@ -50,7 +50,7 @@ exports.handler = function (context, event, callback) {
   // between 8am and 7pm
   const isWorkingHour = hour <= workHour.end && hour >= workHour.start;
 
-  let twiml = new Twilio.twiml.VoiceResponse();
+  const twiml = new Twilio.twiml.VoiceResponse();
 
   if (isWorkingDay && isWorkingHour) {
     twiml.dial(phoneNumberToForwardTo);
