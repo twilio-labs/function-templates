@@ -101,7 +101,7 @@ function getStudioExecutions(sid, token) {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token: token }),
+    body: JSON.stringify({ token }),
   })
     .then((response) => response.json())
     .then((data) => {
