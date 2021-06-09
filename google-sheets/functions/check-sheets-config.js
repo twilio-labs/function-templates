@@ -40,7 +40,7 @@ exports.handler = async function (context, _event, callback) {
       success: true,
       message: 'Google Sheets integration is configured properly.',
     });
-    callback(null, response);
+    return callback(null, response);
   } catch (error) {
     let message =
       'Google Sheets integration error. Please check the debugger in your Twilio Console.';
@@ -68,6 +68,6 @@ exports.handler = async function (context, _event, callback) {
       success: false,
       message,
     });
-    callback(null, response);
+    return callback(null, response);
   }
 };

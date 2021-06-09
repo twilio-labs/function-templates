@@ -48,6 +48,7 @@ it('should handle missing document IDs', (done) => {
     spreadsheets: {
       values: {
         append: jest.fn(() =>
+          // eslint-disable-next-line prefer-promise-reject-errors
           Promise.reject({
             code: 404,
           })
@@ -72,6 +73,7 @@ it('should handle Google Sheets API errors', (done) => {
     spreadsheets: {
       values: {
         append: jest.fn(() =>
+          // eslint-disable-next-line prefer-promise-reject-errors
           Promise.reject({
             code: 400,
             errors: [{ message: 'test Google Sheets API error' }],
@@ -97,6 +99,7 @@ it('should handle unknown errors', (done) => {
     spreadsheets: {
       values: {
         append: jest.fn(() =>
+          // eslint-disable-next-line prefer-promise-reject-errors
           Promise.reject({
             code: 500,
             errors: [{ message: 'test Google Sheets unknown error' }],
