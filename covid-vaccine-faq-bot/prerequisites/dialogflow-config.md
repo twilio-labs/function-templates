@@ -1,6 +1,25 @@
 # Google Dialogflow Configuration
 
-**II. [OPTION 1] Configure pre-built Dialogflow chatbot agent:**
+The conversational chatbot is powered by an integration between Twilio and Google Dialogflow, a natural language understanding platform used to design and integrate a conversational user interfaces. You need to create a Dialogflow _agent_ to drive the conversational chatbot exposed via Twilio messaging channels. Your Dialogflow agent will be called by the Studio Flow included in this app each time an inbound message is sent.
+
+## Create a new Dialogflow Agent
+To get started, visit the [Dialogflow Console](https://dialogflow.cloud.google.com/#/getStarted) and click on the **Create Agent** button in the left nav:
+![Create Dialogflow Agent](https://user-images.githubusercontent.com/4605360/121387444-88118f80-c8ff-11eb-8c6f-565550c738fb.png)
+
+Give your agent a name, select the default language you will want the agent to use, and be sure to select the Google Cloud Project you configured in the [previous prerequisite step](prerequisites/google-cloud-platform-config.md):
+
+![Create Agent Details](https://user-images.githubusercontent.com/4605360/121388593-74b2f400-c900-11eb-9a1d-4b9f996fd64d.png)
+
+Click the **Create** button to save your new Dialogflow Agent.
+
+## Configure your Dialogflow Agent
+Next, you will need to train your new agent to be able to answer user questions about the COVID-19 vaccines appropriately.
+
+There are two options for configuring your Dialogflow agent:
+1. **Use a pre-built Dialogflow agent**: Start with a pre-built chatbot that has been configured to respond to questions about COVID-19 vaccines. There are multiple pre-built chatbot profiles available that each target different audiences.
+2. **Create your own Dialogflow agent**: If the pre-built chatbots do not apply to the audiences
+
+### 1. Use a pre-built Dialogflow chatbot agent
 
 Follow the below steps to configure your Dialogflow pre-built agent in your Google project:
 
@@ -10,7 +29,7 @@ Follow the below steps to configure your Dialogflow pre-built agent in your Goog
 
 ![import_agent](https://user-images.githubusercontent.com/4605360/120849443-f682d600-c52a-11eb-9bfc-b6bd29bc0d9a.png)
 
-**II. [OPTION 2] Configure your own Dialogflow chatbot agent:**
+### 2. Configure your own Dialogflow chatbot agent
 
 Messaging around vaccine hesitancy should be tailored to specific audiences for maximum effectiveness. If you wish to customize the chatbot interactions to have content targeted to the communities that you serve and create your own chatbot agents, you can use the Jupyter notebook `studioflow-agent-generator.ipynb` under the `prebuilt-chatbots/make-your-own/` folder. You can open the notebook in [Google Colab](colab.research.google.com) and optionally mount a [Google Drive](https://drive.google.com/) directory to use as the notebook's file system. The notebook consists of three sections:
  
