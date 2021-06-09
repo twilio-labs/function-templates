@@ -30,6 +30,12 @@ repository, or configure your own chatbot agent.
 **Follow [this guide](prerequisites/dialogflow-config.md) for step-by-step instructions on how to do
 this.**
 
+## Deploying the template
+Before deploying the template to your Twilio account, you should make sure to complete the [prerequisite](#prerequisites) steps above, and make sure the following is true:
+1. You have an active Google Cloud Project with the Dialogflow API enabled
+2. You have a JSON authentication key associated with a Service Account from your Google Cloud Project
+3. You have created a Dialogflow agent and configured it either using one of the pre-built agents or have created your own
+
 ## Environment variables
 
 This application requires some environment variables to be set. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
