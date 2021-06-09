@@ -5,12 +5,9 @@ exports.handler = async function (context, event, callback) {
  
  let query = event.utterance;
  
- // google requires an environment variable called GOOGLE_APPLICATION_CREDENTIALS that points to a file path with the service account key file (json) to authenticate into their API
- // to solve for this, we save the key file as a private asset, then use a helper function to find and return the path of the private asset.
- // lastly we set the environment variable dynamically at runtime so that it's in place when the sessions client is initialized
-//process.env.GOOGLE_APPLICATION_CREDENTIALS = Runtime.getAssets()['/service-account-key.json'].path;
- 
- const client = new SessionsClient();
+const client = new SessionsClient({
+  keyFilename: Runtime.getAssets()[context.GOOGLE_APPLICATION_CREDENTIALS].path
+});
  
  // dialogflow keeps conversation state organized by session ids.  in order to have back and forth passes with dialogflow, we need to maintain a consistent
  // session id throughout the dialog.  if one doesn't exist, generate it.  if it does, use what we have.
