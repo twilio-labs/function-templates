@@ -9,10 +9,8 @@ const RECORDED_MESSAGE = 'https://example.com/recorded-message.mp3';
 const TEXT_MESSAGE = 'Text message';
 const MESSAGE = TEXT_MESSAGE;
 const DEFAULT_MESSAGE =
-  'You are receiving a call from ' +
-  SPELLED_FROM_NUMBER +
-  '. ' +
-  'Press any key to accept.';
+  `You are receiving a call from ${SPELLED_FROM_NUMBER}. ` +
+  `Press any key to accept.`;
 
 const ENGLISH = 'en';
 const FRENCH = 'fr';
@@ -155,20 +153,13 @@ test('[WHISPER-OUTPUT-SPELL-1] Spell a phone number digit by digit', () => {
 test('[WHISPER-OUTPUT-WHISPER-1-2] Recorded Message', () => {
   const NO_HUMAN_CHECK = false;
   const WHISPER_TEXT_MESSAGE =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="1">' +
-    '<Say language="' +
-    FRENCH +
-    '" voice="' +
-    WOMAN +
-    '">' +
-    TEXT_MESSAGE +
-    '</Say>' +
-    '</Gather>' +
-    '</Response>';
+    `${XML_DECLARATION}<Response>` +
+    `<Gather numDigits="1">` +
+    `<Say language="${FRENCH}" voice="${WOMAN}">${TEXT_MESSAGE}</Say>` +
+    `</Gather>` +
+    `</Response>`;
 
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.sendWhisperMessage(
     response,
     NO_HUMAN_CHECK,
@@ -182,17 +173,14 @@ test('[WHISPER-OUTPUT-WHISPER-1-2] Recorded Message', () => {
 test('[WHISPER-OUTPUT-WHISPER-1-4] Human Check', () => {
   const HUMAN_CHECK = true;
   const WHISPER_RECORDED_MESSAGE_HUMAN_CHECK =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="1">' +
-    '<Play>' +
-    RECORDED_MESSAGE +
-    '</Play>' +
-    '</Gather>' +
-    '<Hangup/>' +
-    '</Response>';
+    `${XML_DECLARATION}<Response>` +
+    `<Gather numDigits="1">` +
+    `<Play>${RECORDED_MESSAGE}</Play>` +
+    `</Gather>` +
+    `<Hangup/>` +
+    `</Response>`;
 
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.sendWhisperMessage(
     response,
     HUMAN_CHECK,
@@ -204,41 +192,41 @@ test('[WHISPER-OUTPUT-WHISPER-1-4] Human Check', () => {
 });
 
 test('[WHISPER-OUTPUT-WHISPER-2-0] No Digits Provided', () => {
-  const EMPTY_RESPONSE = XML_DECLARATION + '<Response/>';
-  let response = new Twilio.twiml.VoiceResponse();
-  let hasDigits = funlet.output.checkDigitsEntered(response, NO_DIGITS);
+  const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
+  const response = new Twilio.twiml.VoiceResponse();
+  const hasDigits = funlet.output.checkDigitsEntered(response, NO_DIGITS);
   expect(hasDigits).toBe(false);
   expect(response.toString()).toEqual(EMPTY_RESPONSE);
 });
 
 test('[WHISPER-OUTPUT-WHISPER-2-1] A Digit was Pressed', () => {
-  const EMPTY_RESPONSE = XML_DECLARATION + '<Response/>';
-  let response = new Twilio.twiml.VoiceResponse();
-  let hasDigits = funlet.output.checkDigitsEntered(response, NON_EMPTY_DIGITS);
+  const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
+  const response = new Twilio.twiml.VoiceResponse();
+  const hasDigits = funlet.output.checkDigitsEntered(
+    response,
+    NON_EMPTY_DIGITS
+  );
   expect(hasDigits).toBe(true);
   expect(response.toString()).toEqual(EMPTY_RESPONSE);
 });
 
 test('[WHISPER-OUTPUT-WHISPER-2-2] No Digits were Pressed, Empty Digits Set', () => {
-  const HANG_UP = XML_DECLARATION + '<Response>' + '<Hangup/>' + '</Response>';
-  let response = new Twilio.twiml.VoiceResponse();
-  let hasDigits = funlet.output.checkDigitsEntered(response, EMPTY_DIGITS);
+  const HANG_UP = `${XML_DECLARATION}<Response><Hangup/></Response>`;
+  const response = new Twilio.twiml.VoiceResponse();
+  const hasDigits = funlet.output.checkDigitsEntered(response, EMPTY_DIGITS);
   expect(hasDigits).toBe(true);
   expect(response.toString()).toEqual(HANG_UP);
 });
 
 test('[WHISPER-1-1] Full Response: Recorded Message', (done) => {
   const FULL_RESPONSE_WHISPER_1_1 =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="1">' +
-    '<Play>' +
-    RECORDED_MESSAGE +
-    '</Play>' +
-    '</Gather>' +
-    '</Response>';
+    `${XML_DECLARATION}<Response>` +
+    `<Gather numDigits="1">` +
+    `<Play>${RECORDED_MESSAGE}</Play>` +
+    `</Gather>` +
+    `</Response>`;
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_WHISPER_1_1);
     done();
@@ -248,21 +236,14 @@ test('[WHISPER-1-1] Full Response: Recorded Message', (done) => {
 
 test('[WHISPER-1-4] Full Response: Human Check', (done) => {
   const FULL_RESPONSE_WHISPER_1_4 =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="1">' +
-    '<Say language="' +
-    DEFAULT_LANGUAGE +
-    '" voice="' +
-    DEFAULT_VOICE +
-    '">' +
-    TEXT_MESSAGE +
-    '</Say>' +
-    '</Gather>' +
-    '<Hangup/>' +
-    '</Response>';
+    `${XML_DECLARATION}<Response>` +
+    `<Gather numDigits="1">` +
+    `<Say language="${DEFAULT_LANGUAGE}" voice="${DEFAULT_VOICE}">${TEXT_MESSAGE}</Say>` +
+    `</Gather>` +
+    `<Hangup/>` +
+    `</Response>`;
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_WHISPER_1_4);
     done();
@@ -271,9 +252,9 @@ test('[WHISPER-1-4] Full Response: Human Check', (done) => {
 });
 
 test('[WHISPER-2-1] Full Response: A Digit was Pressed', (done) => {
-  const FULL_RESPONSE_WHISPER_2_1 = XML_DECLARATION + '<Response/>';
+  const FULL_RESPONSE_WHISPER_2_1 = `${XML_DECLARATION}<Response/>`;
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_WHISPER_2_1);
     done();
