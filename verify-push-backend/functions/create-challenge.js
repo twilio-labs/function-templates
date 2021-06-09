@@ -31,14 +31,17 @@
 const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/missing-params.js'].path);
 
+// eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  // uncomment to support CORS
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   const missingParams = detectMissingParams(
     ['identity', 'message', 'factor'],
@@ -61,10 +64,10 @@ exports.handler = function (context, event, callback) {
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
 
-  let { identity, message, factor, ...details } = event;
-  let fields = [];
+  const { identity, message, factor, ...details } = event;
+  const fields = [];
   for (const [key, value] of Object.entries(details)) {
-    fields.push({ label: key, value: value });
+    fields.push({ label: key, value });
   }
 
   client.verify

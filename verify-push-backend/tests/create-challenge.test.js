@@ -47,7 +47,7 @@ describe('verify-push-backend/create-challenge', () => {
   });
 
   test('returns an error response when required parameters are missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.error.message).toEqual(
         "Missing parameter; please provide: 'identity, message, factor'."
@@ -62,7 +62,7 @@ describe('verify-push-backend/create-challenge', () => {
   });
 
   test('returns success with valid request', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.status).toEqual('pending');
       expect(mockClient.verify.services).toHaveBeenCalledWith(
