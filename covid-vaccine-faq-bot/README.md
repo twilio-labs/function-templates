@@ -55,7 +55,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init example --template=vaccine-bot-faq && cd example
+twilio serverless:init example --template=covid-vaccine-faq-bot && cd example
 ```
 
 4. Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
