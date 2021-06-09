@@ -46,14 +46,14 @@ function sendMessages(form) {
     .then((resp) => {
       if (resp.ok) {
         return resp.json();
+      }
+
+      if (resp.status === 401) {
+        throw new Error('Invalid Passcode');
       } else {
-        if (resp.status === 401) {
-          throw new Error('Invalid Passcode');
-        } else {
-          throw new Error(
-            'Unexpected error. Please check the logs for what went wrong.'
-          );
-        }
+        throw new Error(
+          'Unexpected error. Please check the logs for what went wrong.'
+        );
       }
     })
     .then((body) => {

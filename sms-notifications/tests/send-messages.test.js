@@ -12,7 +12,7 @@ const mockTwilioClient = {
       if (invocationCount === failOnCount) {
         response = Promise.reject(new Error('Expected test error'));
       }
-      invocationCount++;
+      invocationCount += 1;
       return response;
     }),
   },
@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 
 test('returns 401 if the request was invalid', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(401);
