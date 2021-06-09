@@ -3,7 +3,7 @@
  * If the user enters something it will trigger the handle-user-input Function and otherwise go in a loop.
  */
 exports.handler = function (context, event, callback) {
-  let twiml = new Twilio.twiml.VoiceResponse();
+  const twiml = new Twilio.twiml.VoiceResponse();
   const gather = twiml.gather({
     numDigits: 1,
     action: 'handle-user-input',
