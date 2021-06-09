@@ -10,13 +10,11 @@
 
 const crypto = require('crypto');
 
-function sendSubscribedNotification(notifyService, identity, tags) {
+function sendSubscribedNotification(notifyService, identity) {
   notifyService.notifications
     .create({
       identity,
-      body: `Thank you for subscribing for updates on ${tags.join(
-        ' and '
-      )}. Reply STOP to unsubscribe at any time.`,
+      body: 'Thank you for subscribing. Reply STOP to unsubscribe at any time.',
     })
     .catch((err) => console.log(err));
 }
@@ -35,8 +33,6 @@ exports.handler = (context, event, callback) => {
   const identity = crypto.createHash('sha256').update(to).digest('hex');
   const tags = typeof event.tags === 'object' ? event.tags : [event.tags];
 
-  console.log(`SUBSCRIBING TO: ${tags}`);
-
   verifyService.verificationChecks
     .create({ to, code })
     // eslint-disable-next-line
@@ -50,7 +46,7 @@ exports.handler = (context, event, callback) => {
             tag: tags,
           })
           .then(() => {
-            sendSubscribedNotification(notifyService, identity, tags);
+            sendSubscribedNotification(notifyService, identity);
 
             response.setStatusCode(200);
             response.setBody({

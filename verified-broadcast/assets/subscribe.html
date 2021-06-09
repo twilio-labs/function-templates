@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Broadcast SMS messages</title>
+    <title>Subscribe to SMS updates</title>
 
     <link
       rel="icon"
@@ -14,7 +14,17 @@
       rel="stylesheet"
       href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
     <style>
+      #phone_number {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
       input[type="submit"] {
         cursor: pointer;
         padding-top: 0.5rem;
@@ -76,36 +86,28 @@
     <main>
       <div class="content">
         <section id="intro">
-          <h2>Broadcast a message</h2>
-          <p>
-            The application admin can send a message to subscribers using this
-            form. The admin will receive an SMS passcode to confirm before
-            messages are sent.
-          </p>
+          <h2>Subscribe</h2>
+          <p>Enter your phone number to subscribe to broadcast alerts.</p>
         </section>
         <section>
-          <form id="broadcast">
-            <label for="message-body">Message</label>
-            <input type="text" id="message-body" />
-            <p>Send updates to:</p>
-            <div>
-              <input type="radio" id="all" name="tags" value="all" checked />
-              <label for="all">Everyone</label><br />
-            </div>
-            <div>
-              <input type="radio" id="option1" name="tags" value="option1" />
-              <label for="option1">Team Pie</label><br />
-            </div>
-            <div>
-              <input type="radio" id="option2" name="tags" value="option2" />
-              <label for="option2">Team Cake</label><br />
-            </div>
-            <input type="submit" value="Send message" />
-          </form>
           <span id="status"></span>
+          <form id="subscribe">
+            <label for="phone">Phone number</label>
+            <input type="tel" id="phone_number" />
+            <p>Keep me updated on...</p>
+            <div>
+              <input type="checkbox" id="option1" name="tags" value="option1" />
+              <label for="option1">Pie</label><br />
+            </div>
+            <div>
+              <input type="checkbox" id="option2" name="tags" value="option2" />
+              <label for="option2">Cake</label><br />
+            </div>
+            <input type="submit" value="Subscribe" />
+          </form>
           <form id="otp" style="display: none">
             <label for="code">Code</label>
-            <input type="text" id="code" />
+            <input type="text" id="code" required />
             <input type="submit" value="Confirm" />
           </form>
         </section>
@@ -116,6 +118,18 @@
     </footer>
   </body>
   <script>
+    // Handle international prefixes, format phone input field
+    // Uses intl-tel-input library
+    const phoneInputField = document.querySelector("#phone_number");
+    const phoneInput = window.intlTelInput(phoneInputField, {
+      // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+      preferredCountries: ["us", "co", "in", "de"],
+      utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js",
+    });
+
+    var to;
+
     function logError(error) {
       console.log(error);
       document.getElementById("status").textContent = error;
@@ -124,17 +138,24 @@
     function sendVerificationToken(event) {
       event.preventDefault();
 
-      fetch("./start-verify")
+      to = phoneInput.getNumber();
+
+      const data = new URLSearchParams();
+      data.append("to", to);
+
+      fetch("./start-verify", {
+        method: "POST",
+        body: data,
+      })
         .then((response) => response.json())
         .then((json) => {
           if (json.success) {
             document.getElementById("intro").style.display = "none";
-            document.getElementById("broadcast").style.display = "none";
+            document.getElementById("subscribe").style.display = "none";
 
             document.getElementById("status").textContent =
-              "Successfully sent token. Enter token sent to Admin to broadcast message.";
+              "Successfully sent token. Enter token sent to your phone to confirm subscription.";
 
-            // show OTP form
             document.getElementById("otp").style.display = "flex";
           } else {
             logError(json.error);
@@ -148,17 +169,14 @@
     function verify(event) {
       event.preventDefault();
 
-      const body = document.getElementById("message-body").value;
-      const code = document.getElementById("code").value;
-
       const data = new URLSearchParams();
-      data.append("body", body);
-      data.append("code", code);
+      data.append("to", to);
+      data.append("code", document.getElementById("code").value);
 
-      var tag = document.querySelector('input[name="tags"]:checked').value;
-      data.append("tag", tag);
+      var tags = document.querySelectorAll("input[name=tags]:checked");
+      tags.forEach((tag) => data.append("tags", tag.value));
 
-      fetch("./broadcast", {
+      fetch("./subscribe", {
         method: "POST",
         body: data,
       })
@@ -167,10 +185,9 @@
           if (json.success) {
             document.getElementById("otp").style.display = "none";
             document.getElementById("status").textContent =
-              "Successfully sent message to subscribers.";
+              "Successfully subscribed to updates.";
           } else {
             logError(json.error);
-            // allow another OTP attempt
           }
         })
         .catch((error) => {
@@ -179,7 +196,7 @@
     }
 
     document
-      .getElementById("broadcast")
+      .getElementById("subscribe")
       .addEventListener("submit", sendVerificationToken);
 
     document.getElementById("otp").addEventListener("submit", verify);
