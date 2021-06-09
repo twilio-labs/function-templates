@@ -17,17 +17,40 @@ Next, you will need to train your new agent to be able to answer user questions 
 
 There are two options for configuring your Dialogflow agent:
 1. **Use a pre-built Dialogflow agent**: Start with a pre-built chatbot that has been configured to respond to questions about COVID-19 vaccines. There are multiple pre-built chatbot profiles available that each target different audiences.
-2. **Create your own Dialogflow agent**: If the pre-built chatbots do not apply to the audiences
+2. **Create your own Dialogflow agent**: If the pre-built chatbots do not apply to the audiences you'd like to serve, you can configure your own Dialogflow agent and train it with questions and answers about the vaccine from trusted health sources. Contributing new Dialogflow agents back to this repo is encouraged to create a centralized repository of effective chatbot agents that build vaccine confidence.
 
 ### 1. Use a pre-built Dialogflow chatbot agent
 
 Follow the below steps to configure your Dialogflow pre-built agent in your Google project:
 
-1. Pre-built Dialogflow agents are available under the `prebuilt-chatbots` folder. Learn more about Dialogflow agents [here](https://cloud.google.com/dialogflow/es/docs/agents-overview#:~:text=A%20Dialogflow%20agent%20is%20a,apps%20and%20services%20can%20understand).
-2. Go to Agent Settings ([documentation](https://cloud.google.com/dialogflow/es/docs/agents-settings)) under [Google Dialogflow ES Console](https://dialogflow.cloud.google.com/). 
-3. Import one of the pre-built agents (zip file) into your Google Dialogflow project (more information [here](https://cloud.google.com/dialogflow/es/docs/agents-settings#export)).
+1. Pre-built Dialogflow agents are available as `.zip` files under the [`assets/prebuilt-chatbots`](assets/prebuilt-chatbots) folder. There are currently two included pre-built chatbot agents for you to use:
+- `usa_ama_agent.zip`: An agent trained the on American Medical Assocaition's [COVID-19 vaccine FAQ](https://www.ama-assn.org/delivering-care/public-health/covid-19-vaccines-patients-frequently-asked-questions) for US audiences. 
+- `india_mohfw_agent.zip`: An agent trained on the India Ministry of Health and Family Welfare's [COVID-19 vaccine FAQ](https://www.mohfw.gov.in/covid_vaccination/vaccination/faqs.html) for Indian audiences
 
-![import_agent](https://user-images.githubusercontent.com/4605360/120849443-f682d600-c52a-11eb-9bfc-b6bd29bc0d9a.png)
+Download the `.zip` file from the [prebuilt chatbots]((assets/prebuilt-chatbots)) folder to your local machine by clicking on the file name, then clicking the Download button in the GitHub file interface as shown below:
+
+![Download Zip](https://user-images.githubusercontent.com/4605360/121403008-56a0c000-c90f-11eb-8b50-31c39d35d603.png)
+
+Learn more about Dialogflow agents [here](https://cloud.google.com/dialogflow/es/docs/agents-overview#:~:text=A%20Dialogflow%20agent%20is%20a,apps%20and%20services%20can%20understand).
+
+2. Back on the [Google Dialogflow ES Console](https://dialogflow.cloud.google.com/), click on the gear icon in the left nav next to the agent's name to access your agent's settings:
+
+![Access Dialogflow agent settings](https://user-images.githubusercontent.com/4605360/121403415-b9925700-c90f-11eb-9d55-2a328db0f299.png)
+
+Then, click on the tab called **Export and Import**. This is the place where you will import the `.zip` file containing the prebuilt agent that you downloaded from this repo in the previous step.
+
+Now, click on the **Import from Zip** button as shown below:
+
+![import_agent](https://user-images.githubusercontent.com/4605360/121403937-49d09c00-c910-11eb-84f5-203f874918e6.png)
+
+A modal will appear with a filepicker. Either drag and drop or select the `.zip` file containing the prebuilt agent from the previous step, type "IMPORT" as requested then click the **Import** button.
+
+![Import modal](https://user-images.githubusercontent.com/4605360/121404216-974d0900-c910-11eb-8643-714df27911b8.png)
+
+Congrats! you've imported a pre-built chatbot agent. If everything worked, you should be able to go to the **Intents** page and see the imported questions and answers from the prebuilt agent:
+
+![Confirm import](https://user-images.githubusercontent.com/4605360/121404481-db400e00-c910-11eb-9b4b-148f3d105838.png)
+
 
 ### 2. Configure your own Dialogflow chatbot agent
 
