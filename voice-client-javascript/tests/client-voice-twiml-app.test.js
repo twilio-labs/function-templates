@@ -18,7 +18,7 @@ describe('voice-client-javascript/client-voice-twiml-app', () => {
   });
 
   test('returns TwiML with `<Say>` when no `To` is provided', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
@@ -30,7 +30,7 @@ describe('voice-client-javascript/client-voice-twiml-app', () => {
   });
 
   test('returns TwiML for `<Dial>` a `<Number>` when number provided', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain('<Number>');
@@ -40,7 +40,7 @@ describe('voice-client-javascript/client-voice-twiml-app', () => {
   });
 
   test('returns TwiML for `<Dial>` a `<Client>` when name is provided', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain('<Client>');

@@ -1,4 +1,6 @@
+/* eslint-disable no-negated-condition */
 const { stripIndents } = require('common-tags');
+
 const assets = Runtime.getAssets();
 const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
   '/admin/shared.js'
