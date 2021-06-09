@@ -23,76 +23,51 @@ const DEFAULT_VOICE = ALICE;
 
 const RECORDED_MESSAGE = 'https://example.com/recorded-message';
 const PLAY_RECORDED_MESSAGE =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Play>' +
-  RECORDED_MESSAGE +
-  '</Play>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Play>${RECORDED_MESSAGE}</Play>` +
+  `</Response>`;
 
 const TEXT_MESSAGE = 'Text message';
 const SAY_TEXT_MESSAGE =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Say language="' +
-  ENGLISH +
-  '" voice="' +
-  ALICE +
-  '">' +
-  TEXT_MESSAGE +
-  '</Say>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Say language="${ENGLISH}" voice="${ALICE}">${TEXT_MESSAGE}</Say>` +
+  `</Response>`;
 
 const NO_MESSAGES = [];
-const EMPTY_RESPONSE = XML_DECLARATION + '<Response/>';
+const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
 
 const SINGLE_RECORDED_MESSAGE = [RECORDED_MESSAGE];
 const SINGLE_TEXT_MESSAGE = [TEXT_MESSAGE];
 
 const MULTIPLE_MESSAGES = [MESSAGE1, MESSAGE2, MESSAGE3];
 const PLAY_AND_SAY_MESSAGES =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Say language="' +
-  ENGLISH +
-  '" voice="' +
-  ALICE +
-  '">' +
-  MESSAGE1 +
-  '</Say>' +
-  '<Play>' +
-  MESSAGE2 +
-  '</Play>' +
-  '<Say language="' +
-  ENGLISH +
-  '" voice="' +
-  ALICE +
-  '">' +
-  MESSAGE3 +
-  '</Say>' +
-  '</Response>';
+  `${XML_DECLARATION}<Response>` +
+  `<Say language="${ENGLISH}" voice="${ALICE}">${MESSAGE1}</Say>` +
+  `<Play>${MESSAGE2}</Play>` +
+  `<Say language="${ENGLISH}" voice="${ALICE}">${MESSAGE3}</Say>` +
+  `</Response>`;
 
 beforeAll(() => runtime.setup());
 
 test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-0] Read Empty List', () => {
-  let empty = [];
+  const empty = [];
   expect(funlet.input.readListParam('Param', {})).toEqual(empty);
 });
 
 test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-1] Read Single String', () => {
-  let string = 'one';
+  const string = 'one';
   expect(funlet.input.readListParam('Param', { Param: string })).toEqual([
     string,
   ]);
 });
 
 test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-2] Read Array', () => {
-  let array = ['one', 'two', 'three'];
+  const array = ['one', 'two', 'three'];
   expect(funlet.input.readListParam('Param', { Param: array })).toEqual(array);
 });
 
 test('[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-3] Read Sequential Indexed Values', () => {
-  let array = ['zero', 'one', 'two'];
+  const array = ['zero', 'one', 'two'];
   expect(
     funlet.input.readListParam('Param', {
       'Param[0]': array[0],
@@ -106,7 +81,7 @@ test(
   '[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-4] ' +
     'Read Non-Sequential Indexed Values',
   () => {
-    let array = [];
+    const array = [];
     array[1] = 'the one';
     array[42] = 'the answer';
     array[99] = 'bottles of beer';
@@ -124,7 +99,7 @@ test(
   '[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-5] ' +
     'Mix of String and Non-Sequential Indexed Values',
   () => {
-    let array = [];
+    const array = [];
     array[1] = 'the one';
     array[42] = 'the answer';
     array[99] = 'bottles of beer';
@@ -144,7 +119,7 @@ test(
   '[SIMPLE-MESSAGE-INPUT-READ-LIST-PARAM-5] ' +
     'Mix of Array and Non-Sequential Indexed Values',
   () => {
-    let array = [];
+    const array = [];
     array[1] = 'the one';
     array[42] = 'the answer';
     array[99] = 'bottles of beer';
@@ -163,12 +138,12 @@ test(
 );
 
 test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-0] Read Empty List', () => {
-  let empty = [];
+  const empty = [];
   expect(funlet.input.readEnvList('FUNLET_PARAM', 1, 3, {})).toEqual(empty);
 });
 
 test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-1] Read List from 0 to 2', () => {
-  let array = ['zero', 'one', 'two'];
+  const array = ['zero', 'one', 'two'];
   expect(
     funlet.input.readEnvList('FUNLET_PARAM', 0, 2, {
       FUNLET_PARAM0: array[0],
@@ -179,7 +154,7 @@ test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-1] Read List from 0 to 2', () => {
 });
 
 test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-2] Read List from 3 to 5', () => {
-  let array = ['three', 'four', 'five'];
+  const array = ['three', 'four', 'five'];
   expect(
     funlet.input.readEnvList('FUNLET_PARAM', 3, 5, {
       FUNLET_PARAM3: array[0],
@@ -190,7 +165,7 @@ test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-2] Read List from 3 to 5', () => {
 });
 
 test('[SIMPLE-MESSAGE-INPUT-READ-ENV-LIST-3] Read Partial List', () => {
-  let array = ['one', 'three', 'five'];
+  const array = ['one', 'three', 'five'];
   expect(
     funlet.input.readEnvList('FUNLET_PARAM', 0, 10, {
       FUNLET_PARAM1: array[0],
@@ -323,9 +298,9 @@ test(
     'simpleMessage() with Empty Message',
   () => {
     const EMPTY_MESSAGE = '';
-    const EMPTY_RESPONSE = XML_DECLARATION + '<Response/>';
+    const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
 
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessage(response, EMPTY_MESSAGE, ENGLISH, ALICE);
     expect(response.toString()).toEqual(EMPTY_RESPONSE);
   }
@@ -335,7 +310,7 @@ test(
   '[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-1] ' +
     'simpleMessage() with Recorded Message',
   () => {
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessage(response, RECORDED_MESSAGE, ENGLISH, ALICE);
     expect(response.toString()).toEqual(PLAY_RECORDED_MESSAGE);
   }
@@ -345,7 +320,7 @@ test(
   '[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGE-2] ' +
     'simpleMessage() with Text Message',
   () => {
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessage(response, TEXT_MESSAGE, ENGLISH, ALICE);
     expect(response.toString()).toEqual(SAY_TEXT_MESSAGE);
   }
@@ -355,7 +330,7 @@ test(
   '[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-0] ' +
     'simpleMessages() with Empty List',
   () => {
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessages(response, NO_MESSAGES, ENGLISH, ALICE);
     expect(response.toString()).toEqual(EMPTY_RESPONSE);
   }
@@ -365,7 +340,7 @@ test(
   '[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-1] ' +
     'simpleMessages() with Single Recorded Message',
   () => {
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessages(
       response,
       SINGLE_RECORDED_MESSAGE,
@@ -380,7 +355,7 @@ test(
   '[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-2] ' +
     'simpleMessages() with Single Text Message',
   () => {
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessages(response, SINGLE_TEXT_MESSAGE, ENGLISH, ALICE);
     expect(response.toString()).toEqual(SAY_TEXT_MESSAGE);
   }
@@ -390,14 +365,14 @@ test(
   '[SIMPLE-MESSAGE-OUTPUT-SIMPLE-MESSAGES-3] ' +
     'simpleMessages() with Multiple Messages',
   () => {
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.simpleMessages(response, MULTIPLE_MESSAGES, ENGLISH, ALICE);
     expect(response.toString()).toEqual(PLAY_AND_SAY_MESSAGES);
   }
 );
 
 test('[SIMPLE-MESSAGE-3] Full Response: Multiple Messages', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(PLAY_AND_SAY_MESSAGES);
     done();
