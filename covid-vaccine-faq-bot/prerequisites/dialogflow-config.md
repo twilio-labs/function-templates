@@ -16,8 +16,8 @@ Click the **Create** button to save your new Dialogflow Agent.
 Next, you will need to train your new agent to be able to answer user questions about the COVID-19 vaccines appropriately.
 
 There are two options for configuring your Dialogflow agent:
-1. **Use a pre-built Dialogflow agent**: Start with a pre-built chatbot that has been configured to respond to questions about COVID-19 vaccines. There are multiple pre-built chatbot profiles available that each target different audiences.
-2. **Create your own Dialogflow agent**: If the pre-built chatbots do not apply to the audiences you'd like to serve, you can configure your own Dialogflow agent and train it with questions and answers about the vaccine from trusted health sources. Contributing new Dialogflow agents back to this repo is encouraged to create a centralized repository of effective chatbot agents that build vaccine confidence.
+1. [**Use a pre-built Dialogflow agent**](#1-use-a-pre-built-dialogflow-chatbot-agent): Start with a pre-built chatbot that has been configured to respond to questions about COVID-19 vaccines. There are multiple pre-built chatbot profiles available that each target different audiences.
+2. [**Create your own Dialogflow agent**](#2-configure-your-own-dialogflow-chatbot-agent): If the pre-built chatbots do not apply to the audiences you'd like to serve, you can configure your own Dialogflow agent and train it with questions and answers about the vaccine from trusted health sources. Contributing new Dialogflow agents back to this repo is encouraged to create a centralized repository of effective chatbot agents that build vaccine confidence.
 
 ### 1. Use a pre-built Dialogflow chatbot agent
 
