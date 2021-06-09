@@ -51,6 +51,7 @@ Congrats! you've imported a pre-built chatbot agent. If everything worked, you s
 
 ![Confirm import](https://user-images.githubusercontent.com/4605360/121404481-db400e00-c910-11eb-9b4b-148f3d105838.png)
 
+You can now return to the main [README](README.md) to complete installing this app.
 
 ### 2. Configure your own Dialogflow chatbot agent
 
