@@ -10,19 +10,20 @@
  */
 
 exports.handler = function (context, event, callback) {
-  // Change these values for your use case
-  // REMINDER: This identity is only for prototyping purposes
+  /*
+   * Change these values for your use case
+   * REMINDER: This identity is only for prototyping purposes
+   */
   const IDENTITY = 'testing-username';
   const ROOM = 'myroom';
 
-  const ACCOUNT_SID = context.ACCOUNT_SID;
+  const { ACCOUNT_SID } = context;
 
   // set these values in your .env file
-  const API_KEY = context.API_KEY;
-  const API_SECRET = context.API_SECRET;
+  const { API_KEY, API_SECRET } = context;
 
-  const AccessToken = Twilio.jwt.AccessToken;
-  const VideoGrant = AccessToken.VideoGrant;
+  const { AccessToken } = Twilio.jwt;
+  const { VideoGrant } = AccessToken;
 
   const grant = new VideoGrant();
   grant.room = ROOM;
@@ -34,10 +35,12 @@ exports.handler = function (context, event, callback) {
 
   const response = new Twilio.Response();
 
-  // Uncomment these lines for CORS support
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'GET');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /*
+   * Uncomment these lines for CORS support
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'GET');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   response.appendHeader('Content-Type', 'application/json');
   response.setBody({ token: accessToken.toJwt() });
