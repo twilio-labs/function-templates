@@ -41,7 +41,7 @@ In your `.env` file, set the following values:
 | `TWILIO PHONE NUMBER`            | Your Twilio phone number for sending and receiving SMS (find this [in the console here](https://www.twilio.com/console/phone-numbers/incoming))| Yes |
 | `DIALOGFLOW_ES_PROJECT_ID`       | Your Google Dialog Flow Project ID ([instructions here](https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects))                                                                                                              | Yes |
 | `FLOW_SID`                       | SID of Studio Flow for chatbot. Will be set automatically                                                                        | No  |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Service account key file (json) to authenticate into dialogflow API                                                      | No  |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Service account key file (json) to authenticate into dialogflow API                                                      | Yes  |
 
 ## Create a new project with the template
 
