@@ -46,7 +46,7 @@ In your `.env` file, set the following values:
 | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------  | :-- |
 | `TWILIO PHONE NUMBER`            | Your Twilio phone number for sending and receiving SMS (find this [in the console here](https://www.twilio.com/console/phone-numbers/incoming))| Yes |
 | `DIALOGFLOW_ES_PROJECT_ID`       | Your Google Dialog Flow Project ID ([instructions here](https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects))                                                                                                              | Yes |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Service account key file (json) to authenticate into dialogflow API                                                      | Yes  |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Path to service account key file (json) to authenticate into dialogflow API. Default is `/service-account-key.json`                                                      | Yes  |
 
 There is a fourth environment variable, `FLOW_SID`, but that will be set automatically by the app. **Do not** set this value.
 | Variable | Description | Required |
