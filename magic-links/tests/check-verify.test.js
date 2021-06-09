@@ -31,7 +31,7 @@ describe('verify/check-verification', () => {
   });
 
   test('returns an error response when required to parameter is missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
@@ -40,13 +40,14 @@ describe('verify/check-verification', () => {
       done();
     };
     const event = {
+      // eslint-disable-next-line camelcase
       verification_code: '123456',
     };
     checkVerifyFunction(testContext, event, callback);
   });
 
   test('returns an error response when required verification_code parameter is missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
@@ -61,7 +62,7 @@ describe('verify/check-verification', () => {
   });
 
   test('returns an error response when required parameters are missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
@@ -74,7 +75,7 @@ describe('verify/check-verification', () => {
   });
 
   test('returns success with valid request', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(
@@ -84,6 +85,7 @@ describe('verify/check-verification', () => {
     };
     const event = {
       to: 'hello@example.com',
+      // eslint-disable-next-line camelcase
       verification_code: '123456',
     };
     checkVerifyFunction(testContext, event, callback);
