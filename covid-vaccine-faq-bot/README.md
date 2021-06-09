@@ -33,7 +33,7 @@ this.**
 ## Deploying the template
 Before deploying the template to your Twilio account, you should make sure to complete the [prerequisite](#prerequisites) steps above, and make sure the following is true:
 1. You have an active Google Cloud Project with the Dialogflow API enabled
-2. You have a JSON authentication key associated with a Service Account from your Google Cloud Project, and this file is saved in your local clone of this repo.
+2. You have a JSON authentication key associated with a Service Account from your Google Cloud Project, and this file is saved to a file named `service-account-key.private.json` under the assets directory for this function template.
 3. You have created a Dialogflow agent and configured it either using one of the pre-built agents or have created your own
 
 ## Environment variables
@@ -46,7 +46,7 @@ In your `.env` file, set the following values:
 | :------------------------------- | :----------------------------------------------------------------------------------------------------------------------  | :-- |
 | `TWILIO PHONE NUMBER`            | Your Twilio phone number for sending and receiving SMS (find this [in the console here](https://www.twilio.com/console/phone-numbers/incoming))| Yes |
 | `DIALOGFLOW_ES_PROJECT_ID`       | Your Google Dialog Flow Project ID ([instructions here](https://cloud.google.com/resource-manager/docs/creating-managing-projects#identifying_projects))                                                                                                              | Yes |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Path to service account key file (json) to authenticate into dialogflow API. Default is `/service-account-key.json`. Make sure this path matches where your GCP Service Account JSON key is saved.                                                      | Yes  |
+| `GOOGLE_APPLICATION_CREDENTIALS` | Path to service account key file (json) to authenticate into dialogflow API. Default is `/service-account-key.json`.                                                      | Yes  |
 
 There is a fourth environment variable, `FLOW_SID`, but that will be set automatically by the app. **Do not** set this value.
 | Variable | Description | Required |
