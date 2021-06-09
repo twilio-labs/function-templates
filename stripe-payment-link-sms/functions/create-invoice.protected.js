@@ -11,9 +11,12 @@
  */
 const Stripe = require('stripe');
 
-// Format the amount for usage with Stripe.
-// Detect and handle zero-decimal currencies.
+/*
+ * Format the amount for usage with Stripe.
+ * Detect and handle zero-decimal currencies.
+ */
 const formatAmountForStripe = ({ amount, currency }) => {
+  // eslint-disable-next-line radix
   amount = parseInt(amount);
   const numberFormat = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -22,7 +25,7 @@ const formatAmountForStripe = ({ amount, currency }) => {
   });
   const parts = numberFormat.formatToParts(amount);
   let zeroDecimalCurrency = true;
-  for (let part of parts) {
+  for (const part of parts) {
     if (part.type === 'decimal') {
       zeroDecimalCurrency = false;
     }
@@ -55,23 +58,26 @@ exports.handler = async function (context, event, callback) {
       });
       const invoice = await stripe.invoices.create({
         customer: customer.id,
+        // eslint-disable-next-line camelcase
         auto_advance: false,
       });
       await stripe.invoices.finalizeInvoice(invoice.id);
-      // Simply return a 200 OK message by calling `callback()`.
-      // You could return an SMS TWIML here to return the payment link immediately.
-      // In this example we do this in a separate function called `send-invoice-sms.js`,
-      // based on a webhook trigger from Stripe.
-      // This allows us to also send SMS links for invoices that were created in the Stripe Dashboard:
-      // https://stripe.com/docs/billing/invoices/create#without-code
-      callback();
+      /*
+       * Simply return a 200 OK message by calling `callback()`.
+       * You could return an SMS TWIML here to return the payment link immediately.
+       * In this example we do this in a separate function called `send-invoice-sms.js`,
+       * based on a webhook trigger from Stripe.
+       * This allows us to also send SMS links for invoices that were created in the Stripe Dashboard:
+       * https://stripe.com/docs/billing/invoices/create#without-code
+       */
+      return callback();
     } catch (error) {
       // Respond with error message
       console.log({ error });
-      callback(error);
+      return callback(error);
     }
   } else {
     // Unhandled action, simply return
-    callback();
+    return callback();
   }
 };

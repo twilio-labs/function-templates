@@ -14,7 +14,9 @@ const mockStripeCustomer = {
 
 const mockStripeInvoice = {
   id: 'in_00000000000000',
+  // eslint-disable-next-line camelcase
   customer_phone: '+12025551212',
+  // eslint-disable-next-line camelcase
   hosted_invoice_url: 'https://receipt.url',
 };
 
@@ -27,6 +29,7 @@ const mockStripeClient = {
       ({ amount }) =>
         new Promise((resolve, reject) => {
           if (isNaN(amount)) {
+            // eslint-disable-next-line prefer-promise-reject-errors
             reject({ message: 'Invalid integer: NaN' });
           } else {
             resolve();
@@ -68,6 +71,7 @@ test('create invoice when prompt correct', (done) => {
     });
     expect(mockStripeClient.invoices.create).toHaveBeenCalledWith({
       customer: mockStripeCustomer.id,
+      // eslint-disable-next-line camelcase
       auto_advance: false,
     });
     expect(mockStripeClient.invoices.finalizeInvoice).toHaveBeenCalledWith(
