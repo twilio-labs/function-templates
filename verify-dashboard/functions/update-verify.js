@@ -22,14 +22,17 @@
  *  }
  */
 
+// eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  // uncomment to support CORS
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   if (typeof event.to === 'undefined') {
     response.setBody({
@@ -46,7 +49,7 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const to = event.to;
+  const { to } = event;
 
   client.verify
     .services(service)
