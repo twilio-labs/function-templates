@@ -11,6 +11,7 @@ class AdminClient {
         this.isReady = false;
       }
       // Throw an error
+      // eslint-disable-next-line no-throw-literal
       throw {
         statusCode: response.status,
         message: await response.text(),
@@ -28,7 +29,7 @@ class AdminClient {
       body: JSON.stringify(obj),
     });
     await this._handleResponse(response);
-    return await response.json();
+    return response.json();
   }
 
   async login(password) {
@@ -45,9 +46,9 @@ class AdminClient {
   async postAction(action) {
     const bodyObj = {
       token: this.token,
-      action: action,
+      action,
     };
-    return await this._post('./perform-action', bodyObj);
+    return this._post('./perform-action', bodyObj);
   }
 
   async fetchState() {
@@ -55,7 +56,7 @@ class AdminClient {
       `./check-status?token=${encodeURIComponent(this.token)}`
     );
     await this._handleResponse(response);
-    return await response.json();
+    return response.json();
   }
 
   get token() {

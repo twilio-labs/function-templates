@@ -13,7 +13,7 @@ const mockStatuses = {
   statuses: [
     async () => 'good one',
     async () => {
-      throw 'bad two';
+      throw new Error('bad two');
     },
     async () => 'good three',
   ],
@@ -37,7 +37,7 @@ describe('voice-client-javascript/admin/check-status', () => {
     );
     helpers.setup(baseContext, runtime);
     jest.mock('../../assets/admin/statuses.private.js', () => mockStatuses);
-    const { createToken } = require('../../assets/admin/shared.private.js');
+    const { createToken } = require('../../assets/admin/shared.private');
     token = createToken(baseContext, process.env.ADMIN_PASSWORD);
     checkStatusFunction = require('../../functions/admin/check-status').handler;
   });

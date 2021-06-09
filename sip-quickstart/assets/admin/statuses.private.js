@@ -1,4 +1,5 @@
 const { stripIndents } = require('common-tags');
+
 const assets = Runtime.getAssets();
 const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
   '/admin/shared.js'
@@ -22,6 +23,7 @@ async function checkEnvironmentInitialization(context) {
     \`\`\`
     After it has been deployed, revisit this page in your deployed application.
     `;
+    // eslint-disable-next-line no-negated-condition
   } else if (!process.env.INITIALIZED) {
     status.description = stripIndents`
     The SIP Quickstart requires that you setup a few things on your account. 
@@ -82,6 +84,7 @@ async function getSipDomainStatus(context) {
       ];
     }
   } else {
+    // eslint-disable-next-line no-warning-comments
     // TODO: Does this work? NO!
     const results = await client.sip.domains.list({ friendlyName });
     if (results.length >= 1) {
@@ -346,6 +349,7 @@ async function getSipDomainIsWiredUp(context) {
     title: 'SIP Domain is configured to route outbound calls',
     valid: false,
   };
+  // eslint-disable-next-line no-negated-condition
   if (!sipDomainSid) {
     status.description =
       'After you update your environment, you can wire up your SIP Domain correctly.';
