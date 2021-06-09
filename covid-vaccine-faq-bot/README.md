@@ -86,3 +86,14 @@ twilio serverless:deploy
 This app includes a [Twilio Studio](https://www.twilio.com/studio) Flow that orchestrates the SMS chatbot. You will be prompted to deploy the Studio flow as part of the steps included in `index.html`. Once deployed, you can view your flow [here](https://www.twilio.com/console/studio/dashboard) — it will be named "Vaccine FAQ Bot".
 
 You are encouraged to edit the Studio Flow in accordance with your organization's unique needs.
+
+## Contributing
+Messaging around vaccine hesitancy should be tailored to specific audieces for maximum effectiveness. The included [pre-built chatbot agents](https://github.com/twilio/covid-vaccine-faq-bot/tree/master/prebuilt-chatbots) are intended to provide a starting point, but we understand that there will be many audiences that require different kinds of content to impact vaccine attitudes.
+
+We encourage you to [contribute new pre-built agents](https://github.com/twilio/covid-vaccine-faq-bot/pulls) back to this repo to make them available to other organizations serving similar audiences. Over time, we hope this grows into a growing repository of open-source vaccine hesitancy chatbots that can increase vaccine uptake globally. We are actively seeking contributions for chatbot agents that:
+
+- Are translated into different languages
+- Speak to localized vaccine information in different countries, states, and cities
+- Address underserved populations or communities with specific needs
+
+There are instructions for how to do this  [here](prerequisites/dialogflow-config.md#2-configure-your-own-dialogflow-chatbot-agent), including a scripting tool to automatically extract question/answer pairs from other vaccine FAQ webpages (HTML or XML format).
