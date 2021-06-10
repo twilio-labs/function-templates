@@ -218,6 +218,7 @@ function updateTos(data) {
   $('#description').html(data.campaignDescription);
   $('#contact-information').html( data.contactInformation);
   $('#messageQuantity').html(data.messageQuantity);
+  $('#messageInterval').html(data.messageInterval);
   $('#privacy-policy-link').attr('href', data.privacyPolicyLink);
 }
 
