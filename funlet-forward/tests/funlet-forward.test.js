@@ -70,41 +70,31 @@ const IS_RESTRICTED_NUMBER = false;
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
-const FULL_RESPONSE_FORWARD_1_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action="${BASE_ACTION_URL}" ` +
-  `timeout="${DEFAULT_TIMEOUT}"` +
-  `>${PHONE_NUMBER}</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_FORWARD_1_1 = `${XML_DECLARATION}<Response>\
+<Dial action="${BASE_ACTION_URL}" timeout="${DEFAULT_TIMEOUT}">${PHONE_NUMBER}</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_FORWARD_1_2 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action="${XML_ACTION_URL_WITH_FALLBACK_URL}" ` +
-  `timeout="${DEFAULT_TIMEOUT}"` +
-  `>${PHONE_NUMBER}</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_FORWARD_1_2 = `${XML_DECLARATION}<Response>\
+<Dial action="${XML_ACTION_URL_WITH_FALLBACK_URL}" timeout="${DEFAULT_TIMEOUT}">\
+${PHONE_NUMBER}\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_FORWARD_1_4 =
-  `${XML_DECLARATION}<Response>` +
-  `<Say language="${FRENCH}" voice="${MAN}">${ACCESS_RESTRICTED}</Say>` +
-  `</Response>`;
+const FULL_RESPONSE_FORWARD_1_4 = `${XML_DECLARATION}<Response>\
+<Say language="${FRENCH}" voice="${MAN}">${ACCESS_RESTRICTED}</Say>\
+</Response>`;
 
-const FULL_RESPONSE_FORWARD_1_7 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action="${BASE_ACTION_URL}" ` +
-  `callerId="${CALLER_ID}" ` +
-  `timeout="${TIMEOUT}">${PHONE_NUMBER}</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_FORWARD_1_7 = `${XML_DECLARATION}<Response>\
+<Dial action="${BASE_ACTION_URL}" callerId="${CALLER_ID}" timeout="${TIMEOUT}">\
+${PHONE_NUMBER}\
+</Dial>\
+</Response>`;
 
 const HANG_UP = `${XML_DECLARATION}<Response><Hangup/></Response>`;
 
-const FULL_RESPONSE_FORWARD_2_4 =
-  `${XML_DECLARATION}<Response>` +
-  `<Redirect>${FALLBACK_URL}</Redirect>` +
-  `</Response>`;
+const FULL_RESPONSE_FORWARD_2_4 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
 beforeAll(() => runtime.setup());
 
