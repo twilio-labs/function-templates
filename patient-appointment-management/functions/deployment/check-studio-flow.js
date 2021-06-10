@@ -35,7 +35,7 @@ exports.handler = async function (context, event, callback) {
       .catch((err) => throw err);
 
     if (is_flow_deployed) return callback(null, TWILIO_FLOW_SID);
-    else return callback(null, 'NOT-DEPLOYED');
+    return callback(null, 'NOT-DEPLOYED');
   } catch (err) {
     console.log(err);
     return callback(err);

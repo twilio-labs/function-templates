@@ -144,7 +144,7 @@ exports.handler = async function (context, event, callback) {
     console.log(err);
     if (err.code === 'ERR_ASSERTION')
       return callback({ error: 'ERR_ASSERTION', message: err.message });
-    else return callback(err);
+    return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

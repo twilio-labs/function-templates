@@ -50,7 +50,7 @@ exports.handler = async function (context, event, callback) {
       if (status.endsWith('_COMPLETE')) return callback(null, 'DEPLOYED');
       else if (status.endsWith('_IN_PROGRESS'))
         return callback(null, 'DEPLOYING');
-      else return callback(null, 'FAILED');
+      return callback(null, 'FAILED');
     } catch (AmazonCloudFormationException) {
       return callback(null, 'NOT-DEPLOYED');
     }

@@ -136,7 +136,7 @@ async function retrieveParameter(context, key) {
     ? context.AUTH_TOKEN
     : process.env.AUTH_TOKEN;
   const client = context.getTwilioClient();
-  //const client = Twilio(account_sid, auth_token);
+  // const client = Twilio(account_sid, auth_token);
 
   switch (key) {
     case 'AWS_ACCESS_KEY_ID': {
@@ -165,11 +165,7 @@ async function retrieveParameter(context, key) {
         const output = response.Stacks[0].Outputs.find(function (o) {
           return o.OutputKey === 'AWSAccessKeyId';
         });
-        if (output !== null) {
-          return output.OutputValue;
-        } else {
-          return null;
-        }
+        return output === null ? null : output.OutputValue;
       } catch (AmazonCloudFormationException) {
         return null; // stack does not exist yet
       }
@@ -200,11 +196,7 @@ async function retrieveParameter(context, key) {
         const output = response.Stacks[0].Outputs.find(function (o) {
           return o.OutputKey === 'AWSSecretAccessKey';
         });
-        if (output !== null) {
-          return output.OutputValue;
-        } else {
-          return null;
-        }
+        return output === null ? null : output.OutputValue;
       } catch (AmazonCloudFormationException) {
         return null; // stack does not exist yet
       }
@@ -214,22 +206,22 @@ async function retrieveParameter(context, key) {
         context,
         'APPLICATION_CUSTOMER_CODE'
       );
-      const stack_name =
+      return (
         CONSTANTS.AWS_CF_APPLICATION_STACK_BASE_NAME +
         '-' +
-        APPLICATION_CUSTOMER_CODE;
-      return stack_name;
+        APPLICATION_CUSTOMER_CODE
+      );
     }
     case 'AWS_CF_STACK_BUCKET': {
       const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
         context,
         'APPLICATION_CUSTOMER_CODE'
       );
-      const stack_name =
+      return (
         CONSTANTS.AWS_CF_BUCKET_STACK_BASE_NAME +
         '-' +
-        APPLICATION_CUSTOMER_CODE;
-      return stack_name;
+        APPLICATION_CUSTOMER_CODE
+      );
     }
     case 'AWS_GLUE_CRAWLER': {
       const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
@@ -245,20 +237,20 @@ async function retrieveParameter(context, key) {
         context,
         'APPLICATION_CUSTOMER_CODE'
       );
-      const lambda_name =
+      return (
         CONSTANTS.AWS_LAMBDA_SEND_REMINDERS_BASE_NAME +
         '-' +
-        APPLICATION_CUSTOMER_CODE;
-      return lambda_name;
+        APPLICATION_CUSTOMER_CODE
+      );
     }
     case 'AWS_S3_BUCKET': {
       const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
         context,
         'APPLICATION_CUSTOMER_CODE'
       );
-      const bucket_name =
-        CONSTANTS.AWS_S3_BUCKET_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE;
-      return bucket_name;
+      return (
+        CONSTANTS.AWS_S3_BUCKET_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE
+      );
     }
     case 'TWILIO_ACCOUNT_SID': {
       return retrieveParameter(context, 'ACCOUNT_SID');
