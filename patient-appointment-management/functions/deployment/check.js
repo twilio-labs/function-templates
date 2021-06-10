@@ -15,14 +15,13 @@ const { path } = Runtime.getFunctions().helpers;
 const { retrieveParameter, assignParameter } = require(path);
 
 exports.handler = async function (context, event, callback) {
-  console.log(THIS, 'Starting');
+  console.log(THIS, 'Begin');
   console.time(THIS);
   try {
     if (event.hasOwnProperty('name') && event.name !== undefined) {
       const value = await retrieveParameter(context, event.name);
 
-      callback(null, value);
-      return;
+      return callback(null, value);
     } else {
       const parameters = {
         ACCOUNT_SID: await retrieveParameter(context, 'ACCOUNT_SID'),
@@ -111,9 +110,11 @@ exports.handler = async function (context, event, callback) {
       );
       console.log(THIS, parameters);
 
-      callback(null, parameters);
-      return;
+      return callback(null, parameters);
     }
+  } catch (err) {
+    console.log(err);
+    return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+/* eslint-disable sonarjs/cognitive-complexity */
 const THIS = 'deployment/deploy-aws-bucket';
 /*
  * --------------------------------------------------------------------------------
@@ -75,77 +76,67 @@ exports.handler = async function (context, event, callback) {
       .validateTemplate({ TemplateBody: `${definition}` })
       .promise();
 
+    response = null;
     switch (action) {
       case 'UPDATE':
-        {
-          console.log(
-            'Updating',
-            AWS_CF_STACK_BUCKET,
-            'CloudFormation Stack ...'
-          );
-          try {
-            const params = {
-              StackName: AWS_CF_STACK_BUCKET,
-              TemplateBody: `${definition}`,
-              Parameters: [
-                {
-                  ParameterKey: 'ParameterCustomerCode',
-                  UsePreviousValue: true,
-                },
-                { ParameterKey: 'ParameterS3Bucket', UsePreviousValue: true },
-              ],
-              Capabilities: [
-                'CAPABILITY_IAM',
-                'CAPABILITY_NAMED_IAM',
-                'CAPABILITY_AUTO_EXPAND',
-              ],
-            };
-            response = await cf.updateStack(params).promise();
-            console.log('Successfully initiated stack update');
-            callback(null, response);
-            return;
-          } catch (err) {
-            if (err.message.includes('No updates are to be performed')) {
-              console.log('No update stack needed as no change');
-            } else {
-              throw err;
-            }
-          }
-        }
-        break;
-
-      case 'CREATE':
-        {
-          console.log(
-            'Creating',
-            AWS_CF_STACK_BUCKET,
-            'CloudFormation Stack...'
-          );
+        console.log(
+          'Updating',
+          AWS_CF_STACK_BUCKET,
+          'CloudFormation Stack ...'
+        );
+        try {
           const params = {
             StackName: AWS_CF_STACK_BUCKET,
             TemplateBody: `${definition}`,
             Parameters: [
               {
                 ParameterKey: 'ParameterCustomerCode',
-                ParameterValue: APPLICATION_CUSTOMER_CODE,
+                UsePreviousValue: true,
               },
-              {
-                ParameterKey: 'ParameterS3Bucket',
-                ParameterValue: AWS_S3_BUCKET,
-              },
+              { ParameterKey: 'ParameterS3Bucket', UsePreviousValue: true },
             ],
-            OnFailure: 'ROLLBACK',
             Capabilities: [
               'CAPABILITY_IAM',
               'CAPABILITY_NAMED_IAM',
               'CAPABILITY_AUTO_EXPAND',
             ],
           };
-          response = await cf.createStack(params).promise();
-          console.log('Successfully initiated stack creation');
-          callback(null, response);
-          return;
+          response = await cf.updateStack(params).promise();
+          console.log('Successfully initiated stack update');
+        } catch (err) {
+          if (err.message.includes('No updates are to be performed')) {
+            console.log('No update stack needed as no change');
+            response = 'No update stack needed as no change';
+          } else {
+            throw err;
+          }
         }
+        break;
+
+      case 'CREATE':
+        console.log('Creating', AWS_CF_STACK_BUCKET, 'CloudFormation Stack...');
+        const params = {
+          StackName: AWS_CF_STACK_BUCKET,
+          TemplateBody: `${definition}`,
+          Parameters: [
+            {
+              ParameterKey: 'ParameterCustomerCode',
+              ParameterValue: APPLICATION_CUSTOMER_CODE,
+            },
+            {
+              ParameterKey: 'ParameterS3Bucket',
+              ParameterValue: AWS_S3_BUCKET,
+            },
+          ],
+          OnFailure: 'ROLLBACK',
+          Capabilities: [
+            'CAPABILITY_IAM',
+            'CAPABILITY_NAMED_IAM',
+            'CAPABILITY_AUTO_EXPAND',
+          ],
+        };
+        response = await cf.createStack(params).promise();
+        console.log('Successfully initiated stack creation');
         break;
 
       case 'DELETE':
@@ -193,16 +184,17 @@ exports.handler = async function (context, event, callback) {
           };
           response = await cf.deleteStack(params).promise();
           console.log('Successfully initiated stack deletion');
-          callback(null, response);
-          return;
         }
         break;
 
       default:
-        callback('undefined action!');
-        return;
+        return callback('undefined action!');
         break;
     }
+    return callback(null, response);
+  } catch (err) {
+    console.log(err);
+    return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

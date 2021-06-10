@@ -1,4 +1,4 @@
-/* eslint-disable-camelcase */
+/* eslint-disable camelcase */
 const THIS = 'save-rescheduled:';
 /*
  * --------------------------------------------------------------------------------
@@ -121,7 +121,7 @@ exports.handler = async function (context, event, callback) {
     let results = await s3.putObject(params).promise();
     console.log(THIS, 'PUT - ', params.Key);
 
-    if (disposition != null && disposition != 'QUEUED') {
+    if (disposition !== null && disposition !== 'QUEUED') {
       params = {
         Bucket: AWS_S3_BUCKET,
         Key: state_file_s3key.replace('{DISPOSITION}', disposition),
@@ -146,12 +146,12 @@ exports.handler = async function (context, event, callback) {
       event_type: appointment.event_type,
       appointment_s3key: new_state_file_s3key,
     };
-    callback(null, response);
+    return callback(null, response);
   } catch (err) {
     console.log(err);
     if (err.code === 'ERR_ASSERTION')
-      callback({ error: 'ERR_ASSERTION', message: err.message });
-    else callback(err);
+      return callback({ error: 'ERR_ASSERTION', message: err.message });
+    else return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

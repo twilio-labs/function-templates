@@ -14,7 +14,7 @@ const { path } = Runtime.getFunctions().helpers;
 const { retrieveParameter, assignParameter } = require(path);
 
 exports.handler = async function (context, event, callback) {
-  console.log(THIS, 'Starting');
+  console.log(THIS, 'Begin');
   console.time(THIS);
   try {
     const AWS_CF_STACK_APPLICATION = await retrieveParameter(
@@ -47,19 +47,12 @@ exports.handler = async function (context, event, callback) {
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);
-      if (status.endsWith('_COMPLETE')) {
-        callback(null, 'DEPLOYED');
-        return;
-      } else if (status.endsWith('_IN_PROGRESS')) {
-        callback(null, 'DEPLOYING');
-        return;
-      } else {
-        callback(null, 'FAILED');
-        return;
-      }
+      if (status.endsWith('_COMPLETE')) return callback(null, 'DEPLOYED');
+      else if (status.endsWith('_IN_PROGRESS'))
+        return callback(null, 'DEPLOYING');
+      else return callback(null, 'FAILED');
     } catch (AmazonCloudFormationException) {
-      callback(null, 'NOT-DEPLOYED');
-      return;
+      return callback(null, 'NOT-DEPLOYED');
     }
   } finally {
     console.timeEnd(THIS);

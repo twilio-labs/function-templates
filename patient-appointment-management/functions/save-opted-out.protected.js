@@ -158,7 +158,7 @@ exports.handler = async function (context, event, callback) {
       if (s3key.includes('QUEUED')) disposition = 'QUEUED';
       else if (s3key.includes('REMINDED-1')) disposition = 'REMINDED-1';
       else if (s3key.includes('REMINDED-2')) disposition = 'REMINDED-2';
-      else null;
+      else disposition = null;
       if (disposition === null) continue; // error case, skip for now
 
       params = {
@@ -206,17 +206,12 @@ exports.handler = async function (context, event, callback) {
       patient_id,
       appointment_count: appointment_s3keys.length,
     };
-    callback(null, response);
-    return;
+    return callback(null, response);
   } catch (err) {
     console.log(err);
-    if (err.code === 'ERR_ASSERTION') {
-      callback({ error: 'ERR_ASSERTION', message: err.message });
-      return;
-    } else {
-      callback(err);
-      return;
-    }
+    if (err.code === 'ERR_ASSERTION')
+      return callback({ error: 'ERR_ASSERTION', message: err.message });
+    else return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

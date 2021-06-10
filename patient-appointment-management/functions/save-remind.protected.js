@@ -114,8 +114,7 @@ exports.handler = async function (context, event, callback) {
         event_type: appointment.event_type,
         appointment_s3key: null,
       };
-      callback(response);
-      return;
+      return callback(response);
     }
 
     // advance disposition per reminder rule
@@ -135,8 +134,7 @@ exports.handler = async function (context, event, callback) {
           disposition
         ),
       };
-      callback(response);
-      return;
+      return callback(response);
     }
 
     const new_state_file_s3key = state_file_s3key.replace(
@@ -176,17 +174,12 @@ exports.handler = async function (context, event, callback) {
       event_type: appointment.event_type,
       appointment_s3key: new_state_file_s3key,
     };
-    callback(null, response);
-    return;
+    return callback(null, response);
   } catch (err) {
     console.log(err);
-    if (err.code === 'ERR_ASSERTION') {
-      callback({ error: 'ERR_ASSERTION', message: err.message });
-      return;
-    } else {
-      callback(err);
-      return;
-    }
+    if (err.code === 'ERR_ASSERTION')
+      return callback({ error: 'ERR_ASSERTION', message: err.message });
+    else return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

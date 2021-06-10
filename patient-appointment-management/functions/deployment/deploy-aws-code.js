@@ -138,8 +138,7 @@ exports.handler = async function (context, event, callback) {
       }
     }
 
-    callback(null, 'success');
-    return;
+    return callback(null, 'success');
   } finally {
     console.timeEnd(THIS);
   }

@@ -141,205 +141,196 @@ exports.handler = async function (context, event, callback) {
       .validateTemplate({ TemplateBody: `${definition}` })
       .promise();
 
+    response = null;
     switch (action) {
       case 'UPDATE':
-        {
-          console.log(
-            'Updating',
-            AWS_CF_STACK_APPLICATION,
-            'CloudFormation Stack ...'
-          );
-          try {
-            const params = {
-              StackName: AWS_CF_STACK_APPLICATION,
-              TemplateBody: `${definition}`,
-              Parameters: [
-                {
-                  ParameterKey: 'ParameterApplicationName',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterCustomerCode',
-                  UsePreviousValue: true,
-                },
-                { ParameterKey: 'ParameterS3Bucket', UsePreviousValue: true },
-                {
-                  ParameterKey: 'ParameterTwilioAccountSID',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterTwilioAuthToken',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterTwilioFlowSID',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterTwilioPhoneNumber',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterLambdaSendReminders',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterGlueCrawlerName',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterGlueDatabaseName',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterFilenamePatternAppointment',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterReminderOutreachStart',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterReminderOutreachFinish',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterReminderFirstOffset',
-                  UsePreviousValue: true,
-                },
-                {
-                  ParameterKey: 'ParameterReminderSecondOffset',
-                  UsePreviousValue: true,
-                },
-              ],
-              Capabilities: [
-                'CAPABILITY_IAM',
-                'CAPABILITY_NAMED_IAM',
-                'CAPABILITY_AUTO_EXPAND',
-              ],
-            };
-            response = await cf.updateStack(params).promise();
-            console.log('Successfully initiated stack update');
-            callback(null, response);
-            return;
-          } catch (err) {
-            if (err.message.includes('No updates are to be performed')) {
-              console.log('No update stack needed as no change');
-            } else {
-              throw err;
-            }
-          }
-        }
-        break;
-
-      case 'CREATE':
-        {
-          console.log(
-            'Creating',
-            AWS_CF_STACK_APPLICATION,
-            'CloudFormation Stack...'
-          );
+        console.log(
+          'Updating',
+          AWS_CF_STACK_APPLICATION,
+          'CloudFormation Stack ...'
+        );
+        try {
           const params = {
             StackName: AWS_CF_STACK_APPLICATION,
             TemplateBody: `${definition}`,
             Parameters: [
               {
                 ParameterKey: 'ParameterApplicationName',
-                ParameterValue: APPLICATION_NAME,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterCustomerCode',
-                ParameterValue: APPLICATION_CUSTOMER_CODE,
+                UsePreviousValue: true,
               },
-              {
-                ParameterKey: 'ParameterS3Bucket',
-                ParameterValue: AWS_S3_BUCKET,
-              },
+              { ParameterKey: 'ParameterS3Bucket', UsePreviousValue: true },
               {
                 ParameterKey: 'ParameterTwilioAccountSID',
-                ParameterValue: TWILIO_ACCOUNT_SID,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterTwilioAuthToken',
-                ParameterValue: TWILIO_AUTH_TOKEN,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterTwilioFlowSID',
-                ParameterValue: TWILIO_FLOW_SID,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterTwilioPhoneNumber',
-                ParameterValue: TWILIO_PHONE_NUMBER,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterLambdaSendReminders',
-                ParameterValue: AWS_LAMBDA_SEND_REMINDERS,
+                UsePreviousValue: true,
               },
               {
-                ParameterKey: 'ParameterGlueCrawler',
-                ParameterValue: AWS_GLUE_CRAWLER,
+                ParameterKey: 'ParameterGlueCrawlerName',
+                UsePreviousValue: true,
               },
               {
-                ParameterKey: 'ParameterGlueDatabase',
-                ParameterValue: AWS_GLUE_DATABASE,
+                ParameterKey: 'ParameterGlueDatabaseName',
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterFilenamePatternAppointment',
-                ParameterValue: APPLICATION_FILENAME_PATTERN_APPOINTMENT,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterReminderOutreachStart',
-                ParameterValue: REMINDER_OUTREACH_START,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterReminderOutreachFinish',
-                ParameterValue: REMINDER_OUTREACH_FINISH,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterReminderFirstOffset',
-                ParameterValue: REMINDER_FIRST_OFFSET,
+                UsePreviousValue: true,
               },
               {
                 ParameterKey: 'ParameterReminderSecondOffset',
-                ParameterValue: REMINDER_SECOND_OFFSET,
+                UsePreviousValue: true,
               },
             ],
-            OnFailure: 'ROLLBACK',
             Capabilities: [
               'CAPABILITY_IAM',
               'CAPABILITY_NAMED_IAM',
               'CAPABILITY_AUTO_EXPAND',
             ],
           };
-          response = await cf.createStack(params).promise();
-          console.log('Successfully initiated stack creation');
-          callback(null, response);
-          return;
+          response = await cf.updateStack(params).promise();
+          console.log('Successfully initiated stack update');
+        } catch (err) {
+          if (err.message.includes('No updates are to be performed')) {
+            console.log('No update stack needed as no change');
+            response = 'No update stack needed as no change';
+          } else throw err;
         }
+        break;
+
+      case 'CREATE':
+        console.log(
+          'Creating',
+          AWS_CF_STACK_APPLICATION,
+          'CloudFormation Stack...'
+        );
+        let params = {
+          StackName: AWS_CF_STACK_APPLICATION,
+          TemplateBody: `${definition}`,
+          Parameters: [
+            {
+              ParameterKey: 'ParameterApplicationName',
+              ParameterValue: APPLICATION_NAME,
+            },
+            {
+              ParameterKey: 'ParameterCustomerCode',
+              ParameterValue: APPLICATION_CUSTOMER_CODE,
+            },
+            {
+              ParameterKey: 'ParameterS3Bucket',
+              ParameterValue: AWS_S3_BUCKET,
+            },
+            {
+              ParameterKey: 'ParameterTwilioAccountSID',
+              ParameterValue: TWILIO_ACCOUNT_SID,
+            },
+            {
+              ParameterKey: 'ParameterTwilioAuthToken',
+              ParameterValue: TWILIO_AUTH_TOKEN,
+            },
+            {
+              ParameterKey: 'ParameterTwilioFlowSID',
+              ParameterValue: TWILIO_FLOW_SID,
+            },
+            {
+              ParameterKey: 'ParameterTwilioPhoneNumber',
+              ParameterValue: TWILIO_PHONE_NUMBER,
+            },
+            {
+              ParameterKey: 'ParameterLambdaSendReminders',
+              ParameterValue: AWS_LAMBDA_SEND_REMINDERS,
+            },
+            {
+              ParameterKey: 'ParameterGlueCrawler',
+              ParameterValue: AWS_GLUE_CRAWLER,
+            },
+            {
+              ParameterKey: 'ParameterGlueDatabase',
+              ParameterValue: AWS_GLUE_DATABASE,
+            },
+            {
+              ParameterKey: 'ParameterFilenamePatternAppointment',
+              ParameterValue: APPLICATION_FILENAME_PATTERN_APPOINTMENT,
+            },
+            {
+              ParameterKey: 'ParameterReminderOutreachStart',
+              ParameterValue: REMINDER_OUTREACH_START,
+            },
+            {
+              ParameterKey: 'ParameterReminderOutreachFinish',
+              ParameterValue: REMINDER_OUTREACH_FINISH,
+            },
+            {
+              ParameterKey: 'ParameterReminderFirstOffset',
+              ParameterValue: REMINDER_FIRST_OFFSET,
+            },
+            {
+              ParameterKey: 'ParameterReminderSecondOffset',
+              ParameterValue: REMINDER_SECOND_OFFSET,
+            },
+          ],
+          OnFailure: 'ROLLBACK',
+          Capabilities: [
+            'CAPABILITY_IAM',
+            'CAPABILITY_NAMED_IAM',
+            'CAPABILITY_AUTO_EXPAND',
+          ],
+        };
+        response = await cf.createStack(params).promise();
+        console.log('Successfully initiated stack creation');
         break;
 
       case 'DELETE':
-        {
-          console.log(
-            'Deleting',
-            AWS_CF_STACK_APPLICATION,
-            'CloudFormation Stack...'
-          );
-          const params = {
-            StackName: AWS_CF_STACK_APPLICATION,
-          };
-          response = await cf.deleteStack(params).promise();
-          console.log('Successfully initiated stack deletion');
-          callback(null, response);
-          return;
-        }
+        console.log(
+          'Deleting',
+          AWS_CF_STACK_APPLICATION,
+          'CloudFormation Stack...'
+        );
+        params = {
+          StackName: AWS_CF_STACK_APPLICATION,
+        };
+        response = await cf.deleteStack(params).promise();
+        console.log('Successfully initiated stack deletion');
         break;
 
       default:
-        callback('undefined action!');
-        return;
+        return callback('undefined action!');
         break;
     }
+    return callback(null, response);
+  } catch (err) {
+    console.log(err);
+    return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

@@ -1,4 +1,6 @@
 /* eslint-disable camelcase */
+/* eslint-disable complexity */
+/* eslint-disable sonarjs/cognitive-complexity */
 /*
  * --------------------------------------------------------------------------------
  * common helper function used by functions & client-side javascript
@@ -15,17 +17,19 @@
  *
  * --------------------------------------------------------------------------------
  */
+const AWS = require('aws-sdk');
+const Twilio = require('twilio');
 
-const APPLICATION_NAME = 'patient-appointment-management';
+const THIS_APPLICATION_NAME = 'patient-appointment-management';
 const CONSTANTS = {
-  APPLICATION_NAME,
+  APPLICATION_NAME: THIS_APPLICATION_NAME,
   APPLICATION_FILENAME_PATTERN_APPOINTMENT:
     'appointment{appointment_id}-patient{patient_id}.json',
-  AWS_S3_BUCKET_BASE_NAME: `twilio-${APPLICATION_NAME}`,
-  AWS_CF_BUCKET_STACK_BASE_NAME: `twilio-${APPLICATION_NAME}-bucket`,
-  AWS_CF_APPLICATION_STACK_BASE_NAME: `twilio-${APPLICATION_NAME}-application`,
+  AWS_S3_BUCKET_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}`,
+  AWS_CF_BUCKET_STACK_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}-bucket`,
+  AWS_CF_APPLICATION_STACK_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}-application`,
   AWS_LAMBDA_SEND_REMINDERS_BASE_NAME: 'twilio-send-appointment-reminders',
-  AWS_GLUE_CRAWLER_BASE_NAME: `twilio-${APPLICATION_NAME}`,
+  AWS_GLUE_CRAWLER_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}`,
   AWS_GLUE_DATABASE: 'patient_appointments',
 };
 
@@ -61,8 +65,19 @@ async function assignParameter(context, key, value) {
       break;
     case 'server':
       const client = context.getTwilioClient();
-      const service_sid = context.TWILIO_SERVICE_SID;
-      const environment_sid = context.TWILIO_ENVIRONMENT_SID;
+      console.log('twilioClient', client);
+      // eslint-disable-next-line no-use-before-define
+      const service_sid = await retrieveParameter(
+        context,
+        'TWILIO_SERVICE_SID'
+      );
+      console.log('service_sid', service_sid);
+      // eslint-disable-next-line no-use-before-define
+      const environment_sid = await retrieveParameter(
+        context,
+        'TWILIO_ENVIRONMENT_SID'
+      );
+      console.log('environment_sid', environment_sid);
 
       let variable_sid = null;
       await client.serverless
@@ -75,19 +90,19 @@ async function assignParameter(context, key, value) {
           })
         );
 
-      if (variable_sid !== null) {
+      if (variable_sid === null) {
+        await client.serverless
+          .services(service_sid)
+          .environments(environment_sid)
+          .variables.create({ key, value })
+          .then((v) => console.log('Created variable', v.key));
+      } else {
         await client.serverless
           .services(service_sid)
           .environments(environment_sid)
           .variables(variable_sid)
           .update({ value })
           .then((v) => console.log('Updated variable', v.key));
-      } else {
-        await client.serverless
-          .services(service_sid)
-          .environments(environment_sid)
-          .variables.create({ key, value })
-          .then((v) => console.log('Created variable', v.key));
       }
       break;
     default:
@@ -108,12 +123,11 @@ async function assignParameter(context, key, value) {
  * --------------------------------------------------------------------------------
  */
 async function retrieveParameter(context, key) {
-  const AWS = require('aws-sdk');
-  const Twilio = require('twilio');
-
   if (CONSTANTS[key]) return CONSTANTS[key];
-  if (context[key]) return context[key];
-  if (process.env[key]) return process.env[key];
+  if (context[key] && context[key] !== null && context[key] !== '')
+    return context[key];
+  if (process.env[key] && process.env[key] !== null && process.env[key] !== '')
+    return process.env[key];
 
   const account_sid = context.ACCOUNT_SID
     ? context.ACCOUNT_SID
@@ -121,7 +135,8 @@ async function retrieveParameter(context, key) {
   const auth_token = context.AUTH_TOKEN
     ? context.AUTH_TOKEN
     : process.env.AUTH_TOKEN;
-  const client = context.getTwilioClient(); // Twilio(account_sid, auth_token)
+  const client = context.getTwilioClient();
+  //const client = Twilio(account_sid, auth_token);
 
   switch (key) {
     case 'AWS_ACCESS_KEY_ID': {
@@ -151,11 +166,6 @@ async function retrieveParameter(context, key) {
           return o.OutputKey === 'AWSAccessKeyId';
         });
         if (output !== null) {
-          await assignParameter(
-            context,
-            'AWS_ACCESS_KEY_ID',
-            output.OutputValue
-          );
           return output.OutputValue;
         } else {
           return null;
@@ -191,11 +201,6 @@ async function retrieveParameter(context, key) {
           return o.OutputKey === 'AWSSecretAccessKey';
         });
         if (output !== null) {
-          await assignParameter(
-            context,
-            'AWS_SECRET_ACCESS_KEY',
-            output.OutputValue
-          );
           return output.OutputValue;
         } else {
           return null;
@@ -213,7 +218,6 @@ async function retrieveParameter(context, key) {
         CONSTANTS.AWS_CF_APPLICATION_STACK_BASE_NAME +
         '-' +
         APPLICATION_CUSTOMER_CODE;
-      await assignParameter(context, 'AWS_CF_STACK_APPLICATION', stack_name);
       return stack_name;
     }
     case 'AWS_CF_STACK_BUCKET': {
@@ -225,7 +229,6 @@ async function retrieveParameter(context, key) {
         CONSTANTS.AWS_CF_BUCKET_STACK_BASE_NAME +
         '-' +
         APPLICATION_CUSTOMER_CODE;
-      await assignParameter(context, 'AWS_CF_STACK_BUCKET', stack_name);
       return stack_name;
     }
     case 'AWS_GLUE_CRAWLER': {
@@ -246,7 +249,6 @@ async function retrieveParameter(context, key) {
         CONSTANTS.AWS_LAMBDA_SEND_REMINDERS_BASE_NAME +
         '-' +
         APPLICATION_CUSTOMER_CODE;
-      await assignParameter(context, 'AWS_LAMBDA_SEND_REMINDERS', lambda_name);
       return lambda_name;
     }
     case 'AWS_S3_BUCKET': {
@@ -256,7 +258,6 @@ async function retrieveParameter(context, key) {
       );
       const bucket_name =
         CONSTANTS.AWS_S3_BUCKET_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE;
-      await assignParameter(context, 'AWS_S3_BUCKET', bucket_name);
       return bucket_name;
     }
     case 'TWILIO_ACCOUNT_SID': {
@@ -320,7 +321,7 @@ async function retrieveParameter(context, key) {
         })
       );
       if (service_sid !== null) {
-        await assignParameter(context, 'TWILIO_SERVICE_SID', service_sid);
+        console.log('Found', service_sid);
         return service_sid;
       }
       console.log('YOU MUST DEPLOY THE SERVICE FIRST!!! ABORTING!!!');

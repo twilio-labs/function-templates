@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+/* eslint-disable consistent-return */
 const THIS = 'deployment/check-studio-flow:';
 /*
  * --------------------------------------------------------------------------------
@@ -19,27 +20,25 @@ exports.handler = async function (context, event, callback) {
     const TWILIO_FLOW_SID = await retrieveParameter(context, 'TWILIO_FLOW_SID');
 
     const client = context.getTwilioClient();
-    client.studio.flows
+    const is_flow_deployed = client.studio.flows
       .list({ limit: 100 })
       .then((flows) => {
-        if (flows.length > 0) {
-          flows.forEach((f) => {
-            if (f.sid === TWILIO_FLOW_SID) {
-              console.log(THIS, 'Found', TWILIO_FLOW_SID);
-              callback(null, TWILIO_FLOW_SID);
-              return;
-            }
-          });
-          callback(null, 'NOT-DEPLOYED');
-          return;
-        } else {
-          callback(null, 'NOT-DEPLOYED');
-          return;
-        }
+        if (flows.length === 0) return false;
+        flows.forEach((f) => {
+          if (f.sid === TWILIO_FLOW_SID) {
+            console.log(THIS, 'Found', TWILIO_FLOW_SID);
+            return true;
+          }
+        });
+        return false;
       })
-      .catch((err) => callback(err));
+      .catch((err) => throw err);
+
+    if (is_flow_deployed) return callback(null, TWILIO_FLOW_SID);
+    else return callback(null, 'NOT-DEPLOYED');
   } catch (err) {
-    throw new Error(err.details);
+    console.log(err);
+    return callback(err);
   } finally {
     console.timeEnd(THIS);
   }

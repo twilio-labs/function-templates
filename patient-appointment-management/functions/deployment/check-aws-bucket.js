@@ -44,24 +44,13 @@ exports.handler = async function (context, event, callback) {
         .promise();
       const status = response.Stacks[0].StackStatus;
 
-      if (status.endsWith('_COMPLETE')) {
-        console.log(THIS, 'StackStatus=', status);
-        console.log(THIS, 'Returning=', AWS_S3_BUCKET);
-        callback(null, AWS_S3_BUCKET);
-        return;
-      } else if (status.endsWith('_IN_PROGRESS')) {
-        console.log(THIS, 'StackStatus=', status);
-        callback(null, 'DEPLOYING');
-        return;
-      } else {
-        console.log(THIS, 'StackStatus=', status);
-        callback(null, 'FAILED');
-        return;
-      }
+      console.log(THIS, 'StackStatus=', status);
+      if (status.endsWith('_COMPLETE')) return callback(null, AWS_S3_BUCKET);
+      else if (status.endsWith('_IN_PROGRESS'))
+        return callback(null, 'DEPLOYING');
+      else return callback(null, 'FAILED');
     } catch (AmazonCloudFormationException) {
-      console.log(THIS, 'StackStatus=', null);
-      callback(null, 'NOT-DEPLOYED');
-      return;
+      return callback(null, 'NOT-DEPLOYED');
     }
   } finally {
     console.timeEnd(THIS);

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const helpers = require('../../test/test-helper');
 const Twilio = require('twilio');
 const { handler } = require('../functions/save-remind.protected');

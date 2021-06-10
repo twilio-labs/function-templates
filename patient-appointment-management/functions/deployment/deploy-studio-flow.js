@@ -173,22 +173,19 @@ exports.handler = async function (context, event, callback) {
         break;
 
       case 'DELETE':
-        {
-          console.log(THIS, 'Deleting TWILIO_FLOW_SID=', TWILIO_FLOW_SID);
-          await client.studio.flows(TWILIO_FLOW_SID).remove();
-        }
+        console.log(THIS, 'Deleting TWILIO_FLOW_SID=', TWILIO_FLOW_SID);
+        await client.studio.flows(TWILIO_FLOW_SID).remove();
         break;
 
       default:
-        callback('undefined action!');
-        return;
+        return callback('undefined action!');
         break;
     }
 
-    callback(null, 'success');
-    return;
+    return callback(null, 'success');
   } catch (err) {
-    throw new Error(err.details);
+    console.log(err);
+    return callback(err);
   } finally {
     console.timeEnd(THIS);
   }
