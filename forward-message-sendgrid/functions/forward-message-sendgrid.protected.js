@@ -21,8 +21,8 @@ exports.handler = function (context, event, callback) {
       },
       body: JSON.stringify(requestBody),
     })
-    .then((response) => {
-      let twiml = new Twilio.twiml.MessagingResponse();
+    .then((_response) => {
+      const twiml = new Twilio.twiml.MessagingResponse();
       callback(null, twiml);
     })
     .catch((err) => {

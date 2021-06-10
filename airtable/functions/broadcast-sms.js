@@ -1,8 +1,8 @@
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
 
-  var Airtable = require('airtable');
-  var base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
+  const Airtable = require('airtable');
+  const base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
     context.AIRTABLE_BASE_ID
   );
 

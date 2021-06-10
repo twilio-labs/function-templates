@@ -4,16 +4,12 @@ const Twilio = require('twilio');
 
 const event = {};
 
-jest.mock('airtable', () => {
-  return jest.fn().mockImplementation(() => {
-    return mockAirtableClient;
-  });
-});
-
-const mockAirtableClient = {
-  base: jest.fn().mockImplementation(() => {
-    return mockAirtableBase;
-  }),
+const mockAirtableTable = {
+  create: jest.fn(() =>
+    Promise.resolve({
+      err: 'This is an error message',
+    })
+  ),
 };
 
 const mockAirtableBase = {
@@ -22,13 +18,17 @@ const mockAirtableBase = {
   }),
 };
 
-const mockAirtableTable = {
-  create: jest.fn(() =>
-    Promise.resolve({
-      err: 'This is an error message',
-    })
-  ),
+const mockAirtableClient = {
+  base: jest.fn().mockImplementation(() => {
+    return mockAirtableBase;
+  }),
 };
+
+jest.mock('airtable', () => {
+  return jest.fn().mockImplementation(() => {
+    return mockAirtableClient;
+  });
+});
 
 const context = {
   AIRTABLE_API_KEY: 'keyAbcD12efG3HijK',
@@ -46,7 +46,7 @@ afterAll(() => {
 });
 
 test('returns a MessageResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     done();
   };
@@ -55,7 +55,7 @@ test('returns a MessageResponse', (done) => {
 });
 
 test('successfully saved the message', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Message>The SMS was successfully saved.</Message>'
     );

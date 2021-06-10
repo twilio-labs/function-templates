@@ -20,7 +20,7 @@ afterAll(() => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -29,7 +29,7 @@ test('returns a VoiceResponse', (done) => {
 });
 
 test('rejects unknown numbers', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toContain(
       `<Response><Say>I'm sorry but I don't recognize your number. Have a good day.</Say><Hangup/></Response>`
     );
@@ -40,7 +40,7 @@ test('rejects unknown numbers', (done) => {
 });
 
 test('grants moderator access', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toContain(
       `<Response><Say>Thank you! You are joining the conference</Say><Dial><Conference startConferenceOnEnter="true" endConferenceOnExit="true">My gated conference</Conference></Dial></Response>`
     );
@@ -51,7 +51,7 @@ test('grants moderator access', (done) => {
 });
 
 test('grants valid callers access', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toContain(
       `<Response><Say>Thank you! You are joining the conference</Say><Dial><Conference startConferenceOnEnter="false" endConferenceOnExit="false">My gated conference</Conference></Dial></Response>`
     );

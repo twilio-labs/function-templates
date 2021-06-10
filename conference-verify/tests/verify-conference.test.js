@@ -3,9 +3,11 @@ const verifiedConferenceFunction =
 const helpers = require('../../test/test-helper');
 const { getExpectedBodyHash } = require('twilio/lib/webhooks/webhooks');
 
-//
-// START: TEST SETUP
-//
+/*
+ *
+ * START: TEST SETUP
+ *
+ */
 let hasOpenVerification = false;
 
 const mockVerificationsEndpoint = jest.fn(() => {
@@ -43,9 +45,11 @@ const testContext = {
   getTwilioClient: () => mockClient,
 };
 
-//
-// END: TEST SETUP
-//
+/*
+ *
+ * END: TEST SETUP
+ *
+ */
 
 describe('conference-verify/verify-conference', () => {
   beforeEach(() => {
@@ -72,7 +76,7 @@ describe('conference-verify/verify-conference', () => {
   });
 
   test('blocks unknown numbers', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -90,7 +94,7 @@ describe('conference-verify/verify-conference', () => {
   });
 
   test('allows moderator number ', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -108,7 +112,7 @@ describe('conference-verify/verify-conference', () => {
   });
 
   test('allows regular valid number ', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -126,7 +130,7 @@ describe('conference-verify/verify-conference', () => {
   });
 
   test('sends verification if there is none open', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -151,7 +155,7 @@ describe('conference-verify/verify-conference', () => {
   });
 
   test('skips sending verification if there is one', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -173,7 +177,7 @@ describe('conference-verify/verify-conference', () => {
   });
 
   test('handles failed verification creation', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();

@@ -18,7 +18,7 @@ describe('chat-token/token', () => {
   });
 
   test('returns a valid token if service available in context', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
       jwt.verify(result._body.token, baseContext.API_SECRET, (err, decoded) => {
@@ -28,6 +28,7 @@ describe('chat-token/token', () => {
         expect(decoded.grants).toEqual({
           identity: 'testing-username',
           chat: {
+            // eslint-disable-next-line camelcase
             service_sid: baseContext.CHAT_SERVICE_SID,
           },
         });
@@ -38,7 +39,7 @@ describe('chat-token/token', () => {
   });
 
   test('returns a valid token if service available inline', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
       jwt.verify(result._body.token, baseContext.API_SECRET, (err, decoded) => {
@@ -48,6 +49,7 @@ describe('chat-token/token', () => {
         expect(decoded.grants).toEqual({
           identity: 'testing-username',
           chat: {
+            // eslint-disable-next-line camelcase
             service_sid: 'enter Chat Service Sid',
           },
         });

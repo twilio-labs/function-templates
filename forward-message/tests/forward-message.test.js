@@ -19,7 +19,7 @@ afterAll(() => {
 });
 
 test('returns a MessagingResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     done();
   };
@@ -28,8 +28,8 @@ test('returns a MessagingResponse', (done) => {
 });
 
 test('forwards the message to the number from the context', (done) => {
-  const callback = (err, result) => {
-    expect(result.toString()).toMatch('to="' + context.MY_PHONE_NUMBER + '"');
+  const callback = (_err, result) => {
+    expect(result.toString()).toMatch(`to="${context.MY_PHONE_NUMBER}"`);
     done();
   };
 
@@ -37,9 +37,9 @@ test('forwards the message to the number from the context', (done) => {
 });
 
 test('includes the original From number and Body', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
-      '>From: ' + event.From + '. Body: ' + event.Body + '<'
+      `>From: ${event.From}. Body: ${event.Body}<`
     );
     done();
   };

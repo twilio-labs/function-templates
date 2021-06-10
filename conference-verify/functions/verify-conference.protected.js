@@ -54,5 +54,5 @@ exports.handler = async function (context, event, callback) {
 
   twiml.redirect(context.PATH);
 
-  callback(null, twiml);
+  return callback(null, twiml);
 };

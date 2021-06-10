@@ -4,20 +4,18 @@ const Twilio = require('twilio');
 
 const event = {};
 
-jest.mock('airtable', () => {
-  return jest.fn().mockImplementation(() => {
-    return mockAirtableClient;
-  });
-});
-
 const mockRecord = {
   get: jest.fn(() => '+1234567890'),
 };
 const mockAllRecords = [mockRecord];
 
-const mockAirtableClient = {
-  base: jest.fn().mockImplementation(() => {
-    return mockAirtableBase;
+const mockAirtableQuery = {
+  all: jest.fn(() => Promise.resolve(mockAllRecords)),
+};
+
+const mockAirtableTable = {
+  select: jest.fn(() => {
+    return mockAirtableQuery;
   }),
 };
 
@@ -27,17 +25,19 @@ const mockAirtableBase = {
   }),
 };
 
-const mockAirtableTable = {
-  select: jest.fn(() => {
-    return mockAirtableQuery;
+const mockAirtableClient = {
+  base: jest.fn().mockImplementation(() => {
+    return mockAirtableBase;
   }),
 };
 
-const mockAirtableQuery = {
-  all: jest.fn(() => Promise.resolve(mockAllRecords)),
-};
+jest.mock('airtable', () => {
+  return jest.fn().mockImplementation(() => {
+    return mockAirtableClient;
+  });
+});
 
-let shouldFail = false;
+const shouldFail = false;
 const mockClient = {
   messages: {
     create: jest.fn(async () => {
@@ -69,7 +69,7 @@ afterAll(() => {
 });
 
 test('returns a Response', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeDefined();
     done();
   };
@@ -78,7 +78,7 @@ test('returns a Response', (done) => {
 });
 
 test('sends an SMS message', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, _result) => {
     expect(mockClient.messages.create).toHaveBeenCalledWith({
       from: 'TwilioNumber',
       to: '+1234567890',
