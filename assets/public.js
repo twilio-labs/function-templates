@@ -66,6 +66,10 @@ function settingsUpdate(input) {
     case 'privacy-policy-link':
       $('#privacyPolicyLink').attr('href', input.value);
       break;
+    
+    case 'data-source':
+      $('#data-source').val(input.value);
+      break;
   
     default:
       break;
@@ -90,6 +94,23 @@ function setOpenDataPanel(dataSource) {
         $('#webhook-tab').tab('show');
         break;
     }
+}
+
+function bindDataSourceTabs() {
+  $('#webhook-tab').on('click', function (e) {
+    let dataSource = e.target.innerText.toLocaleLowerCase()
+    settingsUpdate({id: 'data-source', value: dataSource});
+  });
+
+  $('#segment-tab').on('click', function (e) {
+    let dataSource = e.target.innerText.toLocaleLowerCase()
+    settingsUpdate({id: 'data-source', value: dataSource});
+  });
+
+  $('#airtable-tab').on('click', function (e) {
+    let dataSource = e.target.innerText.toLocaleLowerCase()
+    settingsUpdate({id: 'data-source', value: dataSource});
+  });
 }
 
 function sendSMS() {
@@ -149,6 +170,8 @@ function displaySettings(data) {
     </code>`
 
     $('#iframe-panel').html(iframeTemplate);
+
+    bindDataSourceTabs();
   }
 }
 
@@ -196,8 +219,6 @@ function updateTos(data) {
   $('#contact-information').html( data.contactInformation);
   $('#messageQuantity').html(data.messageQuantity);
   $('#privacy-policy-link').attr('href', data.privacyPolicyLink);
-  
-
 }
 
 function getText() {
