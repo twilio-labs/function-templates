@@ -58,39 +58,29 @@ const WHISPER_URL_WITH_CUSTOM_MESSAGE = `${DEFAULT_WHISPER_URL}&amp;Message=${CU
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
-const FULL_RESPONSE_CALL_ME_1_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action=".?Dial=true" ` +
-  `timeout="${DEFAULT_TIMEOUT}"` +
-  `>` +
-  `<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_CALL_ME_1_1 = `${XML_DECLARATION}<Response>\
+<Dial action=".?Dial=true" timeout="${DEFAULT_TIMEOUT}">\
+<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_CALL_ME_1_3 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action=".?Dial=true" ` +
-  `timeout="${TIMEOUT}"` +
-  `>` +
-  `<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_CALL_ME_1_3 = `${XML_DECLARATION}<Response>\
+<Dial action=".?Dial=true" timeout="${TIMEOUT}">\
+<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_CALL_ME_2_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Gather numDigits="1">` +
-  `<Play>${RECORDED_MESSAGE}</Play>` +
-  `</Gather>` +
-  `</Response>`;
+const FULL_RESPONSE_CALL_ME_2_1 = `${XML_DECLARATION}<Response>\
+<Gather numDigits="1">\
+<Play>${RECORDED_MESSAGE}</Play>\
+</Gather>\
+</Response>`;
 
 const FULL_RESPONSE_CALL_ME_3_1 = `${XML_DECLARATION}<Response/>`;
 
-const FULL_RESPONSE_CALL_ME_4_3 =
-  `${XML_DECLARATION}<Response>` +
-  `<Redirect>${FALLBACK_URL}</Redirect>` +
-  `</Response>`;
+const FULL_RESPONSE_CALL_ME_4_3 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
 beforeAll(() => runtime.setup());
 
