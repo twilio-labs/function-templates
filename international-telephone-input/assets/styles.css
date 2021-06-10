@@ -9,7 +9,8 @@ body {
   padding: 10px;
 }
 
-#phone, .btn {
+#phone,
+.btn {
   padding-top: 6px;
   padding-bottom: 6px;
   border: 1px solid #ccc;
@@ -18,8 +19,8 @@ body {
 
 .btn {
   color: #ffffff;
-  background-color: #428BCA;
-  border-color: #357EBD;
+  background-color: #428bca;
+  border-color: #357ebd;
   font-size: 14px;
   outline: none;
   cursor: pointer;
@@ -27,13 +28,14 @@ body {
   padding-right: 12px;
 }
 
-.btn:focus, .btn:hover {
-  background-color: #3276B1;
-  border-color: #285E8E;
+.btn:focus,
+.btn:hover {
+  background-color: #3276b1;
+  border-color: #285e8e;
 }
 
 .btn:active {
-  box-shadow: inset 0 3px 5px rgba(0,0,0,.125);
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
 
 .alert {

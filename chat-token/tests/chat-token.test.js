@@ -17,7 +17,7 @@ describe('chat-token/token', () => {
     helpers.teardown();
   });
 
-  test('returns a valid token if service available in context', done => {
+  test('returns a valid token if service available in context', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
@@ -37,7 +37,7 @@ describe('chat-token/token', () => {
     tokenFunction(baseContext, {}, callback);
   });
 
-  test('returns a valid token if service available inline', done => {
+  test('returns a valid token if service available inline', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');

@@ -1,5 +1,5 @@
-const joinConferenceFunction = require('../functions/join-conference.protected')
-  .handler;
+const joinConferenceFunction =
+  require('../functions/join-conference.protected').handler;
 const helpers = require('../../test/test-helper');
 
 //

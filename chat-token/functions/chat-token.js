@@ -10,7 +10,7 @@
  *   - Create an API Key (https://www.twilio.com/console/runtime/api-keys)
  */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   // Change these values for your use case
   // REMINDER: This identity is only for prototyping purposes
   const IDENTITY = 'testing-username';

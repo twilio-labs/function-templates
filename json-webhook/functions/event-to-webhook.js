@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const twiml = new Twilio.twiml.MessagingResponse();
 
   try {
@@ -20,9 +20,8 @@ exports.handler = async function(context, event, callback) {
     if (res.ok) {
       twiml.message('The SMS was successfully forwarded to your webhook.');
       callback(null, twiml);
-    }
-    else {
-      callback(res.statusText)
+    } else {
+      callback(res.statusText);
     }
   } catch (error) {
     callback(error);

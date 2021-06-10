@@ -14,7 +14,7 @@ const context = {
   getTwilioClient: jest.fn(() => ({
     messages: {
       create: messagesCreate,
-    }
+    },
   })),
 };
 
@@ -44,7 +44,7 @@ it('should send an SMS after a matching event is received', (done) => {
     expect(messagesCreate).toHaveBeenCalledWith({
       to: MY_PHONE_NUMBER,
       from: TWILIO_PHONE_NUMBER,
-      body: `The Segment event "${SEGMENT_EVENT}" occurred.`
+      body: `The Segment event "${SEGMENT_EVENT}" occurred.`,
     });
     done();
   };
@@ -71,7 +71,7 @@ it('should send an SMS after a matching event is received with properties', (don
 test: true
 n: 1
 s: "hello"
-`
+`,
     });
     done();
   };

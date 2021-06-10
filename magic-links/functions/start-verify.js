@@ -19,10 +19,10 @@
  *  }
  */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  
+
   // uncomment to support CORS
   // response.appendHeader('Access-Control-Allow-Origin', '*');
   // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -30,12 +30,12 @@ exports.handler = function(context, event, callback) {
 
   if (typeof event.to === 'undefined') {
     response.setBody({
-      "success": false,
-      "error": {
-        "message": "Missing parameter; please provide an email.",
-        "moreInfo": "https://www.twilio.com/docs/verify/api/verification"
-      }
-    })
+      success: false,
+      error: {
+        message: 'Missing parameter; please provide an email.',
+        moreInfo: 'https://www.twilio.com/docs/verify/api/verification',
+      },
+    });
     response.setStatusCode(400);
     return callback(null, response);
   }
@@ -43,38 +43,45 @@ exports.handler = function(context, event, callback) {
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
   const to = event.to;
-  const protocol = (context.DOMAIN_NAME.startsWith('localhost:') ? 'http' : 'https')
-  const callback_url = `${protocol}://${context.DOMAIN_NAME}${context.PATH.substr(0, context.PATH.lastIndexOf('/'))}/${context.CALLBACK_PATH}`
+  const protocol = context.DOMAIN_NAME.startsWith('localhost:')
+    ? 'http'
+    : 'https';
+  const callback_url = `${protocol}://${
+    context.DOMAIN_NAME
+  }${context.PATH.substr(0, context.PATH.lastIndexOf('/'))}/${
+    context.CALLBACK_PATH
+  }`;
 
-  client.verify.services(service)
-    .verifications
-    .create({
+  client.verify
+    .services(service)
+    .verifications.create({
       to: to,
       channel: 'email',
       channelConfiguration: {
-        substitutions: { // used in email template
+        substitutions: {
+          // used in email template
           email: to,
-          callback_url: callback_url
-        }
-      }
+          callback_url: callback_url,
+        },
+      },
     })
-    .then(verification => {
+    .then((verification) => {
       console.log(`Sent verification: '${verification.sid}'`);
       response.setStatusCode(200);
       response.setBody({
-        "success": true
+        success: true,
       });
       callback(null, response);
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       response.setStatusCode(error.status);
       response.setBody({
-        "success": false,
-        "error": {
-          "message": error.message,
-          "moreInfo": error.moreInfo
-        }
+        success: false,
+        error: {
+          message: error.message,
+          moreInfo: error.moreInfo,
+        },
       });
       callback(null, response);
     });

@@ -1,17 +1,17 @@
-const crypto = require("crypto");
-const path = require("path");
+const crypto = require('crypto');
+const path = require('path');
 
 // Change the salt to invalidate tokens
-const SALT = "salty";
+const SALT = 'salty';
 
 // Creates a token for client side usage
 function createToken(context, password) {
   const tokenString = `${context.ACCOUNT_SID}:${password}:${SALT}`;
   // Similar to TwilioClient
   return crypto
-    .createHmac("sha1", context.AUTH_TOKEN)
-    .update(Buffer.from(tokenString, "utf-8"))
-    .digest("base64");
+    .createHmac('sha1', context.AUTH_TOKEN)
+    .update(Buffer.from(tokenString, 'utf-8'))
+    .digest('base64');
 }
 
 function isAllowed(context, token) {
@@ -25,7 +25,7 @@ function checkAuthorization(context, event, callback) {
   if (!isAllowed(context, event.token)) {
     const response = new Twilio.Response();
     response.setStatusCode(403);
-    response.setBody("Not authorized");
+    response.setBody('Not authorized');
     callback(null, response);
     return false;
   }
@@ -33,7 +33,7 @@ function checkAuthorization(context, event, callback) {
 }
 
 async function getCurrentEnvironment(context) {
-  if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith("localhost")) {
+  if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')) {
     return;
   }
   const client = context.getTwilioClient();
@@ -43,7 +43,7 @@ async function getCurrentEnvironment(context) {
       .services(service.sid)
       .environments.list();
     const environment = environments.find(
-      env => env.domainName === context.DOMAIN_NAME
+      (env) => env.domainName === context.DOMAIN_NAME
     );
     if (environment) {
       // Exit the function
@@ -64,10 +64,16 @@ async function getEnvironmentVariable(context, environment, key) {
   const client = context.getTwilioClient();
   // The list filter method isn't implemented yet.
   const envVars = await getEnvironmentVariables(context, environment);
-  return envVars.find(variable => variable.key === key);
+  return envVars.find((variable) => variable.key === key);
 }
 
-async function setEnvironmentVariable(context, environment, key, value, override=true) {
+async function setEnvironmentVariable(
+  context,
+  environment,
+  key,
+  value,
+  override = true
+) {
   const client = context.getTwilioClient();
   try {
     const currentVariable = await getEnvironmentVariable(
@@ -82,7 +88,9 @@ async function setEnvironmentVariable(context, environment, key, value, override
           await currentVariable.update({ value });
           return true;
         } else {
-          console.log(`Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`);
+          console.log(
+            `Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`
+          );
           return false;
         }
       } else {
@@ -96,7 +104,7 @@ async function setEnvironmentVariable(context, environment, key, value, override
         .environments(environment.sid)
         .variables.create({
           key,
-          value
+          value,
         });
     }
   } catch (err) {
@@ -108,10 +116,10 @@ async function setEnvironmentVariable(context, environment, key, value, override
 
 function urlForSiblingPage(newPage, ...paths) {
   const url = path.resolve(...paths);
-  const parts = url.split("/");
+  const parts = url.split('/');
   parts.pop();
   parts.push(newPage);
-  return parts.join("/");
+  return parts.join('/');
 }
 
 module.exports = {
@@ -121,5 +129,5 @@ module.exports = {
   getEnvironmentVariables,
   getEnvironmentVariable,
   setEnvironmentVariable,
-  urlForSiblingPage
+  urlForSiblingPage,
 };

@@ -1,0 +1,22 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo -e "Running prettier...\n"
+npm run format:changed && format_status=$? || format_status=$?
+
+if [ "$format_status" -eq "0" ]; then
+	echo -e "\nprettier finished.\n"
+else
+	cat <<EOF
+
+Formatting with prettier failed with an error; this may be due to a syntax
+error. See the above output for details. If prettier appears to be failing
+for another reason, you can skip this check using the $(--no-verify) flag on
+your $(git commit) command. Please consider opening an issue at
+https://github.com/twilio-labs/function-templates/issues if you need to
+skip this check for a reason that is not the result of a syntax error.
+
+EOF
+fi
+
+exit $format_status

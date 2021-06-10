@@ -1,6 +1,6 @@
 const got = require('got');
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const requestBody = {
     personalizations: [{ to: [{ email: context.TO_EMAIL_ADDRESS }] }],
     from: { email: context.FROM_EMAIL_ADDRESS },
@@ -21,11 +21,11 @@ exports.handler = function(context, event, callback) {
       },
       body: JSON.stringify(requestBody),
     })
-    .then(response => {
+    .then((response) => {
       let twiml = new Twilio.twiml.MessagingResponse();
       callback(null, twiml);
     })
-    .catch(err => {
+    .catch((err) => {
       callback(err);
     });
 };

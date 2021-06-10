@@ -32,7 +32,7 @@
 
 let config = {
   // a recording URL or a text to say to invite the caller to select an option
-  message: "",
+  message: '',
 
   // error message (recording URL or text)
   // played when the digits pressed do not match any option
@@ -40,10 +40,10 @@ let config = {
 
   // language code for conversion of text-to-speech messages,
   // e.g. 'en' or 'en-gb'
-  language: "en",
+  language: 'en',
 
   // voice for text-to-speech messages, one of 'man', 'woman' or 'alice'
-  voice: "alice",
+  voice: 'alice',
 
   // hash of key -> value for options where:
   // - the key is a string of digits
@@ -53,7 +53,7 @@ let config = {
   //   "1": "https://example.com/option/1",
   //   "2": "..."
   // }
-  options: {}
+  options: {},
 };
 
 /*
@@ -63,24 +63,24 @@ let config = {
 */
 
 // Copied from Simple Message Funlet
-function readListParam( name, params ) {
+function readListParam(name, params) {
   let array = [];
 
-  const INDEXED_PARAM_REGEX = new RegExp( '^' + name + '\\[([0-9]+)\\]$' );
-  for( let property of Object.keys(params) ) {
-    let matches = INDEXED_PARAM_REGEX.exec( property );
-    if( matches !== null ) {
+  const INDEXED_PARAM_REGEX = new RegExp('^' + name + '\\[([0-9]+)\\]$');
+  for (let property of Object.keys(params)) {
+    let matches = INDEXED_PARAM_REGEX.exec(property);
+    if (matches !== null) {
       let index = matches[1];
-      array[ index ] = params[ property ];
+      array[index] = params[property];
     }
   }
 
-  if ( params.hasOwnProperty( name ) ) {
-    let value = params[ name ];
-    if ( typeof value === "string" ) {
-      array.push( value );
-    } else if ( Array.isArray( value ) ) {
-      array = array.concat( value );
+  if (params.hasOwnProperty(name)) {
+    let value = params[name];
+    if (typeof value === 'string') {
+      array.push(value);
+    } else if (Array.isArray(value)) {
+      array = array.concat(value);
     }
   }
 
@@ -109,9 +109,9 @@ function getMessage(params, env, config) {
 }
 
 function getErrorMessage(params, env, config) {
-  return params.ErrorMessage ||
-         env.FUNLET_MENU_ERROR_MESSAGE ||
-         config.errorMessage;
+  return (
+    params.ErrorMessage || env.FUNLET_MENU_ERROR_MESSAGE || config.errorMessage
+  );
 }
 
 function getLanguage(params, env, config) {
@@ -123,24 +123,24 @@ function getVoice(params, env, config) {
 }
 
 function getOptions(params, env, config) {
-  let options = Object.assign({},config.options);
+  let options = Object.assign({}, config.options);
 
-  for( let name of Object.keys(env) ) {
-    let matches = /^FUNLET_MENU_OPTION([0-9]+)_URL$/.exec( name );
-    if( matches !== null ) {
+  for (let name of Object.keys(env)) {
+    let matches = /^FUNLET_MENU_OPTION([0-9]+)_URL$/.exec(name);
+    if (matches !== null) {
       let optionNumber = matches[1];
-      let digits = env[ "FUNLET_MENU_OPTION" + optionNumber + "_DIGITS" ]
+      let digits = env['FUNLET_MENU_OPTION' + optionNumber + '_DIGITS'];
       digits = digits || optionNumber;
-      options[ digits ] = env[ name ];
+      options[digits] = env[name];
     }
   }
 
-  Object.assign(options, readListParam("Options",params) );
+  Object.assign(options, readListParam('Options', params));
   return options;
 }
 
 function getDigits(params, env, config) {
-  return params.Digits || "";
+  return params.Digits || '';
 }
 
 /*
@@ -154,13 +154,13 @@ function getDigits(params, env, config) {
 
 // Copied from Simple Message Funlet
 function simpleMessage(response, message, language, voice) {
-  if ( message.length === 0 ) {
+  if (message.length === 0) {
     return;
   }
-  if ( message.startsWith("http") ) {
+  if (message.startsWith('http')) {
     response.play({}, message);
   } else {
-    response.say({language:language, voice:voice}, message);
+    response.say({ language: language, voice: voice }, message);
   }
 }
 
@@ -185,7 +185,7 @@ function simpleMessage(response, message, language, voice) {
 */
 function gatherDigits(response, maxDigits, message, language, voice) {
   simpleMessage(
-    response.gather({numDigits: maxDigits}),
+    response.gather({ numDigits: maxDigits }),
     message,
     language,
     voice
@@ -215,11 +215,11 @@ function gatherDigits(response, maxDigits, message, language, voice) {
 */
 function simpleMenuStage1(response, message, language, voice, options) {
   let maxDigits = 1;
-  for( let digits of Object.keys(options) ) {
+  for (let digits of Object.keys(options)) {
     maxDigits = Math.max(maxDigits, digits.length);
   }
   gatherDigits(response, maxDigits, message, language, voice);
-  response.redirect({},"");
+  response.redirect({}, '');
 }
 
 /*
@@ -249,16 +249,21 @@ function simpleMenuStage1(response, message, language, voice, options) {
     boolean, true if a matching option was found, and false otherwise
 */
 function simpleMenuStage2(
-  response, digits, options, errorMessage, language, voice
+  response,
+  digits,
+  options,
+  errorMessage,
+  language,
+  voice
 ) {
-  if ( digits === "" ) {
+  if (digits === '') {
     return false;
   }
-  if ( !options.hasOwnProperty(digits) ) {
+  if (!options.hasOwnProperty(digits)) {
     simpleMessage(response, errorMessage, language, voice);
     return false;
   }
-  let optionUrl = options[ digits ];
+  let optionUrl = options[digits];
   response.redirect({}, optionUrl);
   return true;
 }
@@ -271,11 +276,10 @@ function simpleMenuStage2(
   such as the ones generated by Twilio events.
 */
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const NO_ERROR = null;
 
-  let
-    response = new Twilio.twiml.VoiceResponse(),
+  let response = new Twilio.twiml.VoiceResponse(),
     digits = getDigits(event, context, config),
     message = getMessage(event, context, config),
     errorMessage = getErrorMessage(event, context, config),
@@ -284,9 +288,7 @@ exports.handler = function(context, event, callback) {
     options = getOptions(event, context, config);
 
   if (
-    ! simpleMenuStage2(
-      response, digits, options, errorMessage, language, voice
-    )
+    !simpleMenuStage2(response, digits, options, errorMessage, language, voice)
   ) {
     simpleMenuStage1(response, message, language, voice, options);
   }
@@ -307,13 +309,13 @@ exports.input = {
   getLanguage: getLanguage,
   getVoice: getVoice,
   getOptions: getOptions,
-  getDigits: getDigits
+  getDigits: getDigits,
 };
 
 exports.output = {
   gatherDigits: gatherDigits,
   simpleMenuStage1: simpleMenuStage1,
-  simpleMenuStage2: simpleMenuStage2
+  simpleMenuStage2: simpleMenuStage2,
 };
 
 /*

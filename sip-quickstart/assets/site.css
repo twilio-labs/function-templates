@@ -1,11 +1,12 @@
 body {
-  background: #F9F9F9;
+  background: #f9f9f9;
   color: #253856;
   font-weight: 300;
   font-size: 62.5%;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
 }
 
 #app {
@@ -25,7 +26,7 @@ ul {
 }
 
 .title {
-  background: #4C576F;
+  background: #4c576f;
   color: white;
   border-radius: 4px;
   font-size: 1.1rem;
@@ -44,28 +45,28 @@ ul {
 }
 
 .invalid {
-  background: #D2262F;
+  background: #d2262f;
 }
 
 .invalid:before {
-  content: "✕";
+  content: '✕';
   font-size: 1.2rem;
   line-height: 1.4rem;
 }
 
 .valid {
-  background: #2DAE5B;
+  background: #2dae5b;
 }
 
 .valid:before {
-  content: "✓";
+  content: '✓';
   font-size: 1.5rem;
   line-height: 1.3rem;
 }
 
 code {
   background: rgba(0, 0, 0, 0.12);
-  color: #3A4860;
+  color: #3a4860;
   padding: 3px 6px;
   border-radius: 3px;
   vertical-align: 2px;
@@ -86,7 +87,7 @@ button {
 }
 
 p a {
-  color: #2492F8;
+  color: #2492f8;
 }
 
 table {

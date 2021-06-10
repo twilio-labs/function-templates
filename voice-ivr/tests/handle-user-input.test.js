@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
-const handleUserInput = require('../functions/handle-user-input.protected')
-  .handler;
+const handleUserInput =
+  require('../functions/handle-user-input.protected').handler;
 const Twilio = require('twilio');
 
 let shouldFail = false;
@@ -19,7 +19,7 @@ const mockTwilioClient = {
 
 const context = {
   getTwilioClient: () => mockTwilioClient,
-  MY_PHONE_NUMBER: 'TwilioNumber'
+  MY_PHONE_NUMBER: 'TwilioNumber',
 };
 const baseEvent = {
   From: '+12223334444',
@@ -55,7 +55,9 @@ describe('handles digit inputs', () => {
     const callback = (err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' + context.MY_PHONE_NUMBER + '</Dial></Response>'
+        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' +
+          context.MY_PHONE_NUMBER +
+          '</Dial></Response>'
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
@@ -90,8 +92,7 @@ describe('handles digit inputs', () => {
       expect(mockTwilioClient.messages.create).toHaveBeenCalledWith({
         from: baseEvent.To,
         to: baseEvent.From,
-        body:
-          'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
+        body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
       });
       done();
     };
@@ -122,7 +123,9 @@ describe('handles speech inputs', () => {
     const callback = (err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' + context.MY_PHONE_NUMBER + '</Dial></Response>'
+        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' +
+          context.MY_PHONE_NUMBER +
+          '</Dial></Response>'
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
@@ -160,8 +163,7 @@ describe('handles speech inputs', () => {
       expect(mockTwilioClient.messages.create).toHaveBeenCalledWith({
         from: baseEvent.To,
         to: baseEvent.From,
-        body:
-          'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
+        body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
       });
       done();
     };
@@ -199,8 +201,7 @@ describe('handles sms sending', () => {
       expect(mockTwilioClient.messages.create).toHaveBeenCalledWith({
         from: baseEvent.To,
         to: baseEvent.From,
-        body:
-          'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
+        body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
       });
       done();
     };

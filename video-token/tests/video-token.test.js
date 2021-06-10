@@ -16,7 +16,7 @@ describe('video-token/token', () => {
     helpers.teardown();
   });
 
-  test('returns a valid token with default room', done => {
+  test('returns a valid token with default room', (done) => {
     const callback = (err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');

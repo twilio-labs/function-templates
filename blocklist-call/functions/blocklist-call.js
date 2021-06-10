@@ -15,9 +15,12 @@ exports.handler = function (context, event, callback) {
     twiml.reject();
   } else {
     // Update this line to your response.
-    twiml.redirect({
-      method: 'GET'
-    },'https://demo.twilio.com/docs/voice.xml');
+    twiml.redirect(
+      {
+        method: 'GET',
+      },
+      'https://demo.twilio.com/docs/voice.xml'
+    );
   }
   callback(null, twiml);
 };

@@ -1,9 +1,9 @@
-const { stripIndents } = require("common-tags");
+const { stripIndents } = require('common-tags');
 const assets = Runtime.getAssets();
 const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
-  "/admin/shared.js"
+  '/admin/shared.js'
 ].path);
-const extensions = require(assets["/extensions.js"].path);
+const extensions = require(assets['/extensions.js'].path);
 
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
@@ -35,7 +35,7 @@ async function checkEnvironmentInitialization(context) {
     status.actions = [
       {
         title: `Initialize your application for your environment, ${environment.uniqueName}`,
-        name: "initialize",
+        name: 'initialize',
       },
     ];
   } else {
@@ -72,8 +72,8 @@ async function getSipDomainStatus(context) {
       status.description = missingSipDomainError(err);
       status.actions = [
         {
-          title: "Recreate a new SIP Domain",
-          name: "createSipDomain",
+          title: 'Recreate a new SIP Domain',
+          name: 'createSipDomain',
           params: {
             friendlyName,
             domainName,
@@ -93,15 +93,15 @@ async function getSipDomainStatus(context) {
       `;
       status.actions = [
         {
-          title: "Use existing SIP Domain",
-          name: "useExistingSipDomain",
+          title: 'Use existing SIP Domain',
+          name: 'useExistingSipDomain',
           params: {
             sipDomainSid: domain.sid,
           },
         },
         {
-          title: "Do not use existing SIP domain, create a new one",
-          name: "createSipDomain",
+          title: 'Do not use existing SIP domain, create a new one',
+          name: 'createSipDomain',
           params: {
             friendlyName,
             domainName,
@@ -116,8 +116,8 @@ async function getSipDomainStatus(context) {
       `;
       status.actions = [
         {
-          title: "Create a new SIP Domain",
-          name: "createSipDomain",
+          title: 'Create a new SIP Domain',
+          name: 'createSipDomain',
           params: {
             friendlyName,
             domainName,
@@ -135,11 +135,11 @@ async function getCredentialListStatus(context) {
   const status = {
     valid: false,
     title:
-      "Default Credential List is created, loaded and mapped to your SIP Domain",
+      'Default Credential List is created, loaded and mapped to your SIP Domain',
   };
   const createAction = {
-    title: "Create new default credential list",
-    name: "createDefaultCredentialListForDomain",
+    title: 'Create new default credential list',
+    name: 'createDefaultCredentialListForDomain',
     params: {
       sipDomainSid,
     },
@@ -172,13 +172,13 @@ async function getCredentialListStatus(context) {
           credentialList.sid
         }) is missing the following accounts:
 
-          ${missing.join(", ")}
+          ${missing.join(', ')}
         `;
 
         status.actions = [
           {
-            name: "addNewCredentials",
-            title: "Add missing credentials",
+            name: 'addNewCredentials',
+            title: 'Add missing credentials',
             params: {
               credentialListSid,
               usernames: missing,
@@ -203,19 +203,19 @@ async function getIncomingNumberStatus(context) {
   const client = context.getTwilioClient();
   const incomingNumber = process.env.INCOMING_NUMBER;
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
-    "extension-menu",
+    'extension-menu',
     context.PATH,
-    ".."
+    '..'
   )}`;
   const status = {
     valid: false,
-    title: "Incoming Number is defined and wired up",
+    title: 'Incoming Number is defined and wired up',
   };
   const allIncomingNumbers = await client.incomingPhoneNumbers.list();
   chooseNumberActions = allIncomingNumbers.map((number) => {
     return {
       title: `Choose ${number.friendlyName}`,
-      name: "updateIncomingNumber",
+      name: 'updateIncomingNumber',
       params: {
         sid: number.sid,
         voiceUrl: expectedFn,
@@ -235,8 +235,8 @@ async function getIncomingNumberStatus(context) {
         status.description = `Your incoming number is set to ${incomingNumber} and the incoming Webhook is set to \`${numberObject.voiceUrl}\``;
         status.actions = [
           {
-            title: "Choose a different incoming number",
-            name: "clearIncomingNumber",
+            title: 'Choose a different incoming number',
+            name: 'clearIncomingNumber',
           },
         ];
       } else {
@@ -248,15 +248,15 @@ async function getIncomingNumberStatus(context) {
         status.actions = [
           {
             title: `Update ${incomingNumber} incoming webhook`,
-            name: "updateIncomingNumberVoiceUrl",
+            name: 'updateIncomingNumberVoiceUrl',
             params: {
               sid: numberObject.sid,
               voiceUrl: expectedFn,
             },
           },
           {
-            title: "Choose a different incoming number",
-            name: "clearIncomingNumber",
+            title: 'Choose a different incoming number',
+            name: 'clearIncomingNumber',
           },
         ];
       }
@@ -284,7 +284,7 @@ async function getCallerIdStatus(context) {
   const callerId = process.env.CALLER_ID;
   const status = {
     valid: false,
-    title: "Caller ID is set to a valid number",
+    title: 'Caller ID is set to a valid number',
   };
   // Get All Owned Numbers and Verified Numbers
   const incomingNumbers = await client.incomingPhoneNumbers.list();
@@ -298,8 +298,8 @@ async function getCallerIdStatus(context) {
       status.description = `Your Caller ID is set to ${process.env.CALLER_ID}`;
       status.actions = [
         {
-          name: "setCallerId",
-          title: "Choose a new Caller ID",
+          name: 'setCallerId',
+          title: 'Choose a new Caller ID',
           params: {
             number: undefined,
           },
@@ -316,7 +316,7 @@ async function getCallerIdStatus(context) {
     status.description = `Your outgoing caller ID can be set to any Twilio number that you've purchased or any numbers that are verified on your account. `;
     status.actions = incomingNumbers.map((num) => ({
       title: `Choose Twilio # ${num.friendlyName}`,
-      name: "setCallerId",
+      name: 'setCallerId',
       params: {
         number: num.phoneNumber,
       },
@@ -324,7 +324,7 @@ async function getCallerIdStatus(context) {
     status.actions = status.actions.concat(
       outgoingCallerIds.map((num) => ({
         title: `Choose Verified # ${num.friendlyName}`,
-        name: "setCallerId",
+        name: 'setCallerId',
         params: {
           number: num.phoneNumber,
         },
@@ -337,18 +337,18 @@ async function getCallerIdStatus(context) {
 async function getSipDomainIsWiredUp(context) {
   const client = context.getTwilioClient();
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
-    "outbound-calls",
+    'outbound-calls',
     context.PATH,
-    ".."
+    '..'
   )}`;
   const sipDomainSid = process.env.SIP_DOMAIN_SID;
   const status = {
-    title: "SIP Domain is configured to route outbound calls",
+    title: 'SIP Domain is configured to route outbound calls',
     valid: false,
   };
   if (!sipDomainSid) {
     status.description =
-      "After you update your environment, you can wire up your SIP Domain correctly.";
+      'After you update your environment, you can wire up your SIP Domain correctly.';
   } else {
     try {
       const domain = await client.sip.domains(sipDomainSid).fetch();
@@ -366,7 +366,7 @@ async function getSipDomainIsWiredUp(context) {
         status.actions = [
           {
             title: `Update SIP Domain Voice Webhook`,
-            name: "updateSipDomainVoiceUrl",
+            name: 'updateSipDomainVoiceUrl',
             params: {
               sipDomainSid,
               voiceUrl: expectedFn,
@@ -382,10 +382,10 @@ async function getSipDomainIsWiredUp(context) {
 }
 async function getDefaultPasswordChanged(context) {
   const status = {
-    title: "Default admin password has been changed",
+    title: 'Default admin password has been changed',
     valid: false,
   };
-  if (process.env.ADMIN_PASSWORD === "default") {
+  if (process.env.ADMIN_PASSWORD === 'default') {
     status.description = stripIndents`
     Please take a moment to change your admin password from the provided default password. 
     

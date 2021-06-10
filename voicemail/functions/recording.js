@@ -1,4 +1,4 @@
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
 
   try {

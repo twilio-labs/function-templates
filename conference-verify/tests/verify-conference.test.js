@@ -1,5 +1,5 @@
-const verifiedConferenceFunction = require('../functions/verify-conference.protected')
-  .handler;
+const verifiedConferenceFunction =
+  require('../functions/verify-conference.protected').handler;
 const helpers = require('../../test/test-helper');
 const { getExpectedBodyHash } = require('twilio/lib/webhooks/webhooks');
 

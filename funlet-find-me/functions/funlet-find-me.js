@@ -134,6 +134,11 @@ function getPhoneNumbers(params, env, config) {
 
   readListParam('PhoneNumbers', params).forEach(addIfNotEmpty);
   readEnvList('FUNLET_FINDME_PHONE_NUMBER', 1, 5, env).forEach(addIfNotEmpty);
+  if (env.FUNLET_FINDME_PHONE_NUMBERS) {
+    env.FUNLET_FINDME_PHONE_NUMBERS.split(',')
+      .filter((s) => s.trim())
+      .forEach(addIfNotEmpty);
+  }
 
   if (Array.isArray(config.phoneNumbers)) {
     config.phoneNumbers.forEach(addIfNotEmpty);

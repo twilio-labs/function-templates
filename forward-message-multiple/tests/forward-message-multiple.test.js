@@ -1,14 +1,14 @@
 const helpers = require('../../test/test-helper');
-const forwardMessageMultiple = require('../functions/forward-message-multiple')
-  .handler;
+const forwardMessageMultiple =
+  require('../functions/forward-message-multiple').handler;
 const Twilio = require('twilio');
 
 const context = {
-  FORWARDING_NUMBERS: 'TwilioNumber1, TwilioNumber2'
+  FORWARDING_NUMBERS: 'TwilioNumber1, TwilioNumber2',
 };
 const event = {
   Body: 'Hello',
-  From: 'ExternalNumber'
+  From: 'ExternalNumber',
 };
 
 beforeAll(() => {
@@ -19,7 +19,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('returns a MessagingResponse', done => {
+test('returns a MessagingResponse', (done) => {
   const callback = (err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     done();
@@ -28,7 +28,7 @@ test('returns a MessagingResponse', done => {
   forwardMessageMultiple(context, event, callback);
 });
 
-test('forwards the message to both numbers from the context', done => {
+test('forwards the message to both numbers from the context', (done) => {
   const callback = (err, result) => {
     const twiml = result.toString();
     expect(twiml).toMatch('to="TwilioNumber1"');
@@ -40,7 +40,7 @@ test('forwards the message to both numbers from the context', done => {
   forwardMessageMultiple(context, event, callback);
 });
 
-test('includes the original From number and Body', done => {
+test('includes the original From number and Body', (done) => {
   const callback = (err, result) => {
     expect(result.toString()).toMatch(
       '>From: ' + event.From + '. Body: ' + event.Body + '<'

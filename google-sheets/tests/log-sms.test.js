@@ -10,15 +10,15 @@ google.auth.JWT.mockReturnValue();
 google.sheets.mockReturnValue({
   spreadsheets: {
     values: {
-      append: jest.fn(() => Promise.resolve())
+      append: jest.fn(() => Promise.resolve()),
     },
   },
 });
 
 const context = {
-  SHEETS_AUTH_JSON: '/auth.json',
-  SHEETS_DOC_ID: 'appAbcD12efG3HijK',
-  SHEETS_SHEET_NAME: 'Sheet1',
+  GOOGLE_CREDENTIALS: '/auth.json',
+  DOCUMENT_ID: 'appAbcD12efG3HijK',
+  SHEET_NAME: 'Sheet1',
 };
 
 beforeAll(() => {
@@ -31,72 +31,86 @@ afterAll(() => {
   helpers.teardown();
 });
 
-it('should successfully save the message', done => {
+it('should successfully save the message', (done) => {
   const callback = (err, result) => {
     expect(err).toBeFalsy();
-    expect(result.toString()).toMatch('<Message>The SMS was successfully saved.</Message>');
+    expect(result.toString()).toMatch(
+      '<Message>The SMS was successfully saved.</Message>'
+    );
     done();
   };
 
   logSms(context, event, callback);
 });
 
-it('should handle missing document IDs', done => {
+it('should handle missing document IDs', (done) => {
   google.sheets.mockReturnValueOnce({
     spreadsheets: {
       values: {
-        append: jest.fn(() => Promise.reject({
-          code: 404,
-        }))
+        append: jest.fn(() =>
+          Promise.reject({
+            code: 404,
+          })
+        ),
       },
     },
   });
 
   const callback = (err, result) => {
     expect(err).toBeFalsy();
-    expect(result.toString()).toMatch('<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>');
+    expect(result.toString()).toMatch(
+      '<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>'
+    );
     done();
   };
 
   logSms(context, event, callback);
 });
 
-it('should handle Google Sheets API errors', done => {
+it('should handle Google Sheets API errors', (done) => {
   google.sheets.mockReturnValueOnce({
     spreadsheets: {
       values: {
-        append: jest.fn(() => Promise.reject({
-          code: 400,
-          errors: [{ message: 'test Google Sheets API error' }]
-        }))
+        append: jest.fn(() =>
+          Promise.reject({
+            code: 400,
+            errors: [{ message: 'test Google Sheets API error' }],
+          })
+        ),
       },
     },
   });
 
   const callback = (err, result) => {
     expect(err).toBeFalsy();
-    expect(result.toString()).toMatch('<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>');
+    expect(result.toString()).toMatch(
+      '<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>'
+    );
     done();
   };
 
   logSms(context, event, callback);
 });
 
-it('should handle unknown errors', done => {
+it('should handle unknown errors', (done) => {
   google.sheets.mockReturnValueOnce({
     spreadsheets: {
       values: {
-        append: jest.fn(() => Promise.reject({
-          code: 500,
-          errors: [{ message: 'test Google Sheets unknown error' }]
-        }))
+        append: jest.fn(() =>
+          Promise.reject({
+            code: 500,
+            errors: [{ message: 'test Google Sheets unknown error' }],
+          })
+        ),
       },
     },
   });
 
   const callback = (err, result) => {
     expect(err).toBeFalsy();
-    expect(result.toString()).toMatch('<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>');
+    expect(result.toString()).toMatch(
+      '<Message>Failed to save to Google Sheets. Please check the debugger in your Twilio console.</Message>'
+    );
     done();
   };
 
