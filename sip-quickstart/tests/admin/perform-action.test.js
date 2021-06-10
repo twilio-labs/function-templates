@@ -24,6 +24,7 @@ class MockActions {
     };
   }
 
+  // eslint-disable-next-line no-empty-function
   noReturnValue() {}
 }
 
@@ -40,8 +41,8 @@ describe('voice-client-javascript/admin/perform-action', () => {
       '../../assets/admin/actions.private.js'
     );
     helpers.setup(baseContext, runtime);
-    jest.mock('../../assets/admin/actions.private.js', () => MockActions);
-    const { createToken } = require('../../assets/admin/shared.private.js');
+    jest.mock('../../assets/admin/actions.private', () => MockActions);
+    const { createToken } = require('../../assets/admin/shared.private');
     token = createToken(baseContext, process.env.ADMIN_PASSWORD);
     jest.mock('../../assets/admin/shared.private.js', () => {
       const shared = jest.requireActual('../../assets/admin/shared.private.js');

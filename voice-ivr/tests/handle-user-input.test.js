@@ -8,6 +8,7 @@ const mockTwilioClient = {
   messages: {
     create: jest.fn(() => {
       if (shouldFail) {
+        // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject('Expected test error');
       }
       return Promise.resolve({
@@ -40,7 +41,7 @@ beforeEach(() => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -50,14 +51,12 @@ test('returns a VoiceResponse', (done) => {
 
 describe('handles digit inputs', () => {
   test('responds to 1', (done) => {
-    let event = { ...baseEvent, Digits: '1' };
+    const event = { ...baseEvent, Digits: '1' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' +
-          context.MY_PHONE_NUMBER +
-          '</Dial></Response>'
+        `<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>${context.MY_PHONE_NUMBER}</Dial></Response>`
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
@@ -67,9 +66,9 @@ describe('handles digit inputs', () => {
   });
 
   test('responds to 2', (done) => {
-    let event = { ...baseEvent, Digits: '2' };
+    const event = { ...baseEvent, Digits: '2' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
         '<Response><Say>We are open from 9am to 5pm every day but Sunday.</Say></Response>'
@@ -82,9 +81,9 @@ describe('handles digit inputs', () => {
   });
 
   test('responds to 3', (done) => {
-    let event = { ...baseEvent, Digits: '3' };
+    const event = { ...baseEvent, Digits: '3' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
         '<Response><Say>We will send you a text message with our address in a minute.</Say></Response>'
@@ -101,9 +100,9 @@ describe('handles digit inputs', () => {
   });
 
   test('responds to unknown digits', (done) => {
-    let event = { ...baseEvent, Digits: '5' };
+    const event = { ...baseEvent, Digits: '5' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
         '<Response><Say>We are sorry, we did not recognize your option. Please try again.</Say><Redirect>voice-ivr</Redirect></Response>'
@@ -118,14 +117,12 @@ describe('handles digit inputs', () => {
 
 describe('handles speech inputs', () => {
   test('responds to sales', (done) => {
-    let event = { ...baseEvent, SpeechResult: 'I want to talk to sales' };
+    const event = { ...baseEvent, SpeechResult: 'I want to talk to sales' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        '<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>' +
-          context.MY_PHONE_NUMBER +
-          '</Dial></Response>'
+        `<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>${context.MY_PHONE_NUMBER}</Dial></Response>`
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
@@ -135,9 +132,9 @@ describe('handles speech inputs', () => {
   });
 
   test('responds to opening hours', (done) => {
-    let event = { ...baseEvent, SpeechResult: 'What are your opening hours' };
+    const event = { ...baseEvent, SpeechResult: 'What are your opening hours' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
         '<Response><Say>We are open from 9am to 5pm every day but Sunday.</Say></Response>'
@@ -150,12 +147,12 @@ describe('handles speech inputs', () => {
   });
 
   test('responds to address', (done) => {
-    let event = {
+    const event = {
       ...baseEvent,
       SpeechResult: 'what address are you located at',
     };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
         '<Response><Say>We will send you a text message with our address in a minute.</Say></Response>'
@@ -172,9 +169,9 @@ describe('handles speech inputs', () => {
   });
 
   test('responds to unknown text', (done) => {
-    let event = { ...baseEvent, SpeechResult: 'Not saying anyting relevant' };
+    const event = { ...baseEvent, SpeechResult: 'Not saying anyting relevant' };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
         '<Response><Say>We are sorry, we did not recognize your option. Please try again.</Say><Redirect>voice-ivr</Redirect></Response>'
@@ -190,7 +187,7 @@ describe('handles speech inputs', () => {
 describe('handles sms sending', () => {
   test('ignores errors thrown during sending an SMS', (done) => {
     shouldFail = true;
-    let event = { ...baseEvent, Digits: '3' };
+    const event = { ...baseEvent, Digits: '3' };
 
     const callback = (err, result) => {
       expect(err).toEqual(null);

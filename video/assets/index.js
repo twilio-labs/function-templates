@@ -1,8 +1,47 @@
-'use strict';
+const getPasscode = () => {
+  const passcodeInput = document.getElementById('passcode') || {};
+  const passcode = passcodeInput.value;
+  passcodeInput.value = '';
+
+  return passcode;
+};
+
+const trackSubscribed = (div, track) => {
+  div.appendChild(track.attach());
+};
+
+const trackUnsubscribed = (track) => {
+  track.detach().forEach((element) => element.remove());
+};
+
+// connect participant
+const participantConnected = (participant) => {
+  console.log(`Participant ${participant.identity} connected'`);
+
+  const div = document.createElement('div'); // create div for new participant
+  div.id = participant.sid;
+
+  participant.on('trackSubscribed', (track) => trackSubscribed(div, track));
+  participant.on('trackUnsubscribed', trackUnsubscribed);
+
+  participant.tracks.forEach((publication) => {
+    if (publication.isSubscribed) {
+      trackSubscribed(div, publication.track);
+    }
+  });
+  document.body.appendChild(div);
+};
+
+const participantDisconnected = (participant) => {
+  console.log(`Participant ${participant.identity} disconnected.`);
+  document.getElementById(participant.sid).remove();
+};
+
 (() => {
   const ROOM_NAME = 'demo';
-  const Video = Twilio.Video;
-  let videoRoom, localStream;
+  const { Video } = Twilio;
+  let videoRoom;
+  let localStream;
   const video = document.getElementById('video');
 
   // preview screen
@@ -22,19 +61,18 @@
       .then((resp) => {
         if (resp.ok) {
           return resp.json();
+        }
+        console.error(resp);
+        if (resp.status === 401) {
+          throw new Error('Invalid passcode');
         } else {
-          console.error(resp);
-          if (resp.status === 401) {
-            throw new Error('Invalid passcode');
-          } else {
-            throw new Error('Unexpected error. Open dev tools for logs');
-          }
+          throw new Error('Unexpected error. Open dev tools for logs');
         }
       })
       .then((body) => {
-        const token = body.token;
+        const { token } = body;
         console.log(token);
-        //connect to room
+        // connect to room
         return Video.connect(token, { name: ROOM_NAME });
       })
       .then((room) => {
@@ -52,6 +90,7 @@
         leaveRoomButton.disabled = false;
       })
       .catch((err) => {
+        // eslint-disable-next-line no-alert
         alert(err.message);
       });
   };
@@ -63,42 +102,3 @@
     leaveRoomButton.disabled = true;
   };
 })();
-
-const getPasscode = () => {
-  const passcodeInput = document.getElementById('passcode') || {};
-  const passcode = passcodeInput.value;
-  passcodeInput.value = '';
-
-  return passcode;
-};
-
-// connect participant
-const participantConnected = (participant) => {
-  console.log(`Participant ${participant.identity} connected'`);
-
-  const div = document.createElement('div'); //create div for new participant
-  div.id = participant.sid;
-
-  participant.on('trackSubscribed', (track) => trackSubscribed(div, track));
-  participant.on('trackUnsubscribed', trackUnsubscribed);
-
-  participant.tracks.forEach((publication) => {
-    if (publication.isSubscribed) {
-      trackSubscribed(div, publication.track);
-    }
-  });
-  document.body.appendChild(div);
-};
-
-const participantDisconnected = (participant) => {
-  console.log(`Participant ${participant.identity} disconnected.`);
-  document.getElementById(participant.sid).remove();
-};
-
-const trackSubscribed = (div, track) => {
-  div.appendChild(track.attach());
-};
-
-const trackUnsubscribed = (track) => {
-  track.detach().forEach((element) => element.remove());
-};

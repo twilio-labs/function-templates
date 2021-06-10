@@ -1,3 +1,4 @@
+/* eslint-disable */
 $(function () {
   var speakerDevices = document.getElementById('speaker-devices');
   var ringtoneDevices = document.getElementById('ringtone-devices');

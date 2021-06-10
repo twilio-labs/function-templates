@@ -18,9 +18,10 @@ function sendMessage(context, event) {
 /**
  * Handles the user input gathered in the voice-ivr Function
  */
+// eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
   let UserInput = event.Digits || event.SpeechResult;
-  let twiml = new Twilio.twiml.VoiceResponse();
+  const twiml = new Twilio.twiml.VoiceResponse();
 
   if (!UserInput) {
     twiml.say('Sorry something went wrong. Please call again');
@@ -66,9 +67,9 @@ exports.handler = function (context, event, callback) {
 
   request
     .then(() => {
-      callback(null, twiml);
+      return callback(null, twiml);
     })
     .catch((err) => {
-      callback(err);
+      return callback(err);
     });
 };

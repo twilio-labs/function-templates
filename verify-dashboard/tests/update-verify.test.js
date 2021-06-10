@@ -33,7 +33,7 @@ describe('verify/check-verification', () => {
   });
 
   test('returns an error response when required to parameter is missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
@@ -45,7 +45,7 @@ describe('verify/check-verification', () => {
   });
 
   test('returns success with valid request', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(
         mockService.verifications('VE4c972329f190f29406d82da7b4c5a64c').update

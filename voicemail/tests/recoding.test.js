@@ -1,4 +1,4 @@
-let mockedTimeString = 'Thu, 13 Feb 2020 10:00:00 +0000';
+const mockedTimeString = 'Thu, 13 Feb 2020 10:00:00 +0000';
 jest.mock('moment', () => {
   const actualMoment = jest.requireActual('moment');
   return () => {
@@ -36,7 +36,7 @@ const mockClient = {
   },
 };
 
-let context = {
+const context = {
   getTwilioClient: () => mockClient,
   MY_PHONE_NUMBER: '+12223334444',
 };

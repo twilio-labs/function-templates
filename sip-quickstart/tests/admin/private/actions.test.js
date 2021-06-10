@@ -70,7 +70,7 @@ describe('sip-quickstart/admin/private/actions', () => {
       '../../../assets/admin/shared.private.js'
     );
     helpers.setup({}, runtime);
-    const Actions = require('../../../assets/admin/actions.private.js');
+    const Actions = require('../../../assets/admin/actions.private');
     options = {
       friendlyName: 'Example App',
       DOMAIN_NAME: 'blargh-duck-123.twil.io',
@@ -90,6 +90,7 @@ describe('sip-quickstart/admin/private/actions', () => {
     });
 
     // Assert
+    // eslint-disable-next-line no-warning-comments
     // TODO: Defaults
     expect(mockTwilioClient.sip.domains.create).toHaveBeenCalledWith({
       friendlyName: 'Example Domain',
@@ -190,12 +191,12 @@ describe('sip-quickstart/admin/private/actions', () => {
   });
 
   test('createDefaultCredentialListForDomain creates uniquely named credential list and adds credentials', async () => {
-    //Act
+    // Act
     const result = await actions.createDefaultCredentialListForDomain({
       sipDomainSid: DUMMY_SIP_DOMAIN_SID,
     });
 
-    //Assert
+    // Assert
     expect(mockTwilioClient.sip.credentialLists.create).toHaveBeenCalledWith({
       friendlyName: 'Example App (blargh-duck-123)',
     });
@@ -357,8 +358,10 @@ describe('sip-quickstart/admin/private/actions', () => {
       },
     ]);
 
-    // Act
-    // options are passed into the constructor
+    /*
+     * Act
+     * options are passed into the constructor
+     */
     const results = await actions.initialize();
 
     // Assert

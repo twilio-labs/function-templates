@@ -27,7 +27,7 @@ afterAll(() => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -41,7 +41,7 @@ test('forwards calls during business hours', (done) => {
     MY_PHONE_NUMBER: '+12223334444',
   };
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Dial>+12223334444</Dial></Response>'
     );
@@ -60,7 +60,7 @@ test('allows to configure business week start', (done) => {
 
   mockedTimeString = '2020-02-10T18:59:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="en-US" voice="Polly.Joey">Hi there! You are calling after my work hours. Please leave a message after the beep</Say><Record action="/demo/recording"/></Response>'
     );
@@ -79,7 +79,7 @@ test('allows to configure business hours start', (done) => {
 
   mockedTimeString = '2020-02-13T08:01:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="en-US" voice="Polly.Joey">Hi there! You are calling after my work hours. Please leave a message after the beep</Say><Record action="/demo/recording"/></Response>'
     );
@@ -98,7 +98,7 @@ test('allows to configure business week end', (done) => {
 
   mockedTimeString = '2020-02-14T10:00:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="en-US" voice="Polly.Joey">Hi there! You are calling after my work hours. Please leave a message after the beep</Say><Record action="/demo/recording"/></Response>'
     );
@@ -117,7 +117,7 @@ test('allows to configure business hours end', (done) => {
 
   mockedTimeString = '2020-02-13T17:01:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="en-US" voice="Polly.Joey">Hi there! You are calling after my work hours. Please leave a message after the beep</Say><Record action="/demo/recording"/></Response>'
     );
@@ -136,7 +136,7 @@ test('handles timezone offset', (done) => {
 
   mockedTimeString = '2020-02-13T18:59:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Dial>+12223334444</Dial></Response>'
     );
@@ -155,7 +155,7 @@ test('handles timezone offset outside business hours', (done) => {
 
   mockedTimeString = '2020-02-13T08:01:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="en-US" voice="Polly.Joey">Hi there! You are calling after my work hours. Please leave a message after the beep</Say><Record action="/demo/recording"/></Response>'
     );
@@ -173,7 +173,7 @@ test('sends default message outside of business hours', (done) => {
 
   mockedTimeString = '2020-02-13T19:00:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="en-US" voice="Polly.Joey">Hi there! You are calling after my work hours. Please leave a message after the beep</Say><Record action="/demo/recording"/></Response>'
     );
@@ -195,7 +195,7 @@ test('sends translated message outside of business hours', (done) => {
 
   mockedTimeString = '2020-02-13T19:00:00.000Z';
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
       '<Response><Say language="de-DE" voice="Polly.Hans">Hallo! Sie rufen außerhalb meiner Arbeitszeiten an. Bitte hinterlassen Sie mir eine Nachricht nach dem Ton.</Say><Record action="/demo/recording"/></Response>'
     );

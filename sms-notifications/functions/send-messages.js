@@ -1,7 +1,7 @@
+// eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
   const phoneNumbers = event.recipients.split(',').map((x) => x.trim());
-  const message = event.message;
-  const passcode = event.passcode;
+  const { message, passcode } = event;
 
   if (passcode !== context.PASSCODE) {
     const response = new Twilio.Response();
@@ -15,7 +15,7 @@ exports.handler = function (context, event, callback) {
     return client.messages
       .create({
         from: context.TWILIO_PHONE_NUMBER,
-        to: to,
+        to,
         body: message,
       })
       .then((msg) => {

@@ -23,14 +23,17 @@
  *  }
  */
 
+// eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  // uncomment to support CORS
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   if (typeof event.to === 'undefined') {
     response.setBody({
@@ -46,16 +49,16 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const to = event.to;
+  const { to } = event;
   const channel = typeof event.channel === 'undefined' ? 'sms' : event.channel;
   const locale = typeof event.locale === 'undefined' ? 'en' : event.locale;
 
   client.verify
     .services(service)
     .verifications.create({
-      to: to,
-      channel: channel,
-      locale: locale,
+      to,
+      channel,
+      locale,
     })
     .then((verification) => {
       console.log(`Sent verification: '${verification.sid}'`);

@@ -2,7 +2,7 @@
 exports.handler = async function (context, event, callback) {
   const assets = Runtime.getAssets();
   const flowDefinition = require(assets['/studio_flow.js'].path);
-  const path = Runtime.getFunctions()['auth'].path;
+  const { path } = Runtime.getFunctions().auth;
   const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
 
   const client = context.getTwilioClient();
@@ -52,7 +52,7 @@ exports.handler = async function (context, event, callback) {
     return setEnvironmentVariable(context, environment, 'FLOW_SID', sid);
   }
 
-  const flow = await deployStudio(flowDefinition);
+  const flow = await deployStudio();
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
   if (environment) {

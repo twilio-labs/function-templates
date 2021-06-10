@@ -20,8 +20,8 @@ exports.handler = async function (context, event, callback) {
       });
     }
   } catch (err) {
-    callback(err);
+    return callback(err);
   }
 
-  callback(null, {});
+  return callback(null, {});
 };

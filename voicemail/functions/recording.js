@@ -13,8 +13,8 @@ exports.handler = async function (context, event, callback) {
       body: message,
     });
 
-    callback(null);
+    return callback(null);
   } catch (err) {
-    callback(err);
+    return callback(err);
   }
 };

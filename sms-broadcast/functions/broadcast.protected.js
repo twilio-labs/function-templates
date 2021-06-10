@@ -1,5 +1,4 @@
 /* global module, exports, require, process, console */
-'use strict';
 
 // Response strings - update these to change the copy in the messages
 const helpMessage =
@@ -27,8 +26,10 @@ class Command {
       process.env.BROADCAST_NOTIFY_SERVICE_SID
     );
 
-    // Occassionally, US numbers will be passed without the preceding
-    // country code - check for this eventuality and fix it
+    /*
+     * Occassionally, US numbers will be passed without the preceding
+     * country code - check for this eventuality and fix it
+     */
     if (this.fromNumber.indexOf('+') !== 0) {
       this.fromNumber = `+1${this.fromNumber}`;
     }
@@ -83,9 +84,12 @@ class BroadcastCommand extends Command {
     this.adminNumbers = context.BROADCAST_ADMIN_NUMBERS;
   }
 
+  // eslint-disable-next-line consistent-return
   run(callback) {
-    // Check if sender is in list of admins, stored in the system environment
-    // as a comma-separated string
+    /*
+     * Check if sender is in list of admins, stored in the system environment
+     * as a comma-separated string
+     */
     if (this.adminNumbers.indexOf(this.fromNumber) < 0) {
       return callback(null, broadcastNotAuthorizedMessage);
     }
@@ -121,7 +125,7 @@ exports.handler = (context, event, callback) => {
   const cmdInstance = new CommandClass(event, context);
 
   // Execute command
-  cmdInstance.run((err, message) => {
+  cmdInstance.run((_err, message) => {
     const twiml = new Twilio.twiml.MessagingResponse();
     twiml.message(message);
     callback(null, twiml);

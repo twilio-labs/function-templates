@@ -9,7 +9,7 @@ describe('verify-push-backend/private/missing-params', () => {
     helpers.teardown();
   });
 
-  const detectMissingParams = missing.detectMissingParams;
+  const { detectMissingParams } = missing;
 
   test('Detects multiple missing parameters when given a list', () => {
     const event = { baz: 'a' };

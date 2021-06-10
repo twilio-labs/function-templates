@@ -19,7 +19,7 @@ describe('sip-quickstart/outbound-calls', () => {
   });
 
   test('returns TwiML for `<Dial>` a `<Number>` when number provided', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain('<Dial callerId="18004567890">+15558675309');
@@ -33,7 +33,7 @@ describe('sip-quickstart/outbound-calls', () => {
   });
 
   test('returns TwiML for `<Dial>` a `<Sip>` when name is provided', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain('<Dial>');

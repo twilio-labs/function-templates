@@ -29,7 +29,7 @@ describe('service details', () => {
   });
 
   test('returns success with valid request', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(

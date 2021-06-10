@@ -16,14 +16,17 @@
  *  }
  */
 
+// eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  // uncomment to support CORS
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   if (
     typeof event.to === 'undefined' ||
@@ -39,14 +42,13 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const to = event.to;
-  const code = event.verification_code;
+  const { to, verification_code: code } = event.to;
 
   client.verify
     .services(service)
     .verificationChecks.create({
-      to: to,
-      code: code,
+      to,
+      code,
     })
     .then((check) => {
       if (check.status === 'approved') {
@@ -55,15 +57,14 @@ exports.handler = function (context, event, callback) {
           success: true,
           message: 'Verification success.',
         });
-        callback(null, response);
-      } else {
-        response.setStatusCode(401);
-        response.setBody({
-          success: false,
-          message: 'Incorrect token.',
-        });
-        callback(null, response);
+        return callback(null, response);
       }
+      response.setStatusCode(401);
+      response.setBody({
+        success: false,
+        message: 'Incorrect token.',
+      });
+      return callback(null, response);
     })
     .catch((error) => {
       console.log(error);
@@ -72,6 +73,6 @@ exports.handler = function (context, event, callback) {
         success: false,
         message: error.message,
       });
-      callback(null, response);
+      return callback(null, response);
     });
 };

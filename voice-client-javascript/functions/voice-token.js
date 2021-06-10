@@ -10,15 +10,13 @@ exports.handler = function (context, event, callback) {
   // REMINDER: This identity is only for prototyping purposes
   const IDENTITY = 'the_user_id';
 
-  const ACCOUNT_SID = context.ACCOUNT_SID;
+  const { ACCOUNT_SID } = context;
 
   // set these values in your .env file
-  const TWIML_APPLICATION_SID = context.TWIML_APPLICATION_SID;
-  const API_KEY = context.API_KEY;
-  const API_SECRET = context.API_SECRET;
+  const { TWIML_APPLICATION_SID, API_KEY, API_SECRET } = context;
 
-  const AccessToken = Twilio.jwt.AccessToken;
-  const VoiceGrant = AccessToken.VoiceGrant;
+  const { AccessToken } = Twilio.jwt;
+  const { VoiceGrant } = AccessToken;
 
   const accessToken = new AccessToken(ACCOUNT_SID, API_KEY, API_SECRET);
   accessToken.identity = IDENTITY;
@@ -30,10 +28,12 @@ exports.handler = function (context, event, callback) {
 
   const response = new Twilio.Response();
 
-  // Uncomment these lines for CORS support
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'GET');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  /*
+   * Uncomment these lines for CORS support
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'GET');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   response.appendHeader('Content-Type', 'application/json');
   response.setBody({

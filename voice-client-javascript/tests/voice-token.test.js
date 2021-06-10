@@ -18,7 +18,7 @@ describe('voice-client-javascript/voice-token', () => {
   });
 
   test('returns a valid token with default user and expected grants', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
       jwt.verify(result._body.token, baseContext.API_SECRET, (err, decoded) => {
@@ -32,6 +32,7 @@ describe('voice-client-javascript/voice-token', () => {
               allow: true,
             },
             outgoing: {
+              // eslint-disable-next-line camelcase
               application_sid: baseContext.TWIML_APPLICATION_SID,
             },
           },

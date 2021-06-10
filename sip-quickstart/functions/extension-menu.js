@@ -10,7 +10,7 @@ exports.handler = async function (context, event, callback) {
       );
   } else if (event.Digits === '0') {
     const gather = twiml.gather({ action: './extension-menu', numDigits: '3' });
-    for (let entry of extensions) {
+    for (const entry of extensions) {
       gather.say(`For ${entry.name}, press ${entry.extension}`);
     }
   } else {
@@ -19,7 +19,7 @@ exports.handler = async function (context, event, callback) {
     const entry = extensions.find((ext) => ext.extension === event.Digits);
     if (entry) {
       const domain = await client.sip.domains(context.SIP_DOMAIN_SID).fetch();
-      const username = entry.username;
+      const { username } = entry;
       twiml.say(`Connecting to extension ${event.Digits}`);
       const regionalDomainName = domain.domainName.replace(
         'sip.twilio.com',
