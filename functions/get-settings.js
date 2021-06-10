@@ -26,7 +26,6 @@ exports.handler = function(context, event, callback) {
         contactInformation: context.CONTACT_INFORMATION,
         optInKeyword: context.OPT_IN_KEYWORD,
         privacyPolicyLink: context.PRIVACY_POLICY_LINK,
-        tosLink: context.TOS_LINK,
         domainName: context.DOMAIN_NAME,
         dataSource: context.DATA_SOURCE,
 

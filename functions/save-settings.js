@@ -14,7 +14,7 @@ exports.handler = async function(context, event, callback) {
       event['admin-password'] !== context.ADMIN_PASSWORD) {
     // eslint-disable-next-line no-undef
     response.setStatusCode(301)
-    response.appendHeader('Location', `${redirectBaseUrl}/index.html?error=Unauthorized`);
+    response.appendHeader('Location', `${redirectBaseUrl}/index.html?error=Unauthorized:%20check%20your%20admin%20phone%20number%20and%20admin%20password%20and%20try%20again.`);
 
     callback(null, response);
     return;
@@ -34,21 +34,18 @@ exports.handler = async function(context, event, callback) {
     
     Promise.all(promises)
       .then(values => {
-        console.log('PROMISE SUCCESS!', redirectBaseUrl);
         response.setStatusCode(307);
-        response.appendHeader('Location', `${redirectBaseUrl}/index.html?success=Saved`);
+        response.appendHeader('Location', `${redirectBaseUrl}/index.html?success=Sucessfully%20saved%20settings!`);
 
         callback(null, response)
       })
       .catch(err => {
-        console.log('PROMISE FAIL!', redirectBaseUrl);
         response.setStatusCode(307);
         response.appendHeader('Location', `${redirectBaseUrl}/index.html?error=${err}`);
         callback(null, response);
       });
       
   } catch (err) {
-    console.log('OTHER FAIL!', `${redirectBaseUrl}/index.html?error=${err}`);
     response.setStatusCode(307)
     response.appendHeader('Location', `${redirectBaseUrl}/index.html?error=${err}`);
     callback(null, response);

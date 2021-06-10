@@ -32,7 +32,7 @@ function settingsUpdate(input) {
   console.log(input.id, input.value);
   switch (input.id) {
     case 'logo-url':
-      $('#logo').src = input.value;
+      $('#logo').attr('src', input.value);
       break;
 
     case 'campaign-title':
@@ -44,11 +44,11 @@ function settingsUpdate(input) {
       break;
 
     case 'background-color':
-      $('#body').style.background = input.value;
+      $('#body').css('background', input.value);
       break;
     
     case 'font-color':
-      $('#card-container').style.color = input.value;
+      $('#card-container').css('color', input.value);
       break;
 
     case 'message-quantity':
@@ -64,7 +64,7 @@ function settingsUpdate(input) {
       break;
     
     case 'privacy-policy-link':
-      $('#privacyPolicyLink').href = input.value;
+      $('#privacyPolicyLink').attr('href', input.value);
       break;
   
     default:
@@ -72,9 +72,29 @@ function settingsUpdate(input) {
   }
 }
 
+function setOpenDataPanel(dataSource) {
+  switch (dataSource) {
+      case 'webhook':
+        $('#webhook-tab').tab('show');
+        break;
+    
+      case 'segment':
+        $('#segment-tab').tab('show');
+        break;
+
+      case 'airtable':
+        $('#airtable-tab').tab('show');
+        break;
+        
+      default:
+        $('#webhook-tab').tab('show');
+        break;
+    }
+}
+
 function sendSMS() {
   let inputValue = $('#phone-number').value;
-  fetch(`/send-sms?to=${inputValue}&from=14155344095`)
+  fetch(`/send-sms?to=${inputValue}`)
     .then(data => {
       $('#sms-confirmation').style.display = 'block';
     });
@@ -112,6 +132,8 @@ function displaySettings(data) {
     $('#contact-information').val(data.contactInformation);
     $('#privacy-policy-link').val(data.privacyPolicyLink);
 
+    setOpenDataPanel(data.dataSource);
+    
     $('#webhook-url').val(data.webhookUrl);
 
     $('#segment-write-key').attr('placeholder', data.segmentWriteKey);
@@ -150,7 +172,7 @@ function setHomeConfig(data) {
     `)
   }
 
-  $('#logo').src = data.logoUrl;
+  $('#logo').attr('src', data.logoUrl);
   $('#title').html(data.campaignTitle);
   $('#description').html(data.campaignDescription); 
   $('#buttonCta').html(data.buttonCta);
@@ -161,7 +183,7 @@ function setHomeConfig(data) {
 
   $('#messageQuantity').html(data.messageQuantity);
   $('#messageInterval').html(data.messageInterval);
-  $('#privacyPolicyLink').href = data.privacyPolicyLink;
+  $('#privacyPolicyLink').attr('href', data.privacyPolicyLink);
 
 
   el.parentNode.removeChild( el );
@@ -169,12 +191,11 @@ function setHomeConfig(data) {
 }
 
 function updateTos(data) {
-  //$('#logo').src = data.logoUrl;
   $('#title').html(data.campaignTitle);
   $('#description').html(data.campaignDescription);
   $('#contact-information').html( data.contactInformation);
   $('#messageQuantity').html(data.messageQuantity);
-  $('#privacy-policy-link').href = data.privacyPolicyLink;
+  $('#privacy-policy-link').attr('href', data.privacyPolicyLink);
   
 
 }

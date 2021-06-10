@@ -41,7 +41,7 @@ exports.handler = function(context, event, callback) {
     const segmentPlugin = require('@analytics/segment');
 
     const analytics = Analytics({
-      app: 'twilio-keyword',
+      app: 'twilio-opt-in-builder',
       plugins: [
         segmentPlugin({
           writeKey: context.SEGMENT_WRITE_KEY
@@ -145,6 +145,9 @@ exports.handler = function(context, event, callback) {
       segmentOptIn(twiml, true);
     } else if (context.DATA_SOURCE === "webhook") {
       webhookOptIn(twiml, true)
+    } else {
+      console.log("No data source set.")
+      callback(null, twiml);
     }
 
   } else if (stopKeywords.includes(message)) {
@@ -155,6 +158,8 @@ exports.handler = function(context, event, callback) {
       segmentOptIn(null, false);
     } else if (context.DATA_SOURCE === "webhook") {
       webhookOptIn(null, false)
+    } else {
+      console.log("No data source set.")
     }
     
   } else {
