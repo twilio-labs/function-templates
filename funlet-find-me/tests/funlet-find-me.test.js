@@ -29,9 +29,8 @@ const SPELLED_FROM_NUMBER = '+. 1. 9. 1. 6. 5. 5. 5. 0. 1. 2. 3. ';
 const RECORDED_MESSAGE = 'https://example.com/recorded-message.mp3';
 const TEXT_MESSAGE = 'Text message';
 const MESSAGE = TEXT_MESSAGE;
-const DEFAULT_MESSAGE =
-  `You are receiving a call from ${SPELLED_FROM_NUMBER}. ` +
-  `Press any key to accept.`;
+const DEFAULT_MESSAGE = `You are receiving a call from ${SPELLED_FROM_NUMBER}. \
+Press any key to accept.`;
 
 const CUSTOM_MESSAGE = 'Custom Message';
 const CUSTOM_MESSAGE_ENCODED = 'Custom%20Message';
@@ -76,62 +75,54 @@ const XML_WHISPER_URL_WITH_CUSTOM_MESSAGE = `${XML_DEFAULT_WHISPER_URL}&amp;Mess
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
-const FULL_RESPONSE_FIND_ME_1_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action="${EXAMPLE_BASE_URL}?Dial=true` +
-  `&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}" ` +
-  `timeout="${DEFAULT_TIMEOUT}"` +
-  `>` +
-  `<Number url="${XML_DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_FIND_ME_1_1 = `${XML_DECLARATION}<Response>\
+<Dial action="${EXAMPLE_BASE_URL}?Dial=true\
+&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}" \
+timeout="${DEFAULT_TIMEOUT}">\
+<Number url="${XML_DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_1_3 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action="${EXAMPLE_BASE_URL}?Dial=true` +
-  `&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}" ` +
-  `timeout="${TIMEOUT}"` +
-  `>` +
-  `<Number url="${XML_WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER1}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_FIND_ME_1_3 = `${XML_DECLARATION}<Response>\
+<Dial action="${EXAMPLE_BASE_URL}?Dial=true\
+&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}" \
+timeout="${TIMEOUT}">\
+<Number url="${XML_WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER1}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_1_4 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action="${EXAMPLE_BASE_URL}?Dial=true` +
-  `&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}&amp;PhoneNumbers%5B2%5D=${PHONE_NUMBER4}&amp;PhoneNumbers%5B3%5D=${PHONE_NUMBER5}&amp;PhoneNumbers%5B4%5D=${PHONE_NUMBER6}&amp;PhoneNumbers%5B5%5D=${PHONE_NUMBER7}&amp;PhoneNumbers%5B6%5D=${PHONE_NUMBER8}&amp;PhoneNumbers%5B7%5D=${PHONE_NUMBER9}&amp;PhoneNumbers%5B8%5D=${PHONE_NUMBER10}" ` +
-  `timeout="${DEFAULT_TIMEOUT}"` +
-  `>` +
-  `<Number url="${XML_DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_FIND_ME_1_4 = `${XML_DECLARATION}<Response>\
+<Dial action="${EXAMPLE_BASE_URL}?Dial=true\
+&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}\
+&amp;PhoneNumbers%5B2%5D=${PHONE_NUMBER4}&amp;PhoneNumbers%5B3%5D=${PHONE_NUMBER5}\
+&amp;PhoneNumbers%5B4%5D=${PHONE_NUMBER6}&amp;PhoneNumbers%5B5%5D=${PHONE_NUMBER7}\
+&amp;PhoneNumbers%5B6%5D=${PHONE_NUMBER8}&amp;PhoneNumbers%5B7%5D=${PHONE_NUMBER9}\
+&amp;PhoneNumbers%5B8%5D=${PHONE_NUMBER10}" \
+timeout="${DEFAULT_TIMEOUT}">\
+<Number url="${XML_DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>\
+</Dial>\
+</Response>`;
 
 const FULL_RESPONSE_FIND_ME_1_5 = FULL_RESPONSE_FIND_ME_1_4;
 
 const FULL_RESPONSE_FIND_ME_1_6 = `${XML_DECLARATION}<Response><Hangup/></Response>`;
 
-const FULL_RESPONSE_FIND_ME_1_7 =
-  `${XML_DECLARATION}<Response>` +
-  `<Redirect>${FALLBACK_URL}</Redirect>` +
-  `</Response>`;
+const FULL_RESPONSE_FIND_ME_1_7 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_2_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Gather numDigits="1">` +
-  `<Play>${RECORDED_MESSAGE}</Play>` +
-  `</Gather>` +
-  `<Hangup/>` +
-  `</Response>`;
+const FULL_RESPONSE_FIND_ME_2_1 = `${XML_DECLARATION}<Response>\
+<Gather numDigits="1">\
+<Play>${RECORDED_MESSAGE}</Play>\
+</Gather>\
+<Hangup/>\
+</Response>`;
 
 const FULL_RESPONSE_FIND_ME_3_1 = `${XML_DECLARATION}<Response><Say>Connecting</Say></Response>`;
 
-const FULL_RESPONSE_FIND_ME_4_3 =
-  `${XML_DECLARATION}<Response>` +
-  `<Redirect>${FALLBACK_URL}</Redirect>` +
-  `</Response>`;
+const FULL_RESPONSE_FIND_ME_4_3 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
 beforeAll(() => runtime.setup());
 
