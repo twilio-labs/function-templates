@@ -22,16 +22,14 @@ const ALICE = 'alice';
 const DEFAULT_VOICE = ALICE;
 
 const RECORDED_MESSAGE = 'https://example.com/recorded-message';
-const PLAY_RECORDED_MESSAGE =
-  `${XML_DECLARATION}<Response>` +
-  `<Play>${RECORDED_MESSAGE}</Play>` +
-  `</Response>`;
+const PLAY_RECORDED_MESSAGE = `${XML_DECLARATION}<Response>\
+<Play>${RECORDED_MESSAGE}</Play>\
+</Response>`;
 
 const TEXT_MESSAGE = 'Text message';
-const SAY_TEXT_MESSAGE =
-  `${XML_DECLARATION}<Response>` +
-  `<Say language="${ENGLISH}" voice="${ALICE}">${TEXT_MESSAGE}</Say>` +
-  `</Response>`;
+const SAY_TEXT_MESSAGE = `${XML_DECLARATION}<Response>\
+<Say language="${ENGLISH}" voice="${ALICE}">${TEXT_MESSAGE}</Say>\
+</Response>`;
 
 const NO_MESSAGES = [];
 const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
@@ -40,12 +38,11 @@ const SINGLE_RECORDED_MESSAGE = [RECORDED_MESSAGE];
 const SINGLE_TEXT_MESSAGE = [TEXT_MESSAGE];
 
 const MULTIPLE_MESSAGES = [MESSAGE1, MESSAGE2, MESSAGE3];
-const PLAY_AND_SAY_MESSAGES =
-  `${XML_DECLARATION}<Response>` +
-  `<Say language="${ENGLISH}" voice="${ALICE}">${MESSAGE1}</Say>` +
-  `<Play>${MESSAGE2}</Play>` +
-  `<Say language="${ENGLISH}" voice="${ALICE}">${MESSAGE3}</Say>` +
-  `</Response>`;
+const PLAY_AND_SAY_MESSAGES = `${XML_DECLARATION}<Response>\
+<Say language="${ENGLISH}" voice="${ALICE}">${MESSAGE1}</Say>\
+<Play>${MESSAGE2}</Play>\
+<Say language="${ENGLISH}" voice="${ALICE}">${MESSAGE3}</Say>\
+</Response>`;
 
 beforeAll(() => runtime.setup());
 
