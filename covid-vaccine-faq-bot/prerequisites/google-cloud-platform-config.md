@@ -51,10 +51,13 @@ When prompted, make sure that you select *JSON* as the Key Type and click *Creat
 The JSON Authentication Key will then be downloaded to your local machine.
 
 5. **Save JSON Authentication Key as a Private Asset**. 
+
 _If you are deploying this template as a Code Exchange Quick Deploy App_
+
 You will be asked to paste the contents of this JSON file when configuring your Quick Deploy app in the Code Exchange interface. The Code Exchange will automatically upload the JSON file as a private asset in the right place upon deploying the app.
 
 _If you are deploying this template from the CLI_
+
 Take the JSON file you just downloaded, and save it to a file named `service-account-key.private.json` under the `assets` directory for this function template. Here is a one-line command you can run from the root of the template directory to help do that:
 
 ```
