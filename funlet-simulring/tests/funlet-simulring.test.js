@@ -62,43 +62,33 @@ const WHISPER_URL_WITH_CUSTOM_MESSAGE = `${DEFAULT_WHISPER_URL}&amp;Message=${CU
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
-const FULL_RESPONSE_SIMULRING_1_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action=".?Dial=true" ` +
-  `timeout="${DEFAULT_TIMEOUT}"` +
-  `>` +
-  `<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>` +
-  `<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER2}</Number>` +
-  `<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER3}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_SIMULRING_1_1 = `${XML_DECLARATION}<Response>\
+<Dial action=".?Dial=true" timeout="${DEFAULT_TIMEOUT}">\
+<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>\
+<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER2}</Number>\
+<Number url="${DEFAULT_WHISPER_URL}">${PHONE_NUMBER3}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_SIMULRING_1_3 =
-  `${XML_DECLARATION}<Response>` +
-  `<Dial ` +
-  `action=".?Dial=true" ` +
-  `timeout="${TIMEOUT}"` +
-  `>` +
-  `<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER1}</Number>` +
-  `<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER2}</Number>` +
-  `<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER3}</Number>` +
-  `</Dial>` +
-  `</Response>`;
+const FULL_RESPONSE_SIMULRING_1_3 = `${XML_DECLARATION}<Response>\
+<Dial action=".?Dial=true" timeout="${TIMEOUT}">\
+<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER1}</Number>\
+<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER2}</Number>\
+<Number url="${WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER3}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_SIMULRING_2_1 =
-  `${XML_DECLARATION}<Response>` +
-  `<Gather numDigits="1">` +
-  `<Play>${RECORDED_MESSAGE}</Play>` +
-  `</Gather>` +
-  `</Response>`;
+const FULL_RESPONSE_SIMULRING_2_1 = `${XML_DECLARATION}<Response>\
+<Gather numDigits="1">\
+<Play>${RECORDED_MESSAGE}</Play>\
+</Gather>\
+</Response>`;
 
 const FULL_RESPONSE_SIMULRING_3_1 = `${XML_DECLARATION}<Response/>`;
 
-const FULL_RESPONSE_SIMULRING_4_3 =
-  `${XML_DECLARATION}<Response>` +
-  `<Redirect>${FALLBACK_URL}</Redirect>` +
-  `</Response>`;
+const FULL_RESPONSE_SIMULRING_4_3 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
 beforeAll(() => runtime.setup());
 
