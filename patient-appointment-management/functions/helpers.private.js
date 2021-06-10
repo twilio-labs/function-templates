@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable prefer-template */
 /*
  * --------------------------------------------------------------------------------
  * common helper function used by functions & client-side javascript
