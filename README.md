@@ -12,7 +12,43 @@ Easily create an embedable SMS Opt-In form to collect contacts for your campaign
 
 ## Pre-requisites
 
-### Environment Variables
+1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started):
+
+```shell
+twilio plugins:install @twilio-labs/plugin-serverless
+```
+## Setup
+
+3. Clone the repository and `cd` into it:
+```shell
+git clone git@github.com:cweems/twilio-keyword.git
+
+cd twilio-keyword
+```
+4. Install dependencies:
+```shell
+npm install
+```
+5. Create `.env` file and set environment variables:
+```shell
+cp .env.example .env
+```
+> Note: you'll need to set `ACCOUNT_SID`, `AUTH_TOKEN`, `TWILIO_PHONE_NUMBER`, `ADMIN_PHONE_NUMBER`, and `ADMIN_PASSWORD` before deploying. All other environment variables can be set by the opt-in builder. If you're using Quick Deploy, these initial environemnt variables will be set for you.
+
+6. Deploy to Twilio Serverless:
+```shell
+twilio serverless:deploy
+
+# View your opt-in builder at https://[my-runtime-url].twil.io/index.html
+```
+
+7. Optional: develop locally if you want to edit HTML / CSS / JavaScript:
+```shell
+twilio serverless:start --live
+```
+
+### Environment Variable Reference
 If you're running this project locally, you'll need to manually set environment variables in your `.env` file. When run on Twilio Serverless, environment variables are automatically set when you click the `Save Settings` button.
 
 To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
@@ -46,26 +82,4 @@ To keep your tokens and secrets secure, make sure to not commit the `.env` file 
 | AIRTABLE_OPT_IN_COLUMN_NAME | Name of the column where you'll store opt-in status in Airtable. Values can be true / false.                                                                                                | Optional    |
 | WEBHOOK_URL                 | URL to a webhook on your own custom app that will receive Opt-In events.                                                                                                                    | Optional    |
 
-## Create a new project with the template
-
-1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
-2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-
-```shell
-twilio plugins:install @twilio-labs/plugin-serverless
-```
-
-3. Initiate a new project
-
-```
-twilio serverless:init signup-builder --template=twilio-signup-builder && cd signup-builder
-```
-
-4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:start
-```
-
-5. Open the web page at https://localhost:3000/index.html and use the live-preview settings editor to customize your app. Note that when running locally, you'll need to manually update your `.env` file and restart Twilio Serverless each time you make a configuration change.
 

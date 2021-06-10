@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "twilio-run",
-    "deploy": "twilio-run deploy"
+    "start": "twilio serverless:start --live",
+    "deploy": "twilio serverless:deploy"
   },
   "devDependencies": {
     "twilio-run": "^2.6.0"
