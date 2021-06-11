@@ -17,7 +17,7 @@ const client = new SessionsClient({
  
  const request = {
    session: client.projectAgentSessionPath(
-     context.DIALOGFLOW_ES_PROJECT_ID,
+     context.GOOGLE_CLOUD_PROJECT_ID,
      event.dialogflow_session_id
    ),
    queryInput: {
