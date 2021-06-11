@@ -23,7 +23,7 @@ describe('a completed call', () => {
   setupLifeCycle(context);
 
   test('returns a VoiceResponse', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       done();
     };
@@ -32,7 +32,7 @@ describe('a completed call', () => {
   });
 
   test('returns a hangup', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result.toString()).toMatch('<Hangup/>');
       done();
     };
@@ -47,7 +47,7 @@ describe('the first call', () => {
   setupLifeCycle(context);
 
   test('returns a VoiceResponse', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       done();
     };
@@ -56,7 +56,7 @@ describe('the first call', () => {
   });
 
   test('returns a dial to the first number', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const xml = result.toString();
       expect(xml).toMatch('<Dial');
       expect(xml).toMatch('<Number');
@@ -68,7 +68,7 @@ describe('the first call', () => {
   });
 
   test('sets the next number to dial in the url', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const xml = result.toString();
       expect(xml).toMatch('/hunt?nextNumber=%2B10987654321');
       done();
@@ -89,7 +89,7 @@ describe('a subsequent call', () => {
   setupLifeCycle(context);
 
   test('returns a VoiceResponse', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       done();
     };
@@ -98,7 +98,7 @@ describe('a subsequent call', () => {
   });
 
   test('returns a dial to the next number', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const xml = result.toString();
       expect(xml).toMatch('<Dial');
       expect(xml).toMatch('<Number');
@@ -110,7 +110,7 @@ describe('a subsequent call', () => {
   });
 
   test('sets the url to finished', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const xml = result.toString();
       expect(xml).toMatch('/hunt?finished=true');
       done();
@@ -129,7 +129,7 @@ describe('the last call', () => {
     setupLifeCycle(context);
 
     test('returns a VoiceResponse', (done) => {
-      const callback = (err, result) => {
+      const callback = (_err, result) => {
         expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
         done();
       };
@@ -138,7 +138,7 @@ describe('the last call', () => {
     });
 
     test('returns a hangup', (done) => {
-      const callback = (err, result) => {
+      const callback = (_err, result) => {
         expect(result.toString()).toMatch('<Hangup/>');
         done();
       };
@@ -156,7 +156,7 @@ describe('the last call', () => {
     setupLifeCycle(context);
 
     test('returns a VoiceResponse', (done) => {
-      const callback = (err, result) => {
+      const callback = (_err, result) => {
         expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
         done();
       };
@@ -165,7 +165,7 @@ describe('the last call', () => {
     });
 
     test('returns a redirect', (done) => {
-      const callback = (err, result) => {
+      const callback = (_err, result) => {
         const xml = result.toString();
         expect(xml).toMatch('<Redirect>');
         expect(xml).toMatch(context.FINAL_URL);

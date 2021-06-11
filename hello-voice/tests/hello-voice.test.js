@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -23,7 +23,7 @@ test('returns a VoiceResponse', (done) => {
 });
 
 test('says Hello World', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch('<Say>Hello World</Say>');
     done();
   };

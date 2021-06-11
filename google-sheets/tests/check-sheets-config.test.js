@@ -50,6 +50,7 @@ it('should handle Google Sheets API errors', (done) => {
     spreadsheets: {
       values: {
         get: jest.fn(() =>
+          // eslint-disable-next-line prefer-promise-reject-errors
           Promise.reject({
             code: 401,
             message: errorMessage,
@@ -72,6 +73,7 @@ it('should handle a missing Google Sheets document', (done) => {
     spreadsheets: {
       values: {
         get: jest.fn(() =>
+          // eslint-disable-next-line prefer-promise-reject-errors
           Promise.reject({
             code: 404,
           })
@@ -97,6 +99,7 @@ it('should log Google Sheets API errors', (done) => {
     spreadsheets: {
       values: {
         get: jest.fn(() =>
+          // eslint-disable-next-line prefer-promise-reject-errors
           Promise.reject({
             code: 400,
             errors: [{ message: testError }],

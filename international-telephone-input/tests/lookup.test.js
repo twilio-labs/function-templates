@@ -24,7 +24,7 @@ describe('international-telephone-input/lookup', () => {
   });
 
   test('returns an error response when required parameter is missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       done();
@@ -34,7 +34,7 @@ describe('international-telephone-input/lookup', () => {
   });
 
   test('returns an error response when required parameter is empty', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       done();
@@ -46,7 +46,7 @@ describe('international-telephone-input/lookup', () => {
   });
 
   test('returns success with valid request', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       done();

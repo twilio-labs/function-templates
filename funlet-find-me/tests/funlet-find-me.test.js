@@ -29,11 +29,8 @@ const SPELLED_FROM_NUMBER = '+. 1. 9. 1. 6. 5. 5. 5. 0. 1. 2. 3. ';
 const RECORDED_MESSAGE = 'https://example.com/recorded-message.mp3';
 const TEXT_MESSAGE = 'Text message';
 const MESSAGE = TEXT_MESSAGE;
-const DEFAULT_MESSAGE =
-  'You are receiving a call from ' +
-  SPELLED_FROM_NUMBER +
-  '. ' +
-  'Press any key to accept.';
+const DEFAULT_MESSAGE = `You are receiving a call from ${SPELLED_FROM_NUMBER}. \
+Press any key to accept.`;
 
 const CUSTOM_MESSAGE = 'Custom Message';
 const CUSTOM_MESSAGE_ENCODED = 'Custom%20Message';
@@ -72,133 +69,60 @@ const EXAMPLE_CONTEXT = {
   PATH: '/funlet-find-me',
 };
 
-const DEFAULT_WHISPER_URL = EXAMPLE_BASE_URL + '?Whisper=true';
-const XML_DEFAULT_WHISPER_URL = EXAMPLE_BASE_URL + '?Whisper=true';
-const XML_WHISPER_URL_WITH_CUSTOM_MESSAGE =
-  XML_DEFAULT_WHISPER_URL + '&amp;Message=' + CUSTOM_MESSAGE_ENCODED;
+const DEFAULT_WHISPER_URL = `${EXAMPLE_BASE_URL}?Whisper=true`;
+const XML_DEFAULT_WHISPER_URL = `${EXAMPLE_BASE_URL}?Whisper=true`;
+const XML_WHISPER_URL_WITH_CUSTOM_MESSAGE = `${XML_DEFAULT_WHISPER_URL}&amp;Message=${CUSTOM_MESSAGE_ENCODED}`;
 
 const XML_DECLARATION = '<?xml version="1.0" encoding="UTF-8"?>';
 
-const FULL_RESPONSE_FIND_ME_1_1 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action="' +
-  EXAMPLE_BASE_URL +
-  '?Dial=true' +
-  '&amp;PhoneNumbers%5B0%5D=' +
-  PHONE_NUMBER2 +
-  '&amp;PhoneNumbers%5B1%5D=' +
-  PHONE_NUMBER3 +
-  '" ' +
-  'timeout="' +
-  DEFAULT_TIMEOUT +
-  '"' +
-  '>' +
-  '<Number url="' +
-  XML_DEFAULT_WHISPER_URL +
-  '">' +
-  PHONE_NUMBER1 +
-  '</Number>' +
-  '</Dial>' +
-  '</Response>';
+const FULL_RESPONSE_FIND_ME_1_1 = `${XML_DECLARATION}<Response>\
+<Dial action="${EXAMPLE_BASE_URL}?Dial=true\
+&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}" \
+timeout="${DEFAULT_TIMEOUT}">\
+<Number url="${XML_DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_1_3 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action="' +
-  EXAMPLE_BASE_URL +
-  '?Dial=true' +
-  '&amp;PhoneNumbers%5B0%5D=' +
-  PHONE_NUMBER2 +
-  '&amp;PhoneNumbers%5B1%5D=' +
-  PHONE_NUMBER3 +
-  '" ' +
-  'timeout="' +
-  TIMEOUT +
-  '"' +
-  '>' +
-  '<Number url="' +
-  XML_WHISPER_URL_WITH_CUSTOM_MESSAGE +
-  '">' +
-  PHONE_NUMBER1 +
-  '</Number>' +
-  '</Dial>' +
-  '</Response>';
+const FULL_RESPONSE_FIND_ME_1_3 = `${XML_DECLARATION}<Response>\
+<Dial action="${EXAMPLE_BASE_URL}?Dial=true\
+&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}" \
+timeout="${TIMEOUT}">\
+<Number url="${XML_WHISPER_URL_WITH_CUSTOM_MESSAGE}">${PHONE_NUMBER1}</Number>\
+</Dial>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_1_4 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Dial ' +
-  'action="' +
-  EXAMPLE_BASE_URL +
-  '?Dial=true' +
-  '&amp;PhoneNumbers%5B0%5D=' +
-  PHONE_NUMBER2 +
-  '&amp;PhoneNumbers%5B1%5D=' +
-  PHONE_NUMBER3 +
-  '&amp;PhoneNumbers%5B2%5D=' +
-  PHONE_NUMBER4 +
-  '&amp;PhoneNumbers%5B3%5D=' +
-  PHONE_NUMBER5 +
-  '&amp;PhoneNumbers%5B4%5D=' +
-  PHONE_NUMBER6 +
-  '&amp;PhoneNumbers%5B5%5D=' +
-  PHONE_NUMBER7 +
-  '&amp;PhoneNumbers%5B6%5D=' +
-  PHONE_NUMBER8 +
-  '&amp;PhoneNumbers%5B7%5D=' +
-  PHONE_NUMBER9 +
-  '&amp;PhoneNumbers%5B8%5D=' +
-  PHONE_NUMBER10 +
-  '" ' +
-  'timeout="' +
-  DEFAULT_TIMEOUT +
-  '"' +
-  '>' +
-  '<Number url="' +
-  XML_DEFAULT_WHISPER_URL +
-  '">' +
-  PHONE_NUMBER1 +
-  '</Number>' +
-  '</Dial>' +
-  '</Response>';
+const FULL_RESPONSE_FIND_ME_1_4 = `${XML_DECLARATION}<Response>\
+<Dial action="${EXAMPLE_BASE_URL}?Dial=true\
+&amp;PhoneNumbers%5B0%5D=${PHONE_NUMBER2}&amp;PhoneNumbers%5B1%5D=${PHONE_NUMBER3}\
+&amp;PhoneNumbers%5B2%5D=${PHONE_NUMBER4}&amp;PhoneNumbers%5B3%5D=${PHONE_NUMBER5}\
+&amp;PhoneNumbers%5B4%5D=${PHONE_NUMBER6}&amp;PhoneNumbers%5B5%5D=${PHONE_NUMBER7}\
+&amp;PhoneNumbers%5B6%5D=${PHONE_NUMBER8}&amp;PhoneNumbers%5B7%5D=${PHONE_NUMBER9}\
+&amp;PhoneNumbers%5B8%5D=${PHONE_NUMBER10}" \
+timeout="${DEFAULT_TIMEOUT}">\
+<Number url="${XML_DEFAULT_WHISPER_URL}">${PHONE_NUMBER1}</Number>\
+</Dial>\
+</Response>`;
 
 const FULL_RESPONSE_FIND_ME_1_5 = FULL_RESPONSE_FIND_ME_1_4;
 
-const FULL_RESPONSE_FIND_ME_1_6 =
-  XML_DECLARATION + '<Response>' + '<Hangup/>' + '</Response>';
+const FULL_RESPONSE_FIND_ME_1_6 = `${XML_DECLARATION}<Response><Hangup/></Response>`;
 
-const FULL_RESPONSE_FIND_ME_1_7 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Redirect>' +
-  FALLBACK_URL +
-  '</Redirect>' +
-  '</Response>';
+const FULL_RESPONSE_FIND_ME_1_7 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_2_1 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Gather numDigits="1">' +
-  '<Play>' +
-  RECORDED_MESSAGE +
-  '</Play>' +
-  '</Gather>' +
-  '<Hangup/>' +
-  '</Response>';
+const FULL_RESPONSE_FIND_ME_2_1 = `${XML_DECLARATION}<Response>\
+<Gather numDigits="1">\
+<Play>${RECORDED_MESSAGE}</Play>\
+</Gather>\
+<Hangup/>\
+</Response>`;
 
-const FULL_RESPONSE_FIND_ME_3_1 =
-  XML_DECLARATION + '<Response><Say>Connecting</Say></Response>';
+const FULL_RESPONSE_FIND_ME_3_1 = `${XML_DECLARATION}<Response><Say>Connecting</Say></Response>`;
 
-const FULL_RESPONSE_FIND_ME_4_3 =
-  XML_DECLARATION +
-  '<Response>' +
-  '<Redirect>' +
-  FALLBACK_URL +
-  '</Redirect>' +
-  '</Response>';
+const FULL_RESPONSE_FIND_ME_4_3 = `${XML_DECLARATION}<Response>\
+<Redirect>${FALLBACK_URL}</Redirect>\
+</Response>`;
 
 beforeAll(() => runtime.setup());
 
@@ -280,27 +204,21 @@ test(
   }
 );
 
-test(
-  '[FINDME-INPUT-PHONE-NUMBERS-6] ' + 'Read Phone Numbers from Script Config',
-  () => {
-    expect(
-      funlet.input.getPhoneNumbers(
-        {},
-        {},
-        {
-          phoneNumbers: [PHONE_NUMBER1, PHONE_NUMBER2, PHONE_NUMBER3],
-        }
-      )
-    ).toEqual([PHONE_NUMBER1, PHONE_NUMBER2, PHONE_NUMBER3]);
-  }
-);
+test('[FINDME-INPUT-PHONE-NUMBERS-6] Read Phone Numbers from Script Config', () => {
+  expect(
+    funlet.input.getPhoneNumbers(
+      {},
+      {},
+      {
+        phoneNumbers: [PHONE_NUMBER1, PHONE_NUMBER2, PHONE_NUMBER3],
+      }
+    )
+  ).toEqual([PHONE_NUMBER1, PHONE_NUMBER2, PHONE_NUMBER3]);
+});
 
-test(
-  '[FINDME-INPUT-PHONE-NUMBERS-7] ' + 'Read Default Phone Numbers from Script',
-  () => {
-    expect(funlet.config.phoneNumbers).toEqual(DEFAULT_PHONE_NUMBERS);
-  }
-);
+test('[FINDME-INPUT-PHONE-NUMBERS-7] Read Default Phone Numbers from Script', () => {
+  expect(funlet.config.phoneNumbers).toEqual(DEFAULT_PHONE_NUMBERS);
+});
 
 test('[FINDME-INPUT-PHONE_NUMBERS-7] Skip empty values', () => {
   expect(
@@ -497,7 +415,7 @@ test('[FINDME-INPUT-FALLBACK-URL-4] Read Default Fallback URL from Script', () =
 });
 
 test('[FINDME-OUTPUT-FINDME-1-1] Find Me with 3 Phone Numbers', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.findMeStage1(
     response,
     [PHONE_NUMBER1, PHONE_NUMBER2, PHONE_NUMBER3],
@@ -510,7 +428,7 @@ test('[FINDME-OUTPUT-FINDME-1-1] Find Me with 3 Phone Numbers', () => {
 });
 
 test('[FINDME-OUTPUT-FINDME-1-4] Allow up to 10 numbers', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.findMeStage1(
     response,
     [
@@ -534,7 +452,7 @@ test('[FINDME-OUTPUT-FINDME-1-4] Allow up to 10 numbers', () => {
 });
 
 test('[FINDME-OUTPUT-FINDME-1-5] Discard Extra Numbers Above 10', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.findMeStage1(
     response,
     [
@@ -560,7 +478,7 @@ test('[FINDME-OUTPUT-FINDME-1-5] Discard Extra Numbers Above 10', () => {
 });
 
 test('[FINDME-OUTPUT-FINDME-1-6] No More Numbers, Without Fallback URL', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.findMeStage1(
     response,
     [],
@@ -573,7 +491,7 @@ test('[FINDME-OUTPUT-FINDME-1-6] No More Numbers, Without Fallback URL', () => {
 });
 
 test('[FINDME-OUTPUT-FINDME-1-7] No More Numbers, With Fallback URL', () => {
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.findMeStage1(
     response,
     [],
@@ -586,7 +504,7 @@ test('[FINDME-OUTPUT-FINDME-1-7] No More Numbers, With Fallback URL', () => {
 });
 
 test('[FINDME-1-3] Find Me with Custom Timeout and Message', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_FIND_ME_1_3);
     done();
@@ -603,7 +521,7 @@ test('[FINDME-1-3] Find Me with Custom Timeout and Message', (done) => {
 });
 
 test('[FINDME-2-1] Whisper: Recorded Message', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_FIND_ME_2_1);
     done();
@@ -616,7 +534,7 @@ test('[FINDME-2-1] Whisper: Recorded Message', (done) => {
 });
 
 test('[FINDME-3-1] Whisper: A Digit was Pressed', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_FIND_ME_3_1);
     done();
@@ -629,7 +547,7 @@ test('[FINDME-3-1] Whisper: A Digit was Pressed', (done) => {
 });
 
 test('[FINDME-4-3] Failure with Fallback URL', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_FIND_ME_4_3);
     done();
