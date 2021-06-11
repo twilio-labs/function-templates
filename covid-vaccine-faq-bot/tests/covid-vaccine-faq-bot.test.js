@@ -1,11 +1,10 @@
 const helpers = require('../../test/test-helper');
-// const checkExistingFlow = require('../functions/check-existing-flow').handler;
-const auth = require('../functions/auth.private').handler;
 const returnConfig = require('../functions/return-config').handler;
 const detectIntent = require('../functions/es-dialogflow-detect-intent').handler;
 const {SessionsClient} = require('@google-cloud/dialogflow');
 
 jest.mock('@google-cloud/dialogflow')
+
 SessionsClient.mockImplementation(() => {
   return {
     projectAgentSessionPath: (a, b) => null,
