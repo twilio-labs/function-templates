@@ -14,9 +14,8 @@
     "node": "10"
   },
   "dependencies": {
-    "@analytics/segment": "^1.1.0",
     "airtable": "^0.11.0",
-    "analytics": "^0.7.5",
+    "analytics-node": "^4.0.1",
     "axios": "^0.21.1",
     "twilio": "^3.62.0"
   }

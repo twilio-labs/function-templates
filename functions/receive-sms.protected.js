@@ -1,5 +1,5 @@
 exports.handler = function(context, event, callback) {
-  
+
   const stopKeywords = ['cancel', 'end', 'quit', 'stop', 'stopall', 'unsubscribe'];
   const startKeywords = ['start', 'unstop', 'yes'];
   
@@ -9,16 +9,17 @@ exports.handler = function(context, event, callback) {
 
   const axios = require('axios');
 
-  if(context.DATA_SOURCE === 'airtable') {
-    const Airtable = require('airtable');
-    const base = new Airtable({apiKey: context.AIRTABLE_API_KEY}).base(context.AIRTABLE_BASE_ID);
-    const tableName = context.AIRTABLE_TABLE_NAME;
-    const phoneColumnName = context.AIRTABLE_PHONE_COLUMN_NAME;
-    const optInColumnName = context.AIRTABLE_OPT_IN_COLUMN_NAME;
-  }
+  const Airtable = require('airtable');
+  const base = new Airtable({apiKey: context.AIRTABLE_API_KEY}).base(context.AIRTABLE_BASE_ID);
+  const tableName = context.AIRTABLE_TABLE_NAME;
+  const phoneColumnName = context.AIRTABLE_PHONE_COLUMN_NAME;
+  const optInColumnName = context.AIRTABLE_OPT_IN_COLUMN_NAME;
+  
+  const Analytics = require('analytics-node');
+  const analytics = new Analytics(context.SEGMENT_WRITE_KEY);
 
   function webhookOptIn(twiml, optin) {
-    console.log('webhook!')
+    console.log('Webhook opt-in')
     axios({
       method: 'post',
       url: context.WEBHOOK_URL,
@@ -35,36 +36,45 @@ exports.handler = function(context, event, callback) {
     });
   }
 
-  function segmentOptIn(twiml, optin) {
-
-    const Analytics = require('analytics').default;
-    const segmentPlugin = require('@analytics/segment');
-
-    const analytics = Analytics({
-      app: 'twilio-opt-in-builder',
-      plugins: [
-        segmentPlugin({
-          writeKey: context.SEGMENT_WRITE_KEY
-        })
-      ]
+  function segmentTrack(params) {
+    return new Promise((resolve, reject) => {
+      analytics.track(params, (err, res) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(res)
+        }
+      })
     });
+  }
 
+  async function segmentOptIn(twiml, optin) {
     if (optin) {
-      analytics.track("SMS Opt In", {
-        phone: event.From,
-        opt_in_status: "active"
+      await segmentTrack({
+        userId: event.From,
+        event: 'SMS Opt-In Confirmed',
+        properties: {
+          phone_number: event.From,
+          opt_in_status: 'active'
+        }
       });
-
+      
       callback(null, twiml);
     } else {
-      analytics.track("SMS Opt Out", {
-        phone: event.From,
-        opt_in_status: "inactive"
+      await segmentTrack({
+        userId: event.From,
+        event: 'SMS Opt-Out Confirmed',
+        properties: {
+          opt_in_status: 'inactive'
+        }
       });
+
+      callback(null, null);
     }
   }
 
   function airtableCreateOptIn(twiml) {
+    console.log('Airtable opt-in')
     base(tableName).select({
       maxRecords: 1,
       filterByFormula: `{Phone} = '${event.From}'`,

@@ -114,10 +114,10 @@ function bindDataSourceTabs() {
 }
 
 function sendSMS() {
-  let inputValue = $('#phone-number').value;
+  let inputValue = $('#phone-number').val();
   fetch(`/send-sms?to=${inputValue}`)
     .then(data => {
-      $('#sms-confirmation').style.display = 'block';
+      $('#sms-confirmation').css('display', 'block');
     });
 }
 
