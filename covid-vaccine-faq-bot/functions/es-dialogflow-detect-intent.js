@@ -23,7 +23,7 @@ const client = new SessionsClient({
    queryInput: {
      text: {
        text: query,
-       languageCode: 'en-US',
+       languageCode: context.LANGUAGE_CODE,
      },
    },
  };
