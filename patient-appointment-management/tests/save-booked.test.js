@@ -2,6 +2,7 @@
 const helpers = require('../../test/test-helper');
 const Twilio = require('twilio');
 const { handler } = require('../functions/save-booked.protected');
+const path = require('path');
 
 const context = {
   AWS_ACCESS_KEY_ID: 'YourAWSAccessKeyId',
@@ -24,8 +25,7 @@ beforeAll(() => {
     // map other methods that you want to use like console.table
   };
   helpers.setup(context);
-  Runtime._addFunction('helpers', './functions/helpers.private.js');
-  Runtime._addFunction('save-booked', './functions/save-booked.protected.js');
+  Runtime._addFunction('helpers', './patient-appointment-management/functions/helpers.private.js');
 });
 
 // --------------------------------------------------------------------------------

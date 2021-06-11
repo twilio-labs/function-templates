@@ -24,11 +24,7 @@ beforeAll(() => {
     // map other methods that you want to use like console.table
   };
   helpers.setup(context);
-  Runtime._addFunction('helpers', './functions/helpers.private.js');
-  Runtime._addFunction(
-    'save-rescheduled',
-    './functions/save-rescheduled.protected.js'
-  );
+  Runtime._addFunction('helpers', './patient-appointment-management/functions/helpers.private.js');
 });
 
 // --------------------------------------------------------------------------------
