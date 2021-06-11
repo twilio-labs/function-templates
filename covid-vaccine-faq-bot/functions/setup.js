@@ -76,7 +76,6 @@ function deployStudio() {
 
   
   const flow = await deployStudio(flowDefinition);
-  console.log(flow);
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
   if(environment) {
