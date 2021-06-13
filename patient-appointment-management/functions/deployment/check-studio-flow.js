@@ -31,7 +31,6 @@ exports.handler = async function (context, event, callback) {
           if (f.sid === TWILIO_FLOW_SID) {
             console.log(THIS, 'Found', TWILIO_FLOW_SID);
             callback(null, TWILIO_FLOW_SID);
-            return;
           }
         });
         callback(null, 'NOT-DEPLOYED');

@@ -1,11 +1,14 @@
 /* eslint-disable camelcase */
-// --------------------------------------------------------------------------------
-// synchronously runs glue crawler
-//
-// THIS LAMBDA IS A SINGLETON! Deploy with Concurrency = 1
-//
-// returns response.Crawler if successful; null otherwise
-// --------------------------------------------------------------------------------
+/* eslint-disable prefer-destructuring */
+/*
+ * --------------------------------------------------------------------------------
+ * synchronously runs glue crawler
+ *
+ * THIS LAMBDA IS A SINGLETON! Deploy with Concurrency = 1
+ *
+ * returns response.Crawler if successful; null otherwise
+ * --------------------------------------------------------------------------------
+ */
 async function run_crawler_synchronous(crawler_name, AWS) {
   const glue = new AWS.Glue();
 
@@ -24,8 +27,7 @@ async function run_crawler_synchronous(crawler_name, AWS) {
       console.log('Started glue crawler:', crawler_name);
     }
 
-    // loop to wait for crawler completion
-    // note that crawler could have been started external from this function
+    // loop to wait for crawler completion, note that crawler could have been started external from this function
     const sleep_milliseconds = 30000;
     do {
       await new Promise((resolve) => setTimeout(resolve, sleep_milliseconds));
@@ -42,11 +44,13 @@ async function run_crawler_synchronous(crawler_name, AWS) {
   }
 }
 
-// --------------------------------------------------------------------------------
-// synchronously executes athena query
-//
-// returns response.QueryExecution if successful; null otherwise
-// --------------------------------------------------------------------------------
+/*
+ * --------------------------------------------------------------------------------
+ * synchronously executes athena query
+ *
+ * returns response.QueryExecution if successful; null otherwise
+ * --------------------------------------------------------------------------------
+ */
 async function execute_athena_query_synchronous(query, s3bucket, AWS) {
   const athena = new AWS.Athena();
 
@@ -63,8 +67,7 @@ async function execute_athena_query_synchronous(query, s3bucket, AWS) {
     const qe_id = response.QueryExecutionId;
     console.log('Started athena query...');
 
-    // loop to wait for query completion
-    // note loop will max timeout at lambda max
+    // loop to wait for query completion, note loop will max timeout at lambda max
     const milliseconds = 10000;
     let state = null;
     do {
@@ -109,7 +112,7 @@ exports.handler = async function (event, context) {
     // ---------- check if table data exists
     const glue = new AWS.Glue();
     try {
-      let params = {
+      const params = {
         DatabaseName: database_name,
         Name: 'state',
       };

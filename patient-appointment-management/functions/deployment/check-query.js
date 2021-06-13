@@ -1,15 +1,21 @@
 /* eslint-disable camelcase */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable dot-notation */
+/* eslint-disable prefer-template */
 const THIS = 'check-query:';
-// --------------------------------------------------------------------------------
-// check query
-//
-// returns
-//  - RUNNING, if data is being prepared
-//  - READY, if ready to prepare data
-//  - a signedURL, if data is available for download
-// --------------------------------------------------------------------------------
+/*
+ * --------------------------------------------------------------------------------
+ * check query
+ *
+ * returns
+ *  - RUNNING, if data is being prepared
+ *  - READY, if ready to prepare data
+ *  - a signedURL, if data is available for download
+ * --------------------------------------------------------------------------------
+ */
 const assert = require('assert');
 const AWS = require('aws-sdk');
+
 const path = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path);
 

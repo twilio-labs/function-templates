@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable complexity */
 /* eslint-disable sonarjs/cognitive-complexity */
+/* eslint-disable prefer-destructuring */
 const THIS = 'send-appointment-reminders: ';
 
 // --------------------------------------------------------------------------------

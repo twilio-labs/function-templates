@@ -1,14 +1,19 @@
 /* eslint-disable camelcase */
+/* eslint-disable prefer-destructuring */
+/* eslint-disable dot-notation */
 const THIS = 'execute-query:';
-// --------------------------------------------------------------------------------
-// executes query
-//
-// returns
-// - STARTED, if started successfully
-// - RUNNING, if already running
-// --------------------------------------------------------------------------------
+/*
+ * --------------------------------------------------------------------------------
+ * executes query
+ *
+ * returns
+ * - STARTED, if started successfully
+ * - RUNNING, if already running
+ * --------------------------------------------------------------------------------
+ */
 const assert = require('assert');
 const AWS = require('aws-sdk');
+
 const path = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path);
 
