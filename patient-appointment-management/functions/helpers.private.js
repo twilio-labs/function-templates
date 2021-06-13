@@ -152,8 +152,10 @@ async function getParam(context, key) {
         const response = await cf
           .describeStacks({ StackName: stack_name })
           .promise();
+        console.log(response.Stacks[0].Outputs);
         const output = response.Stacks[0].Outputs.find(function (o) {
-          return o.OutputKey === 'AWSAccessKeyId';
+          // Note that CF Output key MUST match that in the CF template
+          return o.OutputKey === 'PatientAppointmentManagementAWSAccessKeyId';
         });
         return output === null ? null : output.OutputValue;
       } catch (AmazonCloudFormationException) {
@@ -178,7 +180,8 @@ async function getParam(context, key) {
           .describeStacks({ StackName: stack_name })
           .promise();
         const output = response.Stacks[0].Outputs.find(function (o) {
-          return o.OutputKey === 'AWSSecretAccessKey';
+          // Note that CF Output key MUST match that in the CF template
+          return o.OutputKey === 'PatientAppointmentManagementAWSSecretAccessKey';
         });
         return output === null ? null : output.OutputValue;
       } catch (AmazonCloudFormationException) {
