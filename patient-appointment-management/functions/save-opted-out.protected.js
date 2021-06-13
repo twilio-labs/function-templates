@@ -46,24 +46,21 @@ exports.handler = async function (context, event, callback) {
     const assert = require('assert');
     const AWS = require('aws-sdk');
     const { path } = Runtime.getFunctions().helpers;
-    const { retrieveParameter, assignParameter } = require(path);
+    const { getParam, setParam } = require(path);
 
     // ---------- validate environment variables & input event
-    const AWS_ACCESS_KEY_ID = await retrieveParameter(
-      context,
-      'AWS_ACCESS_KEY_ID'
-    );
-    const AWS_SECRET_ACCESS_KEY = await retrieveParameter(
+    const AWS_ACCESS_KEY_ID = await getParam(context, 'AWS_ACCESS_KEY_ID');
+    const AWS_SECRET_ACCESS_KEY = await getParam(
       context,
       'AWS_SECRET_ACCESS_KEY'
     );
-    const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
-    const AWS_S3_BUCKET = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(
+    const AWS_REGION = await getParam(context, 'AWS_REGION');
+    const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
+    const FILENAME_APPOINTMENT = await getParam(
       context,
-      'APPLICATION_FILENAME_PATTERN_APPOINTMENT'
+      'FILENAME_APPOINTMENT'
     );
-    const TWILIO_FLOW_SID = await retrieveParameter(context, 'TWILIO_FLOW_SID');
+    const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
     assert(
       event.hasOwnProperty('appointment'),
       'missing input event.appointment'

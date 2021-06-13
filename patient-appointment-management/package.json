@@ -5,11 +5,5 @@
     "aws-sdk": "^2.925.0",
     "jszip": "^3.6.0",
     "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "jest": "^27.0.4"
-  },
-  "scripts": {
-    "test": "jest"
   }
 }

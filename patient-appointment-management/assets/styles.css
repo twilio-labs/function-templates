@@ -24,7 +24,11 @@ footer p {
   height: 50px;
 }
 
-.flow-loader .aws-bucket-loader .aws-application-loader {
+.flow-loader
+  .aws-bucket-loader
+  .aws-application-loader
+  .state-downloader
+  .history-downloader {
   border: 4px solid rgb(244, 244, 246);
   border-top: 4px solid rgb(18, 28, 45);
   border-radius: 50%;
@@ -50,7 +54,31 @@ footer p {
   cursor: default;
 }
 
-#aws-deploy .button.loading {
+#aws-bucket-deploy .button.loading {
+  background: rgb(244, 244, 246);
+  border: 1px solid rgb(244, 244, 246);
+  color: rgb(96, 107, 133);
+  box-shadow: none;
+  cursor: default;
+}
+
+#aws-application-deploy .button.loading {
+  background: rgb(244, 244, 246);
+  border: 1px solid rgb(244, 244, 246);
+  color: rgb(96, 107, 133);
+  box-shadow: none;
+  cursor: default;
+}
+
+#state-download .button.loading {
+  background: rgb(244, 244, 246);
+  border: 1px solid rgb(244, 244, 246);
+  color: rgb(96, 107, 133);
+  box-shadow: none;
+  cursor: default;
+}
+
+#history-download .button.loading {
   background: rgb(244, 244, 246);
   border: 1px solid rgb(244, 244, 246);
   color: rgb(96, 107, 133);

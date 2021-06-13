@@ -108,16 +108,39 @@
         </p>
 
         <h5>Once you have some appointment data, you can query appointment data.</h5>
-        <ul>
-          <li>
-            Download current appointment states:
-            <a id="download-states" class="button button-outline" href="https://console.aws.amazon.com/glue/" target="_blank">Download</a>
-          </li>
-          <li>
-            Download historical appointment events:
-            <a id="download-history" class="button button-outline" href="https://console.aws.amazon.com/athena/" target="_blank">Download</a>
-          </li>
-        </ul>
+
+        <section>
+          <div class="state-downloader"></div>
+          <div id="state-query" style="display: none;" class="deployer">
+            <a class="button" onclick="downloadState(event);">Query Appointment State Data</a>
+            <div id="state-loader button-loader" style="display: none;"></div>
+          </div>
+          <div id="state-querying" style="display: none;" class="deployer">
+            <h4>Appointment State data is being prepared ...</h4>
+            <p>Please periodically refresh this page until ready to download</p>
+          </div>
+          <div id="state-ready" style="display: none;" class="deployer">
+            <h4><span class="checkmark">&#10003;</span> Appointment State Data is ready</h4>
+            <a id="state-download" class="button button-outline" href="" target="_blank">Download</a>
+          </div>
+        </section>
+
+        <section>
+          <div class="history-downloader"></div>
+          <div id="history-query" style="display: none;" class="deployer">
+            <a class="button" onclick="downloadHistory(event);">Query Appointment History Data</a>
+            <div id="history-loader button-loader" style="display: none;"></div>
+          </div>
+          <div id="history-querying" style="display: none;" class="deployer">
+            <h4>Appointment History data is being prepared ...</h4>
+            <p>Please periodically refresh this page until ready to download</p>
+          </div>
+          <div id="history-ready" style="display: none;" class="deployer">
+            <h4><span class="checkmark">&#10003;</span> Appointment History Data is ready</h4>
+            <a id="history-download" class="button button-outline" href="" target="_blank">Download</a>
+          </div>
+        </section>
+
         <br/>
       </div>
     </section>

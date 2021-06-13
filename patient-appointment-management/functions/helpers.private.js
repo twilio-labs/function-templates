@@ -6,13 +6,13 @@
  * --------------------------------------------------------------------------------
  * common helper function used by functions & client-side javascript
  *
- * retrieveParameter(context, key)
- * retrieveParameter(context, key)
- * assignParameter(context, key, value)
+ * getParam(context, key)
+ * getParam(context, key)
+ * setParam(context, key, value)
  *
  * include via:
  *   const path = Runtime.getFunctions()['helper'].path;
- *   const { retrieveParameter, assignParameter } = require(path);
+ *   const { getParam, setParam } = require(path);
  * and call functions directly
  *
  *
@@ -24,14 +24,15 @@ const Twilio = require('twilio');
 const THIS_APPLICATION_NAME = 'patient-appointment-management';
 const CONSTANTS = {
   APPLICATION_NAME: THIS_APPLICATION_NAME,
-  APPLICATION_FILENAME_PATTERN_APPOINTMENT:
-    'appointment{appointment_id}-patient{patient_id}.json',
-  AWS_S3_BUCKET_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}`,
-  AWS_CF_BUCKET_STACK_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}-bucket`,
-  AWS_CF_APPLICATION_STACK_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}-application`,
-  AWS_LAMBDA_SEND_REMINDERS_BASE_NAME: 'twilio-send-appointment-reminders',
-  AWS_GLUE_CRAWLER_BASE_NAME: `twilio-${THIS_APPLICATION_NAME}`,
-  AWS_GLUE_DATABASE: 'patient_appointments',
+  FILENAME_APPOINTMENT: 'appointment{appointment_id}-patient{patient_id}.json',
+  _S3_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}`,
+  _CF_STACK_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}-bucket`,
+  _CF_STACK_APPLICATION_BASE: `twilio-${THIS_APPLICATION_NAME}-application`,
+  _SEND_REMINDERS_BASE: 'twilio-send-appointment-reminders',
+  _QUERY_STATE_BASE: 'twilio-query-appointment-state',
+  _QUERY_HISTORY_BASE: 'twilio-query-appointment-history',
+  _GLUE_CRAWLER_BASE: `twilio-${THIS_APPLICATION_NAME}`,
+  _GLUE_DATABASE_BASE: 'patient_appointments',
 };
 
 function determineRuntimeEnvironment(context) {
@@ -51,7 +52,7 @@ function determineRuntimeEnvironment(context) {
  *
  * --------------------------------------------------------------------------------
  */
-async function assignParameter(context, key, value) {
+async function setParam(context, key, value) {
   const onLocalhost = Boolean(
     context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')
   );
@@ -68,16 +69,10 @@ async function assignParameter(context, key, value) {
       const client = context.getTwilioClient();
       console.log('twilioClient', client);
       // eslint-disable-next-line no-use-before-define
-      const service_sid = await retrieveParameter(
-        context,
-        'TWILIO_SERVICE_SID'
-      );
+      const service_sid = await getParam(context, 'TWILIO_SERVICE_SID');
       console.log('service_sid', service_sid);
       // eslint-disable-next-line no-use-before-define
-      const environment_sid = await retrieveParameter(
-        context,
-        'TWILIO_ENVIRONMENT_SID'
-      );
+      const environment_sid = await getParam(context, 'TWILIO_ENVIRONMENT_SID');
       console.log('environment_sid', environment_sid);
 
       let variable_sid = null;
@@ -123,7 +118,7 @@ async function assignParameter(context, key, value) {
  *   . TWILIO_ENVIRONMENT_DOMAIN_NAME from TWILIO_SERVICE_SID
  * --------------------------------------------------------------------------------
  */
-async function retrieveParameter(context, key) {
+async function getParam(context, key) {
   if (CONSTANTS[key]) return CONSTANTS[key];
   if (context[key] && context[key] !== null && context[key] !== '')
     return context[key];
@@ -143,23 +138,17 @@ async function retrieveParameter(context, key) {
     case 'AWS_ACCESS_KEY_ID': {
       // ---------- get aws clients
       const options = {
-        accessKeyId: await retrieveParameter(
-          context,
-          'DEPLOYER_AWS_ACCESS_KEY_ID'
-        ),
-        secretAccessKey: await retrieveParameter(
+        accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
+        secretAccessKey: await getParam(
           context,
           'DEPLOYER_AWS_SECRET_ACCESS_KEY'
         ),
-        region: await retrieveParameter(context, 'AWS_REGION'),
+        region: await getParam(context, 'AWS_REGION'),
       };
       const cf = new AWS.CloudFormation(options);
 
       try {
-        const stack_name = await retrieveParameter(
-          context,
-          'AWS_CF_STACK_APPLICATION'
-        );
+        const stack_name = await getParam(context, 'AWS_CF_STACK_APPLICATION');
         const response = await cf
           .describeStacks({ StackName: stack_name })
           .promise();
@@ -174,23 +163,17 @@ async function retrieveParameter(context, key) {
     case 'AWS_SECRET_ACCESS_KEY': {
       // ---------- get aws clients
       const options = {
-        accessKeyId: await retrieveParameter(
-          context,
-          'DEPLOYER_AWS_ACCESS_KEY_ID'
-        ),
-        secretAccessKey: await retrieveParameter(
+        accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
+        secretAccessKey: await getParam(
           context,
           'DEPLOYER_AWS_SECRET_ACCESS_KEY'
         ),
-        region: await retrieveParameter(context, 'AWS_REGION'),
+        region: await getParam(context, 'AWS_REGION'),
       };
       const cf = new AWS.CloudFormation(options);
 
       try {
-        const stack_name = await retrieveParameter(
-          context,
-          'AWS_CF_STACK_APPLICATION'
-        );
+        const stack_name = await getParam(context, 'AWS_CF_STACK_APPLICATION');
         const response = await cf
           .describeStacks({ StackName: stack_name })
           .promise();
@@ -203,67 +186,61 @@ async function retrieveParameter(context, key) {
       }
     }
     case 'AWS_CF_STACK_APPLICATION': {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-        context,
-        'APPLICATION_CUSTOMER_CODE'
-      );
-      return (
-        CONSTANTS.AWS_CF_APPLICATION_STACK_BASE_NAME +
-        '-' +
-        APPLICATION_CUSTOMER_CODE
-      );
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return CONSTANTS._CF_STACK_APPLICATION_BASE + '-' + CUSTOMER_CODE;
     }
     case 'AWS_CF_STACK_BUCKET': {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-        context,
-        'APPLICATION_CUSTOMER_CODE'
-      );
-      return (
-        CONSTANTS.AWS_CF_BUCKET_STACK_BASE_NAME +
-        '-' +
-        APPLICATION_CUSTOMER_CODE
-      );
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return CONSTANTS._CF_STACK_BUCKET_BASE + '-' + CUSTOMER_CODE;
     }
     case 'AWS_GLUE_CRAWLER': {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-        context,
-        'APPLICATION_CUSTOMER_CODE'
-      );
-      return (
-        CONSTANTS.AWS_GLUE_CRAWLER_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE
-      );
+      return [
+        CONSTANTS._GLUE_CRAWLER_BASE,
+        await getParam(context, 'CUSTOMER_CODE'),
+      ].join('-');
+    }
+    case 'AWS_GLUE_DATABASE': {
+      return [
+        CONSTANTS._GLUE_DATABASE_BASE,
+        await getParam(context, 'CUSTOMER_CODE'),
+      ].join('_');
     }
     case 'AWS_LAMBDA_SEND_REMINDERS': {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-        context,
-        'APPLICATION_CUSTOMER_CODE'
-      );
-      return (
-        CONSTANTS.AWS_LAMBDA_SEND_REMINDERS_BASE_NAME +
-        '-' +
-        APPLICATION_CUSTOMER_CODE
-      );
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return CONSTANTS._SEND_REMINDERS_BASE + '-' + CUSTOMER_CODE;
+    }
+    case 'AWS_LAMBDA_QUERY_STATE': {
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return CONSTANTS._QUERY_STATE_BASE + '-' + CUSTOMER_CODE;
+    }
+    case 'AWS_LAMBDA_QUERY_HISTORY': {
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return CONSTANTS._QUERY_HISTORY_BASE + '-' + CUSTOMER_CODE;
+    }
+    case 'AWS_SFN_QUERY_STATE': {
+      return [
+        CONSTANTS._QUERY_STATE_BASE,
+        await getParam(context, 'CUSTOMER_CODE'),
+      ].join('-');
+    }
+    case 'AWS_SFN_QUERY_HISTORY': {
+      return [
+        CONSTANTS._QUERY_HISTORY_BASE,
+        await getParam(context, 'CUSTOMER_CODE'),
+      ].join('-');
     }
     case 'AWS_S3_BUCKET': {
-      const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-        context,
-        'APPLICATION_CUSTOMER_CODE'
-      );
-      return (
-        CONSTANTS.AWS_S3_BUCKET_BASE_NAME + '-' + APPLICATION_CUSTOMER_CODE
-      );
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return CONSTANTS._S3_BUCKET_BASE + '-' + CUSTOMER_CODE;
     }
     case 'TWILIO_ACCOUNT_SID': {
-      return retrieveParameter(context, 'ACCOUNT_SID');
+      return getParam(context, 'ACCOUNT_SID');
     }
     case 'TWILIO_AUTH_TOKEN': {
-      return retrieveParameter(context, 'AUTH_TOKEN');
+      return getParam(context, 'AUTH_TOKEN');
     }
     case 'TWILIO_ENVIRONMENT_SID': {
-      const service_sid = await retrieveParameter(
-        context,
-        'TWILIO_SERVICE_SID'
-      );
+      const service_sid = await getParam(context, 'TWILIO_SERVICE_SID');
       if (service_sid === null) {
         return null; // service not yet deployed
       }
@@ -274,10 +251,7 @@ async function retrieveParameter(context, key) {
       return environments[0].sid;
     }
     case 'TWILIO_ENVIRONMENT_DOMAIN_NAME': {
-      const service_sid = await retrieveParameter(
-        context,
-        'TWILIO_SERVICE_SID'
-      );
+      const service_sid = await getParam(context, 'TWILIO_SERVICE_SID');
       if (service_sid === null) {
         return null; // service not yet deployed
       }
@@ -290,7 +264,7 @@ async function retrieveParameter(context, key) {
       let flow_sid = null;
       await client.studio.flows.list({ limit: 100 }).then((flows) =>
         flows.forEach((f) => {
-          if (f.friendlyName === CONSTANTS.APPLICATION_NAME) {
+          if (f.friendlyName === THIS_APPLICATION_NAME) {
             flow_sid = f.sid;
           }
         })
@@ -298,7 +272,7 @@ async function retrieveParameter(context, key) {
       if (flow_sid !== null) {
         /*
          * do not save in case flow is manually deleted
-         * await assignParameter(context,'TWILIO_FLOW_SID', flow_sid);
+         * await setParam(context,'TWILIO_FLOW_SID', flow_sid);
          */
         return flow_sid;
       }
@@ -308,7 +282,7 @@ async function retrieveParameter(context, key) {
       let service_sid = null;
       await client.serverless.services.list({ limit: 100 }).then((services) =>
         services.forEach((s) => {
-          if (s.friendlyName === CONSTANTS.APPLICATION_NAME) {
+          if (s.friendlyName === THIS_APPLICATION_NAME) {
             service_sid = s.sid;
           }
         })
@@ -317,15 +291,17 @@ async function retrieveParameter(context, key) {
         console.log('Found', service_sid);
         return service_sid;
       }
-      console.log('YOU MUST DEPLOY THE SERVICE FIRST!!! ABORTING!!!');
-      throw new Error('YOU MUST DEPLOY THE SERVICE FIRST!!!');
+      console.log(
+        'Developer note: YOU MUST DEPLOY THE SERVICE FIRST!!! ABORTING!!!'
+      );
+      return null;
     }
     default:
-      throw new Error('Undefined variable' + key + ' !!!');
+      throw new Error('Undefined variable ' + key + ' !!!');
   }
 }
 
 module.exports = {
-  retrieveParameter,
-  assignParameter,
+  getParam,
+  setParam,
 };

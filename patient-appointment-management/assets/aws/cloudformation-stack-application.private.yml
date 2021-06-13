@@ -30,6 +30,18 @@ Parameters:
   ParameterLambdaSendReminders:
     Type: String
 
+  ParameterLambdaQueryState:
+    Type: String
+
+  ParameterSFNQueryState:
+    Type: String
+
+  ParameterLambdaQueryHistory:
+    Type: String
+
+  ParameterSFNQueryHistory:
+    Type: String
+
   ParameterGlueCrawler:
     Type: String
 
@@ -105,6 +117,7 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/service-role/AWSQuicksightAthenaAccess
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -116,6 +129,7 @@ Resources:
                 - events.amazonaws.com
                 - lambda.amazonaws.com
                 - glue.amazonaws.com
+                - states.amazonaws.com
 
   PolicyForStack:
     Type: AWS::IAM::ManagedPolicy
@@ -131,10 +145,26 @@ Resources:
         Statement:
           - Sid: 'S3Permissions'
             Effect: Allow
-            Action: s3:*
+            Action:
+              - s3:*
             Resource:
               - !Sub 'arn:aws:s3:::${ParameterS3Bucket}'
               - !Sub 'arn:aws:s3:::${ParameterS3Bucket}/*'
+          - Sid: 'EventInvokePermissions'
+            Effect: Allow
+            Action:
+              - states:StartExecution
+            Resource:
+              - !Sub 'arn:aws:states:::stateMachine:${ParameterSFNQueryState}'
+              - !Sub 'arn:aws:states:::stateMachine:${ParameterSFNQueryHistory}'
+          - Sid: 'StepFunctionPermissions'
+            Effect: Allow
+            Action:
+              - events:PutTargets
+              - events:PutRule
+              - events:DescribeRule
+              - lambda:InvokeFunction
+            Resource: '*'
 
   CrawlerAppointments:
     Type: AWS::Glue::Crawler
@@ -160,6 +190,8 @@ Resources:
       WorkGroupConfiguration:
         ResultConfiguration:
           OutputLocation: !Sub 's3://${ParameterS3Bucket}/query-results/'
+          EncryptionConfiguration:
+            EncryptionOption: SSE_S3
 
   LambdaLayerTwilioNodeLibrary:
     Type: AWS::Lambda::LayerVersion
@@ -186,7 +218,7 @@ Resources:
           TWILIO_FLOW_SID: !Ref ParameterTwilioFlowSID
           TWILIO_PHONE_NUMBER: !Ref ParameterTwilioPhoneNumber
           AWS_S3_BUCKET: !Ref ParameterS3Bucket
-          APPLICATION_FILENAME_PATTERN_APPOINTMENT: !Ref ParameterFilenamePatternAppointment
+          FILENAME_APPOINTMENT: !Ref ParameterFilenamePatternAppointment
           REMINDER_OUTREACH_START: !Ref ParameterReminderOutreachStart
           REMINDER_OUTREACH_FINISH: !Ref ParameterReminderOutreachFinish
           REMINDER_FIRST_OFFSET: !Ref ParameterReminderFirstOffset
@@ -202,3 +234,93 @@ Resources:
       Code:
         S3Bucket: !Ref ParameterS3Bucket
         S3Key: 'artifacts/send_appointment_reminders.zip'
+
+  LambdaQueryState:
+    Type: AWS::Lambda::Function
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !Ref ParameterLambdaQueryState
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref ParameterS3Bucket
+          GLUE_CRAWLER: !Ref ParameterGlueCrawler
+      MemorySize: 256
+      Timeout: 900
+      ReservedConcurrentExecutions: 1
+      Role: !GetAtt RoleForExecution.Arn
+      Runtime: 'nodejs12.x'
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref ParameterS3Bucket
+        S3Key: 'artifacts/query_appointment_state.zip'
+
+  LambdaQueryHistory:
+    Type: AWS::Lambda::Function
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Properties:
+      FunctionName: !Ref ParameterLambdaQueryHistory
+      Environment:
+        Variables:
+          S3_BUCKET: !Ref ParameterS3Bucket
+          GLUE_CRAWLER: !Ref ParameterGlueCrawler
+      MemorySize: 256
+      Timeout: 900
+      ReservedConcurrentExecutions: 1
+      Role: !GetAtt RoleForExecution.Arn
+      Runtime: 'nodejs12.x'
+      Handler: index.handler
+      Code:
+        S3Bucket: !Ref ParameterS3Bucket
+        S3Key: 'artifacts/query_appointment_history.zip'
+
+  StepFunctionQueryState:
+    Type: AWS::StepFunctions::StateMachine
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      StateMachineName: !Ref ParameterSFNQueryState
+      RoleArn: !GetAtt RoleForExecution.Arn
+      DefinitionSubstitutions:
+        AWSRegion: !Ref AWS::Region
+        AWSAccountId: !Ref AWS::AccountId
+        LambdaFunction: !Ref ParameterLambdaQueryState
+      DefinitionString: |-
+        {
+          "Comment": "invokes lambda function synchronously",
+          "StartAt": "InvokeLambdaSynchronous",
+          "States": {
+            "InvokeLambdaSynchronous": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:${AWSRegion}:${AWSAccountId}:function:${LambdaFunction}",
+              "Parameters": {},
+              "End": true
+            }
+          }
+        }
+
+  StepFunctionQueryHistory:
+    Type: AWS::StepFunctions::StateMachine
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+    Properties:
+      StateMachineName: !Ref ParameterSFNQueryHistory
+      RoleArn: !GetAtt RoleForExecution.Arn
+      DefinitionSubstitutions:
+        AWSRegion: !Ref AWS::Region
+        AWSAccountId: !Ref AWS::AccountId
+        LambdaFunction: !Ref ParameterLambdaQueryHistory
+      DefinitionString: |-
+        {
+          "Comment": "invokes lambda function synchronously",
+          "StartAt": "InvokeLambdaSynchronous",
+          "States": {
+            "InvokeLambdaSynchronous": {
+              "Type": "Task",
+              "Resource": "arn:aws:lambda:${AWSRegion}:${AWSAccountId}:function:${LambdaFunction}",
+              "Parameters": {},
+              "End": true
+            }
+          }
+        }

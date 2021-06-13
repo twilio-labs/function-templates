@@ -3,10 +3,6 @@
 /* eslint-disable sonarjs/cognitive-complexity */
 const THIS = 'send-appointment-reminders: ';
 
-const assert = require('assert');
-const AWS = require('aws-sdk');
-const twilio = require('twilio');
-
 // --------------------------------------------------------------------------------
 async function getAllKeys(params, s3client, allKeys = []) {
   const response = await s3client.listObjectsV2(params).promise();
@@ -29,47 +25,21 @@ exports.handler = async function (event, context) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
-    // ---------- validate enviroment variables & input event
-    assert(
-      process.env.hasOwnProperty('AWS_S3_BUCKET'),
-      'missing process.env.AWS_S3_BUCKET'
-    );
-    assert(
-      process.env.hasOwnProperty('APPLICATION_FILENAME_PATTERN_APPOINTMENT'),
-      'missing process.env.APPLICATION_FILENAME_PATTERN_APPOINTMENT'
-    );
-    assert(
-      process.env.hasOwnProperty('ACCOUNT_SID'),
-      'missing process.env.ACCOUNT_SID'
-    );
-    assert(
-      process.env.hasOwnProperty('AUTH_TOKEN'),
-      'missing process.env.AUTH_TOKEN'
-    );
-    assert(
-      process.env.hasOwnProperty('TWILIO_FLOW_SID'),
-      'missing process.env.TWILIO_FLOW_SID'
-    );
-    assert(
-      process.env.hasOwnProperty('TWILIO_PHONE_NUMBER'),
-      'missing process.env.TWILIO_PHONE_NUMBER'
-    );
-    assert(
-      process.env.hasOwnProperty('REMINDER_OUTREACH_START'),
-      'missing process.env.REMINDER_OUTREACH_START'
-    );
-    assert(
-      process.env.hasOwnProperty('REMINDER_OUTREACH_FINISH'),
-      'missing process.env.REMINDER_OUTREACH_FINISH'
-    );
-    assert(
-      process.env.hasOwnProperty('REMINDER_FIRST_OFFSET'),
-      'missing process.env.REMINDER_FIRST_OFFSET'
-    );
-    assert(
-      process.env.hasOwnProperty('REMINDER_SECOND_OFFSET'),
-      'missing process.env.REMINDER_SECOND_OFFSET'
-    );
+    const assert = require('assert');
+    const AWS = require('aws-sdk');
+    const twilio = require('twilio');
+
+    // ---------- environment variables & input event
+    const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET;
+    const FILENAME_APPOINTMENT = process.env.FILENAME_APPOINTMENT;
+    const ACCOUNT_SID = process.env.ACCOUNT_SID;
+    const AUTH_TOKEN = process.env.AUTH_TOKEN;
+    const TWILIO_FLOW_SID = process.env.TWILIO_FLOW_SID;
+    const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
+    const REMINDER_OUTREACH_START = process.env.REMINDER_OUTREACH_START;
+    const REMINDER_OUTREACH_FINISH = process.env.REMINDER_OUTREACH_FINISH;
+    const REMINDER_FIRST_OFFSET = process.env.REMINDER_FIRST_OFFSET;
+    const REMINDER_SECOND_OFFSET = process.env.REMINDER_SECOND_OFFSET;
 
     // initialize s3 client
     const s3 = new AWS.S3();

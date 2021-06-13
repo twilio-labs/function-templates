@@ -14,31 +14,25 @@ const fs = require('fs');
 const aws = require('aws-sdk');
 
 const { path } = Runtime.getFunctions().helpers;
-const { retrieveParameter, assignParameter } = require(path);
+const { getParam, setParam } = require(path);
 
 exports.handler = async function (context, event, callback) {
   console.log('Starting:', THIS);
   console.time(THIS);
   try {
-    const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-      context,
-      'APPLICATION_CUSTOMER_CODE'
-    );
-    const AWS_S3_BUCKET = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const DEPLOYER_AWS_ACCESS_KEY_ID = await retrieveParameter(
+    const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+    const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
+    const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
     );
-    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(
+    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await getParam(
       context,
       'DEPLOYER_AWS_SECRET_ACCESS_KEY'
     );
-    const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
-    const AWS_CF_STACK_BUCKET = await retrieveParameter(
-      context,
-      'AWS_CF_STACK_BUCKET'
-    );
-    const AWS_CF_STACK_APPLICATION = await retrieveParameter(
+    const AWS_REGION = await getParam(context, 'AWS_REGION');
+    const AWS_CF_STACK_BUCKET = await getParam(context, 'AWS_CF_STACK_BUCKET');
+    const AWS_CF_STACK_APPLICATION = await getParam(
       context,
       'AWS_CF_STACK_APPLICATION'
     );
@@ -121,7 +115,7 @@ exports.handler = async function (context, event, callback) {
           Parameters: [
             {
               ParameterKey: 'ParameterCustomerCode',
-              ParameterValue: APPLICATION_CUSTOMER_CODE,
+              ParameterValue: CUSTOMER_CODE,
             },
             {
               ParameterKey: 'ParameterS3Bucket',

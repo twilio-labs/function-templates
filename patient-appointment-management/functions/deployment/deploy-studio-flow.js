@@ -12,39 +12,30 @@ const assert = require('assert');
 const fs = require('fs');
 
 const { path } = Runtime.getFunctions().helpers;
-const { retrieveParameter, assignParameter } = require(path);
+const { getParam, setParam } = require(path);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Starting');
   console.time(THIS);
   try {
     // ---------- parameters
-    const CUSTOMER_NAME = await retrieveParameter(context, 'CUSTOMER_NAME');
-    const CUSTOMER_EHR_ENDPOINT_URL = await retrieveParameter(
+    const CUSTOMER_NAME = await getParam(context, 'CUSTOMER_NAME');
+    const CUSTOMER_EHR_ENDPOINT_URL = await getParam(
       context,
       'CUSTOMER_EHR_ENDPOINT_URL'
     );
-    const APPLICATION_NAME = await retrieveParameter(
-      context,
-      'APPLICATION_NAME'
-    );
-    const TWILIO_PHONE_NUMBER = await retrieveParameter(
-      context,
-      'TWILIO_PHONE_NUMBER'
-    );
-    const TWILIO_SERVICE_SID = await retrieveParameter(
-      context,
-      'TWILIO_SERVICE_SID'
-    );
-    const TWILIO_ENVIRONMENT_SID = await retrieveParameter(
+    const APPLICATION_NAME = await getParam(context, 'APPLICATION_NAME');
+    const TWILIO_PHONE_NUMBER = await getParam(context, 'TWILIO_PHONE_NUMBER');
+    const TWILIO_SERVICE_SID = await getParam(context, 'TWILIO_SERVICE_SID');
+    const TWILIO_ENVIRONMENT_SID = await getParam(
       context,
       'TWILIO_ENVIRONMENT_SID'
     );
-    const TWILIO_ENVIRONMENT_DOMAIN_NAME = await retrieveParameter(
+    const TWILIO_ENVIRONMENT_DOMAIN_NAME = await getParam(
       context,
       'TWILIO_ENVIRONMENT_DOMAIN_NAME'
     );
-    const TWILIO_FLOW_SID = await retrieveParameter(context, 'TWILIO_FLOW_SID');
+    const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
 
     // ---------- load & configure studio flow definition
     console.log(
@@ -79,10 +70,10 @@ exports.handler = async function (context, event, callback) {
       .toString('utf-8')
       .replace('YOUR_HEALTH_SYSTEM_NAME', CUSTOMER_NAME)
       .replace('YOUR_EHR_ENDPOINT_URL', CUSTOMER_EHR_ENDPOINT_URL)
-      .replaceAll('YOUR_TWILIO_SERVICE_SID', TWILIO_SERVICE_SID)
-      .replaceAll('YOUR_TWILIO_ENVIRONMENT_SID', TWILIO_ENVIRONMENT_SID)
-      .replaceAll(
-        'YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME',
+      .replace(/YOUR_TWILIO_SERVICE_SID/g, TWILIO_SERVICE_SID)
+      .replace(/YOUR_TWILIO_ENVIRONMENT_SID/g, TWILIO_ENVIRONMENT_SID)
+      .replace(
+        /YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/g,
         TWILIO_ENVIRONMENT_DOMAIN_NAME
       );
 
@@ -162,7 +153,7 @@ exports.handler = async function (context, event, callback) {
             commitMessage: 'Code Exchange automatic deploy',
             definition: `${flow_definition}`,
           });
-          assignParameter(context, 'TWILIO_FLOW_SID', flow.sid);
+          setParam(context, 'TWILIO_FLOW_SID', flow.sid);
 
           console.log(THIS, 'TWILIO_PHONE_NUMBER=', TWILIO_PHONE_NUMBER);
           const phoneNumberSid = await getPhoneNumberSid(TWILIO_PHONE_NUMBER);

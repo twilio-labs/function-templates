@@ -8,8 +8,7 @@ const context = {
   AWS_SECRET_ACCESS_KEY: 'YourAWSSecretAccessKey',
   AWS_REGION: 'us-west-2',
   AWS_S3_BUCKET: 'twilio-patient-appointment-management-owlhealth',
-  APPLICATION_FILENAME_PATTERN_APPOINTMENT:
-    'appointment{appointment_id}-patient{patient_id}.json',
+  FILENAME_APPOINTMENT: 'appointment{appointment_id}-patient{patient_id}.json',
   TWILIO_FLOW_SID: 'YourStudioFlowSID',
 };
 

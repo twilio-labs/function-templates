@@ -13,86 +13,72 @@ const fs = require('fs');
 const aws = require('aws-sdk');
 
 const { path } = Runtime.getFunctions().helpers;
-const { retrieveParameter, assignParameter } = require(path);
+const { getParam, setParam } = require(path);
 
 exports.handler = async function (context, event, callback) {
   console.log('Starting:', THIS);
   console.time(THIS);
   try {
-    const APPLICATION_NAME = await retrieveParameter(
-      context,
-      'APPLICATION_NAME'
-    );
-    const APPLICATION_CUSTOMER_CODE = await retrieveParameter(
-      context,
-      'APPLICATION_CUSTOMER_CODE'
-    );
-    const AWS_S3_BUCKET = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const DEPLOYER_AWS_ACCESS_KEY_ID = await retrieveParameter(
+    const APPLICATION_NAME = await getParam(context, 'APPLICATION_NAME');
+    const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+    const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
+    const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
     );
-    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(
+    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await getParam(
       context,
       'DEPLOYER_AWS_SECRET_ACCESS_KEY'
     );
-    const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
-    const TWILIO_ACCOUNT_SID = await retrieveParameter(
-      context,
-      'TWILIO_ACCOUNT_SID'
-    );
-    const TWILIO_AUTH_TOKEN = await retrieveParameter(
-      context,
-      'TWILIO_AUTH_TOKEN'
-    );
-    const TWILIO_TWILIO_FLOW_SID = await retrieveParameter(
-      context,
-      'TWILIO_FLOW_SID'
-    );
-    const TWILIO_PHONE_NUMBER = await retrieveParameter(
-      context,
-      'TWILIO_PHONE_NUMBER'
-    );
-    const TWILIO_FLOW_SID = await retrieveParameter(context, 'TWILIO_FLOW_SID');
-    const AWS_LAMBDA_SEND_REMINDERS = await retrieveParameter(
+    const AWS_REGION = await getParam(context, 'AWS_REGION');
+    const TWILIO_ACCOUNT_SID = await getParam(context, 'TWILIO_ACCOUNT_SID');
+    const TWILIO_AUTH_TOKEN = await getParam(context, 'TWILIO_AUTH_TOKEN');
+    const TWILIO_TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
+    const TWILIO_PHONE_NUMBER = await getParam(context, 'TWILIO_PHONE_NUMBER');
+    const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
+    const AWS_LAMBDA_SEND_REMINDERS = await getParam(
       context,
       'AWS_LAMBDA_SEND_REMINDERS'
     );
-    const AWS_GLUE_CRAWLER = await retrieveParameter(
+    const AWS_LAMBDA_QUERY_STATE = await getParam(
       context,
-      'AWS_GLUE_CRAWLER'
+      'AWS_LAMBDA_QUERY_STATE'
     );
-    const AWS_GLUE_DATABASE = await retrieveParameter(
+    const AWS_SFN_QUERY_STATE = await getParam(context, 'AWS_SFN_QUERY_STATE');
+    const AWS_LAMBDA_QUERY_HISTORY = await getParam(
       context,
-      'AWS_GLUE_DATABASE'
+      'AWS_LAMBDA_QUERY_HISTORY'
     );
-    const AWS_CF_STACK_BUCKET = await retrieveParameter(
+    const AWS_SFN_QUERY_HISTORY = await getParam(
       context,
-      'AWS_CF_STACK_BUCKET'
+      'AWS_SFN_QUERY_HISTORY'
     );
-    const AWS_CF_STACK_APPLICATION = await retrieveParameter(
+    const AWS_GLUE_CRAWLER = await getParam(context, 'AWS_GLUE_CRAWLER');
+    const AWS_GLUE_DATABASE = await getParam(context, 'AWS_GLUE_DATABASE');
+    const AWS_CF_STACK_BUCKET = await getParam(context, 'AWS_CF_STACK_BUCKET');
+    const AWS_CF_STACK_APPLICATION = await getParam(
       context,
       'AWS_CF_STACK_APPLICATION'
     );
-    const REMINDER_OUTREACH_START = await retrieveParameter(
+    const REMINDER_OUTREACH_START = await getParam(
       context,
       'REMINDER_OUTREACH_START'
     );
-    const REMINDER_OUTREACH_FINISH = await retrieveParameter(
+    const REMINDER_OUTREACH_FINISH = await getParam(
       context,
       'REMINDER_OUTREACH_FINISH'
     );
-    const REMINDER_FIRST_OFFSET = await retrieveParameter(
+    const REMINDER_FIRST_OFFSET = await getParam(
       context,
       'REMINDER_FIRST_OFFSET'
     );
-    const REMINDER_SECOND_OFFSET = await retrieveParameter(
+    const REMINDER_SECOND_OFFSET = await getParam(
       context,
       'REMINDER_SECOND_OFFSET'
     );
-    const APPLICATION_FILENAME_PATTERN_APPOINTMENT = await retrieveParameter(
+    const FILENAME_APPOINTMENT = await getParam(
       context,
-      'APPLICATION_FILENAME_PATTERN_APPOINTMENT'
+      'FILENAME_APPOINTMENT'
     );
 
     const assets = Runtime.getAssets();
@@ -184,11 +170,27 @@ exports.handler = async function (context, event, callback) {
                 UsePreviousValue: true,
               },
               {
-                ParameterKey: 'ParameterGlueCrawlerName',
+                ParameterKey: 'ParameterLambdaQueryState',
                 UsePreviousValue: true,
               },
               {
-                ParameterKey: 'ParameterGlueDatabaseName',
+                ParameterKey: 'ParameterSFNQueryState',
+                UsePreviousValue: true,
+              },
+              {
+                ParameterKey: 'ParameterLambdaQueryHistory',
+                UsePreviousValue: true,
+              },
+              {
+                ParameterKey: 'ParameterSFNQueryHistory',
+                UsePreviousValue: true,
+              },
+              {
+                ParameterKey: 'ParameterGlueCrawler',
+                UsePreviousValue: true,
+              },
+              {
+                ParameterKey: 'ParameterGlueDatabase',
                 UsePreviousValue: true,
               },
               {
@@ -229,98 +231,118 @@ exports.handler = async function (context, event, callback) {
         break;
 
       case 'CREATE':
-        console.log(
-          'Creating',
-          AWS_CF_STACK_APPLICATION,
-          'CloudFormation Stack...'
-        );
-        let params = {
-          StackName: AWS_CF_STACK_APPLICATION,
-          TemplateBody: `${definition}`,
-          Parameters: [
-            {
-              ParameterKey: 'ParameterApplicationName',
-              ParameterValue: APPLICATION_NAME,
-            },
-            {
-              ParameterKey: 'ParameterCustomerCode',
-              ParameterValue: APPLICATION_CUSTOMER_CODE,
-            },
-            {
-              ParameterKey: 'ParameterS3Bucket',
-              ParameterValue: AWS_S3_BUCKET,
-            },
-            {
-              ParameterKey: 'ParameterTwilioAccountSID',
-              ParameterValue: TWILIO_ACCOUNT_SID,
-            },
-            {
-              ParameterKey: 'ParameterTwilioAuthToken',
-              ParameterValue: TWILIO_AUTH_TOKEN,
-            },
-            {
-              ParameterKey: 'ParameterTwilioFlowSID',
-              ParameterValue: TWILIO_FLOW_SID,
-            },
-            {
-              ParameterKey: 'ParameterTwilioPhoneNumber',
-              ParameterValue: TWILIO_PHONE_NUMBER,
-            },
-            {
-              ParameterKey: 'ParameterLambdaSendReminders',
-              ParameterValue: AWS_LAMBDA_SEND_REMINDERS,
-            },
-            {
-              ParameterKey: 'ParameterGlueCrawler',
-              ParameterValue: AWS_GLUE_CRAWLER,
-            },
-            {
-              ParameterKey: 'ParameterGlueDatabase',
-              ParameterValue: AWS_GLUE_DATABASE,
-            },
-            {
-              ParameterKey: 'ParameterFilenamePatternAppointment',
-              ParameterValue: APPLICATION_FILENAME_PATTERN_APPOINTMENT,
-            },
-            {
-              ParameterKey: 'ParameterReminderOutreachStart',
-              ParameterValue: REMINDER_OUTREACH_START,
-            },
-            {
-              ParameterKey: 'ParameterReminderOutreachFinish',
-              ParameterValue: REMINDER_OUTREACH_FINISH,
-            },
-            {
-              ParameterKey: 'ParameterReminderFirstOffset',
-              ParameterValue: REMINDER_FIRST_OFFSET,
-            },
-            {
-              ParameterKey: 'ParameterReminderSecondOffset',
-              ParameterValue: REMINDER_SECOND_OFFSET,
-            },
-          ],
-          OnFailure: 'ROLLBACK',
-          Capabilities: [
-            'CAPABILITY_IAM',
-            'CAPABILITY_NAMED_IAM',
-            'CAPABILITY_AUTO_EXPAND',
-          ],
-        };
-        response = await cf.createStack(params).promise();
-        console.log('Successfully initiated stack creation');
+        {
+          console.log(
+            'Creating',
+            AWS_CF_STACK_APPLICATION,
+            'CloudFormation Stack...'
+          );
+          const params = {
+            StackName: AWS_CF_STACK_APPLICATION,
+            TemplateBody: `${definition}`,
+            Parameters: [
+              {
+                ParameterKey: 'ParameterApplicationName',
+                ParameterValue: APPLICATION_NAME,
+              },
+              {
+                ParameterKey: 'ParameterCustomerCode',
+                ParameterValue: CUSTOMER_CODE,
+              },
+              {
+                ParameterKey: 'ParameterS3Bucket',
+                ParameterValue: AWS_S3_BUCKET,
+              },
+              {
+                ParameterKey: 'ParameterTwilioAccountSID',
+                ParameterValue: TWILIO_ACCOUNT_SID,
+              },
+              {
+                ParameterKey: 'ParameterTwilioAuthToken',
+                ParameterValue: TWILIO_AUTH_TOKEN,
+              },
+              {
+                ParameterKey: 'ParameterTwilioFlowSID',
+                ParameterValue: TWILIO_FLOW_SID,
+              },
+              {
+                ParameterKey: 'ParameterTwilioPhoneNumber',
+                ParameterValue: TWILIO_PHONE_NUMBER,
+              },
+              {
+                ParameterKey: 'ParameterLambdaSendReminders',
+                ParameterValue: AWS_LAMBDA_SEND_REMINDERS,
+              },
+              {
+                ParameterKey: 'ParameterLambdaQueryState',
+                ParameterValue: AWS_LAMBDA_QUERY_STATE,
+              },
+              {
+                ParameterKey: 'ParameterSFNQueryState',
+                ParameterValue: AWS_SFN_QUERY_STATE,
+              },
+              {
+                ParameterKey: 'ParameterLambdaQueryHistory',
+                ParameterValue: AWS_LAMBDA_QUERY_HISTORY,
+              },
+              {
+                ParameterKey: 'ParameterSFNQueryHistory',
+                ParameterValue: AWS_SFN_QUERY_HISTORY,
+              },
+              {
+                ParameterKey: 'ParameterGlueCrawler',
+                ParameterValue: AWS_GLUE_CRAWLER,
+              },
+              {
+                ParameterKey: 'ParameterGlueDatabase',
+                ParameterValue: AWS_GLUE_DATABASE,
+              },
+              {
+                ParameterKey: 'ParameterFilenamePatternAppointment',
+                ParameterValue: FILENAME_APPOINTMENT,
+              },
+              {
+                ParameterKey: 'ParameterReminderOutreachStart',
+                ParameterValue: REMINDER_OUTREACH_START,
+              },
+              {
+                ParameterKey: 'ParameterReminderOutreachFinish',
+                ParameterValue: REMINDER_OUTREACH_FINISH,
+              },
+              {
+                ParameterKey: 'ParameterReminderFirstOffset',
+                ParameterValue: REMINDER_FIRST_OFFSET,
+              },
+              {
+                ParameterKey: 'ParameterReminderSecondOffset',
+                ParameterValue: REMINDER_SECOND_OFFSET,
+              },
+            ],
+            OnFailure: 'ROLLBACK',
+            Capabilities: [
+              'CAPABILITY_IAM',
+              'CAPABILITY_NAMED_IAM',
+              'CAPABILITY_AUTO_EXPAND',
+            ],
+          };
+          response = await cf.createStack(params).promise();
+          console.log('Successfully initiated stack creation');
+        }
         break;
 
       case 'DELETE':
-        console.log(
-          'Deleting',
-          AWS_CF_STACK_APPLICATION,
-          'CloudFormation Stack...'
-        );
-        params = {
-          StackName: AWS_CF_STACK_APPLICATION,
-        };
-        response = await cf.deleteStack(params).promise();
-        console.log('Successfully initiated stack deletion');
+        {
+          console.log(
+            'Deleting',
+            AWS_CF_STACK_APPLICATION,
+            'CloudFormation Stack...'
+          );
+          const params = {
+            StackName: AWS_CF_STACK_APPLICATION,
+          };
+          response = await cf.deleteStack(params).promise();
+          console.log('Successfully initiated stack deletion');
+        }
         break;
 
       default:

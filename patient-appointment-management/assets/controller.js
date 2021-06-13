@@ -23,6 +23,64 @@ const fullUrl = baseUrl.href.substr(0, baseUrl.href.length - 1);
 const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // --------------------------------------------------------------------------------
+function checkQueryHistory(resource) {
+  fetch('/deployment/check-query?table=history')
+    .then((response) => response.text())
+    .then((url) => {
+      $('#history-download .button').removeClass('loading');
+      $('.history-downloader').hide();
+      if (url === 'READY') {
+        $('#history-query').show();
+      } else if (url === 'RUNNING') {
+        $('#history-querying').show();
+        $('#history-query').hide();
+      } else if (url === 'FAILED') {
+        throw new Error();
+      } else {
+        $('#history-ready').show();
+        $('#history-querying').hide();
+        $('#history-download').attr('href', `${url}`);
+      }
+    })
+    .catch((err) => {
+      console.log(
+        'An error occurred when attempting to check the AWS Resources',
+        err
+      );
+    });
+}
+
+// --------------------------------------------------------------------------------
+function checkQueryState(resource) {
+  fetch('/deployment/check-query?table=state')
+    .then((response) => response.text())
+    .then((url) => {
+      $('#state-download .button').removeClass('loading');
+      $('.state-downloader').hide();
+      if (url === 'READY') {
+        $('#state-query').show();
+      } else if (url === 'RUNNING') {
+        $('#state-querying').show();
+        $('#state-query').hide();
+      } else if (url === 'FAILED') {
+        throw new Error();
+      } else {
+        $('#state-ready').show();
+        $('#state-querying').hide();
+        $('#state-download').attr('href', `${url}`);
+
+        checkQueryHistory();
+      }
+    })
+    .catch((err) => {
+      console.log(
+        'An error occurred when attempting to check the AWS Resources',
+        err
+      );
+    });
+}
+
+// --------------------------------------------------------------------------------
 function checkAWSApplication(resource) {
   fetch('/deployment/check-aws-application')
     .then((response) => response.text())
@@ -43,6 +101,7 @@ function checkAWSApplication(resource) {
         );
 
         $('#ready-to-use').show();
+        checkQueryState();
       } else {
         throw new Error();
       }

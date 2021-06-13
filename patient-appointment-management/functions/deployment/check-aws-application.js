@@ -11,25 +11,25 @@ const THIS = 'deployment/check-aws-application:';
 const aws = require('aws-sdk');
 
 const { path } = Runtime.getFunctions().helpers;
-const { retrieveParameter, assignParameter } = require(path);
+const { getParam, setParam } = require(path);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
-    const AWS_CF_STACK_APPLICATION = await retrieveParameter(
+    const AWS_CF_STACK_APPLICATION = await getParam(
       context,
       'AWS_CF_STACK_APPLICATION'
     );
-    const DEPLOYER_AWS_ACCESS_KEY_ID = await retrieveParameter(
+    const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
     );
-    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(
+    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await getParam(
       context,
       'DEPLOYER_AWS_SECRET_ACCESS_KEY'
     );
-    const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_REGION = await getParam(context, 'AWS_REGION');
 
     // ---------- get aws clients
     const options = {

@@ -8,26 +8,23 @@ const THIS = 'deployment/check-aws-bucket:';
 const aws = require('aws-sdk');
 
 const { path } = Runtime.getFunctions().helpers;
-const { retrieveParameter, assignParameter } = require(path);
+const { getParam, setParam } = require(path);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Starting');
   console.time(THIS);
   try {
-    const AWS_S3_BUCKET = await retrieveParameter(context, 'AWS_S3_BUCKET');
-    const AWS_CF_STACK_BUCKET = await retrieveParameter(
-      context,
-      'AWS_CF_STACK_BUCKET'
-    );
-    const DEPLOYER_AWS_ACCESS_KEY_ID = await retrieveParameter(
+    const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
+    const AWS_CF_STACK_BUCKET = await getParam(context, 'AWS_CF_STACK_BUCKET');
+    const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
     );
-    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await retrieveParameter(
+    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await getParam(
       context,
       'DEPLOYER_AWS_SECRET_ACCESS_KEY'
     );
-    const AWS_REGION = await retrieveParameter(context, 'AWS_REGION');
+    const AWS_REGION = await getParam(context, 'AWS_REGION');
 
     // ---------- get aws clients
     const options = {
