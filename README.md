@@ -2,6 +2,8 @@
 
 Easily create an embedable SMS Opt-In form to collect contacts for your campaign.
 
+![Twilio Keyword Screenshot](https://user-images.githubusercontent.com/1418949/121948197-c944dd80-cd0b-11eb-8ce3-53a1405eb557.png)
+
 ## Key Features
 
 * Live editor allows you to preview your signup form.
