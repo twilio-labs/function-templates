@@ -181,7 +181,9 @@ async function getParam(context, key) {
           .promise();
         const output = response.Stacks[0].Outputs.find(function (o) {
           // Note that CF Output key MUST match that in the CF template
-          return o.OutputKey === 'PatientAppointmentManagementAWSSecretAccessKey';
+          return (
+            o.OutputKey === 'PatientAppointmentManagementAWSSecretAccessKey'
+          );
         });
         return output === null ? null : output.OutputValue;
       } catch (AmazonCloudFormationException) {
