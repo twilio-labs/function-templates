@@ -57,7 +57,14 @@ You can now return to the main [README](README.md) to complete installing this a
 
 Messaging around vaccine hesitancy should be tailored to specific audiences for maximum effectiveness. If you wish to customize the chatbot interactions to have content targeted to the communities that you serve and create your own chatbot agents, you can use the Jupyter notebook [`studioflow-agent-generator.ipynb`](../assets/make-your-own/studioflow-agent-generator.ipynb) under the `assets/make-your-own/` folder. 
 
-You can open the notebook in [Google Colab](https://colab.research.google.com) and optionally mount a [Google Drive](https://drive.google.com/) directory to use as the notebook's file system. The notebook consists of three sections:
+To use the script, head to [Google Colab](https://colab.research.google.com) and click **File > Upload** from the top nav menu:
+![Upload](https://user-images.githubusercontent.com/4605360/122097158-361bae80-cdc4-11eb-907f-b94428d7b70a.png)
+
+You can click the **GitHub** tab and paste in [the link to the script](../assets/make-your-own/studioflow-agent-generator.ipynb) to upload to Colab, or download the file and manually upload it:
+
+![GitHub import link](https://user-images.githubusercontent.com/4605360/122097828-f608fb80-cdc4-11eb-998b-7df3711fbbcd.png)
+
+The notebook consists of three sections:
  
 1. An example which shows how to extract question/answer pairs from an HTML (or any XML) format, and convert those question/answer pairs into a CSV format.
 2. Data upsampling in the shape of paraphrase generation. This section generates paraphrases for each of the questions and generates the intents that will later be included in the dialogflow agent. The output for this section is a second intermediate CSV file which you can check for correctness and manually edit before generating the chatbot agent.
