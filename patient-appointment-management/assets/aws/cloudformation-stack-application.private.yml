@@ -243,6 +243,8 @@ Resources:
 
   CloudWatchRuleSendReminders:
     Type: AWS::Events::Rule
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
     Properties:
       Name: !Sub 'twilio-trigger-send-appointment-reminders-${ParameterCustomerCode}'
       Description: 'cron job set to trigger every hour'
@@ -258,6 +260,8 @@ Resources:
 
   PermissionForEventsToInvokeLambda:
     Type: AWS::Lambda::Permission
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
     Properties:
       FunctionName: !Ref LambdaSendReminders
       Action: "lambda:InvokeFunction"
