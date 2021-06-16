@@ -5,7 +5,7 @@ const isAuthValid = (authJson) => {
   authJson.client_email &&
   authJson.client_email === '<YOUR SERVICE ACCOUNT EMAIL ADDRESS>' &&
   authJson.private_key &&
-  authJson.private_key === '<YOUR PRIVATE KEY BLOCK HERE>';
+  authJson.private_key === '<YOUR PRIVATE KEY BLOCK HERE>'
 }
 
 exports.handler = async function(context, _event, callback) {
