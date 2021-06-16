@@ -3,11 +3,7 @@ const helpers = require('../../test/test-helper');
 
 const mockService = {
   verifications: {
-    create: jest.fn(() =>
-      Promise.resolve({
-        sid: 'my-new-sid',
-      })
-    ),
+    create: jest.fn().mockResolvedValue({ sid: 'my-new-sid' }),
   },
 };
 
