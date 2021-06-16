@@ -10,11 +10,11 @@ exports.handler = async function (context, event, callback) {
 
   // Configure Studio Flow with Function
   async function configureFlowWithFunction() {
-    let functionURL = '';
+    
     const functionName = 'es-dialogflow-detect-intent';
     const environment = await getCurrentEnvironment(context);
     const domainName = environment.domainName;
-    functionURL = `https://${domainName}/${functionName}`;
+    const functionURL = `https://${domainName}/${functionName}`;
   
     const studioWidgets = flowDefinition.states;
     const functionWidget = studioWidgets.find(widget => widget.name === "DialogflowDetectIntent");
