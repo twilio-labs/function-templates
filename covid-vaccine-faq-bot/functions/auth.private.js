@@ -18,19 +18,19 @@ async function getCurrentEnvironment(context) {
     }
 }
 
-async function getEnvironmentVariable(context, environment, key) {
-  const client = context.getTwilioClient();
-  // The list filter method isn't implemented yet.
-  const envVars = await getEnvironmentVariables(context, environment);
-  return envVars.find(variable => variable.key === key);
-}
-
 async function getEnvironmentVariables(context, environment) {
   const client = context.getTwilioClient();
   return await client.serverless
     .services(environment.serviceSid)
     .environments(environment.sid)
     .variables.list();
+}
+
+async function getEnvironmentVariable(context, environment, key) {
+  const client = context.getTwilioClient();
+  // The list filter method isn't implemented yet.
+  const envVars = await getEnvironmentVariables(context, environment);
+  return envVars.find(variable => variable.key === key);
 }
 
 async function setEnvironmentVariable(
