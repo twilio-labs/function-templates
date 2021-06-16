@@ -28,15 +28,15 @@ exports.handler = function (context, event, callback) {
   }
 
   let twiml;
-  if (!event.Digits) {
-    twiml = promptForPin();
-  } else {
+  if (event.Digits) {
     if (event.Digits.toString() === context.CONFERENCE_PIN.toString()) {
       twiml = joinConference();
     } else {
       twiml = rejectCaller();
     }
+  } else {
+    twiml = promptForPin();
   }
 
-  callback(null, twiml);
+  return callback(null, twiml);
 };

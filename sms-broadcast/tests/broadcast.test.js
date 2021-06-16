@@ -22,7 +22,7 @@ afterAll(() => {
 describe('help', () => {
   test('returns help text without a recognised command', (done) => {
     helpers.setup(context);
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
       expect(result.toString()).toMatch(
         '<Message>Hello! Text "subscribe" to receive updates, "stop" to stop getting messages, and "start" to receive them again.</Message>'
@@ -40,7 +40,7 @@ describe('help', () => {
 
   test('returns help text without a command at all', (done) => {
     helpers.setup(context);
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
       expect(result.toString()).toMatch(
         '<Message>Hello! Text "subscribe" to receive updates, "stop" to stop getting messages, and "start" to receive them again.</Message>'
@@ -72,7 +72,7 @@ describe('subscribing', () => {
       From: '+1555123456',
     };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(mockService.bindings.create).toHaveBeenCalledTimes(1);
       expect(mockService.bindings.create).toHaveBeenCalledWith({
         identity: event.From,
@@ -107,7 +107,7 @@ describe('subscribing', () => {
       From: '+1555123456',
     };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(console.error).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledWith(error);
       expect(mockService.bindings.create).toHaveBeenCalledTimes(1);
@@ -131,7 +131,7 @@ describe('broadcasting', () => {
   test('returns message if from number is not an admin', (done) => {
     helpers.setup(context);
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
       expect(result.toString()).toMatch(
         '<Message>Your phone number is not authorized to broadcast in this application</Message>'
@@ -156,7 +156,7 @@ describe('broadcasting', () => {
       },
     };
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(mockService.notifications.create).toHaveBeenCalledTimes(1);
       expect(mockService.notifications.create).toHaveBeenCalledWith({
         tag: 'all',
@@ -190,7 +190,7 @@ describe('broadcasting', () => {
 
     console.error = jest.fn();
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(mockService.notifications.create).toHaveBeenCalledTimes(1);
       expect(mockService.notifications.create).toHaveBeenCalledWith({
         tag: 'all',

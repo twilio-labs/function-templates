@@ -6,7 +6,7 @@ const mockTwilioClient = {
   messages: {
     create: jest.fn(() => {
       if (shouldFail) {
-        return Promise.reject('Expected test error');
+        return Promise.reject(new Error('Expected test error'));
       }
 
       return Promise.resolve({

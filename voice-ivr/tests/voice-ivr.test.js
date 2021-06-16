@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -23,7 +23,7 @@ test('returns a VoiceResponse', (done) => {
 });
 
 test('prompts for the right options', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     const twiml = result.toString();
     expect(twiml).toMatch(
       '<Gather numDigits="1" action="handle-user-input" hints="sales, opening hours, address" input="speech dtmf">'

@@ -8,9 +8,9 @@ const WebhookSid = 'WHxxxxxxxxx';
 const ConversationSid = 'CHxxxxxxxxx';
 
 const getMockTwilioClient = function (createWebhook) {
-  const createConversationsService = (ConversationSid) => {
-    sid: conversationSid;
-  };
+  const createConversationsService = (conversationSid) => ({
+    sid: conversationSid,
+  });
 
   const mockConversationsService = {
     conversations: {
@@ -22,7 +22,7 @@ const getMockTwilioClient = function (createWebhook) {
   };
   return {
     conversations: {
-      conversations: (ConversationSid) => mockConversationsService,
+      conversations: (_conversationSid) => mockConversationsService,
     },
   };
 };
@@ -42,7 +42,7 @@ test('returns success response', (done) => {
     getTwilioClient: () => getMockTwilioClient(createWebhook),
   };
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toEqual(`webhook ${WebhookSid} successfully created`);
     expect(createWebhook.mock.calls.length).toBe(1);
     expect(createWebhook.mock.calls[0][0]).toStrictEqual({
@@ -56,7 +56,7 @@ test('returns success response', (done) => {
 });
 
 test('returns error response', (done) => {
-  const createWebhook = () => Promise.reject('nope');
+  const createWebhook = () => Promise.reject(new Error('nope'));
   const context = {
     STUDIO_FLOW_SID: StudioFlowSid,
     getTwilioClient: () => getMockTwilioClient(createWebhook),
@@ -65,7 +65,7 @@ test('returns error response', (done) => {
   helpers.setup(context);
 
   const callback = (err) => {
-    expect(err).toEqual('nope');
+    expect(err.message).toEqual('nope');
     done();
   };
 

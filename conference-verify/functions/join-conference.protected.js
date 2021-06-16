@@ -4,7 +4,7 @@ async function isValidCode(context, phoneNumber, code) {
     .services(context.VERIFY_SERVICE_SID)
     .verificationChecks.create({
       to: phoneNumber,
-      code: code,
+      code,
     });
   return check.status === 'approved';
 }
@@ -25,10 +25,7 @@ exports.handler = async function (context, event, callback) {
     return callback(null, twiml);
   }
 
-  if (!(await isValidCode(context, caller, verificationCode))) {
-    twiml.say('Please try again');
-    twiml.redirect('./verify-conference');
-  } else {
+  if (await isValidCode(context, caller, verificationCode)) {
     twiml.say('Welcome! Joining the conference');
     twiml.dial().conference(
       {
@@ -37,7 +34,10 @@ exports.handler = async function (context, event, callback) {
       },
       'my conference'
     );
+  } else {
+    twiml.say('Please try again');
+    twiml.redirect('./verify-conference');
   }
 
-  callback(null, twiml);
+  return callback(null, twiml);
 };

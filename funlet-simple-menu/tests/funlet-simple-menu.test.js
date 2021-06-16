@@ -239,15 +239,11 @@ test('[SIMPLE-MENU-INPUT-DIGITS-1] Read Non-Empty Digits from Event', () => {
 test('[SIMPLE-MENU-OUTPUT-GATHER-DIGITS-0] Gather Digits Without Message', () => {
   const EMPTY_MESSAGE = '';
   const DIGITS = 5;
-  const GATHER_DIGITS =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="' +
-    DIGITS +
-    '"/>' +
-    '</Response>';
+  const GATHER_DIGITS = `${XML_DECLARATION}<Response>\
+<Gather numDigits="${DIGITS}"/>\
+</Response>`;
 
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.gatherDigits(
     response,
     DIGITS,
@@ -264,19 +260,13 @@ test(
   () => {
     const RECORDED_MESSAGE = 'https://example.com/recorded-message.mp3';
     const DIGITS = 5;
-    const PLAY_MESSAGE_GATHER_DIGITS =
-      XML_DECLARATION +
-      '<Response>' +
-      '<Gather numDigits="' +
-      DIGITS +
-      '">' +
-      '<Play>' +
-      RECORDED_MESSAGE +
-      '</Play>' +
-      '</Gather>' +
-      '</Response>';
+    const PLAY_MESSAGE_GATHER_DIGITS = `${XML_DECLARATION}<Response>\
+<Gather numDigits="${DIGITS}">\
+<Play>${RECORDED_MESSAGE}</Play>\
+</Gather>\
+</Response>`;
 
-    let response = new Twilio.twiml.VoiceResponse();
+    const response = new Twilio.twiml.VoiceResponse();
     funlet.output.gatherDigits(
       response,
       DIGITS,
@@ -290,46 +280,26 @@ test(
 
 test('[SIMPLE-MENU-OUTPUT-GATHER-DIGITS-2] Gather Digits With Text Message', () => {
   const DIGITS = 5;
-  const SAY_MESSAGE_GATHER_DIGITS =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="' +
-    DIGITS +
-    '">' +
-    '<Say language="' +
-    FRENCH +
-    '" voice="' +
-    WOMAN +
-    '">' +
-    TEXT_MESSAGE +
-    '</Say>' +
-    '</Gather>' +
-    '</Response>';
+  const SAY_MESSAGE_GATHER_DIGITS = `${XML_DECLARATION}<Response>\
+<Gather numDigits="${DIGITS}">\
+<Say language="${FRENCH}" voice="${WOMAN}">${TEXT_MESSAGE}</Say>\
+</Gather>\
+</Response>`;
 
-  let response = new Twilio.twiml.VoiceResponse();
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.gatherDigits(response, DIGITS, TEXT_MESSAGE, FRENCH, WOMAN);
   expect(response.toString()).toEqual(SAY_MESSAGE_GATHER_DIGITS);
 });
 
 test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-1-3] Multiple Digits to Gather', () => {
   const DIGITS = '12345'.length;
-  const GATHER_MULTIPLE_DIGITS =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="' +
-    DIGITS +
-    '">' +
-    '<Say language="' +
-    FRENCH +
-    '" voice="' +
-    WOMAN +
-    '">' +
-    TEXT_MESSAGE +
-    '</Say>' +
-    '</Gather>' +
-    '<Redirect/>' +
-    '</Response>';
-  let response = new Twilio.twiml.VoiceResponse();
+  const GATHER_MULTIPLE_DIGITS = `${XML_DECLARATION}<Response>\
+<Gather numDigits="${DIGITS}">\
+<Say language="${FRENCH}" voice="${WOMAN}">${TEXT_MESSAGE}</Say>\
+</Gather>\
+<Redirect/>\
+</Response>`;
+  const response = new Twilio.twiml.VoiceResponse();
   funlet.output.simpleMenuStage1(response, TEXT_MESSAGE, FRENCH, WOMAN, {
     12345: ACTION12345,
   });
@@ -337,9 +307,9 @@ test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-1-3] Multiple Digits to Gather', () => {
 });
 
 test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-0] No Digits', () => {
-  const EMPTY_RESPONSE = XML_DECLARATION + '<Response/>';
-  let response = new Twilio.twiml.VoiceResponse();
-  let hasMatch = funlet.output.simpleMenuStage2(
+  const EMPTY_RESPONSE = `${XML_DECLARATION}<Response/>`;
+  const response = new Twilio.twiml.VoiceResponse();
+  const hasMatch = funlet.output.simpleMenuStage2(
     response,
     '',
     { 12345: ACTION12345 },
@@ -352,15 +322,11 @@ test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-0] No Digits', () => {
 });
 
 test('[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-1] Digits Pressed Match an Option', () => {
-  const REDIRECT_TO_MATCHING_OPTION =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Redirect>' +
-    ACTION12345 +
-    '</Redirect>' +
-    '</Response>';
-  let response = new Twilio.twiml.VoiceResponse();
-  let hasMatch = funlet.output.simpleMenuStage2(
+  const REDIRECT_TO_MATCHING_OPTION = `${XML_DECLARATION}<Response>\
+<Redirect>${ACTION12345}</Redirect>\
+</Response>`;
+  const response = new Twilio.twiml.VoiceResponse();
+  const hasMatch = funlet.output.simpleMenuStage2(
     response,
     '12345',
     { 12345: ACTION12345 },
@@ -376,15 +342,11 @@ test(
   '[SIMPLE-MENU-OUTPUT-SIMPLE-MENU-2-2] ' +
     'Digits Pressed Do Not Match Any Option',
   () => {
-    const PLAY_ERROR_MESSAGE =
-      XML_DECLARATION +
-      '<Response>' +
-      '<Play>' +
-      ERROR_MESSAGE +
-      '</Play>' +
-      '</Response>';
-    let response = new Twilio.twiml.VoiceResponse();
-    let hasMatch = funlet.output.simpleMenuStage2(
+    const PLAY_ERROR_MESSAGE = `${XML_DECLARATION}<Response>\
+<Play>${ERROR_MESSAGE}</Play>\
+</Response>`;
+    const response = new Twilio.twiml.VoiceResponse();
+    const hasMatch = funlet.output.simpleMenuStage2(
       response,
       '42',
       { 12345: ACTION12345 },
@@ -398,22 +360,14 @@ test(
 );
 
 test('[SIMPLE-MENU-1-2] Full Response: Text Message', (done) => {
-  const FULL_RESPONSE_SIMPLE_MENU_1_2 =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Gather numDigits="1">' +
-    '<Say language="' +
-    DEFAULT_LANGUAGE +
-    '" voice="' +
-    DEFAULT_VOICE +
-    '">' +
-    TEXT_MESSAGE +
-    '</Say>' +
-    '</Gather>' +
-    '<Redirect/>' +
-    '</Response>';
+  const FULL_RESPONSE_SIMPLE_MENU_1_2 = `${XML_DECLARATION}<Response>\
+<Gather numDigits="1">\
+<Say language="${DEFAULT_LANGUAGE}" voice="${DEFAULT_VOICE}">${TEXT_MESSAGE}</Say>\
+</Gather>\
+<Redirect/>\
+</Response>`;
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_SIMPLE_MENU_1_2);
     done();
@@ -422,15 +376,11 @@ test('[SIMPLE-MENU-1-2] Full Response: Text Message', (done) => {
 });
 
 test('[SIMPLE-MENU-2-1] Full Response: Digits Pressed Match an Option', (done) => {
-  const FULL_RESPONSE_SIMPLE_MENU_2_1 =
-    XML_DECLARATION +
-    '<Response>' +
-    '<Redirect>' +
-    ACTION12345 +
-    '</Redirect>' +
-    '</Response>';
+  const FULL_RESPONSE_SIMPLE_MENU_2_1 = `${XML_DECLARATION}<Response>\
+<Redirect>${ACTION12345}</Redirect>\
+</Response>`;
 
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     expect(result.toString()).toEqual(FULL_RESPONSE_SIMPLE_MENU_2_1);
     done();

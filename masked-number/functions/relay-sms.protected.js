@@ -34,5 +34,5 @@ exports.handler = async function (context, event, callback) {
     );
   }
 
-  callback(null, twiml);
+  return callback(null, twiml);
 };

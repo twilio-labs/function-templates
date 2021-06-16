@@ -9,7 +9,7 @@ exports.handler = async (context, event, callback) => {
       '.sip.twilio.com',
       '.sip.us1.twilio.com'
     );
-    callback(null, {
+    return callback(null, {
       initialized: context.INITIALIZED,
       appName: context.APP_NAME,
       incomingNumber: context.INCOMING_NUMBER,
@@ -19,6 +19,6 @@ exports.handler = async (context, event, callback) => {
       localizedSipDomainName,
     });
   } catch (err) {
-    callback(err);
+    return callback(err);
   }
 };

@@ -21,7 +21,7 @@ exports.handler = function (context, event, callback) {
       url = '/hunt?finished=true';
     } else {
       const nextNumber = numbers[currentNumberIndex + 1];
-      url = '/hunt?nextNumber=' + encodeURIComponent(nextNumber);
+      url = `/hunt?nextNumber=${encodeURIComponent(nextNumber)}`;
     }
     const dial = response.dial({ action: url });
     dial.number(numberToDial);

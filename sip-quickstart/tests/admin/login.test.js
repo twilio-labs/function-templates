@@ -15,6 +15,7 @@ describe('voice-client-javascript/admin/login', () => {
     helpers.setup({}, runtime);
     loginFunction = require('../../functions/admin/login').handler;
     shared = require(Runtime.getAssets()['/admin/shared.js'].path);
+    // eslint-disable-next-line prefer-destructuring
     createToken = shared.createToken;
   });
   afterAll(() => {

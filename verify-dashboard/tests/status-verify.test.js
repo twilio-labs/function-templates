@@ -33,7 +33,7 @@ describe('verification status', () => {
   });
 
   test("returns an error response when required 'to' parameter is missing", (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
@@ -46,11 +46,12 @@ describe('verification status', () => {
   });
 
   test('fetches verification with the expected parameters', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(mockClient.verify.services).toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
+      // eslint-disable-next-line no-unused-expressions
       expect(mockService.verifications('+17341234567').fetch).toHaveBeenCalled;
       done();
     };

@@ -1,13 +1,11 @@
-// eslint-disable-next-line func-names
+/* eslint-disable camelcase */
 exports.handler = async function (context, event, callback) {
   // Validate token before running
-  /* eslint-disable no-console */
-  const path = Runtime.getFunctions()['auth'].path;
+  const { path } = Runtime.getFunctions().auth;
   const { isAllowed } = require(path);
 
   if (!isAllowed(event.token, context)) {
-    // eslint-disable-next-line no-undef
-    let response = new Twilio.Response();
+    const response = new Twilio.Response();
     response.setStatusCode(401);
     response.appendHeader('Content-Type', 'application/json');
     response.setBody({ message: 'Unauthorized' });
@@ -21,6 +19,7 @@ exports.handler = async function (context, event, callback) {
   client.studio.v1
     .flows(flowSid)
     .executions.list({ limit: 100 })
+    // eslint-disable-next-line consistent-return
     .then((executions) => {
       if (executions.length > 0) {
         const endedExecutions = executions.filter((e) => e.status === 'ended');
@@ -70,11 +69,11 @@ exports.handler = async function (context, event, callback) {
 
         Promise.all(promises)
           .then((data) => {
-            callback(null, data);
+            return callback(null, data);
           })
           .catch((err) => callback(err));
       } else {
-        callback(null, []);
+        return callback(null, []);
       }
     })
     .catch((err) => callback(err));

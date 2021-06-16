@@ -7,6 +7,7 @@ const mockStripeCharge = {
     id: 'cus_00000000000000',
     phone: '+12025551212',
   },
+  // eslint-disable-next-line camelcase
   receipt_url: 'https://receipt.url',
 };
 
@@ -26,6 +27,7 @@ const mockStripeClient = {
           if (id.startsWith('evt_')) {
             resolve(mockChargeSuccededEvent);
           } else {
+            // eslint-disable-next-line prefer-promise-reject-errors
             reject({ message: 'No such event.' });
           }
         })
@@ -66,7 +68,7 @@ afterAll(() => {
 });
 
 test('return sid when SMS has been sent', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(mockStripeClient.events.retrieve).toHaveBeenCalledWith(
       mockChargeSuccededEvent.id
     );
@@ -95,7 +97,7 @@ test('return sid when SMS has been sent', (done) => {
 });
 
 test('return 200 for any other events', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(200);
     done();
@@ -110,7 +112,7 @@ test('return 200 for any other events', (done) => {
 });
 
 test('return 400 if we catch an error', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(400);
     done();

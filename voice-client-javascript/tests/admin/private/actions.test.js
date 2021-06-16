@@ -33,7 +33,7 @@ describe('voice-client-javascript/admin/private/actions', () => {
       '../../../assets/admin/shared.private.js'
     );
     helpers.setup({}, runtime);
-    const Actions = require('../../../assets/admin/actions.private.js');
+    const Actions = require('../../../assets/admin/actions.private');
     options = {
       friendlyName: 'Example App',
       DOMAIN_NAME: 'blargh-duck-123.com',
@@ -133,8 +133,10 @@ describe('voice-client-javascript/admin/private/actions', () => {
       { phoneNumber: '+15551213434' },
     ]);
 
-    // Act
-    // options are passed into the constructor
+    /*
+     * Act
+     * options are passed into the constructor
+     */
     const results = await actions.initialize();
 
     // Assert

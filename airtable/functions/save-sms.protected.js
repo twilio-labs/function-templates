@@ -1,9 +1,9 @@
 const Airtable = require('airtable');
 
 exports.handler = function (context, event, callback) {
-  let twiml = new Twilio.twiml.MessagingResponse();
+  const twiml = new Twilio.twiml.MessagingResponse();
 
-  var base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
+  const base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
     context.AIRTABLE_BASE_ID
   );
 

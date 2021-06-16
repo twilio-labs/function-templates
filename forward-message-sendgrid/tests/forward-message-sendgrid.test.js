@@ -1,4 +1,5 @@
 const helpers = require('../../test/test-helper');
+
 const got = jest.mock('got');
 const sendGrid =
   require('../functions/forward-message-sendgrid.protected').handler;
@@ -23,7 +24,7 @@ afterAll(() => {
 });
 
 test('returns an TwiML MessagingResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     done();
   };
@@ -32,7 +33,7 @@ test('returns an TwiML MessagingResponse', (done) => {
 });
 
 test('returns an error when the external request fails', (done) => {
-  const callback = (err, result) => {
+  const callback = (err, _result) => {
     expect(err).toBeInstanceOf(Error);
     done();
   };

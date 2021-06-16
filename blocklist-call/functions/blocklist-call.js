@@ -1,11 +1,11 @@
 exports.handler = function (context, event, callback) {
-  let blocklist = event.blocklist || context.BLOCKLIST || '';
+  const blocklist = event.blocklist || context.BLOCKLIST || '';
   const blocklistArray = blocklist
     .toString()
     .split(',')
     .map((num) => num.trim());
+  const twiml = new Twilio.twiml.VoiceResponse();
 
-  let twiml = new Twilio.twiml.VoiceResponse();
   let blocked = false;
   if (blocklistArray.length > 0 && blocklistArray.includes(event.From)) {
     blocked = true;

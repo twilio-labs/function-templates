@@ -233,7 +233,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
   });
 
   test('getCallerIdStatus verifies that the supplied number is either a Twilio # or a Verified number', async () => {
-    //Arrange
+    // Arrange
     process.env.CALLER_ID = '+13334445555';
 
     // Act
@@ -246,11 +246,13 @@ describe('sip-quickstart/admin/private/statuses', () => {
   });
 
   test('getCallerIdStatus matches a verified number', async () => {
-    // Arrange
-    // Mocked in outgoingCallerIds.list
+    /*
+     * Arrange
+     * Mocked in outgoingCallerIds.list
+     */
     process.env.CALLER_ID = '+18001234567';
 
-    //Act
+    // Act
     const status = await statusFunctions.getCallerIdStatus(CONTEXT);
 
     // Assert
@@ -347,14 +349,16 @@ describe('sip-quickstart/admin/private/statuses', () => {
     expect(status.description).toContain('`.env`');
   });
 
-  // getIncomingNumberStatus,
-  // getCallerIdStatus,
+  /*
+   * getIncomingNumberStatus,
+   * getCallerIdStatus,
+   */
 
   test('getCredentialListStatus is invalid and asks to create if missing', async () => {
     // Act
     const status = await statusFunctions.getCredentialListStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
     expect(status.actions[0].name).toBe('createDefaultCredentialListForDomain');
@@ -371,7 +375,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getCredentialListStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
     expect(status.description).toContain('Uh oh');
@@ -391,7 +395,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getCredentialListStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
     // Verify all the extensions are there
@@ -421,7 +425,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getCredentialListStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeTruthy();
     expect(status.description).toContain(extensions.length);
@@ -431,7 +435,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
     expect(status.actions[0].name).toBe('updateIncomingNumber');
@@ -447,7 +451,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
     expect(status.actions[0].name).toBe('updateIncomingNumber');
@@ -464,7 +468,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeFalsy();
     // Displays the incorrect voiceUrl
@@ -491,7 +495,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Act
     const status = await statusFunctions.getIncomingNumberStatus(CONTEXT);
 
-    //Assert
+    // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeTruthy();
     // Allows for changing

@@ -6,6 +6,7 @@ const statusFunctions = status.statuses;
 
 async function getStatuses(context) {
   // This should be `Promise.allSettled` with a filter, but the node version is off
+  // eslint-disable-next-line consistent-return
   const promises = statusFunctions.map(async (fn) => {
     try {
       return await fn(context);

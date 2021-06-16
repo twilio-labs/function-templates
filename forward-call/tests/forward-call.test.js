@@ -16,7 +16,7 @@ afterAll(() => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -25,9 +25,9 @@ test('returns a VoiceResponse', (done) => {
 });
 
 test('forwards the call to the number from the context', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toMatch(
-      '<Dial>' + context.MY_PHONE_NUMBER + '</Dial>'
+      `<Dial>${context.MY_PHONE_NUMBER}</Dial>`
     );
     done();
   };

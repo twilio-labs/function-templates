@@ -16,7 +16,7 @@ test('returns a response that file was created with the file name', (done) => {
   mockFns.readdir = (directoryPath, callback) =>
     callback(null, ['test_file.txt']);
 
-  const temp_storage = require('../functions/temp-storage').handler;
+  const { handler } = require('../functions/temp-storage');
   const callback = (err, result) => {
     expect(err).toBe(null);
     expect(result).toMatch(
@@ -25,20 +25,20 @@ test('returns a response that file was created with the file name', (done) => {
     done();
   };
 
-  temp_storage(context, event, callback);
+  handler(context, event, callback);
 });
 
 test('returns an error when file creation fails', (done) => {
   mockFns.writeFile = (path, content, callback) =>
     callback(new Error('Write failed'));
 
-  const temp_storage = require('../functions/temp-storage').handler;
+  const { handler } = require('../functions/temp-storage');
   const callback = (err, result) => {
     expect(err).toBeInstanceOf(Error);
     done();
   };
 
-  temp_storage(context, event, callback);
+  handler(context, event, callback);
 });
 
 test('returns an error when file read fails', (done) => {
@@ -46,11 +46,11 @@ test('returns an error when file read fails', (done) => {
   mockFns.readdir = (directoryPath, callback) =>
     callback(new Error('Read failed'));
 
-  const temp_storage = require('../functions/temp-storage').handler;
+  const { handler } = require('../functions/temp-storage');
   const callback = (err, result) => {
     expect(err).toBeInstanceOf(Error);
     done();
   };
 
-  temp_storage(context, event, callback);
+  handler(context, event, callback);
 });

@@ -12,6 +12,7 @@ const mockKeys = {
   fetch: jest.fn(),
 };
 
+// eslint-disable-next-line sonarjs/prefer-object-literal
 const mockTwilioClient = {};
 mockTwilioClient.applications = jest.fn(() => mockApplications);
 mockTwilioClient.applications.list = jest.fn(() => Promise.resolve([]));
@@ -210,7 +211,7 @@ describe('voice-client-javascript/admin/private/statuses', () => {
       CONTEXT
     );
 
-    //Assert
+    // Assert
     expect(result).toBeDefined();
     expect(result.valid).toBeFalsy();
     expect(result.description).toContain('generate a new key');
@@ -232,7 +233,7 @@ describe('voice-client-javascript/admin/private/statuses', () => {
       CONTEXT
     );
 
-    //Assert
+    // Assert
     expect(mockKeys.fetch).toHaveBeenCalled();
     expect(result).toBeDefined();
     expect(result.valid).toBeFalsy();
@@ -258,7 +259,7 @@ describe('voice-client-javascript/admin/private/statuses', () => {
       CONTEXT
     );
 
-    //Assert
+    // Assert
     expect(mockKeys.fetch).toHaveBeenCalled();
     expect(result).toBeDefined();
     expect(result.valid).toBeTruthy();
@@ -281,7 +282,7 @@ describe('voice-client-javascript/admin/private/statuses', () => {
   });
 
   test('getCallerIdStatus verifies that the supplied number is either a Twilio # or a Verified number', async () => {
-    //Arrange
+    // Arrange
     process.env.CALLER_ID = '+13334445555';
 
     // Act
@@ -294,11 +295,13 @@ describe('voice-client-javascript/admin/private/statuses', () => {
   });
 
   test('getCallerIdStatus matches a verified number', async () => {
-    // Arrange
-    // Mocked in outgoingCallerIds.list
+    /*
+     * Arrange
+     * Mocked in outgoingCallerIds.list
+     */
     process.env.CALLER_ID = '+18001234567';
 
-    //Act
+    // Act
     const status = await statusFunctions.getCallerIdStatus(CONTEXT);
 
     // Assert

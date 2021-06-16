@@ -17,13 +17,17 @@ exports.handler = async function (context, event, callback) {
 
   // Only handle invoice.finalized events
   if (event.type === 'invoice.finalized') {
-    // Retrieve the event object from Stripe to verify its validity.
-    // If you're running your own server environment you can verify
-    // the webhook signature instead:
-    // https://stripe.com/docs/webhooks/signatures#verify-official-libraries
+    /*
+     * Retrieve the event object from Stripe to verify its validity.
+     * If you're running your own server environment you can verify
+     * the webhook signature instead:
+     * https://stripe.com/docs/webhooks/signatures#verify-official-libraries
+     */
     try {
-      // To use stripe in your Twilio function you need to add it in the dependencies
-      // section of your functions config: https://www.twilio.com/console/functions/configure.
+      /*
+       * To use stripe in your Twilio function you need to add it in the dependencies
+       * section of your functions config: https://www.twilio.com/console/functions/configure.
+       */
       const stripe = Stripe(context.STRIPE_SECRET_KEY);
       const stripeEvent = await stripe.events.retrieve(event.id);
       const invoice = await stripe.invoices.retrieve(
@@ -44,16 +48,20 @@ exports.handler = async function (context, event, callback) {
       }
     } catch (error) {
       console.log(error.message);
-      // Respond with status code 400 so Stripe will retry the request:
-      // https://stripe.com/docs/webhooks/best-practices#retry-logic.
+      /*
+       * Respond with status code 400 so Stripe will retry the request:
+       * https://stripe.com/docs/webhooks/best-practices#retry-logic.
+       */
       response.setStatusCode(400);
       callback(null, response);
       return;
     }
   }
 
-  // Simply acknowledge unhandled events with 200 status,
-  // otherwise Stripe will retry the webhook event.
+  /*
+   * Simply acknowledge unhandled events with 200 status,
+   * otherwise Stripe will retry the webhook event.
+   */
   response.setStatusCode(200);
   callback(null, response);
 };

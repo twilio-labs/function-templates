@@ -17,7 +17,7 @@ class Actions {
   async initialize() {
     let env = {};
     console.log('Creating SIP Domain');
-    const friendlyName = this.options.friendlyName;
+    const { friendlyName } = this.options;
     const sipDomainName = sipDomainNameFromDomainName(this.options.DOMAIN_NAME);
     let results = await this.createSipDomain({
       friendlyName,
@@ -34,7 +34,7 @@ class Actions {
       sipDomainSid: env.SIP_DOMAIN_SID,
       voiceUrl: outboundVoiceUrl,
     });
-    //Create and map credential list to the domain
+    // Create and map credential list to the domain
     console.log('Building and wiring up default credential list');
     results = await this.createDefaultCredentialListForDomain({
       sipDomainSid: env.SIP_DOMAIN_SID,
@@ -65,6 +65,7 @@ class Actions {
     return env;
   }
 
+  // eslint-disable-next-line consistent-return
   async createSipDomain({ friendlyName, domainName }) {
     try {
       const result = await this.client.sip.domains.create({
@@ -137,7 +138,7 @@ class Actions {
   }
 
   async addNewCredentials({ credentialListSid, usernames }) {
-    for (let username of usernames) {
+    for (const username of usernames) {
       await this.addNewCredential({
         credentialListSid,
         username,

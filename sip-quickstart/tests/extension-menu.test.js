@@ -40,7 +40,7 @@ describe('sip-quickstart/extension-menu', () => {
   });
 
   test('it prompts when there are no digits', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain('<Say>Please enter the extension');
@@ -50,7 +50,7 @@ describe('sip-quickstart/extension-menu', () => {
   });
 
   test('it provides a menu of extensions when 0 is sent', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       extensions.forEach((ext) =>
@@ -63,7 +63,7 @@ describe('sip-quickstart/extension-menu', () => {
 
   test('it dials a extension when pressed', (done) => {
     const ext = extensions[0];
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain(`<Dial><Sip>sip:${ext.username}`);
@@ -75,7 +75,7 @@ describe('sip-quickstart/extension-menu', () => {
   });
 
   test("it fails when extension doesn't match", (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       const twiml = result.toString();
       expect(typeof twiml).toBe('string');
       expect(twiml).toContain('<Say>Extension 404 is not found');

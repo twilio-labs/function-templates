@@ -95,7 +95,7 @@ describe('voice-client-javascript/admin/private/shared', () => {
   });
 
   test('checkAuthorization passes thru on success', () => {
-    //Arrange
+    // Arrange
     const event = {
       token: shared.createToken(CONTEXT, process.env.ADMIN_PASSWORD),
     };
@@ -110,7 +110,7 @@ describe('voice-client-javascript/admin/private/shared', () => {
   });
 
   test('checkAuthorization returns a Twilio Response on failure', () => {
-    //Arrange
+    // Arrange
     const event = {
       token: "this isn't right",
     };

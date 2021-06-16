@@ -31,7 +31,7 @@ describe('verify/start-verification', () => {
   });
 
   test('returns an error response when required parameters are missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(result._body.error.message).toEqual(
@@ -47,7 +47,7 @@ describe('verify/start-verification', () => {
   });
 
   test('returns success with valid request', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(

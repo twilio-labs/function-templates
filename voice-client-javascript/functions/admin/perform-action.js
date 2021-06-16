@@ -21,7 +21,7 @@ exports.handler = async function (context, event, callback) {
   try {
     const envVars = await actions[event.action.name](event.action.params);
     if (envVars) {
-      for (let [key, value] of Object.entries(envVars)) {
+      for (const [key, value] of Object.entries(envVars)) {
         const result = await setEnvironmentVariable(
           context,
           environment,
@@ -33,9 +33,11 @@ exports.handler = async function (context, event, callback) {
         logs.push(`${result ? 'Successfully set' : 'Did not set'} "${key}"`);
       }
     }
-    callback(null, { success: true, logs });
+    // eslint-disable-next-line consistent-return
+    return callback(null, { success: true, logs });
   } catch (err) {
     console.error(err);
-    callback(err, { success: false, error: err, logs });
+    // eslint-disable-next-line consistent-return
+    return callback(err, { success: false, error: err, logs });
   }
 };
