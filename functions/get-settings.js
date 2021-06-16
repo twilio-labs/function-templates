@@ -41,8 +41,8 @@ exports.handler = function(context, event, callback) {
     }
 
     response.setStatusCode(200);
-    response.setBody(body);
+    response.setBody(JSON.stringify(body));
 
-    console.log(response);
+    // console.log(response);
     callback(null, response);
 }

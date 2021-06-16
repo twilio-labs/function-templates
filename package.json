@@ -11,7 +11,7 @@
     "twilio-run": "^2.6.0"
   },
   "engines": {
-    "node": "10"
+    "node": "12"
   },
   "dependencies": {
     "airtable": "^0.11.0",
