@@ -97,6 +97,6 @@ In a few moments your Function should be deployed! Grab its URL from the results
 
 ## Usage
 
-Once the Function is deployed, people can subscribe via the form on `/index.html`. Users can respond `stop/start` to use Twilio's built-in stop handling to opt a user out from, or back in to, receiving messages (check out this article for [further details on Twilio's built-in features for handling opt-out/in keywords](https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-opt-out-keywords-SMS-STOP-filtering-)).
+Once the Function is deployed, people can subscribe via the form on `/subscribe.html`. Users can respond `stop/start` to use Twilio's built-in stop handling to opt a user out from, or back in to, receiving messages (check out this article for [further details on Twilio's built-in features for handling opt-out/in keywords](https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-opt-out-keywords-SMS-STOP-filtering-)).
 
 Administrators can use the form on `/broadcast.html` to send a message out to all subscribed users. This will send an OTP to the administrator for verification before broadcasting a message.  
