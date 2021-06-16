@@ -3,7 +3,7 @@
 This Vaccine Hesitancy template application is designed to address COVID-19 vaccine hesitancy among consumers and answer their vaccine-related questions. Consumers ask their questions by sending  SMS to a pre-configured phone number, and are responded to by a FAQ chatbot which is built using trusted data sources for answers. The chatbot is powered by Google Dialogflow ES and Twilio Studio flow connects the chatbot with Twilio’s Programmable SMS channel. The application can be extended to other digital channels such as Voice, Whatsapp or Webchat. 
 
 It includes 2 pre-built chatbot agents:
-1. US bot is based on <a href="https://www.ama-assn.org/delivering-care/public-health/covid-19-vaccines-patients-frequently-asked-questions" target="_blank"> American Medical Assocaition </a>
+1. US bot is based on <a href="https://www.ama-assn.org/delivering-care/public-health/covid-19-vaccines-patients-frequently-asked-questions" target="_blank"> American Medical Association </a>
 2. India bot is based on <a href="https://www.mohfw.gov.in/covid_vaccination/vaccination/faqs.html" target="_blank"> Ministry of Health and Family Welfare </a> 
 
 Note that this app is designed for prototyping purposes only and you should <a href="https://ahoy.twilio.com/vaccine-distribution-1" target="_blank">consult with a Twilio Expert</a> before publicly offering this service in a production context.
@@ -12,23 +12,16 @@ Note that this app is designed for prototyping purposes only and you should <a h
 
 ### 1. Configure Google Cloud Platform and Generate JSON Auth Key
 
-This template uses Google Cloud Platform and Dialogflow to power the conversational chatbot
+This template uses Google Cloud Platform (GCP) and Dialogflow to power the conversational chatbot
 agent that interacts with the user. You will need to setup a Google Cloud project, enable the Dialogflow API, and generate a JSON authentication key from a GCP Service Account for Twilio to use to interact with Dialogflow. Place the GCP JSON authentication key at the following path: `/assets/service-account-key.json`.
 
 **Follow [this guide](prerequisites/google-cloud-platform-config.md) for step-by-step instructions on how to do this.**
 
 ### 2. Create a Dialogflow Chatbot Agent
 
-The conversational chatbot is powered by  an integration between Twilio
-and Google Dialogflow, a natural
-language understanding platform used to design and integrate a
-conversational user interfaces.
+The conversational chatbot is powered by  an integration between Twilio and Google Dialogflow, a natural language understanding platform used to design and integrate a conversational user interfaces. You may import the pre-built Dialogflow chatbot agents included in this repository, or configure your own chatbot agent.
 
-You may import the pre-built Dialogflow chatbot agents included in this
-repository, or configure your own chatbot agent.
-
-**Follow [this guide](prerequisites/dialogflow-config.md) for step-by-step instructions on how to do
-this.**
+**Follow [this guide](prerequisites/dialogflow-config.md) for step-by-step instructions on how to do this.**
 
 ## Deploying the template
 Before deploying the template to your Twilio account, you should make sure to complete the [prerequisite](#prerequisites) steps above, and make sure the following is true:
