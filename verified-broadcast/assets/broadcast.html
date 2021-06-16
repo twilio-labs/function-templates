@@ -86,7 +86,7 @@
         <section>
           <form id="broadcast">
             <label for="message-body">Message</label>
-            <input type="text" id="message-body" />
+            <input type="text" id="message-body" required />
             <p>Send updates to:</p>
             <div>
               <input type="radio" id="all" name="tags" value="all" checked />
@@ -117,7 +117,7 @@
   </body>
   <script>
     function logError(error) {
-      console.log(error);
+      console.error(error);
       document.getElementById("status").textContent = error;
     }
 
@@ -166,8 +166,8 @@
         .then((json) => {
           if (json.success) {
             document.getElementById("otp").style.display = "none";
-            document.getElementById("status").textContent =
-              "Successfully sent message to subscribers.";
+            document.getElementById("status").innerHTML =
+              `<p>Successfully sent message to subscribers. <a href="/broadcast.html">Send another message.</a></p>`
           } else {
             logError(json.error);
             // allow another OTP attempt

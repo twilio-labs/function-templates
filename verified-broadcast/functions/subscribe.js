@@ -55,7 +55,7 @@ exports.handler = (context, event, callback) => {
             return callback(null, response);
           })
           .catch((error) => {
-            console.log(error.message);
+            console.error(error.message);
             response.setStatusCode(400);
             response.setBody({
               success: false,
@@ -64,7 +64,7 @@ exports.handler = (context, event, callback) => {
             return callback(null, response);
           });
       } else {
-        console.log('Incorrect token.');
+        console.error('Incorrect token.');
         response.setStatusCode(401);
         response.setBody({
           success: false,
@@ -74,7 +74,7 @@ exports.handler = (context, event, callback) => {
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       response.setStatusCode(error.status);
       response.setBody({
         success: false,

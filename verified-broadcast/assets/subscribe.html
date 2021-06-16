@@ -93,7 +93,7 @@
           <span id="status"></span>
           <form id="subscribe">
             <label for="phone">Phone number</label>
-            <input type="tel" id="phone_number" />
+            <input type="tel" id="phone_number" required />
             <p>Keep me updated on...</p>
             <div>
               <input type="checkbox" id="option1" name="tags" value="option1" />
@@ -131,7 +131,7 @@
     var to;
 
     function logError(error) {
-      console.log(error);
+      console.error(error);
       document.getElementById("status").textContent = error;
     }
 

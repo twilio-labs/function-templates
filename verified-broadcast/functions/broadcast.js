@@ -37,7 +37,7 @@ exports.handler = (context, event, callback) => {
             return callback(null, response);
           })
           .catch((error) => {
-            console.log(error);
+            console.error(error);
             response.setStatusCode(error.status);
             response.setBody({
               success: false,
@@ -55,7 +55,7 @@ exports.handler = (context, event, callback) => {
       }
     })
     .catch((error) => {
-      console.log(error);
+      console.error(error);
       response.setStatusCode(error.status);
       response.setBody({
         success: false,
