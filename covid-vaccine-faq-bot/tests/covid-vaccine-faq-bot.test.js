@@ -41,12 +41,12 @@ afterAll(() => {
 
 describe('return-config', () => {
   it('should return environment phone number as config body', (done) => {
-  const phone_number = context.TWILIO_PHONE_NUMBER;
+  const phoneNumber = context.TWILIO_PHONE_NUMBER;
     const callback = (err, res) => {
       expect(err).toBeFalsy();
       expect(res._statusCode).toBe(200);
       expect(res._headers['Content-Type']).toMatch('application/json');
-      expect(res._body.phone_number).toMatch(phone_number);
+      expect(res._body.phone_number).toMatch(phoneNumber);
       done();
     };
 
@@ -59,7 +59,8 @@ describe('es-dialogflow-detect-intent', () => {
   it('it should detect intent', (done) => {
     const localEvent = { utterance: "Hi" };
 
-    const callback = (err, res) => {
+    const callback = (err, res) => {      
+      expect(err).toBeFalsy();
       expect(res).toBeTruthy;
     }
 
@@ -72,6 +73,7 @@ describe('es-dialogflow-detect-intent', () => {
     const localEvent = { utterance: "Hi" };
 
     const callback = (err, res) => {
+      expect(err).toBeFalsy();
       console.log(res);
       expect(localEvent.dialogflow_session_id).toMatch(res.session_id)
     }
@@ -87,6 +89,7 @@ describe('es-dialogflow-detect-intent', () => {
     const localEvent = { utterance: "Hi", dialogflow_session_id: "sessionid" };
 
     const callback = (err, res) => {
+      expect(err).toBeFalsy();
       console.log(res);
       expect(res.session_id).toMatch("sessionid")
     }
