@@ -78,13 +78,13 @@ describe('verified-broadcast/broadcast', () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
-      const expectedContext = { tag: ['foo', 'bar'], body: 'broadcast' };
+      const expectedContext = { tag: 'pie', body: 'broadcast' };
       expect(
         mockNotificationSubscribe.notifications.create
       ).toHaveBeenCalledWith(expectedContext);
       done();
     };
-    const event = { code: '123456', body: 'broadcast', tag: ['foo', 'bar'] };
+    const event = { code: '123456', body: 'broadcast', tag: 'pie' };
     broadcastFunction(testContext, event, callback);
   });
 
