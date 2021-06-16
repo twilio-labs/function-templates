@@ -30,7 +30,7 @@ const client = new SessionsClient({
  
  // es6 async/await - https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function
  try {
-   let [response] = await client.detectIntent(request);
+   const [response] = await client.detectIntent(request);
    console.log(response);
    // pass session id back in the response to make it easier to continue the conversation
    response.queryResult.session_id = event.dialogflow_session_id;
