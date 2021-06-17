@@ -5,14 +5,10 @@ let flowSid;
 
 // eslint-disable-next-line no-restricted-globals
 const baseUrl = new URL(location.href);
-baseUrl.pathname = baseUrl
-  .pathname
-  .replace(/\/index\.html$/, '');
+baseUrl.pathname = baseUrl.pathname.replace(/\/index\.html$/, '');
 delete baseUrl.hash;
 delete baseUrl.search;
-const fullUrl = baseUrl
-  .href
-  .substr(0, baseUrl.href.length - 1);
+const fullUrl = baseUrl.href.substr(0, baseUrl.href.length - 1);
 
 fetch(`${fullUrl}/return-config`)
   .then((response) => response.json())
@@ -36,12 +32,21 @@ function checkStudioFlow() {
         $('#flow-deployed').show();
         $('#deploy-flow').hide();
         $('.post-deploy-studio').show();
-        $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
-        $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
+        $('#open-studio').attr(
+          'href',
+          `https://www.twilio.com/console/studio/flows/${sid}`
+        );
+        $('.execution-logs-link').attr(
+          'href',
+          `https://www.twilio.com/console/studio/flows/${sid}/executions`
+        );
       }
     })
     .catch((err) => {
-      console.log('An error occurred when attempting to check the Studio Flow', err);
+      console.log(
+        'An error occurred when attempting to check the Studio Flow',
+        err
+      );
     });
 }
 
@@ -51,14 +56,15 @@ function setup(e) {
   $('#deploy-flow .button').addClass('loading');
   $('.loader.button-loader').show();
 
-  fetch('/setup').then(() => {
-    checkStudioFlow();
-  })
-  .catch((err) => {
-    console.log('An error ocurred creating Studio Flow', err);
-    $('#deploy-flow .button').removeClass('loading');
-    $('.loader.button-loader').hide();
-  });
+  fetch('/setup')
+    .then(() => {
+      checkStudioFlow();
+    })
+    .catch((err) => {
+      console.log('An error ocurred creating Studio Flow', err);
+      $('#deploy-flow .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
 }
 
 checkStudioFlow();

@@ -1,33 +1,30 @@
 /* eslint-disable no-console, func-names */
 exports.handler = async function (context, event, callback) {
-
   const assets = Runtime.getAssets();
-  const flowDefinition = require(assets["/studio_flow.js"].path);
-  const {path} = Runtime.getFunctions().auth;
+  const flowDefinition = require(assets['/studio_flow.js'].path);
+  const { path } = Runtime.getFunctions().auth;
   const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
 
   const client = context.getTwilioClient();
 
   // Configure Studio Flow with Function
   async function configureFlowWithFunction() {
-    
     const functionName = 'es-dialogflow-detect-intent';
     const environment = await getCurrentEnvironment(context);
-    const {domainName} = environment;
+    const { domainName } = environment;
     const functionURL = `https://${domainName}/${functionName}`;
-  
+
     const studioWidgets = flowDefinition.states;
-    const functionWidget = studioWidgets.find(widget => widget.name === "DialogflowDetectIntent");
+    const functionWidget = studioWidgets.find(
+      (widget) => widget.name === 'DialogflowDetectIntent'
+    );
     functionWidget.properties.url = functionURL;
-    flowDefinition.states = studioWidgets;    
-  
- }
- 
+    flowDefinition.states = studioWidgets;
+  }
+
   // Deploy Twilio Studio Flow
-function deployStudio() {  
-    
-  return configureFlowWithFunction()
-    .then(()=>{
+  function deployStudio() {
+    return configureFlowWithFunction().then(() => {
       return client.studio.flows
         .create({
           commitMessage: 'Code Exchange automatic deploy',
@@ -36,8 +33,10 @@ function deployStudio() {
           definition: flowDefinition,
         })
         .then((flow) => flow)
-        .catch((err) => { throw new Error(err.details) });
-    });   
+        .catch((err) => {
+          throw new Error(err.details);
+        });
+    });
   }
 
   function getPhoneNumberSid() {
@@ -54,7 +53,8 @@ function deployStudio() {
 
   function updatePhoneNumberWebhook(studioWebhook, numberSid) {
     return new Promise((resolve, reject) => {
-      client.incomingPhoneNumbers(numberSid)
+      client
+        .incomingPhoneNumbers(numberSid)
         .update({
           smsUrl: studioWebhook,
         })
@@ -66,19 +66,13 @@ function deployStudio() {
   }
 
   function setFlowSidEnvVar(environment, sid) {
-    return setEnvironmentVariable(
-      context,
-      environment,
-      'FLOW_SID',
-      sid
-    );
+    return setEnvironmentVariable(context, environment, 'FLOW_SID', sid);
   }
 
-  
   const flow = await deployStudio();
   const environment = await getCurrentEnvironment(context);
   // No environment exists when developing locally
-  if(environment) {
+  if (environment) {
     await setFlowSidEnvVar(environment, flow.sid);
   } else {
     process.env.FLOW_SID = flow.sid;
