@@ -10,8 +10,10 @@ const client = new SessionsClient({
   keyFilename: Runtime.getAssets()[context.GOOGLE_APPLICATION_CREDENTIALS].path
 });
  
- /* dialogflow keeps conversation state organized by session ids.  in order to have back and forth passes with dialogflow, we need to maintain a consistent
-  session id throughout the dialog.  if one doesn't exist, generate it.  if it does, use what we have. */
+/*
+ * dialogflow keeps conversation state organized by session ids.  in order to have back and forth passes with dialogflow, we need to maintain a consistent
+ * session id throughout the dialog.  if one doesn't exist, generate it.  if it does, use what we have.
+ */
  if (!event.dialogflow_session_id){
    event.dialogflow_session_id = crypto.randomBytes(16).toString('base64');
  }
@@ -35,9 +37,9 @@ const client = new SessionsClient({
    console.log(response);
    // pass session id back in the response to make it easier to continue the conversation
    response.queryResult.session_id = event.dialogflow_session_id;
-   callback(null, response.queryResult);
+   return callback(null, response.queryResult);
  } catch (error) {
    console.error(error);
-   callback(error);
+   return callback(error);
  }
 }

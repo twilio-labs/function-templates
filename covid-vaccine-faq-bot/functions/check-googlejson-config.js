@@ -1,11 +1,11 @@
 const fs = require('fs').promises;
 const path = require('path');
-const isAuthValid = (authJson) => {
-  
-  authJson.client_email &&
-  authJson.client_email === '<YOUR SERVICE ACCOUNT EMAIL ADDRESS>' &&
-  authJson.private_key &&
-  authJson.private_key === '<YOUR PRIVATE KEY BLOCK HERE>'
+
+const isAuthValid = function isAuthValid(authJson) {
+  return authJson.client_email &&
+         authJson.client_email === '<YOUR SERVICE ACCOUNT EMAIL ADDRESS>' &&
+         authJson.private_key &&
+         authJson.private_key === '<YOUR PRIVATE KEY BLOCK HERE>'
 }
 
 exports.handler = async function(context, _event, callback) {
