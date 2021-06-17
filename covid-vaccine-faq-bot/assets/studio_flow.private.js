@@ -76,38 +76,11 @@ const flowDefinition = {
       }
     },
     {
-      "name": "AnyFurtherQuestionsAndWait",
-      "type": "send-and-wait-for-reply",
-      "transitions": [
-        {
-          "next": "ResetUtteranceVariable",
-          "event": "incomingMessage"
-        },
-        {
-          "event": "timeout"
-        },
-        {
-          "event": "deliveryFailure"
-        }
-      ],
-      "properties": {
-        "offset": {
-          "x": -590,
-          "y": 1170
-        },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
-        "from": "{{flow.channel.address}}",
-        "body": "Do you have any questions about the vaccine?",
-        "timeout": "3600"
-      }
-    },
-    {
       "name": "Check_EndSession",
       "type": "split-based-on",
       "transitions": [
         {
-          "next": "SendDialogflowAnswer",
+          "next": "SendWaitDialogflowAnswer",
           "event": "noMatch"
         },
         {
@@ -145,7 +118,7 @@ const flowDefinition = {
       "properties": {
         "variables": [
           {
-            "value": "{{widgets.AnyFurtherQuestionsAndWait.inbound.Body}}",
+            "value": "{{widgets.SendWaitDialogflowAnswer.inbound.Body}}",
             "key": "utterance"
           }
         ],
@@ -201,27 +174,30 @@ const flowDefinition = {
       }
     },
     {
-      "name": "SendDialogflowAnswer",
-      "type": "send-message",
+      "name": "SendWaitDialogflowAnswer",
+      "type": "send-and-wait-for-reply",
       "transitions": [
         {
-          "next": "AnyFurtherQuestionsAndWait",
-          "event": "sent"
+          "next": "ResetUtteranceVariable",
+          "event": "incomingMessage"
         },
         {
-          "event": "failed"
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
         }
       ],
       "properties": {
         "offset": {
-          "x": -160,
-          "y": 1170
+          "x": -150,
+          "y": 1180
         },
         "service": "{{trigger.message.InstanceSid}}",
         "channel": "{{trigger.message.ChannelSid}}",
         "from": "{{flow.channel.address}}",
-        "to": "{{contact.channel.address}}",
-        "body": "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}"
+        "body": "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}",
+        "timeout": "3600"
       }
     }
   ],
