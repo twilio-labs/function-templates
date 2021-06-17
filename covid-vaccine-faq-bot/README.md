@@ -19,7 +19,7 @@ agent that interacts with the user. You will need to setup a Google Cloud projec
 
 ### 2. Create a Dialogflow Chatbot Agent
 
-The conversational chatbot is powered by  an integration between Twilio and Google Dialogflow, a natural language understanding platform used to design and integrate a conversational user interfaces. You may import the pre-built Dialogflow chatbot agents included in this repository, or configure your own chatbot agent.
+The conversational chatbot is powered by  an integration between Twilio and Google Dialogflow, a natural language understanding platform used to design and integrate a conversational user interfaces.You may import the pre-built Dialogflow chatbot agents included in this repository, or configure your own chatbot agent.
 
 **Follow [this guide](prerequisites/dialogflow-config.md) for step-by-step instructions on how to do this.**
 
