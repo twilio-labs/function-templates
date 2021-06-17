@@ -6,7 +6,6 @@ exports.handler = async function(context, event, callback) {
 
   let response = new Twilio.Response();
   const redirectBaseUrl = getBaseUrl(context);
-  const client = context.getTwilioClient();
 
   if (!event['admin-phone-number'] ||
       !event['admin-password'] ||

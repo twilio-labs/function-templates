@@ -21,8 +21,7 @@ exports.handler = function(context, event, callback) {
         fontColor: context.FONT_COLOR,
         customCss: context.CUSTOM_CSS,
 
-        messageQuantity: context.MESSAGE_QUANTITY,
-        messageInterval: context.MESSAGE_INTERVAL,
+        messageFrequency: context.MESSAGE_FREQUENCY,
         contactInformation: context.CONTACT_INFORMATION,
         optInKeyword: context.OPT_IN_KEYWORD,
         privacyPolicyLink: context.PRIVACY_POLICY_LINK,
@@ -41,7 +40,7 @@ exports.handler = function(context, event, callback) {
     }
 
     response.setStatusCode(200);
-    response.setBody(JSON.stringify(body));
+    response.setBody(body);
 
     // console.log(response);
     callback(null, response);
