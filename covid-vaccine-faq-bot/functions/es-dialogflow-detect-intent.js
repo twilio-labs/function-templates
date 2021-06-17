@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // Imports the Google Cloud API library
 const {SessionsClient} = require('@google-cloud/dialogflow');
 const crypto = require('crypto');

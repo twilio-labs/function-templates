@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const helpers = require('../../test/test-helper');
 const returnConfig = require('../functions/return-config').handler;
 const detectIntent = require('../functions/es-dialogflow-detect-intent').handler;
@@ -61,7 +62,7 @@ describe('es-dialogflow-detect-intent', () => {
 
     const callback = (err, res) => {      
       expect(err).toBeFalsy();
-      expect(res).toBeTruthy;
+      expect(res).toBeTruthy();
     }
 
     detectIntent(context, localEvent, callback);
