@@ -1,6 +1,14 @@
 const got = require('got');
 
 exports.handler = function(context, event, callback) {
+  let emailBody = event.Body || '';
+  const numMedia = parseInt(event.NumMedia, 10);
+  if (numMedia > 0) {
+    emailBody += "\n\n";
+    for (let i = 0; i < numMedia; i++) {
+      emailBody += event[`MediaUrl${i}`] + "\n";
+    }
+  }
   const requestBody = {
     personalizations: [{ to: [{ email: context.TO_EMAIL_ADDRESS }] }],
     from: { email: context.FROM_EMAIL_ADDRESS },
@@ -8,7 +16,7 @@ exports.handler = function(context, event, callback) {
     content: [
       {
         type: 'text/plain',
-        value: event.Body,
+        value: emailBody,
       },
     ],
   };
