@@ -52,7 +52,7 @@ describe('return-config', () => {
       expect(err).toBeFalsy();
       expect(res._statusCode).toBe(200);
       expect(res._headers['Content-Type']).toMatch('application/json');
-      expect(res._body.phone_number).toMatch(phoneNumber);
+      expect(res._body.phoneNumber).toMatch(phoneNumber);
       done();
     };
 
@@ -78,7 +78,6 @@ describe('es-dialogflow-detect-intent', () => {
 
     const callback = (err, res) => {
       expect(err).toBeFalsy();
-      console.log(res);
       expect(localEvent.dialogflow_session_id).toMatch(res.session_id);
     };
 

@@ -4,9 +4,9 @@ const path = require('path');
 const isAuthValid = function isAuthValid(authJson) {
   return (
     authJson.client_email &&
-    authJson.client_email === '<YOUR SERVICE ACCOUNT EMAIL ADDRESS>' &&
+    authJson.client_email !== '<YOUR SERVICE ACCOUNT EMAIL ADDRESS>' &&
     authJson.private_key &&
-    authJson.private_key === '<YOUR PRIVATE KEY BLOCK HERE>'
+    authJson.private_key !== '<YOUR PRIVATE KEY BLOCK HERE>'
   );
 };
 
@@ -30,13 +30,15 @@ exports.handler = async function (context, _event, callback) {
     });
     return callback(null, response);
   } catch (error) {
-    console.error(`Google service account key error: ${error.message}.`);
+    const errMessage = `Google service account key error: ${error.message}.`;
+    console.error(errMessage);
+
+    response.setStatusCode(error.code || 400);
+    response.setBody({
+      success: false,
+      message: errMessage,
+    });
   }
 
-  response.setStatusCode(error.code || 400);
-  response.setBody({
-    success: false,
-    message,
-  });
   return callback(null, response);
 };
