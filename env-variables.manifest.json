@@ -1044,6 +1044,38 @@
         "contentKey": null
       }
     ],
+    "verified-broadcast": [
+      {
+        "key": "BROADCAST_NOTIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Notify Service",
+        "link": "https://www.twilio.com/console/notify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "BROADCAST_ADMIN_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "The number allowed to trigger a broadcast, used for verification",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
     "international-telephone-input": [],
     "forward-message-mailgun": [
       {
