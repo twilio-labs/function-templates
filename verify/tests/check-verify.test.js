@@ -81,6 +81,13 @@ describe('verify/check-verification', () => {
       expect(mockClient.verify.services).toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
+      const expectedParameters = {
+        code: '123456',
+        to: '+17341234567',
+      };
+      expect(mockService.verificationChecks.create).toHaveBeenCalledWith(
+        expectedParameters
+      );
       done();
     };
     const event = {

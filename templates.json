@@ -216,6 +216,11 @@
       "description": "Issue access tokens and create push challenges from this helpful app and dashboard."
     },
     {
+      "id": "verified-broadcast",
+      "name": "SMS Broadcast with Verification",
+      "description": "Broadcast messages to verified subscribers from a web application dashboard."
+    },
+    {
       "id": "international-telephone-input",
       "name": "International telephone input",
       "description": "International telephone input form field and phone number validation with Twilio Lookup."

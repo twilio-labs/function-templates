@@ -42,7 +42,7 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const { to, verification_code: code } = event.to;
+  const { to, verification_code: code } = event;
 
   client.verify
     .services(service)
