@@ -1320,6 +1320,58 @@
         "configurable": false,
         "contentKey": null
       }
+    ],
+    "covid-vaccine-faq-bot": [
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Your Twilio phone number for sending and receiving messages",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "GOOGLE_CLOUD_PROJECT_ID",
+        "required": true,
+        "format": "text",
+        "description": "Your Google Cloud Project ID",
+        "link": "https://cloud.google.com/dialogflow/cx/docs/quick/setup#project",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "GOOGLE_APPLICATION_CREDENTIALS",
+        "required": true,
+        "format": "file(json)",
+        "description": "A JSON key file for your Google service account",
+        "link": "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys",
+        "default": "/service-account-key.json",
+        "configurable": true,
+        "contentKey": "SERVICE_ACCOUNT_KEY_CONTENT"
+      },
+      {
+        "key": "LANGUAGE_CODE",
+        "required": true,
+        "format": "text",
+        "description": "Language to be leveraged by chatbot, can be configured for multi-language chatbots",
+        "link": null,
+        "default": "en-US",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FLOW_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of the Vaccine Bot FAQ Studio Flow, will be set automatically by the app, no need to configure in advance",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      }
     ]
   }
 }
