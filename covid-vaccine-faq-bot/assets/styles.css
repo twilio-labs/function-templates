@@ -1,0 +1,99 @@
+body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+div[role='main'] {
+  flex: 1;
+}
+
+footer {
+  text-align: center;
+}
+
+footer p {
+  margin-bottom: 0;
+}
+
+#twilio-logo {
+  width: 50px;
+  height: 50px;
+}
+
+#deploy-flow .button.loading {
+  background: rgb(244, 244, 246);
+  border: 1px solid rgb(244, 244, 246);
+  color: rgb(96, 107, 133);
+  box-shadow: none;
+  cursor: default;
+}
+.loader {
+  border: 4px solid rgb(244, 244, 246);
+  border-top: 4px solid rgb(18, 28, 45);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 5px;
+  margin-top: -5px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.deploy-studio-flow {
+  margin: 10px 0;
+  margin-bottom: 30px;
+}
+.standby-list-diagram {
+  border: 1px solid rgb(136, 145, 170);
+  margin-bottom: 20px;
+}
+span.checkmark {
+  color: rgb(20, 176, 83);
+}
+tr.table-placeholder {
+  background: rgb(244, 244, 246);
+  text-align: center;
+}
+tr.table-placeholder td {
+  padding: 30px 0;
+}
+#test-standby-list {
+  display: none;
+}
+
+#hipaa-disclaimer {
+  border: 2px solid rgb(136, 145, 170);
+  padding: 20px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+#password-form {
+  padding: 30px 30px 5px 30px;
+  background: rgb(244, 244, 246);
+  margin-bottom: 40px;
+}
+
+#password-form input {
+  background: white;
+}
+
+.auth-successful {
+  background: rgb(244, 244, 246);
+  display: inline-block;
+  padding: 5px 10px;
+  margin-bottom: 20px;
+}
