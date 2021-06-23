@@ -19,7 +19,7 @@ describe('blocklist in the context', () => {
   });
 
   test('rejects the call', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result.toString()).toMatch(/Reject/);
       done();
     };
@@ -54,7 +54,7 @@ describe('blocklist in the event', () => {
   });
 
   test('rejects the call', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result.toString()).toMatch(/Reject/);
       done();
     };
@@ -62,7 +62,7 @@ describe('blocklist in the event', () => {
   });
 
   test('redirects the call', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result.toString()).toMatch(/Redirect/);
       done();
     };
@@ -70,7 +70,7 @@ describe('blocklist in the event', () => {
   });
 
   test('redirects the call with empty Blocklist', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result.toString()).toMatch(/Redirect/);
       done();
     };

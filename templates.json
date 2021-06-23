@@ -211,6 +211,16 @@
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
     },
     {
+      "id": "verify-push-backend",
+      "name": "Verify Push Backend",
+      "description": "Issue access tokens and create push challenges from this helpful app and dashboard."
+    },
+    {
+      "id": "verified-broadcast",
+      "name": "SMS Broadcast with Verification",
+      "description": "Broadcast messages to verified subscribers from a web application dashboard."
+    },
+    {
       "id": "international-telephone-input",
       "name": "International telephone input",
       "description": "International telephone input form field and phone number validation with Twilio Lookup."
@@ -249,6 +259,11 @@
       "id": "google-sheets",
       "name": "Google Sheets SMS Log",
       "description": "Logs incoming SMS numbers and messages into a Google Sheets table"
+    },
+    {
+      "id": "covid-vaccine-faq-bot",
+      "name": "COVID-19 Vaccine FAQ Bot",
+      "description": "Address COVID-19 vaccine hesitancy among consumers and answer their vaccine-related questions through an SMS chatbot"
     }
   ]
 }

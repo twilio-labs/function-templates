@@ -3,14 +3,12 @@ const url = require('url');
 
 const GREETINGS = {
   _default: {
-    text:
-      'Hi there! You are calling after my work hours. Please leave a message after the beep',
+    text: 'Hi there! You are calling after my work hours. Please leave a message after the beep',
     language: 'en-US',
     voice: 'Polly.Joey',
   },
   DE: {
-    text:
-      'Hallo! Sie rufen außerhalb meiner Arbeitszeiten an. Bitte hinterlassen Sie mir eine Nachricht nach dem Ton.',
+    text: 'Hallo! Sie rufen außerhalb meiner Arbeitszeiten an. Bitte hinterlassen Sie mir eine Nachricht nach dem Ton.',
     language: 'de-DE',
     voice: 'Polly.Hans',
   },
@@ -30,7 +28,7 @@ function getInteger(stringValue, defaultValue) {
   return parsedNumber;
 }
 
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const phoneNumberToForwardTo = context.MY_PHONE_NUMBER;
   const timezone = getInteger(context.TIMEZONE_OFFSET, DEFAULT_UTC_OFFSET);
   const workWeek = {
@@ -52,7 +50,7 @@ exports.handler = function(context, event, callback) {
   // between 8am and 7pm
   const isWorkingHour = hour <= workHour.end && hour >= workHour.start;
 
-  let twiml = new Twilio.twiml.VoiceResponse();
+  const twiml = new Twilio.twiml.VoiceResponse();
 
   if (isWorkingDay && isWorkingHour) {
     twiml.dial(phoneNumberToForwardTo);

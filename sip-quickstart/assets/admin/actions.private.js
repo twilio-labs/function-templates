@@ -1,11 +1,11 @@
 const assets = Runtime.getAssets();
-const { urlForSiblingPage } = require(assets["/admin/shared.js"].path);
-const extensions = require(assets["/extensions.js"].path);
+const { urlForSiblingPage } = require(assets['/admin/shared.js'].path);
+const extensions = require(assets['/extensions.js'].path);
 
-const DEFAULT_TWILIO_WEBHOOK = "https://demo.twilio.com/welcome/voice/";
+const DEFAULT_TWILIO_WEBHOOK = 'https://demo.twilio.com/welcome/voice/';
 
 function sipDomainNameFromDomainName(domainName) {
-  return domainName.replace(".twil.io", ".sip.twilio.com");
+  return domainName.replace('.twil.io', '.sip.twilio.com');
 }
 
 class Actions {
@@ -16,8 +16,8 @@ class Actions {
 
   async initialize() {
     let env = {};
-    console.log("Creating SIP Domain");
-    const friendlyName = this.options.friendlyName;
+    console.log('Creating SIP Domain');
+    const { friendlyName } = this.options;
     const sipDomainName = sipDomainNameFromDomainName(this.options.DOMAIN_NAME);
     let results = await this.createSipDomain({
       friendlyName,
@@ -26,7 +26,7 @@ class Actions {
     env = Object.assign(env, results);
     const outboundVoiceUrl = `https://${
       this.options.DOMAIN_NAME
-    }${urlForSiblingPage("outbound-calls", this.options.PATH, "..")}`;
+    }${urlForSiblingPage('outbound-calls', this.options.PATH, '..')}`;
     console.log(
       `Wiring up SIP Domain ${env.SIP_DOMAIN_SID} to the function: ${outboundVoiceUrl}`
     );
@@ -34,8 +34,8 @@ class Actions {
       sipDomainSid: env.SIP_DOMAIN_SID,
       voiceUrl: outboundVoiceUrl,
     });
-    //Create and map credential list to the domain
-    console.log("Building and wiring up default credential list");
+    // Create and map credential list to the domain
+    console.log('Building and wiring up default credential list');
     results = await this.createDefaultCredentialListForDomain({
       sipDomainSid: env.SIP_DOMAIN_SID,
     });
@@ -45,7 +45,7 @@ class Actions {
     if (incomingNumber) {
       const incomingVoiceUrl = `https://${
         this.options.DOMAIN_NAME
-      }${urlForSiblingPage("extension-menu", this.options.PATH, "..")}`;
+      }${urlForSiblingPage('extension-menu', this.options.PATH, '..')}`;
       console.log(
         `Wiring up your number ${incomingNumber.phoneNumber} to the function: ${incomingVoiceUrl}`
       );
@@ -60,11 +60,12 @@ class Actions {
     }
     results = await this.setCallerId({ number: outgoingCallerId });
     env = Object.assign(env, results);
-    env.INITIALIZED = "sip-quickstart";
+    env.INITIALIZED = 'sip-quickstart';
     env.INITIALIZATION_DATE = new Date().toISOString();
     return env;
   }
 
+  // eslint-disable-next-line consistent-return
   async createSipDomain({ friendlyName, domainName }) {
     try {
       const result = await this.client.sip.domains.create({
@@ -110,7 +111,7 @@ class Actions {
   }
 
   async createDefaultCredentialListForDomain({ sipDomainSid }) {
-    const serviceName = this.options.DOMAIN_NAME.replace(".twil.io", "");
+    const serviceName = this.options.DOMAIN_NAME.replace('.twil.io', '');
     const friendlyName = `${this.options.friendlyName} (${serviceName})`;
     const results = await this.createMappedCredentialList({
       friendlyName,
@@ -137,7 +138,7 @@ class Actions {
   }
 
   async addNewCredentials({ credentialListSid, usernames }) {
-    for (let username of usernames) {
+    for (const username of usernames) {
       await this.addNewCredential({
         credentialListSid,
         username,

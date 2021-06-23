@@ -13,8 +13,8 @@ describe('video-token/token', () => {
     helpers.teardown();
   });
 
-  test('returns a valid token with default room', done => {
-    const callback = (err, result) => {
+  test('returns a valid token with default room', (done) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._headers).toEqual({
         Location: 'https://twil.io',

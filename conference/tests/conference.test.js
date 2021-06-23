@@ -12,8 +12,8 @@ describe('simple conference', () => {
     helpers.teardown();
   });
 
-  it('returns a VoiceResponse', done => {
-    const callback = (err, result) => {
+  it('returns a VoiceResponse', (done) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       done();
     };
@@ -21,8 +21,8 @@ describe('simple conference', () => {
     conference(context, event, callback);
   });
 
-  it('connects a call to a conference called Snowy Owl', done => {
-    const callback = (err, result) => {
+  it('connects a call to a conference called Snowy Owl', (done) => {
+    const callback = (_err, result) => {
       expect(result.toString()).toMatch(
         '<Dial><Conference>Snowy Owl</Conference></Dial>'
       );

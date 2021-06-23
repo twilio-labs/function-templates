@@ -17,8 +17,8 @@ describe('sync-token/token', () => {
     helpers.teardown();
   });
 
-  test('returns a valid token with defined sync service sid', done => {
-    const callback = (err, result) => {
+  test('returns a valid token with defined sync service sid', (done) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
       jwt.verify(result._body.token, baseContext.API_SECRET, (err, decoded) => {
@@ -27,9 +27,11 @@ describe('sync-token/token', () => {
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
         expect(decoded.grants).toEqual({
           identity: 'testing-username',
+          /* eslint-disable camelcase */
           data_sync: {
             service_sid: baseContext.SYNC_SERVICE_SID,
           },
+          /* eslint-enable camelcase */
         });
         done();
       });
@@ -37,8 +39,8 @@ describe('sync-token/token', () => {
     tokenFunction(baseContext, {}, callback);
   });
 
-  test('returns a valid token with fallback inline service sid', done => {
-    const callback = (err, result) => {
+  test('returns a valid token with fallback inline service sid', (done) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result._body.token).toBe('string');
       jwt.verify(result._body.token, baseContext.API_SECRET, (err, decoded) => {
@@ -47,9 +49,11 @@ describe('sync-token/token', () => {
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
         expect(decoded.grants).toEqual({
           identity: 'testing-username',
+          /* eslint-disable camelcase */
           data_sync: {
             service_sid: 'enter Sync Service Sid',
           },
+          /* eslint-enable camelcase */
         });
         done();
       });

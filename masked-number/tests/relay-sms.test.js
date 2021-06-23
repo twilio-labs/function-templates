@@ -6,7 +6,7 @@ const mockTwilioClient = {
   messages: {
     create: jest.fn(() => {
       if (shouldFail) {
-        return Promise.reject('Expected test error');
+        return Promise.reject(new Error('Expected test error'));
       }
 
       return Promise.resolve({
@@ -48,16 +48,13 @@ describe('masked-number function template', () => {
       expect(mockTwilioClient.messages.create).toHaveBeenCalled();
 
       done();
-    }
+    };
 
     relaySms(context, event, callback);
   });
 
   it('should relay messages from other phone numbers', (done) => {
-    const event = { ...baseEvent,
-                    From: baseEvent.To,
-                    Body: 'test message',
-                  };
+    const event = { ...baseEvent, From: baseEvent.To, Body: 'test message' };
     const callback = (err, result) => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
@@ -72,9 +69,7 @@ describe('masked-number function template', () => {
   });
 
   it('should reject messages without a recipient specified', (done) => {
-    const event = { ...baseEvent,
-                    Body: 'no recipient specified',
-                  };
+    const event = { ...baseEvent, Body: 'no recipient specified' };
     const callback = (err, result) => {
       expect(err).toBeFalsy();
       const twiml = result.toString();

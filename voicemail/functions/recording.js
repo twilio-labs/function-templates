@@ -1,4 +1,4 @@
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const client = context.getTwilioClient();
 
   try {
@@ -13,8 +13,8 @@ exports.handler = async function(context, event, callback) {
       body: message,
     });
 
-    callback(null);
+    return callback(null);
   } catch (err) {
-    callback(err);
+    return callback(err);
   }
 };

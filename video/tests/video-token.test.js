@@ -17,7 +17,7 @@ describe('video-token/token', () => {
   });
 
   test('returns a valid token with default room', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result.token).toBe('string');
       jwt.verify(result.token, baseContext.API_SECRET, (err, decoded) => {

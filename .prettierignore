@@ -1,0 +1,8 @@
+node_modules
+/coverage
+/docs
+env-variables.manifest.json
+package-lock.json
+*.md
+*.html
+*.yml

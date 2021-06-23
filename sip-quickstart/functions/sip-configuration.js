@@ -1,15 +1,15 @@
 const assets = Runtime.getAssets();
-const extensions = require(assets["/extensions.js"].path);
+const extensions = require(assets['/extensions.js'].path);
 
 exports.handler = async (context, event, callback) => {
   try {
     const client = context.getTwilioClient();
     const sipDomain = await client.sip.domains(context.SIP_DOMAIN_SID).fetch();
     const localizedSipDomainName = sipDomain.domainName.replace(
-      ".sip.twilio.com",
-      ".sip.us1.twilio.com"
+      '.sip.twilio.com',
+      '.sip.us1.twilio.com'
     );
-    callback(null, {
+    return callback(null, {
       initialized: context.INITIALIZED,
       appName: context.APP_NAME,
       incomingNumber: context.INCOMING_NUMBER,
@@ -18,7 +18,7 @@ exports.handler = async (context, event, callback) => {
       extensions,
       localizedSipDomainName,
     });
-  } catch(err) {
-    callback(err);
+  } catch (err) {
+    return callback(err);
   }
 };

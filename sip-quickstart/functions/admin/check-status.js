@@ -1,12 +1,13 @@
 const assets = Runtime.getAssets();
-const status = require(assets["/admin/statuses.js"].path);
-const { checkAuthorization } = require(assets["/admin/shared.js"].path);
+const status = require(assets['/admin/statuses.js'].path);
+const { checkAuthorization } = require(assets['/admin/shared.js'].path);
 const environmentFunction = status.environment;
 const statusFunctions = status.statuses;
 
 async function getStatuses(context) {
   // This should be `Promise.allSettled` with a filter, but the node version is off
-  const promises = statusFunctions.map(async fn => {
+  // eslint-disable-next-line consistent-return
+  const promises = statusFunctions.map(async (fn) => {
     try {
       return await fn(context);
     } catch (err) {
@@ -14,10 +15,10 @@ async function getStatuses(context) {
     }
   });
   const results = await Promise.all(promises);
-  return results.filter(result => result !== undefined);
+  return results.filter((result) => result !== undefined);
 }
 
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   if (!checkAuthorization(context, event, callback)) {
     return;
   }
@@ -25,6 +26,6 @@ exports.handler = async function(context, event, callback) {
   const statuses = await getStatuses(context);
   callback(null, {
     environment,
-    statuses
+    statuses,
   });
 };

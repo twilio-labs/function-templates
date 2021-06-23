@@ -1,7 +1,9 @@
-const { stripIndents } = require("common-tags");
+/* eslint-disable no-negated-condition */
+const { stripIndents } = require('common-tags');
+
 const assets = Runtime.getAssets();
 const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
-  "/admin/shared.js"
+  '/admin/shared.js'
 ].path);
 
 async function checkEnvironmentInitialization(context) {
@@ -34,7 +36,7 @@ async function checkEnvironmentInitialization(context) {
     status.actions = [
       {
         title: `Initialize your application for your environment, ${environment.uniqueName}`,
-        name: "initialize",
+        name: 'initialize',
       },
     ];
   } else {
@@ -66,8 +68,8 @@ async function getTwiMLApplicationStatus(context) {
       status.description = missingTwimlApplicationError(err);
       status.actions = [
         {
-          title: "Recreate a new TwiML Application",
-          name: "createTwimlApp",
+          title: 'Recreate a new TwiML Application',
+          name: 'createTwimlApp',
           params: {
             friendlyName,
           },
@@ -85,15 +87,15 @@ async function getTwiMLApplicationStatus(context) {
       `;
       status.actions = [
         {
-          title: "Use existing TwiML application",
-          name: "useExistingTwimlApp",
+          title: 'Use existing TwiML application',
+          name: 'useExistingTwimlApp',
           params: {
             twimlApplicationSid: app.sid,
           },
         },
         {
-          title: "Do not use existing TwiML application, create a new one",
-          name: "createTwimlApp",
+          title: 'Do not use existing TwiML application, create a new one',
+          name: 'createTwimlApp',
           params: {
             friendlyName,
           },
@@ -107,8 +109,8 @@ async function getTwiMLApplicationStatus(context) {
       `;
       status.actions = [
         {
-          title: "Create a new TwiML Application",
-          name: "createTwimlApp",
+          title: 'Create a new TwiML Application',
+          name: 'createTwimlApp',
           params: {
             friendlyName,
           },
@@ -124,7 +126,7 @@ async function getCallerIdStatus(context) {
   const callerId = process.env.CALLER_ID;
   const status = {
     valid: false,
-    title: "Caller ID is set to a valid number",
+    title: 'Caller ID is set to a valid number',
   };
   // Get All Owned Numbers and Verified Numbers
   const incomingNumbers = await client.incomingPhoneNumbers.list();
@@ -147,7 +149,7 @@ async function getCallerIdStatus(context) {
     status.description = `Your outgoing caller ID can be set to any Twilio number that you've purchased or any numbers that are verified on your account. `;
     status.actions = incomingNumbers.map((num) => ({
       title: `Choose Twilio # ${num.friendlyName}`,
-      name: "setCallerId",
+      name: 'setCallerId',
       params: {
         number: num.phoneNumber,
       },
@@ -155,7 +157,7 @@ async function getCallerIdStatus(context) {
     status.actions = status.actions.concat(
       outgoingCallerIds.map((num) => ({
         title: `Choose Verified # ${num.friendlyName}`,
-        name: "setCallerId",
+        name: 'setCallerId',
         params: {
           number: num.phoneNumber,
         },
@@ -168,18 +170,18 @@ async function getCallerIdStatus(context) {
 async function getTwiMLApplicationIsWiredUp(context) {
   const client = context.getTwilioClient();
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
-    "client-voice-twiml-app",
+    'client-voice-twiml-app',
     context.PATH,
-    ".."
+    '..'
   )}`;
   twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
   const status = {
-    title: "TwiML Application is configured to use incoming call function",
+    title: 'TwiML Application is configured to use incoming call function',
     valid: false,
   };
   if (!twimlApplicationSid) {
     status.description =
-      "After you update your environment, you can wire up your TwiML Application safely.";
+      'After you update your environment, you can wire up your TwiML Application safely.';
   } else {
     try {
       const app = await client.applications(twimlApplicationSid).fetch();
@@ -197,7 +199,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
         status.actions = [
           {
             title: `Update TwiML App Incoming Voice Webhook`,
-            name: "updateTwimlAppVoiceUrl",
+            name: 'updateTwimlAppVoiceUrl',
             params: {
               twimlApplicationSid,
               voiceUrl: expectedFn,
@@ -216,7 +218,7 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
   const client = context.getTwilioClient();
   const status = {
     title:
-      "The API Key and Secret for minting Access Tokens is accessible from the current environment",
+      'The API Key and Secret for minting Access Tokens is accessible from the current environment',
     valid: false,
   };
 
@@ -234,8 +236,8 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
       `;
       status.actions = [
         {
-          title: "Generate a new REST API Key and Secret",
-          name: "generateNewKey",
+          title: 'Generate a new REST API Key and Secret',
+          name: 'generateNewKey',
           params: {
             friendlyName: process.env.APP_NAME,
           },
@@ -252,8 +254,8 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
     `;
     status.actions = [
       {
-        title: "Generate a new REST API Key and Secret",
-        name: "generateNewKey",
+        title: 'Generate a new REST API Key and Secret',
+        name: 'generateNewKey',
         params: {
           friendlyName: process.env.APP_NAME,
         },
@@ -265,10 +267,10 @@ async function getAPIKeyAndSecretFromEnvStatus(context) {
 
 async function getDefaultPasswordChanged(context) {
   const status = {
-    title: "Default admin password has been changed",
+    title: 'Default admin password has been changed',
     valid: false,
   };
-  if (process.env.ADMIN_PASSWORD === "default") {
+  if (process.env.ADMIN_PASSWORD === 'default') {
     status.description = stripIndents`
     Please take a moment to change your admin password from the provided default password. 
     

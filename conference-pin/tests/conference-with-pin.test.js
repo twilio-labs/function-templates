@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
-const conferenceHandler = require('../functions/conference-with-pin.protected')
-  .handler;
+const conferenceHandler =
+  require('../functions/conference-with-pin.protected').handler;
 const Twilio = require('twilio');
 
 const context = {
@@ -29,7 +29,7 @@ test('returns an error if no conference PIN is set', (done) => {
 });
 
 test('returns a VoiceResponse', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
     done();
   };
@@ -38,7 +38,7 @@ test('returns a VoiceResponse', (done) => {
 });
 
 test('prompts for PIN by default', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toContain(
       '<Response><Gather><Say>Welcome! Please enter the PIN for this conference line followed by a hash.</Say></Gather></Response>'
     );
@@ -49,7 +49,7 @@ test('prompts for PIN by default', (done) => {
 });
 
 test('connects to conference with a valid PIN', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toContain(
       '<Response><Say>Thank you! You are joining the conference</Say><Dial><Conference>My pin protected conference</Conference></Dial></Response>'
     );
@@ -60,7 +60,7 @@ test('connects to conference with a valid PIN', (done) => {
 });
 
 test('rejects caller with an invalid PIN', (done) => {
-  const callback = (err, result) => {
+  const callback = (_err, result) => {
     expect(result.toString()).toContain(
       `<Response><Say>I'm sorry but the code is invalid. Please try again. Thank you</Say><Hangup/></Response>`
     );

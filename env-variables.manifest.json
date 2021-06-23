@@ -546,6 +546,16 @@
     ],
     "funlet-echo": [
       {
+        "key": "FUNLET_ECHO_TWIML",
+        "required": true,
+        "format": "text",
+        "description": "The default TwiML to echo back (can be overridden by the Twiml URL parameter)",
+        "link": "https://www.twilio.com/docs/voice/twiml",
+        "default": "<Response><Say>Hello, world!</Say></Response>",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -557,6 +567,56 @@
       }
     ],
     "funlet-simple-message": [
+      {
+        "key": "FUNLET_MESSAGE_1",
+        "required": true,
+        "format": "text",
+        "description": "The first URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": "Hello, world!",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_2",
+        "required": true,
+        "format": "text",
+        "description": "The second URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_3",
+        "required": true,
+        "format": "text",
+        "description": "The third URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_4",
+        "required": true,
+        "format": "text",
+        "description": "The fourth URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FUNLET_MESSAGE_5",
+        "required": true,
+        "format": "text",
+        "description": "The fifth URL to <Play>, or string to <Say>.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -570,6 +630,16 @@
     ],
     "funlet-simple-menu": [
       {
+        "key": "FUNLET_MENU_MESSAGE",
+        "required": true,
+        "format": "text",
+        "description": "The URL of a media file to <Play>, or a string to <Say>, to greet the caller. Can be overridden by the Message URL parameter.",
+        "link": null,
+        "default": "Hello! Please select an option.",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -581,6 +651,16 @@
       }
     ],
     "funlet-whisper": [
+      {
+        "key": "FUNLET_WHISPER_HUMAN_CHECK",
+        "required": true,
+        "format": "text",
+        "description": "If \"true\", check that the recipient is human by having them press a button.",
+        "link": null,
+        "default": "false",
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -594,6 +674,16 @@
     ],
     "funlet-forward": [
       {
+        "key": "FUNLET_FORWARD_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Calls made to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -605,6 +695,16 @@
       }
     ],
     "funlet-call-me": [
+      {
+        "key": "FUNLET_CALLME_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Calls made to your Twilio number will get forwarded to this E.164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -618,6 +718,16 @@
     ],
     "funlet-simulring": [
       {
+        "key": "FUNLET_SIMULRING_PHONE_NUMBERS",
+        "required": true,
+        "format": "list(phone_number)",
+        "description": "The phone numbers in this comma-separated list will be called simultaneously. All phone numbers must follow the E.164 format",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12345551234,+12345556789",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
         "format": "text",
@@ -629,6 +739,16 @@
       }
     ],
     "funlet-find-me": [
+      {
+        "key": "FUNLET_FINDME_PHONE_NUMBERS",
+        "required": true,
+        "format": "list(phone_number)",
+        "description": "The phone numbers in this comma-separated list will be called in order. All phone numbers must follow the E.164 format",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12345551234,+12345556789",
+        "configurable": true,
+        "contentKey": null
+      },
       {
         "key": "TWILIO_VOICE_WEBHOOK_URL",
         "required": true,
@@ -912,6 +1032,50 @@
         "contentKey": null
       }
     ],
+    "verify-push-backend": [
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "verified-broadcast": [
+      {
+        "key": "BROADCAST_NOTIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Notify Service",
+        "link": "https://www.twilio.com/console/notify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "BROADCAST_ADMIN_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "The number allowed to trigger a broadcast, used for verification",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
     "international-telephone-input": [],
     "forward-message-mailgun": [
       {
@@ -992,7 +1156,7 @@
         "key": "BROADCAST_NOTIFY_SERVICE_SID",
         "required": true,
         "format": "sid",
-        "description": "SID of your Twilio Notify Service",
+        "description": "SID of your Twilio Notify Service (starts with IS)",
         "link": "https://www.twilio.com/console/notify/services",
         "default": null,
         "configurable": true,
@@ -1117,17 +1281,17 @@
     ],
     "google-sheets": [
       {
-        "key": "SHEETS_AUTH_JSON",
+        "key": "GOOGLE_CREDENTIALS",
         "required": true,
         "format": "file(json)",
         "description": "A JSON key file for your Google Sheets service account",
         "link": "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys",
         "default": "/auth.json",
         "configurable": true,
-        "contentKey": "SHEETS_AUTH_JSON_CONTENT"
+        "contentKey": "GOOGLE_CREDENTIALS_CONTENT"
       },
       {
-        "key": "SHEETS_DOC_ID",
+        "key": "DOCUMENT_ID",
         "required": true,
         "format": "text",
         "description": "The document ID for your Google Sheets spreadsheet (from its URL: https://docs.google.com/spreadsheets/d/[id]/edit)",
@@ -1137,7 +1301,7 @@
         "contentKey": null
       },
       {
-        "key": "SHEETS_SHEET_NAME",
+        "key": "SHEET_NAME",
         "required": true,
         "format": "text",
         "description": "The spreadsheet name to log to within your Google Sheets document",
@@ -1153,6 +1317,58 @@
         "description": "The path to the webhook",
         "link": null,
         "default": "/log-sms",
+        "configurable": false,
+        "contentKey": null
+      }
+    ],
+    "covid-vaccine-faq-bot": [
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Your Twilio phone number for sending and receiving messages",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "GOOGLE_CLOUD_PROJECT_ID",
+        "required": true,
+        "format": "text",
+        "description": "Your Google Cloud Project ID",
+        "link": "https://cloud.google.com/dialogflow/cx/docs/quick/setup#project",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "GOOGLE_APPLICATION_CREDENTIALS",
+        "required": true,
+        "format": "file(json)",
+        "description": "A JSON key file for your Google service account. If deploying via CodeExchange, paste the JSON contents of the service account key below.",
+        "link": "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys",
+        "default": "/service-account-key.json",
+        "configurable": true,
+        "contentKey": "SERVICE_ACCOUNT_KEY_CONTENT"
+      },
+      {
+        "key": "LANGUAGE_CODE",
+        "required": false,
+        "format": "text",
+        "description": "Language to be used by chatbot. Defaults to U.S. English (en-US). Do not change if using pre-build chatbot agents. If changing, set to Dialogflow language tag (e.g. es).",
+        "link": "https://cloud.google.com/dialogflow/es/docs/reference/language",
+        "default": "en-US",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FLOW_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of the Vaccine Bot FAQ Studio Flow, will be set automatically by the app, no need to configure in advance",
+        "link": null,
+        "default": null,
         "configurable": false,
         "contentKey": null
       }

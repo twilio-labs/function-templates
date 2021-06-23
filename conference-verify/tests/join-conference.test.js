@@ -1,10 +1,12 @@
-const joinConferenceFunction = require('../functions/join-conference.protected')
-  .handler;
+const joinConferenceFunction =
+  require('../functions/join-conference.protected').handler;
 const helpers = require('../../test/test-helper');
 
-//
-// START: TEST SETUP
-//
+/*
+ *
+ * START: TEST SETUP
+ *
+ */
 let verificationStatus = 'approved';
 
 const mockService = {
@@ -29,9 +31,11 @@ const testContext = {
   getTwilioClient: () => mockClient,
 };
 
-//
-// END: TEST SETUP
-//
+/*
+ *
+ * END: TEST SETUP
+ *
+ */
 
 describe('conference-verify/join-conference', () => {
   beforeAll(() => {
@@ -42,7 +46,7 @@ describe('conference-verify/join-conference', () => {
   });
 
   test('returns an error response when required to parameter is missing', (done) => {
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -62,7 +66,7 @@ describe('conference-verify/join-conference', () => {
   test('handles expired codes and redirects', (done) => {
     verificationStatus = 'expired';
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -82,7 +86,7 @@ describe('conference-verify/join-conference', () => {
   test('handles successful code verification for moderators', (done) => {
     verificationStatus = 'approved';
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();
@@ -102,7 +106,7 @@ describe('conference-verify/join-conference', () => {
   test('handles successful code verification for regular callers', (done) => {
     verificationStatus = 'approved';
 
-    const callback = (err, result) => {
+    const callback = (_err, result) => {
       expect(result).toBeDefined();
 
       const twimlString = result.toString();

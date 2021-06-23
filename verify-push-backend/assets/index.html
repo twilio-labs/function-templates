@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Authentication with Twilio Verify Push</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .container {
+        margin-bottom: 100px;
+      }
+
+      .spinner {
+        border: 6px solid #f3f3f3;
+        border-top: 6px solid #3498db;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+      }
+
+      .close {
+        position: absolute;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Twilio Verify Push</h2>
+      <div>
+        <p>Welcome! Your live application with Twilio is ready to use!</p>
+        <p>This application has multiple uses:</p>
+        <ol>
+          <li>
+            <code>/access-token</code>
+            endpoint. Your mobile app (<a
+              href="https://www.twilio.com/docs/verify/quickstarts/push-android#obtain-a-verify-push-api-access-token-for-your-android-app"
+              >Android</a
+            >
+            or
+            <a
+              href="https://www.twilio.com/docs/verify/quickstarts/push-ios#obtain-a-verify-push-api-access-token-for-your-ios-app"
+              >iOS</a
+            >) needs to obtain an access token to make requests to the Verify
+            Push API. This endpoint creates the token and can be used in our
+            sample applications.
+          </li>
+          <li>
+            Create sample push challenges and send to a registered device. Form
+            below.
+          </li>
+          <li>Fetch factors by identity. Form below.</li>
+        </ol>
+      </div>
+      <div class="content">
+        <h3>Create a push challenge</h3>
+        <form id="login">
+          <div class="form-group">
+            <label for="identity">Identity</label>
+            <input type="text" id="identity" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <input
+              type="text"
+              id="message"
+              class="form-control"
+              value="Please verify login attempt"
+            />
+          </div>
+          <div class="form-group">
+            <label for="factor">Factor SID</label>
+            <input
+              type="text"
+              id="factor"
+              class="form-control"
+              placeholder="YFXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+            />
+          </div>
+          <div class="form-group details">
+            <label>Details</label>
+            <p>Arbitrary key-value pairs to display with the verification.</p>
+          </div>
+          <div class="form-group">
+            <a class="btn-link add-details" href="#" role="button"
+              >Add more details</a
+            >
+          </div>
+          <div class="form-group">
+            <input
+              type="submit"
+              class="btn btn-primary"
+              value="Create challenge"
+            />
+          </div>
+        </form>
+        <div id="loading"></div>
+        <span id="push-message"></span>
+      </div>
+      <div>
+        <h3>Factors</h3>
+        <p>
+          Fetch factors (devices) that have been registered for an identity.
+        </p>
+        <form id="list-factors">
+          <div class="form-group">
+            <label for="factor-identity">Identity</label>
+            <input type="text" id="factor-identity" class="form-control" />
+          </div>
+          <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="List factors" />
+          </div>
+        </form>
+        <div id="factor-list"></div>
+      </div>
+      <!-- EDIT_CODE_V2 -->
+    </div>
+  </body>
+  <script>
+    function showMessage(alertType, message) {
+      var content = $("#push-message");
+      content.empty();
+      content.removeClass();
+      content.addClass(`text-${alertType}`).append(message);
+    }
+
+    function checkStatus(sid, identity) {
+      fetch("./challenge-status?" + new URLSearchParams({ sid, identity }))
+        .then((resp) => resp.json())
+        .then(({ status }) => {
+          if (status == "approved") {
+            $("#loading").removeClass("spinner");
+            showMessage("success", "Login request approved!");
+          } else if (status == "denied") {
+            $("#loading").removeClass("spinner");
+            showMessage("danger", "Login request denied!");
+          } else {
+            setTimeout(checkStatus(sid, identity), 5000);
+          }
+        });
+    }
+
+    function registerCloseStatus() {
+      $(".close").click(function () {
+        $(this).closest("div").remove();
+      });
+    }
+
+    function addDetailRow(k, v) {
+      let labelValue = k != undefined ? `value="${k}"` : "";
+      let valueValue = v != undefined ? `value="${v}"` : "";
+      $(".details").append(
+        `<div class="row form-group">
+          <div class="col-xs-5 col-lg-4">
+            <input
+              type="text"
+              class="form-control detail"
+              placeholder="label"
+              ${labelValue}
+            />
+          </div>
+          <div class="col-xs-6 col-lg-4">
+            <input
+              type="text"
+              class="form-control detail"
+              placeholder="value"
+              ${valueValue}
+            />
+          </div>
+          <button class="close">&times;</button>
+        </div>`
+      );
+
+      registerCloseStatus();
+    }
+
+    // seed details
+    fetch("https://ipapi.co/json/")
+      .then((resp) => resp.json())
+      .then(({ ip, city }) => {
+        let location = `${city}`;
+        addDetailRow("Location", city);
+        addDetailRow("IP Address", ip);
+      })
+      .catch((err) => {
+        addDetailRow();
+      });
+
+    $(".add-details").click(function () {
+      addDetailRow();
+    });
+
+    async function digestMessage(identity) {
+      const identityUint8 = new TextEncoder().encode(identity);
+      const hashBuffer = await crypto.subtle.digest("SHA-256", identityUint8);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+      return hashHex;
+    }
+
+    $("#list-factors").submit(function (event) {
+      event.preventDefault();
+
+      digestMessage($("#factor-identity").val())
+        .then((identity) => {
+          const data = new URLSearchParams();
+          data.append("identity", identity);
+
+          return fetch("./list-factors", {
+            method: "POST",
+            body: data,
+          });
+        })
+        .then((resp) => resp.json())
+        .then((respJson) => {
+          respJson.forEach(({ friendlyName, identity, sid }) => {
+            $("#factor-list").append(
+              `<div>
+                <p><strong>${friendlyName}</strong></p>
+                <p><strong>Hashed Identity: </strong>${identity}</p>
+                <p><strong>Factor SID: </strong>${sid}</p>
+              </div>`
+            );
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+
+    $("#login").submit(function (event) {
+      event.preventDefault();
+
+      const identityData = new URLSearchParams({
+        identity: $("#identity").val(),
+      });
+
+      digestMessage($("#identity").val())
+        .then((identity) => {
+          const data = new URLSearchParams();
+          data.append("identity", identity);
+          data.append("message", $("#message").val());
+          data.append("factor", $("#factor").val());
+
+          var details = $(".detail")
+            .toArray()
+            .map((detail) => detail.value)
+            .reduce(function (result, value, index, array) {
+              if (index % 2 === 0) result.push(array.slice(index, index + 2));
+              return result;
+            }, []);
+
+          details.forEach((pair) => {
+            if (pair[0] !== "") data.append(pair[0], pair[1]);
+          });
+
+          return fetch("./create-challenge", {
+            method: "POST",
+            body: data,
+          });
+        })
+        .then((resp) => resp.json())
+        .then(({ status, sid, identity, error }) => {
+          if (status === "pending") {
+            showMessage(
+              "success",
+              "Successfully sent push notification. Check your device."
+            );
+            $("#loading").addClass("spinner");
+            checkStatus(sid, identity);
+          } else {
+            console.error(error);
+            showMessage(
+              "danger",
+              `${error.message} <a href="${error.moreInfo}">[more info]</a>`
+            );
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          showMessage("danger", "Error starting verification.");
+        });
+    });
+  </script>
+</html>

@@ -1,5 +1,4 @@
 class AdminClient {
-
   constructor() {
     this.isReady = this.token !== null;
   }
@@ -12,32 +11,33 @@ class AdminClient {
         this.isReady = false;
       }
       // Throw an error
+      // eslint-disable-next-line no-throw-literal
       throw {
         statusCode: response.status,
-        message: await response.text()
-      }; 
+        message: await response.text(),
+      };
     }
   }
 
   async _post(url, obj) {
     const response = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(obj)
+      body: JSON.stringify(obj),
     });
     await this._handleResponse(response);
-    return await response.json();
+    return response.json();
   }
-  
+
   async login(password) {
     try {
-      const result = await this._post("./login", {password});
+      const result = await this._post('./login', { password });
       this.token = result.token;
       this.isReady = true;
-    } catch(err) {
+    } catch (err) {
       console.error(`${err.statusCode}: ${err.message}`);
     }
     return this.token !== null;
@@ -46,9 +46,9 @@ class AdminClient {
   async postAction(action) {
     const bodyObj = {
       token: this.token,
-      action: action
+      action,
     };
-    return await this._post("./perform-action", bodyObj);
+    return this._post('./perform-action', bodyObj);
   }
 
   async fetchState() {
@@ -56,7 +56,7 @@ class AdminClient {
       `./check-status?token=${encodeURIComponent(this.token)}`
     );
     await this._handleResponse(response);
-    return await response.json();
+    return response.json();
   }
 
   get token() {

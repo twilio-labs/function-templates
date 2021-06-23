@@ -19,62 +19,73 @@
  *  }
  */
 
-exports.handler = function(context, event, callback) {
+// eslint-disable-next-line consistent-return
+exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  
-  // uncomment to support CORS
-  // response.appendHeader('Access-Control-Allow-Origin', '*');
-  // response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  // response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   if (typeof event.to === 'undefined') {
     response.setBody({
-      "success": false,
-      "error": {
-        "message": "Missing parameter; please provide an email.",
-        "moreInfo": "https://www.twilio.com/docs/verify/api/verification"
-      }
-    })
+      success: false,
+      error: {
+        message: 'Missing parameter; please provide an email.',
+        moreInfo: 'https://www.twilio.com/docs/verify/api/verification',
+      },
+    });
     response.setStatusCode(400);
     return callback(null, response);
   }
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
-  const to = event.to;
-  const protocol = (context.DOMAIN_NAME.startsWith('localhost:') ? 'http' : 'https')
-  const callback_url = `${protocol}://${context.DOMAIN_NAME}${context.PATH.substr(0, context.PATH.lastIndexOf('/'))}/${context.CALLBACK_PATH}`
+  const { to } = event;
+  const protocol = context.DOMAIN_NAME.startsWith('localhost:')
+    ? 'http'
+    : 'https';
+  const callbackUrl = `${protocol}://${
+    context.DOMAIN_NAME
+  }${context.PATH.substr(0, context.PATH.lastIndexOf('/'))}/${
+    context.CALLBACK_PATH
+  }`;
 
-  client.verify.services(service)
-    .verifications
-    .create({
-      to: to,
+  client.verify
+    .services(service)
+    .verifications.create({
+      to,
       channel: 'email',
       channelConfiguration: {
-        substitutions: { // used in email template
+        substitutions: {
+          // used in email template
           email: to,
-          callback_url: callback_url
-        }
-      }
+          // eslint-disable-next-line camelcase
+          callback_url: callbackUrl,
+        },
+      },
     })
-    .then(verification => {
+    .then((verification) => {
       console.log(`Sent verification: '${verification.sid}'`);
       response.setStatusCode(200);
       response.setBody({
-        "success": true
+        success: true,
       });
       callback(null, response);
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
       response.setStatusCode(error.status);
       response.setBody({
-        "success": false,
-        "error": {
-          "message": error.message,
-          "moreInfo": error.moreInfo
-        }
+        success: false,
+        error: {
+          message: error.message,
+          moreInfo: error.moreInfo,
+        },
       });
       callback(null, response);
     });

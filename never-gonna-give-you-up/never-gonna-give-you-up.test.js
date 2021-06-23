@@ -9,8 +9,8 @@ describe('', () => {
     helpers.teardown();
   });
 
-  test('returns the right song', done => {
-    const callback = (err, result) => {
+  test('returns the right song', (done) => {
+    const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.VoiceResponse);
       expect(result.toString()).toMatch(
         '<Response><Play>https://demo.twilio.com/docs/classic.mp3</Play></Response>'

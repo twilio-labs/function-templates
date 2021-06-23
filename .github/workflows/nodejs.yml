@@ -41,4 +41,14 @@ jobs:
           npm test
         env:
           CI: true
+      - name: check formatting
+        if: always()
+        run: npm run format:check
+        env:
+          CI: true
           NODE_ENV: test
+      - name: lint
+        if: always()
+        run: npm run lint
+        env:
+          CI: true

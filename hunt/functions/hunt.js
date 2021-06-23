@@ -1,5 +1,7 @@
-exports.handler = function(context, event, callback) {
-  const numbers = context.PHONE_NUMBERS.split(',').map(number => number.trim());
+exports.handler = function (context, event, callback) {
+  const numbers = context.PHONE_NUMBERS.split(',').map((number) =>
+    number.trim()
+  );
   const response = new Twilio.twiml.VoiceResponse();
   if (event.DialCallStatus === 'complete') {
     // Call was answered and completed
@@ -19,7 +21,7 @@ exports.handler = function(context, event, callback) {
       url = '/hunt?finished=true';
     } else {
       const nextNumber = numbers[currentNumberIndex + 1];
-      url = '/hunt?nextNumber=' + encodeURIComponent(nextNumber);
+      url = `/hunt?nextNumber=${encodeURIComponent(nextNumber)}`;
     }
     const dial = response.dial({ action: url });
     dial.number(numberToDial);

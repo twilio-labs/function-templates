@@ -5,14 +5,10 @@ let flowSid;
 
 // eslint-disable-next-line no-restricted-globals
 const baseUrl = new URL(location.href);
-baseUrl.pathname = baseUrl
-  .pathname
-  .replace(/\/index\.html$/, '');
+baseUrl.pathname = baseUrl.pathname.replace(/\/index\.html$/, '');
 delete baseUrl.hash;
 delete baseUrl.search;
-const fullUrl = baseUrl
-  .href
-  .substr(0, baseUrl.href.length - 1);
+const fullUrl = baseUrl.href.substr(0, baseUrl.href.length - 1);
 
 fetch(`${fullUrl}/return-config`)
   .then((response) => response.json())
@@ -37,12 +33,21 @@ function checkStudioFlow() {
         $('#deploy-flow').hide();
         $('.post-deploy-studio').show();
         $('#password-form').show();
-        $('#open-studio').attr('href', `https://www.twilio.com/console/studio/flows/${sid}`);
-        $('.execution-logs-link').attr('href', `https://www.twilio.com/console/studio/flows/${sid}/executions`);
+        $('#open-studio').attr(
+          'href',
+          `https://www.twilio.com/console/studio/flows/${sid}`
+        );
+        $('.execution-logs-link').attr(
+          'href',
+          `https://www.twilio.com/console/studio/flows/${sid}/executions`
+        );
       }
     })
     .catch((err) => {
-      console.log('An error occurred when attempting to check the Studio Flow', err);
+      console.log(
+        'An error occurred when attempting to check the Studio Flow',
+        err
+      );
     });
 }
 
@@ -52,14 +57,15 @@ function setup(e) {
   $('#deploy-flow .button').addClass('loading');
   $('.loader.button-loader').show();
 
-  fetch('/setup').then(() => {
-    checkStudioFlow();
-  })
-  .catch((err) => {
-    console.log('An error ocurred creating Studio Flow', err);
-    $('#deploy-flow .button').removeClass('loading');
-    $('.loader.button-loader').hide();
-  });
+  fetch('/setup')
+    .then(() => {
+      checkStudioFlow();
+    })
+    .catch((err) => {
+      console.log('An error ocurred creating Studio Flow', err);
+      $('#deploy-flow .button').removeClass('loading');
+      $('.loader.button-loader').hide();
+    });
 }
 
 function updateTable(data) {
@@ -95,19 +101,23 @@ function getStudioExecutions(sid, token) {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token: token }),
+    body: JSON.stringify({ token }),
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.length > 0) {
         updateTable(data);
       } else {
-        tbody.html(`<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phoneNumber}</strong> to begin.</td></tr>`);
+        tbody.html(
+          `<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phoneNumber}</strong> to begin.</td></tr>`
+        );
       }
     })
     .catch((err) => {
-      console.log(err)
-      tbody.html(`<tr class="table-placeholder"><td colspan="11" style="color: red">There was an error when attempting to fetch Studio Logs. Refresh the page to try again or see troubleshooting steps below.</td></tr>`);
+      console.log(err);
+      tbody.html(
+        `<tr class="table-placeholder"><td colspan="11" style="color: red">There was an error when attempting to fetch Studio Logs. Refresh the page to try again or see troubleshooting steps below.</td></tr>`
+      );
     });
 }
 
@@ -133,7 +143,11 @@ async function login(e) {
   })
     .then((response) => {
       if (!response.ok) {
-        $('#login-error').text(response.status === 401 ? 'Incorrect password, please try again.' : 'There was an error when attempting to log in.');
+        $('#login-error').text(
+          response.status === 401
+            ? 'Incorrect password, please try again.'
+            : 'There was an error when attempting to log in.'
+        );
         throw Error(response.statusText);
       }
 

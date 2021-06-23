@@ -12,11 +12,11 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable          | Description                                                       | Required |
-| :---------------- | :---------------------------------------------------------------- | :------- |
-| SHEETS_AUTH_JSON  | The path to your Google service account authentication JSON file  | Yes      |
-| SHEETS_DOC_ID     | The document ID for your Google Sheets spreadsheet                | Yes      |
-| SHEETS_SHEET_NAME | The spreadsheet name to log to within your Google Sheets document | Yes      |
+| Variable           | Description                                                       | Required |
+| :----------------- | :---------------------------------------------------------------- | :------- |
+| GOOGLE_CREDENTIALS | The path to your Google service account authentication JSON file  | Yes      |
+| DOCUMENT_ID        | The document ID for your Google Sheets spreadsheet                | Yes      |
+| SHEET_NAME         | The spreadsheet name to log to within your Google Sheets document | Yes      |
 
 ## Create a new project with the template
 
