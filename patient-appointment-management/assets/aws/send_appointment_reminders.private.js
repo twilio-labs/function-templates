@@ -47,7 +47,7 @@ async function executeFlow(params) {
   const data = {
     To: params.to_number,
     From: params.from_number,
-    Parameters: JSON.stringify(params.appointment),
+    Parameters: JSON.stringify(params.appointment_object),
   };
   const body = encode(data);
 
@@ -353,7 +353,7 @@ exports.handler = async function (event, context) {
           twilio_auth_token: AUTH_TOKEN,
           to_number: appointment.patient_phone,
           from_number: TWILIO_PHONE_NUMBER,
-          appointment: appointment,
+          appointment_object: appointment,
         };
         await executeFlow(params);
         reminder_count += 1;
