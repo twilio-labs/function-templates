@@ -18,17 +18,93 @@ async function getAllKeys(params, s3client, allKeys = []) {
 
 /*
  * --------------------------------------------------------------------------------
+ * synchronously execute https post
+ *
+ * params
+ * . twilio_flow_sid
+ * . twilio_account_sid
+ * . twilio_auth_token
+ * . to_number
+ * . from_number
+ * . appointment object
+ * --------------------------------------------------------------------------------
+ */
+async function executeFlow(params) {
+  function encode(obj) {
+    return Object.keys(obj)
+      .map((key) => {
+        return `${key}=${encodeURIComponent(obj[key])}`;
+      })
+      .join('&');
+  }
+
+  const https = require('https');
+
+  const auth =
+    'Basic ' +
+    Buffer.from(
+      params.twilio_account_sid + ':' + params.twilio_auth_token
+    ).toString('base64');
+  console.log(auth);
+
+  const data = {
+    To: params.to_number,
+    From: params.from_number,
+    Parameters: JSON.stringify(params.appointment),
+  };
+  const body = encode(data);
+
+  const options = {
+    hostname: 'studio.twilio.com',
+    port: 443,
+    path: `/v2/Flows/${params.twilio_flow_sid}/Executions`,
+    method: 'POST',
+    headers: {
+      Authorization:
+        'Basic ' +
+        Buffer.from(
+          params.twilio_account_sid + ':' + params.twilio_auth_token
+        ).toString('base64'),
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': body.length,
+    },
+  };
+
+  const result = new Promise((resolve, reject) => {
+    const request = https.request(options, (response) => {
+      console.log(`statusCode: ${response.statusCode}`);
+
+      let data = [];
+      response.on('data', (chunk) => {
+        data.push(chunk);
+      });
+      response.on('end', () => {
+        let result = Buffer.concat(data);
+        resolve(result.toString());
+      });
+      response.on('error', (error) => {
+        reject(error);
+      });
+    });
+
+    request.write(body);
+    request.end();
+  });
+
+  return result;
+}
+
+/*
+ * --------------------------------------------------------------------------------
  * Note that exports.handler is changed to 'async' allow use of 'await' to serialize execution.
  * Therefore, all asnychronous s3 functions must be called in this function body.
  * --------------------------------------------------------------------------------
  */
 exports.handler = async function (event, context) {
-  console.log(THIS, 'Begin');
   console.time(THIS);
   try {
     const assert = require('assert');
     const AWS = require('aws-sdk');
-    const twilio = require('twilio');
 
     // ---------- environment variables & input event
     const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET;
@@ -46,14 +122,14 @@ exports.handler = async function (event, context) {
     const s3 = new AWS.S3();
 
     // ---------- set reminder time criteria
-    const reminder_outreach_start_tod = process.env.REMINDER_OUTREACH_START;
-    const reminder_outreach_finish_tod = process.env.REMINDER_OUTREACH_FINISH;
+    const reminder_outreach_start_tod = REMINDER_OUTREACH_START;
+    const reminder_outreach_finish_tod = REMINDER_OUTREACH_FINISH;
     const reminder_1st_offset_ms =
-      3600 * 1000 * process.env.REMINDER_FIRST_OFFSET.substring(0, 2) +
-      60 * 1000 * process.env.REMINDER_FIRST_OFFSET.substring(2, 4);
+      3600 * 1000 * REMINDER_FIRST_OFFSET.substring(0, 2) +
+      60 * 1000 * REMINDER_FIRST_OFFSET.substring(2, 4);
     const reminder_2ndt_offset_ms =
-      3600 * 1000 * process.env.REMINDER_FIRST_OFFSET.substring(0, 2) +
-      60 * 1000 * process.env.REMINDER_FIRST_OFFSET.substring(2, 4);
+      3600 * 1000 * REMINDER_SECOND_OFFSET.substring(0, 2) +
+      60 * 1000 * REMINDER_SECOND_OFFSET.substring(2, 4);
 
     console.log('reminder_outreach_start_tod=', reminder_1st_offset_ms);
     console.log('reminder_outreach_finish_tod=', reminder_1st_offset_ms);
@@ -62,10 +138,10 @@ exports.handler = async function (event, context) {
 
     // ---------- find all appointments in QUEUED & REMINDED-1
     let params = {
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: AWS_S3_BUCKET,
       Prefix: [
         'state',
-        `flow=${process.env.TWILIO_TWILIO_FLOW_SID}`,
+        `flow=${TWILIO_FLOW_SID}`,
         'disposition=QUEUED',
         '',
       ].join('/'),
@@ -73,10 +149,10 @@ exports.handler = async function (event, context) {
     const keys_q = await getAllKeys(params, s3);
 
     params = {
-      Bucket: process.env.AWS_S3_BUCKET,
+      Bucket: AWS_S3_BUCKET,
       Prefix: [
         'state',
-        `flow=${process.env.TWILIO_TWILIO_FLOW_SID}`,
+        `flow=${TWILIO_FLOW_SID}`,
         'disposition=REMINDED-1',
         '',
       ].join('/'),
@@ -92,7 +168,7 @@ exports.handler = async function (event, context) {
       console.log('appointment_s3key=', s3key);
 
       let params = {
-        Bucket: process.env.AWS_S3_BUCKET,
+        Bucket: AWS_S3_BUCKET,
         Key: s3key,
       };
       let results = await s3.getObject(params).promise();
@@ -133,23 +209,23 @@ exports.handler = async function (event, context) {
       );
 
       const current_utc = new Date();
-      console.log('  current     datetime utc=', current_utc);
+      console.log('current     datetime utc=', current_utc);
 
       const appointment_utc = new Date(
         new Date(appointment.appointment_datetime).getTime() +
           timezone_offset_milliseconds
       );
-      console.log('  appointment datetime utc=', appointment_utc);
+      console.log('appointment datetime utc=', appointment_utc);
 
       const reminder_2_utc = new Date(
         appointment_utc.getTime() - reminder_2ndt_offset_ms
       );
-      console.log('  reminder_2  datetime utc=', reminder_2_utc);
+      console.log('reminder_2  datetime utc=', reminder_2_utc);
 
       const reminder_1_utc = new Date(
         appointment_utc.getTime() - reminder_1st_offset_ms
       );
-      console.log('  reminder_1  datetime utc=', reminder_1_utc);
+      console.log('reminder_1  datetime utc=', reminder_1_utc);
 
       let disposition = null;
       if (s3key.includes('QUEUED')) disposition = 'QUEUED';
@@ -159,28 +235,28 @@ exports.handler = async function (event, context) {
       if (disposition === null) continue; // error case, skip for now
 
       if (appointment_utc <= current_utc) {
-        console.log('  expire: appointment_utc <= current_utc');
+        console.log('expire: appointment_utc <= current_utc');
 
         appointment.event_type = 'EXPIRE';
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key.replace(disposition, 'EXPIRED'),
           Body: JSON.stringify(appointment),
           ServerSideEncryption: 'AES256',
         };
         let results = await s3.putObject(params).promise();
-        console.log('  PUT - ', params.Key);
+        console.log('PUT - ', params.Key);
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key,
         };
         results = await s3.deleteObject(params).promise();
-        console.log('  DELETE - ', params.Key);
+        console.log('DELETE - ', params.Key);
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key
             .replace('state', 'history')
             .replace(disposition, 'EXPIRED')
@@ -189,7 +265,7 @@ exports.handler = async function (event, context) {
           ServerSideEncryption: 'AES256',
         };
         results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
+        console.log('PUT - ', params.Key);
 
         continue;
       } else if (
@@ -199,26 +275,28 @@ exports.handler = async function (event, context) {
         appointment.event_type !== 'OPTED-OUT' &&
         appointment.event_type !== 'EXPIRE'
       ) {
-        console.log('  send reminder-2: reminder_2_utc <= current_utc');
+        console.log('send reminder-2: reminder_2_utc <= current_utc');
+
+        appointment.event_type = 'REMIND';
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key.replace(disposition, 'REMINDED-2'),
           Body: JSON.stringify(appointment),
           ServerSideEncryption: 'AES256',
         };
         let results = await s3.putObject(params).promise();
-        console.log('  PUT - ', params.Key);
+        console.log('PUT - ', params.Key);
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key,
         };
         results = await s3.deleteObject(params).promise();
-        console.log('  DELETE - ', params.Key);
+        console.log('DELETE - ', params.Key);
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key
             .replace('state', 'history')
             .replace(disposition, 'REMINDED-2')
@@ -227,7 +305,7 @@ exports.handler = async function (event, context) {
           ServerSideEncryption: 'AES256',
         };
         results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
+        console.log('PUT - ', params.Key);
       } else if (
         reminder_1_utc <= current_utc &&
         appointment.event_type !== 'CANCELED' &&
@@ -235,26 +313,28 @@ exports.handler = async function (event, context) {
         appointment.event_type !== 'OPTED-OUT' &&
         appointment.event_type !== 'EXPIRE'
       ) {
-        console.log('  send reminder-1: reminder_1_utc <= current_utc');
+        console.log('send reminder-1: reminder_1_utc <= current_utc');
+
+        appointment.event_type = 'REMIND';
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key.replace(disposition, 'REMINDED-1'),
           Body: JSON.stringify(appointment),
           ServerSideEncryption: 'AES256',
         };
         let results = await s3.putObject(params).promise();
-        console.log('  PUT - ', params.Key);
+        console.log('PUT - ', params.Key);
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key,
         };
         results = await s3.deleteObject(params).promise();
-        console.log('  DELETE - ', params.Key);
+        console.log('DELETE - ', params.Key);
 
         params = {
-          Bucket: process.env.AWS_S3_BUCKET,
+          Bucket: AWS_S3_BUCKET,
           Key: s3key
             .replace('state', 'history')
             .replace(disposition, 'REMINDED-1')
@@ -263,40 +343,31 @@ exports.handler = async function (event, context) {
           ServerSideEncryption: 'AES256',
         };
         results = await s3.putObject(params).promise();
-        console.log(THIS, 'PUT - ', params.Key);
+        console.log('PUT - ', params.Key);
       } else {
-        console.log('  error condition, skipping');
+        console.log('error condition, skipping');
 
         continue;
       }
 
       try {
         // ---------- execute twilio studio flow
-        const twlo = require('twilio')(
-          process.env.ACCOUNT_SID,
-          process.env.AUTH_TOKEN
-        );
-
-        console.log(
-          '  executing twilio flow=',
-          process.env.TWILIO_TWILIO_FLOW_SID
-        );
-        reminder_count += 1;
-        appointment.event_type = 'REMIND';
-        params = {
-          to: appointment.patient_phone,
-          from: process.env.TWILIO_FROM_NUMBER,
-          parameters: appointment,
+        console.log('executing appointment=', appointment.appointment_id);
+        const params = {
+          twilio_flow_sid: TWILIO_FLOW_SID,
+          twilio_account_sid: ACCOUNT_SID,
+          twilio_auth_token: AUTH_TOKEN,
+          to_number: appointment.patient_phone,
+          from_number: TWILIO_PHONE_NUMBER,
+          appointment: appointment,
         };
-        results = await twlo.studio.v1
-          .flows(process.env.TWILIO_TWILIO_FLOW_SID)
-          .executions.create(params);
-        console.log('  response twilio flow=', results);
+        const response = await executeFlow(params);
+        reminder_count += 1;
       } catch (err) {
         console.log(err, err.stack);
+        continue;
       }
     }
-    console.log('Ended', THIS);
 
     // JSON.stringify('reminders triggered!')
     return {

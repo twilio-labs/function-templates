@@ -199,18 +199,6 @@ Resources:
           EncryptionConfiguration:
             EncryptionOption: SSE_S3
 
-  LambdaLayerTwilioNodeLibrary:
-    Type: AWS::Lambda::LayerVersion
-    DeletionPolicy: Delete
-    UpdateReplacePolicy: Delete
-    Properties:
-      LayerName: !Sub 'twilioNodeLibrary-${ParameterCustomerCode}'
-      Content:
-        S3Bucket: !Ref ParameterS3Bucket
-        S3Key: 'artifacts/twilioNodeLibrary.zip'
-      CompatibleRuntimes:
-        - 'nodejs12.x'
-
   LambdaSendReminders:
     Type: AWS::Lambda::Function
     UpdateReplacePolicy: Delete
@@ -234,8 +222,6 @@ Resources:
       ReservedConcurrentExecutions: 1
       Role: !GetAtt RoleForExecution.Arn
       Runtime: 'nodejs12.x'
-      Layers:
-        - !Ref LambdaLayerTwilioNodeLibrary
       Handler: index.handler
       Code:
         S3Bucket: !Ref ParameterS3Bucket

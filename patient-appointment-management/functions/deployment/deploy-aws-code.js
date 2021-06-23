@@ -54,43 +54,6 @@ exports.handler = async function (context, event, callback) {
     const lambda = new aws.Lambda(options);
 
     {
-      // ---------- twilioNodeLibrary.zip
-      const assets = Runtime.getAssets();
-      const content = fs.readFileSync(
-        assets['/aws/twilioNodeLibrary.zip'].path
-      );
-
-      let needs_upload = false;
-      const params = {
-        Bucket: AWS_S3_BUCKET,
-        Key: 'artifacts/twilioNodeLibrary.zip',
-      };
-      try {
-        const response = await s3.headObject(params).promise();
-        needs_upload = content.length !== response.ContentLength;
-        console.log(
-          THIS,
-          'local file size=',
-          content.length,
-          needs_upload ? '!=' : '==',
-          's3 file size=',
-          response.ContentLength
-        );
-      } catch {
-        needs_upload = true;
-      }
-
-      if (needs_upload) {
-        params.Body = content;
-        params.ServerSideEncryption = 'AES256';
-        const response = await s3.upload(params).promise();
-        console.log('Uploaded:', response.Location);
-
-        // update lambda layer & function if code is changed
-      }
-    }
-
-    {
       // ---------- send_appointment_reminders.zip
       const assets = Runtime.getAssets();
       const payload = fs.readFileSync(
@@ -118,20 +81,12 @@ exports.handler = async function (context, event, callback) {
       let response = await s3.upload(params).promise();
       console.log('Uploaded:', response.Location);
 
-      let found_function = false;
-      params = {
-        FunctionName: AWS_LAMBDA_SEND_REMINDERS,
-      };
       try {
+        params = {
+          FunctionName: AWS_LAMBDA_SEND_REMINDERS,
+        };
         response = await lambda.getFunction(params).promise();
-        console.log('Found lambda function:', response.FunctionName);
-        found_function = true;
-      } catch (err) {
-        console.log('No lambda function:', params.FunctionName);
-        found_function = false;
-      }
 
-      if (found_function) {
         params = {
           FunctionName: AWS_LAMBDA_SEND_REMINDERS,
           S3Bucket: AWS_S3_BUCKET,
@@ -139,6 +94,8 @@ exports.handler = async function (context, event, callback) {
         };
         response = await lambda.updateFunctionCode(params).promise();
         console.log('Updated lambda function code for:', response.FunctionName);
+      } catch (err) {
+        console.log('No lambda function:', params.FunctionName);
       }
     }
 
@@ -170,27 +127,22 @@ exports.handler = async function (context, event, callback) {
       let response = await s3.upload(params).promise();
       console.log('Uploaded:', response.Location);
 
-      let found_function = false;
-      params = {
-        FunctionName: AWS_LAMBDA_QUERY_STATE,
-      };
       try {
-        response = await lambda.getFunction(params).promise();
-        console.log('Found lambda function:', response.FunctionName);
-        found_function = true;
-      } catch (err) {
-        console.log('No lambda function:', params.FunctionName);
-        found_function = false;
-      }
+        params = {
+          FunctionName: AWS_LAMBDA_QUERY_STATE,
+        };
+        await lambda.getFunction(params).promise();
 
-      if (found_function) {
         params = {
           FunctionName: AWS_LAMBDA_QUERY_STATE,
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/query_appointment_state.zip',
         };
-        response = await lambda.updateFunctionCode(params).promise();
+        const response = await lambda.updateFunctionCode(params).promise();
         console.log('Updated lambda function code for:', response.FunctionName);
+      } catch (err) {
+        console.log('No lambda function:', params.FunctionName);
+        found_function = false;
       }
     }
 
@@ -222,27 +174,21 @@ exports.handler = async function (context, event, callback) {
       let response = await s3.upload(params).promise();
       console.log('Uploaded:', response.Location);
 
-      let found_function = false;
-      params = {
-        FunctionName: AWS_LAMBDA_QUERY_HISTORY,
-      };
       try {
-        response = await lambda.getFunction(params).promise();
-        console.log('Found lambda function:', response.FunctionName);
-        found_function = true;
-      } catch (err) {
-        console.log('No lambda function:', params.FunctionName);
-        found_function = false;
-      }
+        params = {
+          FunctionName: AWS_LAMBDA_QUERY_HISTORY,
+        };
+        await lambda.getFunction(params).promise();
 
-      if (found_function) {
         params = {
           FunctionName: AWS_LAMBDA_QUERY_HISTORY,
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/query_appointment_history.zip',
         };
-        response = await lambda.updateFunctionCode(params).promise();
+        const response = await lambda.updateFunctionCode(params).promise();
         console.log('Updated lambda function code for:', response.FunctionName);
+      } catch (err) {
+        console.log('No lambda function:', params.FunctionName);
       }
     }
 

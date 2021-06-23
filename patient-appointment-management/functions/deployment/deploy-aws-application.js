@@ -33,9 +33,8 @@ exports.handler = async function (context, event, callback) {
     const AWS_REGION = await getParam(context, 'AWS_REGION');
     const TWILIO_ACCOUNT_SID = await getParam(context, 'TWILIO_ACCOUNT_SID');
     const TWILIO_AUTH_TOKEN = await getParam(context, 'TWILIO_AUTH_TOKEN');
-    const TWILIO_TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
-    const TWILIO_PHONE_NUMBER = await getParam(context, 'TWILIO_PHONE_NUMBER');
     const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
+    const TWILIO_PHONE_NUMBER = await getParam(context, 'TWILIO_PHONE_NUMBER');
     const AWS_LAMBDA_SEND_REMINDERS = await getParam(
       context,
       'AWS_LAMBDA_SEND_REMINDERS'
