@@ -124,7 +124,7 @@ exports.handler = async function (context, event, callback) {
         Body: content,
         ServerSideEncryption: 'AES256',
       };
-      let response = await s3.upload(params).promise();
+      const response = await s3.upload(params).promise();
       console.log('Uploaded:', response.Location);
 
       try {
@@ -171,7 +171,7 @@ exports.handler = async function (context, event, callback) {
         Body: content,
         ServerSideEncryption: 'AES256',
       };
-      let response = await s3.upload(params).promise();
+      const response = await s3.upload(params).promise();
       console.log('Uploaded:', response.Location);
 
       try {

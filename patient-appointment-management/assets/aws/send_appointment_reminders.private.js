@@ -1,7 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable complexity */
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable prefer-destructuring */
+/* eslint-disable camelcase, complexity, sonarjs/cognitive-complexity, prefer-destructuring, prefer-template */
 const THIS = 'send-appointment-reminders: ';
 
 // --------------------------------------------------------------------------------
@@ -79,8 +76,7 @@ async function executeFlow(params) {
         data.push(chunk);
       });
       response.on('end', () => {
-        let result = Buffer.concat(data);
-        resolve(result.toString());
+        resolve(Buffer.concat(data).toString());
       });
       response.on('error', (error) => {
         reject(error);
