@@ -1346,7 +1346,7 @@
         "key": "GOOGLE_APPLICATION_CREDENTIALS",
         "required": true,
         "format": "file(json)",
-        "description": "A JSON key file for your Google service account",
+        "description": "A JSON key file for your Google service account. If deploying via CodeExchange, paste the JSON contents of the service account key below.",
         "link": "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys",
         "default": "/service-account-key.json",
         "configurable": true,
@@ -1354,10 +1354,10 @@
       },
       {
         "key": "LANGUAGE_CODE",
-        "required": true,
+        "required": false,
         "format": "text",
-        "description": "Language to be leveraged by chatbot, can be configured for multi-language chatbots",
-        "link": null,
+        "description": "Language to be used by chatbot. Defaults to U.S. English (en-US). Do not change if using pre-build chatbot agents. If changing, set to Dialogflow language tag (e.g. es).",
+        "link": "https://cloud.google.com/dialogflow/es/docs/reference/language",
         "default": "en-US",
         "configurable": true,
         "contentKey": null

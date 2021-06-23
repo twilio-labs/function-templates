@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
+/* eslint-disable prefer-destructuring */
 let phoneNumber;
 let flowSid;
 
@@ -13,7 +14,7 @@ const fullUrl = baseUrl.href.substr(0, baseUrl.href.length - 1);
 fetch(`${fullUrl}/return-config`)
   .then((response) => response.json())
   .then((json) => {
-    phoneNumber = json.phone_number;
+    phoneNumber = json.phoneNumber;
     // Grab the phone number being used and display it to help the user test their app
     const phoneNumberElements = $('.phone-number');
     phoneNumberElements.html(phoneNumber);
