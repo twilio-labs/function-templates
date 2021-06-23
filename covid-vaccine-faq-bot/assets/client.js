@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
+/* eslint-disable prefer-destructuring */
 let phoneNumber;
 let flowSid;
 
