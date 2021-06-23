@@ -67,11 +67,11 @@ async function executeFlow(params) {
     },
   };
 
-  const result = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const request = https.request(options, (response) => {
       console.log(`statusCode: ${response.statusCode}`);
 
-      let data = [];
+      const data = [];
       response.on('data', (chunk) => {
         data.push(chunk);
       });
@@ -86,8 +86,6 @@ async function executeFlow(params) {
     request.write(body);
     request.end();
   });
-
-  return result;
 }
 
 /*
@@ -167,7 +165,7 @@ exports.handler = async function (event, context) {
         Bucket: AWS_S3_BUCKET,
         Key: s3key,
       };
-      let results = await s3.getObject(params).promise();
+      const results = await s3.getObject(params).promise();
       const appointment = JSON.parse(results.Body.toString('utf-8'));
       console.log('appointment=', appointment);
 
@@ -357,7 +355,7 @@ exports.handler = async function (event, context) {
           from_number: TWILIO_PHONE_NUMBER,
           appointment: appointment,
         };
-        const response = await executeFlow(params);
+        await executeFlow(params);
         reminder_count += 1;
       } catch (err) {
         console.log(err, err.stack);
