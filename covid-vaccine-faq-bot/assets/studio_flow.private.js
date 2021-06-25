@@ -253,7 +253,7 @@ const flowDefinition = {
         service: '{{trigger.message.InstanceSid}}',
         channel: '{{trigger.message.ChannelSid}}',
         from: '{{flow.channel.address}}',
-        body: "Sorry, couldn't get it. Could you please rephrase your question?",
+        body: "Sorry, couldn't get it. Could you please rephrase your question? You can ask me questions about COVID-19 vaccines such as vaccine safety, side effects, cost etc.",
         timeout: '3600',
       },
     },
