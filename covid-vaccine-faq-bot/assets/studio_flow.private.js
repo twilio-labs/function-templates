@@ -1,337 +1,338 @@
 /* eslint-disable camelcase */
 const flowDefinition = {
-  "description": "Twilio Dialogflow Chatbot",
-  "states": [
+  description: 'Twilio Dialogflow Chatbot',
+  states: [
     {
-      "name": "Trigger",
-      "type": "trigger",
-      "transitions": [
+      name: 'Trigger',
+      type: 'trigger',
+      transitions: [
         {
-          "next": "SetUtteranceVariable",
-          "event": "incomingMessage"
+          next: 'SetUtteranceVariable',
+          event: 'incomingMessage',
         },
         {
-          "event": "incomingCall"
+          event: 'incomingCall',
         },
         {
-          "event": "incomingRequest"
-        }
+          event: 'incomingRequest',
+        },
       ],
-      "properties": {
-        "offset": {
-          "x": 0,
-          "y": 0
-        }
-      }
+      properties: {
+        offset: {
+          x: 0,
+          y: 0,
+        },
+      },
     },
     {
-      "name": "SetUtteranceVariable",
-      "type": "set-variables",
-      "transitions": [
+      name: 'SetUtteranceVariable',
+      type: 'set-variables',
+      transitions: [
         {
-          "next": "DialogflowDetectIntent",
-          "event": "next"
-        }
+          next: 'DialogflowDetectIntent',
+          event: 'next',
+        },
       ],
-      "properties": {
-        "variables": [
+      properties: {
+        variables: [
           {
-            "value": "{{trigger.message.Body}}",
-            "key": "utterance"
-          }
+            value: '{{trigger.message.Body}}',
+            key: 'utterance',
+          },
         ],
-        "offset": {
-          "x": -50,
-          "y": 200
-        }
-      }
+        offset: {
+          x: -50,
+          y: 200,
+        },
+      },
     },
     {
-      "name": "DialogflowDetectIntent",
-      "type": "run-function",
-      "transitions": [
+      name: 'DialogflowDetectIntent',
+      type: 'run-function',
+      transitions: [
         {
-          "next": "SetDialogflowSessionId",
-          "event": "success"
+          next: 'SetDialogflowSessionId',
+          event: 'success',
         },
         {
-          "event": "fail"
-        }
+          event: 'fail',
+        },
       ],
-      "properties": {
-        "offset": {
-          "x": 20,
-          "y": 470
+      properties: {
+        offset: {
+          x: 20,
+          y: 470,
         },
-        "parameters": [
+        parameters: [
           {
-            "value": "{{flow.variables.utterance}}",
-            "key": "utterance"
+            value: '{{flow.variables.utterance}}',
+            key: 'utterance',
           },
           {
-            "value": "{{flow.variables.dialogflow_session_id}}",
-            "key": "dialogflow_session_id"
-          }
+            value: '{{flow.variables.dialogflow_session_id}}',
+            key: 'dialogflow_session_id',
+          },
         ],
-        "url": ""
-      }
+        url: '',
+      },
     },
     {
-      "name": "Check_EndSession",
-      "type": "split-based-on",
-      "transitions": [
+      name: 'Check_EndSession',
+      type: 'split-based-on',
+      transitions: [
         {
-          "next": "SendWaitDialogflowAnswer",
-          "event": "noMatch"
+          next: 'SendWaitDialogflowAnswer',
+          event: 'noMatch',
         },
         {
-          "next": "SendFinalMessage",
-          "event": "match",
-          "conditions": [
+          next: 'SendFinalMessage',
+          event: 'match',
+          conditions: [
             {
-              "friendly_name": "Wants Agent",
-              "arguments": [
-                "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}"
+              friendly_name: 'Wants Agent',
+              arguments: [
+                '{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}',
               ],
-              "type": "equal_to",
-              "value": "Thank you for using the Vaccine chatbot."
-            }
-          ]
+              type: 'equal_to',
+              value: 'Thank you for using the Vaccine chatbot.',
+            },
+          ],
         },
         {
-          "next": "SendWaitRephrase",
-          "event": "match",
-          "conditions": [
+          next: 'SendWaitRephrase',
+          event: 'match',
+          conditions: [
             {
-              "friendly_name": "Rephrase",
-              "arguments": [
-                "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}"
+              friendly_name: 'Rephrase',
+              arguments: [
+                '{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}',
               ],
-              "type": "is_blank",
-              "value": "Is Blank"
-            }
-          ]
+              type: 'is_blank',
+              value: 'Is Blank',
+            },
+          ],
         },
         {
-          "next": "WelcomeMessage",
-          "event": "match",
-          "conditions": [
+          next: 'WelcomeMessage',
+          event: 'match',
+          conditions: [
             {
-              "friendly_name": "Greetings",
-              "arguments": [
-                "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}"
+              friendly_name: 'Greetings',
+              arguments: [
+                '{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}',
               ],
-              "type": "equal_to",
-              "value": "Greetings! I am Vaccine chatbot. You can ask me questions about COVID-19 vaccines such as vaccine safety, side effects, immunity and allergies."
-            }
-          ]
-        }
+              type: 'equal_to',
+              value:
+                'Greetings! I am Vaccine chatbot. You can ask me questions about COVID-19 vaccines such as vaccine safety, side effects, immunity and allergies.',
+            },
+          ],
+        },
       ],
-      "properties": {
-        "input": "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}",
-        "offset": {
-          "x": 80,
-          "y": 920
-        }
-      }
+      properties: {
+        input: '{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}',
+        offset: {
+          x: 80,
+          y: 920,
+        },
+      },
     },
     {
-      "name": "ResetUtteranceVariable",
-      "type": "set-variables",
-      "transitions": [
+      name: 'ResetUtteranceVariable',
+      type: 'set-variables',
+      transitions: [
         {
-          "next": "DialogflowDetectIntent",
-          "event": "next"
-        }
+          next: 'DialogflowDetectIntent',
+          event: 'next',
+        },
       ],
-      "properties": {
-        "variables": [
+      properties: {
+        variables: [
           {
-            "value": "{{widgets.SendWaitDialogflowAnswer.inbound.Body}}",
-            "key": "utterance"
-          }
+            value: '{{widgets.SendWaitDialogflowAnswer.inbound.Body}}',
+            key: 'utterance',
+          },
         ],
-        "offset": {
-          "x": -990,
-          "y": 660
-        }
-      }
+        offset: {
+          x: -990,
+          y: 660,
+        },
+      },
     },
     {
-      "name": "SetDialogflowSessionId",
-      "type": "set-variables",
-      "transitions": [
+      name: 'SetDialogflowSessionId',
+      type: 'set-variables',
+      transitions: [
         {
-          "next": "Check_EndSession",
-          "event": "next"
-        }
+          next: 'Check_EndSession',
+          event: 'next',
+        },
       ],
-      "properties": {
-        "variables": [
+      properties: {
+        variables: [
           {
-            "value": "{{widgets.DialogflowDetectIntent.parsed.session_id}}",
-            "key": "dialogflow_session_id"
-          }
+            value: '{{widgets.DialogflowDetectIntent.parsed.session_id}}',
+            key: 'dialogflow_session_id',
+          },
         ],
-        "offset": {
-          "x": -260,
-          "y": 700
-        }
-      }
+        offset: {
+          x: -260,
+          y: 700,
+        },
+      },
     },
     {
-      "name": "SendFinalMessage",
-      "type": "send-message",
-      "transitions": [
+      name: 'SendFinalMessage',
+      type: 'send-message',
+      transitions: [
         {
-          "event": "sent"
+          event: 'sent',
         },
         {
-          "event": "failed"
-        }
+          event: 'failed',
+        },
       ],
-      "properties": {
-        "offset": {
-          "x": -330,
-          "y": 1490
+      properties: {
+        offset: {
+          x: -330,
+          y: 1490,
         },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
-        "from": "{{flow.channel.address}}",
-        "to": "{{contact.channel.address}}",
-        "body": "Thank you for using Vaccine FAQ bot!"
-      }
+        service: '{{trigger.message.InstanceSid}}',
+        channel: '{{trigger.message.ChannelSid}}',
+        from: '{{flow.channel.address}}',
+        to: '{{contact.channel.address}}',
+        body: 'Thank you for using Vaccine FAQ bot!',
+      },
     },
     {
-      "name": "SendWaitDialogflowAnswer",
-      "type": "send-and-wait-for-reply",
-      "transitions": [
+      name: 'SendWaitDialogflowAnswer',
+      type: 'send-and-wait-for-reply',
+      transitions: [
         {
-          "next": "ResetUtteranceVariable",
-          "event": "incomingMessage"
+          next: 'ResetUtteranceVariable',
+          event: 'incomingMessage',
         },
         {
-          "event": "timeout"
+          event: 'timeout',
         },
         {
-          "event": "deliveryFailure"
-        }
+          event: 'deliveryFailure',
+        },
       ],
-      "properties": {
-        "offset": {
-          "x": -710,
-          "y": 1210
+      properties: {
+        offset: {
+          x: -710,
+          y: 1210,
         },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
-        "from": "{{flow.channel.address}}",
-        "body": "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}  \nDo you have any additional questions?",
-        "timeout": "3600"
-      }
+        service: '{{trigger.message.InstanceSid}}',
+        channel: '{{trigger.message.ChannelSid}}',
+        from: '{{flow.channel.address}}',
+        body: '{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}  \nDo you have any additional questions?',
+        timeout: '3600',
+      },
     },
     {
-      "name": "SendWaitRephrase",
-      "type": "send-and-wait-for-reply",
-      "transitions": [
+      name: 'SendWaitRephrase',
+      type: 'send-and-wait-for-reply',
+      transitions: [
         {
-          "next": "ResetUtteranceVariableonRephrase",
-          "event": "incomingMessage"
+          next: 'ResetUtteranceVariableonRephrase',
+          event: 'incomingMessage',
         },
         {
-          "event": "timeout"
+          event: 'timeout',
         },
         {
-          "event": "deliveryFailure"
-        }
+          event: 'deliveryFailure',
+        },
       ],
-      "properties": {
-        "offset": {
-          "x": 240,
-          "y": 1470
+      properties: {
+        offset: {
+          x: 240,
+          y: 1470,
         },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
-        "from": "{{flow.channel.address}}",
-        "body": "Sorry, couldn't get it. Could you please rephrase your question?",
-        "timeout": "3600"
-      }
+        service: '{{trigger.message.InstanceSid}}',
+        channel: '{{trigger.message.ChannelSid}}',
+        from: '{{flow.channel.address}}',
+        body: "Sorry, couldn't get it. Could you please rephrase your question?",
+        timeout: '3600',
+      },
     },
     {
-      "name": "ResetUtteranceVariableonRephrase",
-      "type": "set-variables",
-      "transitions": [
+      name: 'ResetUtteranceVariableonRephrase',
+      type: 'set-variables',
+      transitions: [
         {
-          "next": "DialogflowDetectIntent",
-          "event": "next"
-        }
+          next: 'DialogflowDetectIntent',
+          event: 'next',
+        },
       ],
-      "properties": {
-        "variables": [
+      properties: {
+        variables: [
           {
-            "value": "{{widgets.SendWaitRephrase.inbound.Body}}",
-            "key": "utterance"
-          }
+            value: '{{widgets.SendWaitRephrase.inbound.Body}}',
+            key: 'utterance',
+          },
         ],
-        "offset": {
-          "x": 530,
-          "y": 640
-        }
-      }
+        offset: {
+          x: 530,
+          y: 640,
+        },
+      },
     },
     {
-      "name": "WelcomeMessage",
-      "type": "send-and-wait-for-reply",
-      "transitions": [
+      name: 'WelcomeMessage',
+      type: 'send-and-wait-for-reply',
+      transitions: [
         {
-          "next": "ResetUtteranceVariableonWelcome",
-          "event": "incomingMessage"
+          next: 'ResetUtteranceVariableonWelcome',
+          event: 'incomingMessage',
         },
         {
-          "event": "timeout"
+          event: 'timeout',
         },
         {
-          "event": "deliveryFailure"
-        }
+          event: 'deliveryFailure',
+        },
       ],
-      "properties": {
-        "offset": {
-          "x": 800,
-          "y": 1460
+      properties: {
+        offset: {
+          x: 800,
+          y: 1460,
         },
-        "service": "{{trigger.message.InstanceSid}}",
-        "channel": "{{trigger.message.ChannelSid}}",
-        "from": "{{flow.channel.address}}",
-        "body": "{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}",
-        "timeout": "3600"
-      }
+        service: '{{trigger.message.InstanceSid}}',
+        channel: '{{trigger.message.ChannelSid}}',
+        from: '{{flow.channel.address}}',
+        body: '{{widgets.DialogflowDetectIntent.parsed.fulfillmentText}}',
+        timeout: '3600',
+      },
     },
     {
-      "name": "ResetUtteranceVariableonWelcome",
-      "type": "set-variables",
-      "transitions": [
+      name: 'ResetUtteranceVariableonWelcome',
+      type: 'set-variables',
+      transitions: [
         {
-          "next": "DialogflowDetectIntent",
-          "event": "next"
-        }
+          next: 'DialogflowDetectIntent',
+          event: 'next',
+        },
       ],
-      "properties": {
-        "variables": [
+      properties: {
+        variables: [
           {
-            "value": "{{widgets.WelcomeMessage.inbound.Body}}",
-            "key": "utterance"
-          }
+            value: '{{widgets.WelcomeMessage.inbound.Body}}',
+            key: 'utterance',
+          },
         ],
-        "offset": {
-          "x": 1020,
-          "y": 670
-        }
-      }
-    }
+        offset: {
+          x: 1020,
+          y: 670,
+        },
+      },
+    },
   ],
-  "initial_state": "Trigger",
-  "flags": {
-    "allow_concurrent_calls": true
-  }
-}
+  initial_state: 'Trigger',
+  flags: {
+    allow_concurrent_calls: true,
+  },
+};
 
 module.exports = flowDefinition;
