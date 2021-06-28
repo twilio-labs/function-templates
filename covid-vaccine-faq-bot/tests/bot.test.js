@@ -9,10 +9,7 @@ jest.mock('@google-cloud/dialogflow');
 
 const SessionsClient = new dialogflow.SessionsClient();
 SessionsClient.mockImplementation(() => {
-  
-   
-    return {
-    
+  return {
     projectAgentSessionPath: (a, b) => null,
     detectIntent: (a) => {
       return [
