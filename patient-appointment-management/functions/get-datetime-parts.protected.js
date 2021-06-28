@@ -41,13 +41,13 @@ exports.handler = function (context, event, callback) {
   console.log('input', datetime);
 
   const ampm = datetime.getUTCHours() < 12 ? 'AM' : 'PM';
-  const tod = `${datetime.getHours() % 12}:${datetime.getUTCMinutes()} ${ampm}`;
+  const tod = `${datetime.getUTCHours() % 12}:${datetime.getUTCMinutes()} ${ampm}`;
   const r = {
-    year: datetime.getFullYear(),
-    month_number: datetime.getMonth(),
-    month_name: MONTHS[datetime.getMonth() - 1],
-    day: datetime.getDate(),
-    day_of_week_long: DOW[datetime.getDay()],
+    year: datetime.getUTCFullYear(),
+    month_number: datetime.getUTCMonth() + 1,
+    month_name: MONTHS[datetime.getUTCMonth()],
+    day: datetime.getUTCDate(),
+    day_of_week_long: DOW[datetime.getUTCDay()],
     time_of_day: tod,
     readable_datetime: null,
   };
