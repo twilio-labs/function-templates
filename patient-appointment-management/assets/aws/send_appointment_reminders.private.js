@@ -1,5 +1,13 @@
 /* eslint-disable camelcase, complexity, sonarjs/cognitive-complexity, prefer-destructuring, prefer-template */
 const THIS = 'send-appointment-reminders: ';
+/*
+ * --------------------------------------------------------------------------------
+ * iterates through pending appointments and sends appointment reminders
+ *
+ * NOTE: These files are executed on AWS Lambda, updating them here without a redeploy will not change anything.
+ * To redeploy run the function /deployment/deploy-aws-code
+ * --------------------------------------------------------------------------------
+ */
 
 // --------------------------------------------------------------------------------
 async function getAllKeys(params, s3client, allKeys = []) {
@@ -88,12 +96,7 @@ async function executeFlow(params) {
   });
 }
 
-/*
- * --------------------------------------------------------------------------------
- * Note that exports.handler is changed to 'async' allow use of 'await' to serialize execution.
- * Therefore, all asnychronous s3 functions must be called in this function body.
- * --------------------------------------------------------------------------------
- */
+// --------------------------------------------------------------------------------
 exports.handler = async function (event, context) {
   console.time(THIS);
   try {

@@ -3,7 +3,8 @@
  * --------------------------------------------------------------------------------
  * synchronously runs glue crawler
  *
- * THIS LAMBDA IS A SINGLETON! Deploy with Concurrency = 1
+ * NOTE: These files are executed on AWS Lambda, updating them here without a redeploy will not change anything.
+ * To redeploy run the function /deployment/deploy-aws-code
  *
  * returns response.Crawler if successful; null otherwise
  * --------------------------------------------------------------------------------
