@@ -50,13 +50,24 @@ function settingsUpdate(input) {
     case 'font-color':
       $('#card-container').css('color', input.value);
       break;
+    
+    case 'message-frequency':
+      $('#messageFrequency').html(input.value);
+      break;
 
     case 'message-quantity':
-      $('#messageQuantity').html(input.value);
+      console.log('quantity changed');
+      let interval = $('#message-interval').val();
+      let quantityUpdate = `${input.value} message${input.value > 1 ? 's' : ''} per ${interval}`;
+      $('#message-frequency').val(quantityUpdate);
+      $('#messageFrequency').html(quantityUpdate);
       break;
 
     case 'message-interval':
-      $('#messageInterval').html(input.value);
+      let quantity = $('#message-quantity').val();
+      let intervalUpdate = `${quantity} message${quantity > 1 ? 's' : ''} per ${input.value}`;
+      $('#message-frequency').val(intervalUpdate);
+      $('#messageFrequency').html(intervalUpdate);
       break;
 
     case 'button-cta':
@@ -96,6 +107,13 @@ function setOpenDataPanel(dataSource) {
     }
 }
 
+function bindMessageFrequencyTabs() {
+  $('#frequency-varies-tab').on('click', function (e) {
+    $('#message-frequency').val('Message frequency varies');
+    $('#messageFrequency').html('Message frequency varies')
+  });
+}
+
 function bindDataSourceTabs() {
   $('#webhook-tab').on('click', function (e) {
     let dataSource = e.target.innerText.toLocaleLowerCase()
@@ -121,6 +139,7 @@ function sendSMS() {
     });
 }
 
+// Displays settings and prefills setting values from stored settings.
 function displaySettings(data) {
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has('error')) {
@@ -147,8 +166,7 @@ function displaySettings(data) {
     $('#font-color').val(data.fontColor);
     $('#custom-css').val(data.customCss);
 
-    $('#message-quantity').val(data.messageQuantity);
-    $('#message-interval').val(data.messageInterval);
+    $('#message-frequency').val(data.messageFrequency);
     $('#opt-in-keyword').val(data.optInKeyword);
     $('#contact-information').val(data.contactInformation);
     $('#privacy-policy-link').val(data.privacyPolicyLink);
@@ -171,10 +189,12 @@ function displaySettings(data) {
 
     $('#iframe-panel').html(iframeTemplate);
 
+    bindMessageFrequencyTabs();
     bindDataSourceTabs();
   }
 }
 
+// Customizes the opt-in form on page load.
 function setHomeConfig(data) {
   displaySettings(data);
 
@@ -203,9 +223,8 @@ function setHomeConfig(data) {
   $('#body').css('background', data.backgroundColor);
   $('#card-container').css('color', data.fontColor);
   appendCustomCss(data.customCss);
-
-  $('#messageQuantity').html(data.messageQuantity);
-  $('#messageInterval').html(data.messageInterval);
+  console.log(data.messageFrequency);
+  $('#messageFrequency').html(data.messageFrequency);
   $('#privacyPolicyLink').attr('href', data.privacyPolicyLink);
 
 
@@ -217,8 +236,7 @@ function updateTos(data) {
   $('#title').html(data.campaignTitle);
   $('#description').html(data.campaignDescription);
   $('#contact-information').html( data.contactInformation);
-  $('#messageQuantity').html(data.messageQuantity);
-  $('#messageInterval').html(data.messageInterval);
+  $('#messageFrequency').html(data.messageFrequency);
   $('#privacy-policy-link').attr('href', data.privacyPolicyLink);
 }
 

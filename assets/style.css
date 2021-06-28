@@ -34,6 +34,9 @@ code {
   color: #BDDCDC;
 }
 
+.message-frequency-option.nav-link {
+  background: #efefef;
+}
 
 /* Loading Animation */
 .lds-ellipsis {

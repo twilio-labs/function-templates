@@ -91,18 +91,36 @@
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
                   <div class="me-auto">
-                    <div class="fw-bold">Message Quantity and Interval</div>
-                    <div class="input-group mb-3">
-                      <input oninput="settingsUpdate(this)" type="number" id="message-quantity" name="message-quantity" class="form-control" placeholder="1">
-                      <span class="input-group-text">message /</span>
-                      <select onchange="settingsUpdate(this)" class="form-select" id="message-interval" name="message-interval" aria-label="Example select with button addon">
-                        <option selected>Choose interval...</option>
-                        <option value="month">month</option>
-                        <option value="login">login</option>
-                        <option value="delivery">delivery</option>
-                        <option value="appointment">appointment</option>
-                      </select>
+                    <div class="fw-bold mb-2">Message Quantity and Interval</div>
+                    <p>Which best describes how you message customers?</p>
+                    <ul class="nav nav-pills btn-group nav-justified mb-3" id="pills-tab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="message-frequency-option nav-link active" id="consistent-schedule-tab" data-bs-toggle="pill" data-bs-target="#consistent-schedule" type="button" role="tab" aria-controls="consistent-schedule" aria-selected="true">Consistent Schedule</button>
+                      </li>
+                      <li class="nav-item" role="presentation">
+                        <button class="message-frequency-option nav-link" id="frequency-varies-tab" data-bs-toggle="pill" data-bs-target="#frequency-varies" type="button" role="tab" aria-controls="frequency-varies" aria-selected="false">Frequency Varies</button>
+                      </li>
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                      <div class="tab-pane fade show active" id="consistent-schedule" role="tabpanel" aria-labelledby="consistent-schedule-tab">
+                        <div class="input-group mb-3">
+                          <input oninput="settingsUpdate(this)" type="number" id="message-quantity" name="message-quantity" class="form-control" min="1" placeholder="1">
+                          <span class="input-group-text">message(s) /</span>
+                          <select onchange="settingsUpdate(this)" class="form-select" id="message-interval" name="message-interval" aria-label="Example select with button addon">
+                            <option selected value="[choose interval]">Choose interval...</option>
+                            <option value="month">month</option>
+                            <option value="login">login</option>
+                            <option value="delivery">delivery</option>
+                            <option value="appointment">appointment</option>
+                            <option value="[replace with your custom interval]">custom...</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="tab-pane fade" id="frequency-varies" role="tabpanel" aria-labelledby="frequency-varies-tab"></div>
                     </div>
+                    <label for="message-frequency" class="fw-bold mb-2">Message frequency description:</label>
+                    <textarea oninput="settingsUpdate(this)" type="text" class="form-control mb-2" id="message-frequency" name="message-frequency" placeholder="4 messages / month."></textarea>
+                    <p>Edit your message frequency description to provide more detail if needed.</p>
                   </div>
                 </li>
                 <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -224,7 +242,7 @@
               <img id="logo" width="200px" height="auto" src="" />
               <h1 id="title" class="card-title"></h1>
               <p id="description" class="card-text mb-4"></p>
-              <p class="card-text mb-4">Message and data rates may apply. Reply STOP to opt-out, reply HELP for  <span id="messageQuantity"></span> messages / <span id="messageInterval"></span>.</p>
+              <p class="card-text mb-4">Message and data rates may apply. Reply STOP to opt-out, reply HELP for info. <span id="messageFrequency">4 messages / month</span>.</p>
               <div id="cta-button"></div>
               <div id="sms-confirmation" class="alert alert-success" role="alert" style="display:none">
                 We've sent you an SMS to confirm your registration.
