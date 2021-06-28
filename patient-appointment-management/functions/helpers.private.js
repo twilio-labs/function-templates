@@ -1,7 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable complexity */
-/* eslint-disable sonarjs/cognitive-complexity */
-/* eslint-disable prefer-template */
+/* eslint-disable camelcase, complexity, sonarjs/cognitive-complexity */
 /*
  * --------------------------------------------------------------------------------
  * common helper function used by functions & client-side javascript
@@ -191,11 +188,11 @@ async function getParam(context, key) {
     }
     case 'AWS_CF_STACK_APPLICATION': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return CONSTANTS._CF_STACK_APPLICATION_BASE + '-' + CUSTOMER_CODE;
+      return `${CONSTANTS._CF_STACK_APPLICATION_BASE}-${CUSTOMER_CODE}`;
     }
     case 'AWS_CF_STACK_BUCKET': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return CONSTANTS._CF_STACK_BUCKET_BASE + '-' + CUSTOMER_CODE;
+      return `${CONSTANTS._CF_STACK_BUCKET_BASE}-${CUSTOMER_CODE}`;
     }
     case 'AWS_GLUE_CRAWLER': {
       return [
@@ -211,15 +208,15 @@ async function getParam(context, key) {
     }
     case 'AWS_LAMBDA_SEND_REMINDERS': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return CONSTANTS._SEND_REMINDERS_BASE + '-' + CUSTOMER_CODE;
+      return `${CONSTANTS._SEND_REMINDERS_BASE}-${CUSTOMER_CODE}`;
     }
     case 'AWS_LAMBDA_QUERY_STATE': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return CONSTANTS._QUERY_STATE_BASE + '-' + CUSTOMER_CODE;
+      return `${CONSTANTS._QUERY_STATE_BASE}-${CUSTOMER_CODE}`;
     }
     case 'AWS_LAMBDA_QUERY_HISTORY': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return CONSTANTS._QUERY_HISTORY_BASE + '-' + CUSTOMER_CODE;
+      return `${CONSTANTS._QUERY_HISTORY_BASE}-${CUSTOMER_CODE}`;
     }
     case 'AWS_SFN_QUERY_STATE': {
       return [
@@ -235,7 +232,7 @@ async function getParam(context, key) {
     }
     case 'AWS_S3_BUCKET': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return CONSTANTS._S3_BUCKET_BASE + '-' + CUSTOMER_CODE;
+      return `${CONSTANTS._S3_BUCKET_BASE}-${CUSTOMER_CODE}`;
     }
     case 'TWILIO_ACCOUNT_SID': {
       return getParam(context, 'ACCOUNT_SID');
@@ -301,7 +298,7 @@ async function getParam(context, key) {
       return null;
     }
     default:
-      throw new Error('Undefined variable ' + key + ' !!!');
+      throw new Error(`Undefined variable ${key} !!!`);
   }
 }
 

@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, dot-notation */
 const THIS = 'deployment/deploy-studio-flow:';
 /*
  * --------------------------------------------------------------------------------
@@ -11,13 +11,25 @@ const THIS = 'deployment/deploy-studio-flow:';
 const assert = require('assert');
 const fs = require('fs');
 
-const { path } = Runtime.getFunctions().helpers;
-const { getParam, setParam } = require(path);
+const path0 = Runtime.getFunctions()['helpers'].path;
+const { getParam, setParam } = require(path0);
+const path1 = Runtime.getFunctions()['auth'].path;
+const { isAllowed } = require(path1);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Starting');
   console.time(THIS);
   try {
+    assert(event.token, 'missing event.token');
+    if (!isAllowed(event.token, context)) {
+      const response = new Twilio.Response();
+      response.setStatusCode(401);
+      response.appendHeader('Content-Type', 'application/json');
+      response.setBody({ message: 'Unauthorized' });
+
+      return callback(null, response);
+    }
+
     // ---------- parameters
     const CUSTOMER_NAME = await getParam(context, 'CUSTOMER_NAME');
     const CUSTOMER_EHR_ENDPOINT_URL = await getParam(

@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, dot-notation */
 
 const THIS = 'deployment/check:';
 /*
@@ -9,15 +9,28 @@ const THIS = 'deployment/check:';
  * . action = DELETE, optional
  * --------------------------------------------------------------------------------
  */
+const assert = require('assert');
 const aws = require('aws-sdk');
 
-const { path } = Runtime.getFunctions().helpers;
-const { getParam, setParam } = require(path);
+const path0 = Runtime.getFunctions()['helpers'].path;
+const { getParam, setParam } = require(path0);
+const path1 = Runtime.getFunctions()['auth'].path;
+const { isAllowed } = require(path1);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
+    assert(event.token, 'missing event.token');
+    if (!isAllowed(event.token, context)) {
+      const response = new Twilio.Response();
+      response.setStatusCode(401);
+      response.appendHeader('Content-Type', 'application/json');
+      response.setBody({ message: 'Unauthorized' });
+
+      return callback(null, response);
+    }
+
     if (event.hasOwnProperty('name') && event.name !== undefined) {
       const value = await getParam(context, event.name);
 

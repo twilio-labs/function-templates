@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, prefer-destructuring, dot-notation, prefer-template */
+/* eslint-disable camelcase, prefer-destructuring, dot-notation */
 /*
  * --------------------------------------------------------------------------------
  * check query
@@ -19,7 +19,7 @@ const { isAllowed } = require(path1);
 
 // --------------------------------------------------------------------------------
 exports.handler = async function (context, event, callback) {
-  const THIS = 'check-query-' + event.table + ':';
+  const THIS = `check-query-${event.table}:`;
   console.time(THIS);
   try {
     assert(event.token, 'missing event.token');
@@ -114,7 +114,7 @@ exports.handler = async function (context, event, callback) {
         break;
       default:
         throw new Error(
-          'last execution status=' + response.executions[0].status
+          `last execution status=${response.executions[0].status}`
         );
         break;
     }

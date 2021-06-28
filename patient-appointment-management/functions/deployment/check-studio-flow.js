@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable callback-return */
+/* eslint-disable camelcase, dot-notation, consistent-return, callback-return */
 const THIS = 'deployment/check-studio-flow:';
 /*
  * --------------------------------------------------------------------------------
@@ -12,13 +11,27 @@ const THIS = 'deployment/check-studio-flow:';
  * - NOT-DEPLOYED, if not deployed
  * --------------------------------------------------------------------------------
  */
-const { path } = Runtime.getFunctions().helpers;
-const { getParam, setParam } = require(path);
+const assert = require('assert');
+
+const path0 = Runtime.getFunctions()['helpers'].path;
+const { getParam, setParam } = require(path0);
+const path1 = Runtime.getFunctions()['auth'].path;
+const { isAllowed } = require(path1);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
+    assert(event.token, 'missing event.token');
+    if (!isAllowed(event.token, context)) {
+      const response = new Twilio.Response();
+      response.setStatusCode(401);
+      response.appendHeader('Content-Type', 'application/json');
+      response.setBody({ message: 'Unauthorized' });
+
+      return callback(null, response);
+    }
+
     // TWILIO_FLOW_SID will be 'null' if associated flow is not found
     const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
 

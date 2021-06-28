@@ -24,6 +24,23 @@
     </p>
   </header>
   <main>
+    <script>
+    let token = null;
+    </script>
+    <div id="password-form" style="display: none;">
+      <p>To protect sensitive data, a password is required to see responses. This was the admin password you set when launching your app. Or it can be found in the <code>.env</code>file in the root of your application.</p>
+      <p id="login-error" style="color:red;"></p>
+      <form>
+        <div>
+          <label for="password">Password:
+            <input id="password-input" type="password" name="password">
+          </label>
+        </div>
+        <button class="button" onclick="login(event)">Authenticate</button>
+      </form>
+    </div>
+    <p id="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
+
     <section>
       <div class="flow-loader"></div>
       <div id="flow-deploy" style="display: none;" class="deployer">
@@ -108,20 +125,6 @@
         </p>
 
         <h5>Once you have some appointment data, you can query appointment data.</h5>
-
-        <div id="password-form" style="display: none;">
-          <p>To protect sensitive data, a password is required to see responses. This was the admin password you set when launching your app. Or it can be found in the <code>.env</code>file in the root of your application.</p>
-          <p id="login-error" style="color:red;"></p>
-          <form>
-            <div>
-              <label for="password">Password:
-                <input id="password-input" type="password" name="password">
-              </label>
-            </div>
-            <button class="button" onclick="login(event)">Authenticate</button>
-          </form>
-        </div>
-        <p id="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
 
         <div class="state-downloader"></div>
         <div id="state-query" style="display: none;" class="deployer">

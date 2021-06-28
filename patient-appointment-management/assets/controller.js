@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, object-shorthand */
+/* eslint-disable camelcase, object-shorthand, prefer-destructuring */
 
 /*
  * main controller javascript used by index.html
@@ -34,7 +34,7 @@ const fullUrl = baseUrl.href.substr(0, baseUrl.href.length - 1);
 const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // --------------------------------------------------------------------------------
-function checkHistory(token) {
+function checkHistory() {
   THIS = 'checkHistory:';
   console.log(THIS, 'running');
   fetch(`/deployment/check-query?table=history`, {
@@ -89,7 +89,7 @@ function downloadHistory(e) {
 }
 
 // --------------------------------------------------------------------------------
-function checkState(token) {
+function checkState() {
   THIS = 'checkState:';
   console.log(THIS, 'running');
   fetch(`/deployment/check-query?table=state`, {
@@ -144,54 +144,27 @@ function downloadState(e) {
 }
 
 // --------------------------------------------------------------------------------
-async function login(e) {
-  e.preventDefault();
+function readyToUse() {
+  THIS = 'readyToUse:';
+  console.log(THIS, 'running');
+  $('#ready-to-use').show();
 
-  const passwordInput = $('#password-input').val();
-  fetch('/login', {
+  checkState();
+  checkHistory();
+}
+
+// --------------------------------------------------------------------------------
+function checkAWSApplication() {
+  THIS = 'checkAWSApplication:';
+  console.log(THIS, 'running');
+  fetch('/deployment/check-aws-application', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ password: passwordInput }),
+    body: JSON.stringify({ token }),
   })
-    .then((response) => {
-      if (!response.ok) {
-        $('#login-error').text(
-          response.status === 401
-            ? 'Incorrect password, please try again.'
-            : 'There was an error when attempting to log in.'
-        );
-        throw Error(response.statusText);
-      }
-
-      return response;
-    })
-    .then((response) => response.json())
-    .then((r) => {
-      $('#password-form').hide();
-      $('#auth-successful').show();
-      checkState(r.token);
-      checkHistory(r.token);
-    })
-    .catch((err) => console.log(err));
-}
-
-// --------------------------------------------------------------------------------
-function readyToUse() {
-  THIS = 'readyToUse:';
-  console.log(THIS, 'running');
-  $('#ready-to-use').show();
-  $('#password-form').show();
-  $('#auth-successful').hide();
-}
-
-// --------------------------------------------------------------------------------
-function checkAWSApplication(resource) {
-  THIS = 'checkAWSApplication:';
-  console.log(THIS, 'running');
-  fetch('/deployment/check-aws-application')
     .then((response) => response.text())
     .then((status) => {
       console.log(THIS, status);
@@ -228,11 +201,25 @@ function deployAWSApplication(e) {
   $('#aws-application-deploy .button').addClass('loading');
   $('.aws-application-loader.button-loader').show();
 
-  fetch('/deployment/deploy-aws-code').then(() => {
+  fetch('/deployment/deploy-aws-code', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  }).then(() => {
     console.log(THIS, 'deployed aws code');
   });
 
-  fetch('/deployment/deploy-aws-application')
+  fetch('/deployment/deploy-aws-application', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
     .then(() => {
       console.log(THIS, 'success');
       checkAWSApplication();
@@ -248,7 +235,14 @@ function deployAWSApplication(e) {
 function checkAWSBucket(resource) {
   THIS = 'checkAWSBucket:';
   console.log(THIS, 'running');
-  fetch('/deployment/check-aws-bucket')
+  fetch('/deployment/check-aws-bucket', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
     .then((response) => response.text())
     .then((status) => {
       console.log(THIS, status);
@@ -285,7 +279,14 @@ function deployAWSBucket(e) {
   $('#aws-bucket-deploy .button').addClass('loading');
   $('.aws-bucket-loader.button-loader').show();
 
-  fetch('/deployment/deploy-aws-bucket')
+  fetch('/deployment/deploy-aws-bucket', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
     .then(() => {
       console.log(THIS, 'success');
       checkAWSBucket();
@@ -301,7 +302,14 @@ function deployAWSBucket(e) {
 function checkStudioFlow() {
   THIS = 'checkStudioFlow:';
   console.log(THIS, 'running');
-  fetch('/deployment/check-studio-flow')
+  fetch('/deployment/check-studio-flow', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
     .then((response) => response.text())
     .then((sid) => {
       console.log(THIS, sid);
@@ -336,7 +344,14 @@ function deployStudioFlow(e) {
   $('#flow-deploy .button').addClass('loading');
   $('.flow-loader.button-loader').show();
 
-  fetch('/deployment/deploy-studio-flow')
+  fetch('/deployment/deploy-studio-flow', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
     .then(() => {
       console.log(THIS, 'success');
       checkStudioFlow();
@@ -349,43 +364,42 @@ function deployStudioFlow(e) {
 }
 
 // --------------------------------------------------------------------------------
-function getStudioExecutions(sid, token) {
-  const tbody = $('#residents-table-body');
-  fetch(`/get-studio-executions`, {
+async function login(e) {
+  e.preventDefault();
+
+  const passwordInput = $('#password-input').val();
+  fetch('/login', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token }),
+    body: JSON.stringify({ password: passwordInput }),
   })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.length > 0) {
-        updateTable(data);
-      } else {
-        tbody.html(
-          `<tr class="table-placeholder"><td colspan="11">No records yet. Send a text message to <strong class="phone-number">${phoneNumber}</strong> to begin.</td></tr>`
+    .then((response) => {
+      if (!response.ok) {
+        $('#login-error').text(
+          response.status === 401
+            ? 'Incorrect password, please try again.'
+            : 'There was an error when attempting to log in.'
         );
+        throw Error(response.statusText);
       }
-    })
-    .catch((err) => {
-      console.log(err);
-      tbody.html(
-        `<tr class="table-placeholder"><td colspan="11" style="color: red">There was an error when attempting to fetch Studio Logs. Refresh the page to try again or see troubleshooting steps below.</td></tr>`
-      );
-    });
-}
 
-function getStudioData(token) {
-  $('#test-standby-list').show();
-  clearInterval(getStudioExecutions);
-  getStudioExecutions(flowSid, token);
-  setInterval(getStudioExecutions, 3000, flowSid, token);
+      return response;
+    })
+    .then((response) => response.json())
+    .then((r) => {
+      token = r.token;
+      $('#password-form').hide();
+      $('#auth-successful').show();
+      checkStudioFlow();
+    })
+    .catch((err) => console.log(err));
 }
 
 // --------------------------------------------------------------------------------
-function check(token) {
+function check() {
   THIS = 'check:';
   console.log(THIS, 'running');
   fetch('/deployment/check', {
@@ -404,4 +418,5 @@ function check(token) {
     });
 }
 
-checkStudioFlow();
+$('#password-form').show();
+$('#auth-successful').hide();

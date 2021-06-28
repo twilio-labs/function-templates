@@ -1,6 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable dot-notation */
+/* eslint-disable camelcase, prefer-destructuring, dot-notation */
 const THIS = 'execute-query:';
 /*
  * --------------------------------------------------------------------------------
@@ -14,14 +12,26 @@ const THIS = 'execute-query:';
 const assert = require('assert');
 const AWS = require('aws-sdk');
 
-const path = Runtime.getFunctions()['helpers'].path;
-const { getParam, setParam } = require(path);
+const path0 = Runtime.getFunctions()['helpers'].path;
+const { getParam, setParam } = require(path0);
+const path1 = Runtime.getFunctions()['auth'].path;
+const { isAllowed } = require(path1);
 
 // --------------------------------------------------------------------------------
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
+    assert(event.token, 'missing event.token');
+    if (!isAllowed(event.token, context)) {
+      const response = new Twilio.Response();
+      response.setStatusCode(401);
+      response.appendHeader('Content-Type', 'application/json');
+      response.setBody({ message: 'Unauthorized' });
+
+      return callback(null, response);
+    }
+
     const AWS_ACCESS_KEY_ID = await getParam(context, 'AWS_ACCESS_KEY_ID');
     const AWS_SECRET_ACCESS_KEY = await getParam(
       context,
