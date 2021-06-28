@@ -19,7 +19,7 @@
   "author": "Twilio <open-source@twilio.com>",
   "license": "MIT",
   "devDependencies": {
-    "@google-cloud/dialogflow": "^3.5.0",
+    "@google-cloud/dialogflow": "^4.1.0",
     "@twilio-labs/serverless-api": "^1.1.0",
     "airtable": "^0.11.0",
     "common-tags": "^1.8.0",

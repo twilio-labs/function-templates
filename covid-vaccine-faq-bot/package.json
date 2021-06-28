@@ -1,7 +1,7 @@
 {
   "name": "covid-vaccine-faq-bot",
   "dependencies": {
-    "@google-cloud/dialogflow": "^3.5.0",
+    "@google-cloud/dialogflow": "^4.1.0",
     "crypto": "^1.0.1",
     "twilio": "^3.64.0"
   }
