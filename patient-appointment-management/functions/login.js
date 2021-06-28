@@ -1,11 +1,11 @@
-// eslint-disable-next-line func-names
+/* eslint-disable prefer-destructuring, dot-notation */
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
   const { createToken, isAllowed } = require(path);
-  let ac = context.ACCOUNT_SID;
+  const ac = context.ACCOUNT_SID;
 
   const token = createToken(event.password, context);
-  let response = new Twilio.Response();
+  const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
   // Short-circuits

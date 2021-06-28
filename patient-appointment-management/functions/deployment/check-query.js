@@ -24,7 +24,7 @@ exports.handler = async function (context, event, callback) {
   try {
     assert(event.token, 'missing event.token');
     if (!isAllowed(event.token, context)) {
-      let response = new Twilio.Response();
+      const response = new Twilio.Response();
       response.setStatusCode(401);
       response.appendHeader('Content-Type', 'application/json');
       response.setBody({ message: 'Unauthorized' });

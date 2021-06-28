@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable camelcase, object-shorthand */
 
 /*
  * main controller javascript used by index.html

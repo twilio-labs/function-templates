@@ -1,3 +1,4 @@
+/* eslint-disable no-negated-condition, no-else-return */
 const crypto = require('crypto');
 
 function createToken(password, context) {
@@ -17,11 +18,11 @@ function isAllowed(token, context) {
 
 async function getCurrentEnvironment(context) {
   if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')) {
-    return;
+    return null;
   }
   const client = context.getTwilioClient();
   const services = await client.serverless.services.list();
-  for (let service of services) {
+  for (service of services) {
     const environments = await client.serverless
       .services(service.sid)
       .environments.list();
@@ -33,11 +34,12 @@ async function getCurrentEnvironment(context) {
       return environment;
     }
   }
+  return null;
 }
 
 async function getEnvironmentVariables(context, environment) {
   const client = context.getTwilioClient();
-  return await client.serverless
+  return client.serverless
     .services(environment.serviceSid)
     .environments(environment.sid)
     .variables.list();
