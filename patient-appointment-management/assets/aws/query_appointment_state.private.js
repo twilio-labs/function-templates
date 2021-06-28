@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable prefer-destructuring */
+/* eslint-disable camelcase, prefer-destructuring */
 /*
  * --------------------------------------------------------------------------------
  * synchronously runs glue crawler

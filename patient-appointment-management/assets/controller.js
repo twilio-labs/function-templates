@@ -1,5 +1,16 @@
 /* eslint-disable camelcase */
 
+/*
+ * main controller javascript used by index.html
+ *
+ * The following functions are executed in sequence for proper deployment order.
+ * Each check function will call the next check function when deployment is complete.
+ * - checkStudioFlow
+ * - checkAWSBucket
+ * - checkAWSApplication
+ * - readyToUse
+ *
+ */
 let phoneNumber;
 let flowSid;
 
@@ -23,10 +34,20 @@ const fullUrl = baseUrl.href.substr(0, baseUrl.href.length - 1);
 const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 
 // --------------------------------------------------------------------------------
-function checkQueryHistory(resource) {
-  fetch('/deployment/check-query?table=history')
+function checkHistory(token) {
+  THIS = 'checkHistory:';
+  console.log(THIS, 'running');
+  fetch(`/deployment/check-query?table=history`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: token }),
+  })
     .then((response) => response.text())
     .then((url) => {
+      console.log(THIS, url);
       $('#history-download .button').removeClass('loading');
       $('.history-downloader').hide();
       if (url === 'READY') {
@@ -43,18 +64,45 @@ function checkQueryHistory(resource) {
       }
     })
     .catch((err) => {
-      console.log(
-        'An error occurred when attempting to check the AWS Resources',
-        err
-      );
+      console.log(THIS, err);
     });
 }
 
 // --------------------------------------------------------------------------------
-function checkQueryState(resource) {
-  fetch('/deployment/check-query?table=state')
+function downloadHistory(e) {
+  THIS = 'downloadHistory:';
+  console.log(THIS, 'running');
+  e.preventDefault();
+  $('#history-download .button').addClass('loading');
+  $('.history-downloader.button-loader').show();
+
+  fetch('/deployment/execute-query?table=history')
+    .then(() => {
+      console.log(THIS, 'success');
+      checkHistory();
+    })
+    .catch((err) => {
+      console.log(THIS, err);
+      $('#history-download .button').removeClass('loading');
+      $('.history-downloader.button-loader').hide();
+    });
+}
+
+// --------------------------------------------------------------------------------
+function checkState(token) {
+  THIS = 'checkState:';
+  console.log(THIS, 'running');
+  fetch(`/deployment/check-query?table=state`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: token }),
+  })
     .then((response) => response.text())
     .then((url) => {
+      console.log(THIS, url);
       $('#state-download .button').removeClass('loading');
       $('.state-downloader').hide();
       if (url === 'READY') {
@@ -68,23 +116,85 @@ function checkQueryState(resource) {
         $('#state-ready').show();
         $('#state-querying').hide();
         $('#state-download').attr('href', `${url}`);
-
-        checkQueryHistory();
       }
     })
     .catch((err) => {
-      console.log(
-        'An error occurred when attempting to check the AWS Resources',
-        err
-      );
+      console.log(THIS, err);
     });
 }
 
 // --------------------------------------------------------------------------------
+function downloadState(e) {
+  THIS = 'downloadState:';
+  console.log(THIS, 'running');
+  e.preventDefault();
+  $('#state-download .button').addClass('loading');
+  $('.state-downloader.button-loader').show();
+
+  fetch('/deployment/execute-query?table=state')
+    .then(() => {
+      console.log(THIS, 'success');
+      checkState();
+    })
+    .catch((err) => {
+      console.log(THIS, err);
+      $('#state-download .button').removeClass('loading');
+      $('.state-downloader.button-loader').hide();
+    });
+}
+
+// --------------------------------------------------------------------------------
+async function login(e) {
+  e.preventDefault();
+
+  const passwordInput = $('#password-input').val();
+  fetch('/login', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ password: passwordInput }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        $('#login-error').text(
+          response.status === 401
+            ? 'Incorrect password, please try again.'
+            : 'There was an error when attempting to log in.'
+        );
+        throw Error(response.statusText);
+      }
+
+      return response;
+    })
+    .then((response) => response.json())
+    .then((r) => {
+      $('#password-form').hide();
+      $('#auth-successful').show();
+      checkState(r.token);
+      checkHistory(r.token);
+    })
+    .catch((err) => console.log(err));
+}
+
+// --------------------------------------------------------------------------------
+function readyToUse() {
+  THIS = 'readyToUse:';
+  console.log(THIS, 'running');
+  $('#ready-to-use').show();
+  $('#password-form').show();
+  $('#auth-successful').hide();
+}
+
+// --------------------------------------------------------------------------------
 function checkAWSApplication(resource) {
+  THIS = 'checkAWSApplication:';
+  console.log(THIS, 'running');
   fetch('/deployment/check-aws-application')
     .then((response) => response.text())
     .then((status) => {
+      console.log(THIS, status);
       $('#aws-application-deploy .button').removeClass('loading');
       $('.aws-application-loader').hide();
       if (status === 'NOT-DEPLOYED') {
@@ -100,25 +210,48 @@ function checkAWSApplication(resource) {
           `https://console.aws.amazon.com/cloudformation/`
         );
 
-        $('#ready-to-use').show();
-        checkQueryState();
+        readyToUse();
       } else {
         throw new Error();
       }
     })
     .catch((err) => {
-      console.log(
-        'An error occurred when attempting to check the AWS Resources',
-        err
-      );
+      console.log(THIS, err);
+    });
+}
+
+// --------------------------------------------------------------------------------
+function deployAWSApplication(e) {
+  THIS = 'deployAWSApplication:';
+  console.log(THIS, 'running');
+  e.preventDefault();
+  $('#aws-application-deploy .button').addClass('loading');
+  $('.aws-application-loader.button-loader').show();
+
+  fetch('/deployment/deploy-aws-code').then(() => {
+    console.log(THIS, 'deployed aws code');
+  });
+
+  fetch('/deployment/deploy-aws-application')
+    .then(() => {
+      console.log(THIS, 'success');
+      checkAWSApplication();
+    })
+    .catch((err) => {
+      console.log(THIS, err);
+      $('#aws-application-deploy .button').removeClass('loading');
+      $('.aws-application-loader.button-loader').hide();
     });
 }
 
 // --------------------------------------------------------------------------------
 function checkAWSBucket(resource) {
+  THIS = 'checkAWSBucket:';
+  console.log(THIS, 'running');
   fetch('/deployment/check-aws-bucket')
     .then((response) => response.text())
     .then((status) => {
+      console.log(THIS, status);
       $('#aws-bucket-deploy .button').removeClass('loading');
       $('.aws-bucket-loader').hide();
       if (status === 'NOT-DEPLOYED') {
@@ -140,56 +273,38 @@ function checkAWSBucket(resource) {
       }
     })
     .catch((err) => {
-      console.log(
-        'An error occurred when attempting to check the AWS Resources',
-        err
-      );
+      console.log(THIS, err);
     });
 }
 
 // --------------------------------------------------------------------------------
 function deployAWSBucket(e) {
+  THIS = 'deployAWSBucket:';
+  console.log(THIS, 'running');
   e.preventDefault();
   $('#aws-bucket-deploy .button').addClass('loading');
   $('.aws-bucket-loader.button-loader').show();
 
   fetch('/deployment/deploy-aws-bucket')
     .then(() => {
+      console.log(THIS, 'success');
       checkAWSBucket();
     })
     .catch((err) => {
-      console.log('An error ocurred deploying AWS Bucket', err);
+      console.log(THIS, err);
       $('#aws-bucket-deploy .button').removeClass('loading');
       $('.aws-bucket-loader.button-loader').hide();
     });
 }
 
 // --------------------------------------------------------------------------------
-function deployAWSApplication(e) {
-  e.preventDefault();
-  $('#aws-application-deploy .button').addClass('loading');
-  $('.aws-application-loader.button-loader').show();
-
-  fetch('/deployment/deploy-aws-code').then(() => {
-    console.log('deployed aws code');
-  });
-
-  fetch('/deployment/deploy-aws-application')
-    .then(() => {
-      checkAWSApplication();
-    })
-    .catch((err) => {
-      console.log('An error ocurred creating AWS Application', err);
-      $('#aws-application-deploy .button').removeClass('loading');
-      $('.aws-application-loader.button-loader').hide();
-    });
-}
-
-// --------------------------------------------------------------------------------
 function checkStudioFlow() {
+  THIS = 'checkStudioFlow:';
+  console.log(THIS, 'running');
   fetch('/deployment/check-studio-flow')
     .then((response) => response.text())
     .then((sid) => {
+      console.log(THIS, sid);
       $('#flow-deploy .button').removeClass('loading');
       $('.flow-loader').hide();
       if (sid === 'NOT-DEPLOYED') {
@@ -209,30 +324,31 @@ function checkStudioFlow() {
       }
     })
     .catch((err) => {
-      console.log(
-        'An error occurred when attempting to check the Studio Flow',
-        err
-      );
+      console.log(THIS, err);
     });
 }
 
 // --------------------------------------------------------------------------------
 function deployStudioFlow(e) {
+  THIS = 'deployStudioFlow:';
+  console.log(THIS, 'running');
   e.preventDefault();
   $('#flow-deploy .button').addClass('loading');
   $('.flow-loader.button-loader').show();
 
   fetch('/deployment/deploy-studio-flow')
     .then(() => {
+      console.log(THIS, 'success');
       checkStudioFlow();
     })
     .catch((err) => {
-      console.log('An error ocurred creating Studio Flow', err);
+      console.log(THIS, err);
       $('#flow-deploy .button').removeClass('loading');
       $('.flow-loader.button-loader').hide();
     });
 }
 
+// --------------------------------------------------------------------------------
 function getStudioExecutions(sid, token) {
   const tbody = $('#residents-table-body');
   fetch(`/get-studio-executions`, {
@@ -268,37 +384,24 @@ function getStudioData(token) {
   setInterval(getStudioExecutions, 3000, flowSid, token);
 }
 
-// eslint-disable-next-line no-unused-vars
-async function login(e) {
-  e.preventDefault();
-
-  const passwordInput = $('#password-input').val();
-  fetch('/login', {
+// --------------------------------------------------------------------------------
+function check(token) {
+  THIS = 'check:';
+  console.log(THIS, 'running');
+  fetch('/deployment/check', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ password: passwordInput }),
+    body: JSON.stringify({ token: token }),
   })
     .then((response) => {
-      if (!response.ok) {
-        $('#login-error').text(
-          response.status === 401
-            ? 'Incorrect password, please try again.'
-            : 'There was an error when attempting to log in.'
-        );
-        throw Error(response.statusText);
-      }
-
-      return response;
+      console.log(THIS, response);
     })
-    .then((response) => response.json())
-    .then((r) => {
-      $('#password-form').hide();
-      getStudioData(r.token);
-    })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(THIS, err);
+    });
 }
 
 checkStudioFlow();

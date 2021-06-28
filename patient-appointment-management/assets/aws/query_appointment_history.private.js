@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable prefer-destructuring */
+/* eslint-disable camelcase, prefer-destructuring */
 /*
  * --------------------------------------------------------------------------------
  * synchronously runs glue crawler
@@ -51,7 +50,7 @@ async function run_crawler_synchronous(crawler_name, AWS) {
  * returns response.QueryExecution if successful; null otherwise
  * --------------------------------------------------------------------------------
  */
-async function execute_athena_query_synchronous(query, s3bucket, AWS) {
+async function execute_query(query, s3bucket, AWS) {
   const athena = new AWS.Athena();
 
   try {
@@ -127,7 +126,7 @@ exports.handler = async function (event, context) {
 
     // ---------- execute athena query
     const query = `select * from ${database_name}.state`;
-    const queryExecution = await executeAthenaQuery(query, S3_BUCKET, AWS);
+    const queryExecution = await execute_query(query, S3_BUCKET, AWS);
 
     // ---------- generate s3 signed URL
     console.log(

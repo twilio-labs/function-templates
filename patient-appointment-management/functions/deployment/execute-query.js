@@ -74,7 +74,7 @@ exports.handler = async function (context, event, callback) {
 
     params = {
       stateMachineArn: stm_arn,
-      input: {},
+      input: '{}',
     };
     response = await sfn.startExecution(params).promise();
 

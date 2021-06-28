@@ -156,14 +156,16 @@ Resources:
             Resource:
               - !Sub 'arn:aws:s3:::${ParameterS3Bucket}'
               - !Sub 'arn:aws:s3:::${ParameterS3Bucket}/*'
-          - Sid: 'EventInvokePermissions'
+          - Sid: 'StepFunctionPermissions'
             Effect: Allow
             Action:
               - states:*
             Resource:
               - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:${ParameterSFNQueryState}'
               - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:${ParameterSFNQueryHistory}'
-          - Sid: 'StepFunctionPermissions'
+              - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:execution:${ParameterSFNQueryState}:*'
+              - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:execution:${ParameterSFNQueryHistory}:*'
+          - Sid: 'EventInvokePermissions'
             Effect: Allow
             Action:
               - events:PutTargets

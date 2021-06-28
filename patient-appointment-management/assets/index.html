@@ -109,37 +109,45 @@
 
         <h5>Once you have some appointment data, you can query appointment data.</h5>
 
-        <section>
-          <div class="state-downloader"></div>
-          <div id="state-query" style="display: none;" class="deployer">
-            <a class="button" onclick="downloadState(event);">Query Appointment State Data</a>
-            <div id="state-loader button-loader" style="display: none;"></div>
-          </div>
-          <div id="state-querying" style="display: none;" class="deployer">
-            <h4>Appointment State data is being prepared ...</h4>
-            <p>Please periodically refresh this page until ready to download</p>
-          </div>
-          <div id="state-ready" style="display: none;" class="deployer">
-            <h4><span class="checkmark">&#10003;</span> Appointment State Data is ready</h4>
-            <a id="state-download" class="button button-outline" href="" target="_blank">Download</a>
-          </div>
-        </section>
+        <div id="password-form" style="display: none;">
+          <p>To protect sensitive data, a password is required to see responses. This was the admin password you set when launching your app. Or it can be found in the <code>.env</code>file in the root of your application.</p>
+          <p id="login-error" style="color:red;"></p>
+          <form>
+            <div>
+              <label for="password">Password:
+                <input id="password-input" type="password" name="password">
+              </label>
+            </div>
+            <button class="button" onclick="login(event)">Authenticate</button>
+          </form>
+        </div>
+        <p id="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
 
-        <section>
-          <div class="history-downloader"></div>
-          <div id="history-query" style="display: none;" class="deployer">
-            <a class="button" onclick="downloadHistory(event);">Query Appointment History Data</a>
-            <div id="history-loader button-loader" style="display: none;"></div>
-          </div>
-          <div id="history-querying" style="display: none;" class="deployer">
-            <h4>Appointment History data is being prepared ...</h4>
-            <p>Please periodically refresh this page until ready to download</p>
-          </div>
-          <div id="history-ready" style="display: none;" class="deployer">
-            <h4><span class="checkmark">&#10003;</span> Appointment History Data is ready</h4>
-            <a id="history-download" class="button button-outline" href="" target="_blank">Download</a>
-          </div>
-        </section>
+        <div class="state-downloader"></div>
+        <div id="state-query" style="display: none;" class="deployer">
+          <a class="button" onclick="downloadState(event);">Query Appointment State Data</a>
+          <div id="state-downloader button-loader" style="display: none;"></div>
+        </div>
+        <div id="state-querying" style="display: none;" class="deployer">
+          <h4>Appointment State data is being prepared ...</h4>
+          <p>Please periodically refresh this page until ready to download</p>
+        </div>
+        <div id="state-ready" style="display: none;" class="deployer">
+          <a id="state-download" class="button button-outline" href="" target="_blank">Download State Data</a>
+        </div>
+
+        <div class="history-downloader"></div>
+        <div id="history-query" style="display: none;" class="deployer">
+          <a class="button" onclick="downloadHistory(event);">Query Appointment History Data</a>
+          <div id="history-downloader button-loader" style="display: none;"></div>
+        </div>
+        <div id="history-querying" style="display: none;" class="deployer">
+          <h4>Appointment History data is being prepared ...</h4>
+          <p>Please periodically refresh this page until ready to download</p>
+        </div>
+        <div id="history-ready" style="display: none;" class="deployer">
+          <a id="history-download" class="button button-outline" href="" target="_blank">Download History Data</a>
+        </div>
 
         <br/>
       </div>
@@ -151,11 +159,8 @@
 
     <section>
       <h3>Troubleshooting</h3>
-      <ul>
-        <strong>If you aren't getting a response when texting your phone number, make sure that:</strong>
-        <li>If your account is in trial mode, you are sending the SMS from <a href="https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number" target="_blank">verified phone numbers</a>.</li>
-        <li>Your Twilio phone number's (<a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank"><span class="phone-number"></span></a>) Message Configuration is set to the "patient-appointment-management" Studio Workflow.</li>
-      </ul>
+      <strong>If you aren't getting a response when texting your phone number, make sure that:</strong>
+      Your Twilio phone number's (<a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank"><span class="phone-number"></span></a>) Message Configuration is set to the "patient-appointment-management" Studio Workflow.
     </section>
 
   </main>

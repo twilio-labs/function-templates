@@ -70,7 +70,7 @@ footer p {
   cursor: default;
 }
 
-#state-download .button.loading {
+#state-query .button.loading {
   background: rgb(244, 244, 246);
   border: 1px solid rgb(244, 244, 246);
   color: rgb(96, 107, 133);
@@ -78,7 +78,7 @@ footer p {
   cursor: default;
 }
 
-#history-download .button.loading {
+#history-query .button.loading {
   background: rgb(244, 244, 246);
   border: 1px solid rgb(244, 244, 246);
   color: rgb(96, 107, 133);
@@ -99,16 +99,20 @@ footer p {
   border: 1px solid rgb(136, 145, 170);
   margin-bottom: 20px;
 }
+
 span.checkmark {
   color: rgb(20, 176, 83);
 }
+
 tr.table-placeholder {
   background: rgb(244, 244, 246);
   text-align: center;
 }
+
 tr.table-placeholder td {
   padding: 30px 0;
 }
+
 #test-standby-list {
   display: none;
 }

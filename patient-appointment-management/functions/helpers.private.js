@@ -152,7 +152,6 @@ async function getParam(context, key) {
         const response = await cf
           .describeStacks({ StackName: stack_name })
           .promise();
-        console.log(response.Stacks[0].Outputs);
         const output = response.Stacks[0].Outputs.find(function (o) {
           // Note that CF Output key MUST match that in the CF template
           return o.OutputKey === 'PatientAppointmentManagementAWSAccessKeyId';

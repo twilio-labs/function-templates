@@ -1,8 +1,4 @@
-/* eslint-disable camelcase */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable dot-notation */
-/* eslint-disable prefer-template */
-const THIS = 'check-query:';
+/* eslint-disable camelcase, prefer-destructuring, dot-notation, prefer-template */
 /*
  * --------------------------------------------------------------------------------
  * check query
@@ -16,21 +12,34 @@ const THIS = 'check-query:';
 const assert = require('assert');
 const AWS = require('aws-sdk');
 
-const path = Runtime.getFunctions()['helpers'].path;
-const { getParam, setParam } = require(path);
+const path0 = Runtime.getFunctions()['helpers'].path;
+const { getParam, setParam } = require(path0);
+const path1 = Runtime.getFunctions()['auth'].path;
+const { isAllowed } = require(path1);
 
 // --------------------------------------------------------------------------------
 exports.handler = async function (context, event, callback) {
-  console.log(THIS, 'Begin');
+  const THIS = 'check-query-' + event.table + ':';
   console.time(THIS);
   try {
+    assert(event.token, 'missing event.token');
+    if (!isAllowed(event.token, context)) {
+      let response = new Twilio.Response();
+      response.setStatusCode(401);
+      response.appendHeader('Content-Type', 'application/json');
+      response.setBody({ message: 'Unauthorized' });
+
+      return callback(null, response);
+    }
+
+    assert(event.table, 'missing event.table');
+
     const AWS_ACCESS_KEY_ID = await getParam(context, 'AWS_ACCESS_KEY_ID');
     const AWS_SECRET_ACCESS_KEY = await getParam(
       context,
       'AWS_SECRET_ACCESS_KEY'
     );
     const AWS_REGION = await getParam(context, 'AWS_REGION');
-    assert(event.table, 'missing event.table');
     const TABLE = event.table;
     const SFN_QUERY =
       TABLE === 'state'
@@ -67,7 +76,7 @@ exports.handler = async function (context, event, callback) {
     // get last (most recent) execution
     params = {
       stateMachineArn: stm_arn,
-      maxResults: 1,
+      maxResults: 1, // returns most recent execution first
     };
     response = await sfn.listExecutions(params).promise();
     if (response.executions.length === 0) {
@@ -85,10 +94,8 @@ exports.handler = async function (context, event, callback) {
         break;
       case 'SUCCEEDED':
         // check if ran within last 1 hour (in sync with expiration of s3 signedURL)
-        if (
-          Date.now() - response.executions[0].startDate >
-          24 * 60 * 60 * 1000
-        ) {
+        const lastExecution = response.executions[0].startDate;
+        if (Date.now() - lastExecution.getTime() > 55 * 60 * 1000) {
           // last execution is over 1 hour ago
           console.log(THIS, 'Returning READY');
           return callback(null, 'READY');
@@ -98,7 +105,7 @@ exports.handler = async function (context, event, callback) {
           executionArn: response.executions[0].executionArn,
         };
         response = await sfn.describeExecution(params).promise();
-        console.log('output', response.output);
+        console.log(THIS, 'output -', response.output);
         const output = JSON.parse(response.output);
         signed_url = output.result;
 
