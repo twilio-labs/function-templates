@@ -37,6 +37,12 @@ Resources:
         BlockPublicPolicy: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - Id: 'DeleteQueryResultsAfter1Day'
+            Prefix: 'query-results/'
+            Status: Enabled
+            ExpirationInDays: 1
 
   ResourceS3BucketPolicy:
     Type: AWS::S3::BucketPolicy
