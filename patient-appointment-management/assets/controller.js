@@ -76,8 +76,7 @@ function downloadHistory(e) {
   $('#history-download .button').addClass('loading');
   $('.history-downloader.button-loader').show();
 
-  fetch('/deployment/execute-query?table=history',
-  {
+  fetch('/deployment/execute-query?table=history', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -139,8 +138,7 @@ function downloadState(e) {
   $('#state-download .button').addClass('loading');
   $('.state-downloader.button-loader').show();
 
-  fetch('/deployment/execute-query?table=state',
-  {
+  fetch('/deployment/execute-query?table=state', {
     method: 'POST',
     headers: {
       Accept: 'application/json',

@@ -3,8 +3,7 @@ const helpers = require('../../test/test-helper');
 const Twilio = require('twilio');
 const { handler } = require('../functions/get-datetime-parts.protected');
 
-const context = {
-};
+const context = {};
 
 // --------------------------------------------------------------------------------
 beforeAll(() => {
@@ -67,4 +66,3 @@ test('normal flow of event: 2021-11-12T13:15:00Z', async () => {
   };
   expect(callback).toHaveBeenCalledWith(null, expected_response);
 });
-

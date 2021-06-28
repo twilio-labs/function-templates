@@ -41,7 +41,9 @@ exports.handler = function (context, event, callback) {
   console.log('input', datetime);
 
   const ampm = datetime.getUTCHours() < 12 ? 'AM' : 'PM';
-  const tod = `${datetime.getUTCHours() % 12}:${datetime.getUTCMinutes()} ${ampm}`;
+  const tod = `${
+    datetime.getUTCHours() % 12
+  }:${datetime.getUTCMinutes()} ${ampm}`;
   const r = {
     year: datetime.getUTCFullYear(),
     month_number: datetime.getUTCMonth() + 1,
