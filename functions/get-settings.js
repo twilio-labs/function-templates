@@ -7,36 +7,35 @@ exports.handler = function(context, event, callback) {
 
     // This function only returns public settings, private variables are redacted.
     function redactVariable(envVar) {
-        let redacted = envVar.split('').map((char) => { return '•' }).join('');
-        return redacted;
+        if (envVar) {
+            let redacted = envVar.split('').map(() => { return '•' }).join('');
+            return redacted;
+        }
+
+        return;
     }
 
     let body = {
-        logoUrl: context.LOGO_URL,
-        campaignTitle: context.CAMPAIGN_TITLE,
-        campaignDescription: context.CAMPAIGN_DESCRIPTION,
-        buttonCta: context.BUTTON_CTA,
-
-        backgroundColor: context.BACKGROUND_COLOR,
-        fontColor: context.FONT_COLOR,
-        customCss: context.CUSTOM_CSS,
-
-        messageFrequency: context.MESSAGE_FREQUENCY,
-        contactInformation: context.CONTACT_INFORMATION,
-        optInKeyword: context.OPT_IN_KEYWORD,
-        privacyPolicyLink: context.PRIVACY_POLICY_LINK,
-        domainName: context.DOMAIN_NAME,
-        dataSource: context.DATA_SOURCE,
-
-        webhookUrl: context.WEBHOOK_URL,
-
-        segmentWriteKey: redactVariable(context.SEGMENT_WRITE_KEY),
-
-        airtableApiKey: redactVariable(context.AIRTABLE_API_KEY),
-        airtableBaseId: redactVariable(context.AIRTABLE_BASE_ID),
-        airtableTableName: context.AIRTABLE_TABLE_NAME,
-        airtablePhoneColumnName: context.AIRTABLE_PHONE_COLUMN_NAME,
-        airtableOptInColumnName: context.AIRTABLE_OPT_IN_COLUMN_NAME,
+        logoUrl: context.LOGO_URL || "",
+        campaignTitle: context.CAMPAIGN_TITLE || "",
+        campaignDescription: context.CAMPAIGN_DESCRIPTION || "",
+        buttonCta: context.BUTTON_CTA || "",
+        backgroundColor: context.BACKGROUND_COLOR || "",
+        fontColor: context.FONT_COLOR || "",
+        customCss: context.CUSTOM_CSS || "",
+        messageFrequency: context.MESSAGE_FREQUENCY || "",
+        contactInformation: context.CONTACT_INFORMATION || "",
+        optInKeyword: context.OPT_IN_KEYWORD || "",
+        privacyPolicyLink: context.PRIVACY_POLICY_LINK || "",
+        domainName: context.DOMAIN_NAME || "",
+        dataSource: context.DATA_SOURCE || "",
+        webhookUrl: context.WEBHOOK_URL || "",
+        segmentWriteKey: redactVariable(context.SEGMENT_WRITE_KEY) || "",
+        airtableApiKey: redactVariable(context.AIRTABLE_API_KEY) || "",
+        airtableBaseId: redactVariable(context.AIRTABLE_BASE_ID) || "",
+        airtableTableName: context.AIRTABLE_TABLE_NAME || "",
+        airtablePhoneColumnName: context.AIRTABLE_PHONE_COLUMN_NAME || "",
+        airtableOptInColumnName: context.AIRTABLE_OPT_IN_COLUMN_NAME || "",
     }
 
     response.setStatusCode(200);

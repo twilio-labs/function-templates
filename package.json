@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "twilio serverless:start --live",
     "deploy": "twilio serverless:deploy"
   },
   "devDependencies": {
+    "jest": "^27.0.6",
+    "rewire": "^5.0.0",
+    "sinon": "^11.1.1",
     "twilio-run": "^2.6.0"
   },
   "engines": {
