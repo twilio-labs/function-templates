@@ -9,6 +9,31 @@
         <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
         <link rel="stylesheet" href="https://unpkg.com/milligram/dist/milligram.min.css">
         <link rel="stylesheet" href="/styles.css">
+        <script>
+          async function showGoogleDialogflowStatus() {
+              const message = document.getElementById('status-message');
+ 
+              if(!message) {
+                  throw new Error('Missing "status-message" element');
+              }
+ 
+              message.className = '';
+              message.textContent = 'Checking Google Dialogflow credential check status...';
+ 
+              try {
+                  const res = await fetch('./check-googlejson-config', {
+                      method: 'POST',
+                  });
+                  const resData = await res.json();
+ 
+                  message.className = resData.success ? 'status-success' : 'status-failure';
+                  message.textContent = resData.message;
+              } catch (err) {
+                  message.className = 'status-failure';
+                  message.textContent = `Google Dialogflow credentials error: ${err}`;
+              }
+          }
+         </script>
     </head>
     <body>
         <header>
@@ -54,6 +79,16 @@
                 </section>
                 <section>
                   <h3>Troubleshooting</h3>
+                  <ul>                    
+                    <strong>Verify your Google Dialogflow configuration:</strong>
+                    <p>                                                 
+                      <div id="check-status">
+                          <button onclick="showGoogleDialogflowStatus()">Verify Configuration</button>
+                          <span id="status-message"></span>
+                      </div>
+                      If the above check reveals problems, check the values in <code>service-account-key.json</code> file under <code>assets</code> folder of this app, and ensure that all values are correct.
+                    </p>
+                  </ul>
                   <ul>
                     <strong>If you aren't getting a response when texting your phone number, make sure that:</strong>
                     <li>If your account is in trial mode, you are sending the SMS from <a href="https://www.twilio.com/docs/usage/tutorials/how-to-use-your-free-trial-account#verify-your-personal-phone-number" target="_blank">verified phone numbers</a>.</li>
