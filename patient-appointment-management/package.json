@@ -1,0 +1,9 @@
+{
+  "name": "patient-appointment-management",
+  "dependencies": {
+    "twilio": "^3.61.0",
+    "aws-sdk": "^2.925.0",
+    "jszip": "^3.6.0",
+    "uuid": "^8.3.2"
+  }
+}
