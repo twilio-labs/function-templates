@@ -40,10 +40,10 @@ exports.handler = function (context, event, callback) {
   const datetime = new Date(Date.parse(event.datetime_iso));
   console.log('input', datetime);
 
+  const hh = datetime.getUTCHours() % 12;
+  const mm = `0${datetime.getUTCMinutes()}`.slice(-2);
   const ampm = datetime.getUTCHours() < 12 ? 'AM' : 'PM';
-  const tod = `${
-    datetime.getUTCHours() % 12
-  }:${datetime.getUTCMinutes()} ${ampm}`;
+  const tod = `${hh}:${mm} ${ampm}`;
   const r = {
     year: datetime.getUTCFullYear(),
     month_number: datetime.getUTCMonth() + 1,

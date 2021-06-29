@@ -62,7 +62,7 @@ test('normal flow of event: 2021-11-12T13:15:00Z', async () => {
     day: 2,
     day_of_week_long: 'Saturday',
     time_of_day: '6:04 AM',
-    readable_datetime: '6:04 AM on Saturday, January 4, 2021',
+    readable_datetime: '6:04 AM on Saturday, January 2, 2021',
   };
   expect(callback).toHaveBeenCalledWith(null, expected_response);
 });
