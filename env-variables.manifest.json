@@ -1372,6 +1372,138 @@
         "configurable": false,
         "contentKey": null
       }
+    ],
+    "patient-appointment-management": [
+      {
+        "key": "ADMIN_PASSWORD",
+        "required": true,
+        "format": "secret",
+        "description": "Set a password for your app. Users who want download data in, will need this password.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "SALT",
+        "required": true,
+        "format": "secret",
+        "description": "change the salt to invalidate existing auth tokens",
+        "link": null,
+        "default": "salty",
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "CUSTOMER_NAME",
+        "required": true,
+        "format": "text",
+        "description": "Customer name to be displayed in SMS.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "CUSTOMER_CODE",
+        "required": true,
+        "format": "text",
+        "description": "Customer short name. Must be all lowercase one word without any spaces.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "CUSTOMER_EHR_ENDPOINT_URL",
+        "required": true,
+        "format": "text",
+        "description": "Customer EHR endpoint url for communication from Twilio via HTTP POST",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Twilio phone number to send SMS from. Your patient will see this number.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "REMINDER_OUTREACH_START",
+        "required": true,
+        "format": "text",
+        "description": "Reminder outreach window start time local timezone (HHMM) inclusive. default 0000",
+        "link": null,
+        "default": "0000",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "REMINDER_OUTREACH_FINISH",
+        "required": true,
+        "format": "text",
+        "description": "Reminder outreach window end time local timezone (HHMM) exclusive, default 2400",
+        "link": null,
+        "default": "2400",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "REMINDER_FIRST_OFFSET",
+        "required": true,
+        "format": "text",
+        "description": "Reminder 1st outreach offset (HHMM). default 4800",
+        "link": null,
+        "default": "4800",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "REMINDER_SECOND_OFFSET",
+        "required": true,
+        "format": "text",
+        "description": "Reminder 2nd outreach offset (HHMM). default 2400",
+        "link": null,
+        "default": "2400",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "DEPLOYER_AWS_ACCESS_KEY_ID",
+        "required": true,
+        "format": "text",
+        "description": "AWS access key id to your AWS account with admin-level privilege",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "DEPLOYER_AWS_SECRET_ACCESS_KEY",
+        "required": true,
+        "format": "secret",
+        "description": "AWS secret access key of your AWS access key id",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "AWS_REGION",
+        "required": true,
+        "format": "text",
+        "description": "AWS region to deploy resources",
+        "link": null,
+        "default": "us-west-2",
+        "configurable": true,
+        "contentKey": null
+      }
     ]
   }
 }
