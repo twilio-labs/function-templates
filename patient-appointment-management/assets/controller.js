@@ -378,6 +378,38 @@ function deployStudioFlow(e) {
 }
 
 // --------------------------------------------------------------------------------
+function check() {
+  THIS = 'check:';
+  console.log(THIS, 'running');
+  fetch('/deployment/check', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: token }),
+  })
+    .then((response) => response.text())
+    .then((text) => {
+      errors = JSON.parse(text);
+      if (errors.length === 0) {
+        // no errors, so proceed
+        $('#valid-environment-variable').show();
+        checkStudioFlow();
+      } else {
+        $('#invalid-environment-variable').show();
+        for (e of errors) {
+          const error = $('<p></p>').text(JSON.stringify(e));
+          $('#invalid-environment-variable').append(error);
+        }
+      }
+    })
+    .catch((err) => {
+      console.log(THIS, err);
+    });
+}
+
+// --------------------------------------------------------------------------------
 async function login(e) {
   e.preventDefault();
 
@@ -407,30 +439,11 @@ async function login(e) {
       token = r.token;
       $('#password-form').hide();
       $('#auth-successful').show();
-      checkStudioFlow();
+      check();
     })
     .catch((err) => console.log(err));
 }
 
 // --------------------------------------------------------------------------------
-function check() {
-  THIS = 'check:';
-  console.log(THIS, 'running');
-  fetch('/deployment/check', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token: token }),
-  })
-    .then((response) => {
-      console.log(THIS, response);
-    })
-    .catch((err) => {
-      console.log(THIS, err);
-    });
-}
-
 $('#password-form').show();
 $('#auth-successful').hide();

@@ -185,7 +185,7 @@ exports.handler = async function (context, event, callback) {
         break;
     }
 
-    return callback(null, 'success');
+    return callback(null, `${action} success`);
   } catch (err) {
     console.log(err);
     return callback(err);

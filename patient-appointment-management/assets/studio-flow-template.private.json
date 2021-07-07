@@ -1,4 +1,5 @@
 {
+  "description": "template patient appointment management flow",
   "states": [
     {
       "transitions": [
@@ -59,7 +60,7 @@
               "type": "equal_to",
               "friendly_name": "Remind",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Remind"
+              "value": "REMIND"
             }
           ],
           "event": "match",
@@ -69,9 +70,9 @@
           "conditions": [
             {
               "type": "equal_to",
-              "friendly_name": "Optedin",
+              "friendly_name": "Opted-In",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Optedin"
+              "value": "OPTED-IN"
             }
           ],
           "event": "match",
@@ -83,7 +84,7 @@
               "type": "equal_to",
               "friendly_name": "Optedout",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Optedout"
+              "value": "OPTED-OUT"
             }
           ],
           "event": "match",
@@ -95,7 +96,7 @@
               "type": "equal_to",
               "friendly_name": "Booked",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Booked"
+              "value": "BOOKED"
             }
           ],
           "event": "match",
@@ -105,9 +106,9 @@
           "conditions": [
             {
               "type": "equal_to",
-              "friendly_name": "Cancelled",
+              "friendly_name": "Canceled",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Canceled"
+              "value": "CANCELED"
             }
           ],
           "event": "match",
@@ -119,7 +120,7 @@
               "type": "equal_to",
               "friendly_name": "Modified",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Modified"
+              "value": "MODIFIED"
             }
           ],
           "event": "match",
@@ -129,9 +130,9 @@
           "conditions": [
             {
               "type": "equal_to",
-              "friendly_name": "Noshow",
+              "friendly_name": "Noshowed",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Noshow"
+              "value": "NOSHOWED"
             }
           ],
           "event": "match",
@@ -143,7 +144,7 @@
               "type": "equal_to",
               "friendly_name": "Confirmed",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Confirmed"
+              "value": "CONFIRMED"
             }
           ],
           "event": "match",
@@ -155,7 +156,7 @@
               "type": "equal_to",
               "friendly_name": "RESCHEDULED",
               "arguments": ["{{flow.data.event_type}}"],
-              "value": "Rescheduled"
+              "value": "RESCHEDULED"
             }
           ],
           "event": "match",
@@ -184,7 +185,7 @@
       "type": "send-message",
       "name": "send_canceled",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment has been canceled.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to reschedule.\nFrom {{flow.variables.CUSTOMER_NAME}}",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} at {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}} has been canceled.\n\nIf you would like to reschedule, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -207,7 +208,7 @@
       "type": "send-message",
       "name": "send_modified",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr {{flow.data.provider_last_name}} has been modified to on {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} has been modified. Your appointment is now scheduled for {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -230,7 +231,7 @@
       "type": "send-message",
       "name": "send_noshowed",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. You missed your appointment with Dr {{flow.data.provider_last_name}} on {{flow.data.appointment_date}}\nat {{flow.data.appointment_time_of_day}} at {{flow.data.appointment_location}}.\n\nPlease call {{flow.data.provider_callback_phone}} to reschedule.",
+        "body": "Hello, {{flow.data.patient_first_name}}. You missed your appointment with Dr. {{flow.data.provider_last_name}} which was scheduled for {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nPlease call us at {{flow.data.provider_callback_phone}} to reschedule.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -253,7 +254,7 @@
       "type": "send-message",
       "name": "send_confirmed",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment is confirmed.",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment has been confirmed.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -275,7 +276,7 @@
               "type": "equal_to",
               "friendly_name": "Confirm",
               "arguments": ["{{widgets.send_remind.inbound.Body}}"],
-              "value": "CF1"
+              "value": "CONFIRM APPT"
             }
           ],
           "event": "match",
@@ -287,7 +288,7 @@
               "type": "equal_to",
               "friendly_name": "Cancel",
               "arguments": ["{{widgets.send_remind.inbound.Body}}"],
-              "value": "CX2"
+              "value": "CANCEL APPT"
             }
           ],
           "event": "match",
@@ -364,7 +365,7 @@
       "type": "send-and-wait-for-reply",
       "name": "send_remind",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. \nThis is a reminder for your appointment with Dr {{flow.data.provider_last_name}}  on {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease type CF1 to confirm or CX2 to cancel.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "body": "Hello, {{flow.data.patient_first_name}}. This is a reminder that you have an appointment scheduled with Dr. {{flow.data.provider_last_name}} at  {{flow.data.appointment_time_of_day}} on\n{{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nPlease respond to this message with CONFIRM APPT to confirm or CANCEL APPT to cancel your appointment.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "timeout": "120",
@@ -641,7 +642,7 @@
       "type": "send-message",
       "name": "send_optedout",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. You have opted out of receiving reminders.",
+        "body": "Hello, {{flow.data.patient_first_name}}. You have opted out of receiving appointment communication messages. You will no longer receive messages from this number.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -664,7 +665,7 @@
       "type": "send-message",
       "name": "send_optedin",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. You have opted in to receive reminders.",
+        "body": "Hello, {{flow.data.patient_first_name}}. You have opted in to receive appointment communication messages. You can opt out at any time by replying STOP to this message.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -691,7 +692,7 @@
       "type": "send-and-wait-for-reply",
       "name": "send_booked",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr {{flow.data.provider_last_name}} is booked on {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease type CF1 to confirm or call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} is scheduled for {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}, or to cancel your appointment you can respond CANCEL APPT to this message.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "timeout": "120",
@@ -710,10 +711,10 @@
         {
           "conditions": [
             {
-              "type": "equal_to",
-              "friendly_name": "Confirm",
+              "friendly_name": "Cancel",
               "arguments": ["{{widgets.send_booked.inbound.Body}}"],
-              "value": "CF1"
+              "type": "equal_to",
+              "value": "CANCEL APPT"
             }
           ],
           "event": "match",
@@ -756,6 +757,5 @@
   "initial_state": "Trigger",
   "flags": {
     "allow_concurrent_calls": true
-  },
-  "description": "template appointment reminders flow"
+  }
 }

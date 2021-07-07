@@ -69,8 +69,10 @@ exports.handler = async function (context, event, callback) {
       appointment.hasOwnProperty('appointment_datetime'),
       'missing appointment.appointment_datetime'
     );
+
     appointment.event_type = 'REMIND'; // over-ride
-    appointment.appointment_datetime = new Date(); // over-ride
+    // event datetime MUST be set here
+    appointment.event_datetime_utc = new Date(); // over-ride
 
     // initialize s3 client
     const s3 = new AWS.S3({
