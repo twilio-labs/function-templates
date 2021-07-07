@@ -4,6 +4,10 @@
 who are interested in the architecture of the Appointment Management with EHR Integration application
 , and for understanding customization possibilities.*
 
+*Installation of this application is supported using the latest versions of Chrome and Firefox.
+Installation via Internet Explorer has not been officially tested
+and although issues are not expected, unforeseen problems may occur*
+
 ## Application Overview
 
 ***
