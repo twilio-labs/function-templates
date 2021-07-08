@@ -20,24 +20,6 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
-    <style>
-      #phone_number {
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-      }
-      input[type="submit"] {
-        cursor: pointer;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
-        border: 1px solid;
-        border-radius: 4px;
-        margin-top: 1em;
-        font-size: 0.875rem;
-        line-height: 1.25rem;
-      }
-    </style>
   </head>
   <body>
     <div class="page-top">
@@ -93,7 +75,7 @@
           <span id="status"></span>
           <form id="subscribe">
             <label for="phone">Phone number</label>
-            <input type="tel" id="phone_number" required />
+            <input type="tel" id="phone_number" class="intl-tel-input" required />
             <p>Keep me updated on...</p>
             <div>
               <input type="checkbox" id="option1" name="tags" value="option1" />
