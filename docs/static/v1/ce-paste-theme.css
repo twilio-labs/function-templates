@@ -131,6 +131,11 @@ input[type="text"] {
   width: 50%;
 }
 
+input[type="tel"]{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 input[readonly="true"] {
   background-color: rgb(244, 244, 246);
 }
@@ -150,11 +155,6 @@ input[type='submit'] {
 
 input.phone-number {
   width: 15rem;
-}
-
-input.intl-tel-input {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
 }
 
 #twilio-logo {
