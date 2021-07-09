@@ -1,7 +1,7 @@
 /*
  * Filename: ce-paste-theme.css
  * Description: A CSS theme for Code Exchange pages, based on the Paste design language.
- * Version: 1.0.0
+ * Version: 1.1.0
  */
 
 body {
@@ -131,8 +131,26 @@ input[type="text"] {
   width: 50%;
 }
 
+input[type="tel"]{
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
 input[readonly="true"] {
   background-color: rgb(244, 244, 246);
+}
+
+input[type='submit'] {
+  cursor: pointer;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border: 1px solid;
+  border-radius: 4px;
+  margin-top: 1em;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 input.phone-number {
