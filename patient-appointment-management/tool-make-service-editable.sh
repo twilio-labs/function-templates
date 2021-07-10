@@ -1,6 +1,7 @@
 #!/bin/zsh
 
-APPLICATION_NAME='patient-appointment-management'
+
+APPLICATION_NAME="${PWD##*/}"
 
 echo "APPLICATION_NAME=${APPLICATION_NAME}"
 

@@ -112,8 +112,8 @@ exports.handler = async function (event, context) {
     const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
     const REMINDER_OUTREACH_START = process.env.REMINDER_OUTREACH_START;
     const REMINDER_OUTREACH_FINISH = process.env.REMINDER_OUTREACH_FINISH;
-    const REMINDER_FIRST_OFFSET = process.env.REMINDER_FIRST_OFFSET;
-    const REMINDER_SECOND_OFFSET = process.env.REMINDER_SECOND_OFFSET;
+    const REMINDER_FIRST_TIMING = process.env.REMINDER_FIRST_TIMING;
+    const REMINDER_SECOND_TIMING = process.env.REMINDER_SECOND_TIMING;
 
     // initialize s3 client
     const s3 = new AWS.S3();
@@ -121,19 +121,19 @@ exports.handler = async function (event, context) {
     // ---------- set reminder time criteria
     const reminder_outreach_finish_tod = REMINDER_OUTREACH_FINISH;
     const reminder_1st_offset_ms =
-      3600 * 1000 * REMINDER_FIRST_OFFSET.substring(0, 2) +
-      60 * 1000 * REMINDER_FIRST_OFFSET.substring(2, 4);
+      3600 * 1000 * REMINDER_FIRST_TIMING.substring(0, 2) +
+      60 * 1000 * REMINDER_FIRST_TIMING.substring(2, 4);
     const reminder_2nd_offset_ms =
-      3600 * 1000 * REMINDER_SECOND_OFFSET.substring(0, 2) +
-      60 * 1000 * REMINDER_SECOND_OFFSET.substring(2, 4);
+      3600 * 1000 * REMINDER_SECOND_TIMING.substring(0, 2) +
+      60 * 1000 * REMINDER_SECOND_TIMING.substring(2, 4);
 
     console.log(`REMINDER_OUTREACH_START = ${REMINDER_OUTREACH_START}`);
     console.log(`REMINDER_OUTREACH_FINISH= ${REMINDER_OUTREACH_FINISH}`);
     console.log(
-      `REMINDER_FIRST_OFFSET = ${REMINDER_FIRST_OFFSET} (${reminder_1st_offset_ms})`
+      `REMINDER_FIRST_TIMING = ${REMINDER_FIRST_TIMING} (${reminder_1st_offset_ms})`
     );
     console.log(
-      `REMINDER_SECOND_OFFSET= ${REMINDER_SECOND_OFFSET} (${reminder_2nd_offset_ms})`
+      `REMINDER_SECOND_TIMING= ${REMINDER_SECOND_TIMING} (${reminder_2nd_offset_ms})`
     );
 
     // ---------- find all appointments in QUEUED & REMINDED-1

@@ -62,22 +62,22 @@ async function checkParameters(context) {
       REMINDER_OUTREACH_FINISH: `${v} cannot be earlier than REMINDER_OUTREACH_START`,
     });
 
-  v = context.REMINDER_FIRST_OFFSET;
-  if (!v) errors.push({ REMINDER_FIRST_OFFSET: 'cannot be empty' });
+  v = context.REMINDER_FIRST_TIMING;
+  if (!v) errors.push({ REMINDER_FIRST_TIMING: 'cannot be empty' });
   if (!/^\d+$/.test(v))
-    errors.push({ REMINDER_FIRST_OFFSET: `${v} not only digits` });
+    errors.push({ REMINDER_FIRST_TIMING: `${v} not only digits` });
   if (v.length !== 4)
-    errors.push({ REMINDER_FIRST_OFFSET: `${v} not 4 digits` });
+    errors.push({ REMINDER_FIRST_TIMING: `${v} not 4 digits` });
 
-  v = context.REMINDER_SECOND_OFFSET;
-  if (!v) errors.push({ REMINDER_SECOND_OFFSET: 'cannot be empty' });
+  v = context.REMINDER_SECOND_TIMING;
+  if (!v) errors.push({ REMINDER_SECOND_TIMING: 'cannot be empty' });
   if (!/^\d+$/.test(v))
-    errors.push({ REMINDER_SECOND_OFFSET: `${v} not only digits` });
+    errors.push({ REMINDER_SECOND_TIMING: `${v} not only digits` });
   if (v.length !== 4)
-    errors.push({ REMINDER_SECOND_OFFSET: `${v} not 4 digits` });
-  if (context.REMINDER_FIRST_OFFSET <= v)
+    errors.push({ REMINDER_SECOND_TIMING: `${v} not 4 digits` });
+  if (context.REMINDER_FIRST_TIMING <= v)
     errors.push({
-      REMINDER_SECOND_OFFSET: `${v} cannot be earlier than REMINDER_FIRST_OFFSET`,
+      REMINDER_SECOND_TIMING: `${v} cannot be earlier than REMINDER_FIRST_TIMING`,
     });
 
   v = context.AWS_REGION;
@@ -162,8 +162,8 @@ async function listParameters(context) {
       context,
       'REMINDER_OUTREACH_FINISH'
     ),
-    REMINDER_FIRST_OFFSET: await getParam(context, 'REMINDER_FIRST_OFFSET'),
-    REMINDER_SECOND_OFFSET: await getParam(context, 'REMINDER_SECOND_OFFSET'),
+    REMINDER_FIRST_TIMING: await getParam(context, 'REMINDER_FIRST_TIMING'),
+    REMINDER_SECOND_TIMING: await getParam(context, 'REMINDER_SECOND_TIMING'),
     TWILIO_SERVICE_SID: await getParam(context, 'TWILIO_SERVICE_SID'),
     TWILIO_PHONE_NUMBER: await getParam(context, 'TWILIO_PHONE_NUMBER'),
   };

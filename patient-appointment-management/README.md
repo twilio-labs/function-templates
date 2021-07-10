@@ -127,10 +127,10 @@ The following environment variables are required for proper deployment of this a
 |`CUSTOMER_EHR_ENDPOINT_URL` |Your organization's inbound EHR endpoint for communication from Twilio via HTTP POST. Please refer to the [EHR Integration Guide]() for more details.|Yes|
 |`REMINDER_OUTREACH_START` |Appointment reminder outreach window start time (HHMM) in local timezone, inclusive. default 0000 (i.e., midnight)|Yes|
 |`REMINDER_OUTREACH_FINISH` |Appointment reminder outreach window end time (HHMM) in local timezone, exclusive. default 2400 (i.e., midnight)|Yes|
-|`REMINDER_FIRST_OFFSET` |Offset (HHMM) when the 1st appointment reminder is to be sent. default 4800|Yes|
-|`REMINDER_SECOND_OFFSET` |Offset (HHMM) when the 2nd appointment reminder is to be sent. default 2400|Yes|
+|`REMINDER_FIRST_TIMING` |Offset (HHMM) when the 1st appointment reminder is to be sent. default 4800|Yes|
+|`REMINDER_SECOND_TIMING` |Offset (HHMM) when the 2nd appointment reminder is to be sent. default 2400|Yes|
 |`TWILIO_PHONE_NUMBER` |Your Twilio phone number for sending and receiving SMS|Yes|
-|`ADMIN_PASSWORD` |Password to restrict access to sensitive data|Yes|
+|`APPLICATION_PASSWORD` |Password to restrict access to sensitive data|Yes|
 |`SALT` |Change this to invalidate existing auth tokens|No|
 |`DEPLOYER_AWS_ACCESS_KEY_ID` |`AWS_ACCESS_KEY_ID` of the IAM user you provisioned for deploying this application|Yes|
 |`DEPLOYER_AWS_SECRET_ACCESS_KEY`|`AWS_SECRET_ACCESSS_KEY` of the IAM user you provisioned for deploying this application|Yes|

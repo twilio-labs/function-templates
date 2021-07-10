@@ -415,11 +415,7 @@ async function testEHR2TwilioSMS(context, test_phone_number) {
     appointment_location: 'Owl Health Clinic',
     appointment_id: '20000',
     appointment_timezone: '-0700',
-    appointment_date: datetime_parts.date,
     appointment_datetime: appt_datetime.toISOString(),
-    appointment_month: datetime_parts.month_name,
-    appointment_day_of_week: datetime_parts.day_of_week_long,
-    appointment_time_of_day: datetime_parts.time_of_day,
   };
 
   const test_params = [
@@ -552,11 +548,7 @@ async function testReminderTwoReminders(context, test_phone_number) {
     appointment_location: 'Owl Health Clinic',
     appointment_id: '20000',
     appointment_timezone: '-0700',
-    appointment_date: datetime_parts.date,
     appointment_datetime: appt_datetime.toISOString(),
-    appointment_month: datetime_parts.month_name,
-    appointment_day_of_week: datetime_parts.day_of_week_long,
-    appointment_time_of_day: datetime_parts.time_of_day,
   };
 
   const test_params = [
@@ -660,11 +652,7 @@ async function testReminderNoReminder(context, test_phone_number) {
     appointment_location: 'Owl Health Clinic',
     appointment_id: '20000',
     appointment_timezone: '-0700',
-    appointment_date: datetime_parts.date,
     appointment_datetime: appt_datetime.toISOString(),
-    appointment_month: datetime_parts.month_name,
-    appointment_day_of_week: datetime_parts.day_of_week_long,
-    appointment_time_of_day: datetime_parts.time_of_day,
   };
 
   const test_params = [
@@ -742,11 +730,7 @@ async function testReminderExpiration(context, test_phone_number) {
     appointment_location: 'Owl Health Clinic',
     appointment_id: '20000',
     appointment_timezone: '-0700',
-    appointment_date: datetime_parts.date,
     appointment_datetime: appt_datetime.toISOString(),
-    appointment_month: datetime_parts.month_name,
-    appointment_day_of_week: datetime_parts.day_of_week_long,
-    appointment_time_of_day: datetime_parts.time_of_day,
   };
 
   const test_params = [
@@ -792,7 +776,13 @@ async function testReminderExpiration(context, test_phone_number) {
   return test_results;
 }
 
-// --------------------------------------------------------------------------------
+/*
+ * --------------------------------------------------------------------------------
+ * to run
+ *
+ * curl --silent "http://localhost:3000/deployment/test-deployment?token=66NzIRGIvjJBh3B50ZSWN5b/YDY=&to_number=+your_phone_number"
+ * --------------------------------------------------------------------------------
+ */
 exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {

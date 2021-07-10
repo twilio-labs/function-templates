@@ -12,7 +12,7 @@ function createToken(password, context) {
 
 function isAllowed(token, context) {
   // Create the token with the environment password
-  const masterToken = createToken(context.ADMIN_PASSWORD, context);
+  const masterToken = createToken(context.APPLICATION_PASSWORD, context);
   return masterToken === token;
 }
 
