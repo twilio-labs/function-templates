@@ -148,7 +148,7 @@ $(function() {
         inputColor = "yellow";
       }
 
-      inputVolumeBar.style.width = Math.floor(inputVolume * 300) + "px";
+      inputVolumeBar.style.width = Math.floor(inputVolume * 100) + "%";
       inputVolumeBar.style.background = inputColor;
 
       var outputColor = "red";
@@ -158,7 +158,7 @@ $(function() {
         outputColor = "yellow";
       }
 
-      outputVolumeBar.style.width = Math.floor(outputVolume * 300) + "px";
+      outputVolumeBar.style.width = Math.floor(outputVolume * 100) + "%";
       outputVolumeBar.style.background = outputColor;
     });
   }
