@@ -14,7 +14,11 @@ async function getEnvironmentVariable(context, environment, key) {
 }
 
 async function getCurrentEnvironment(context) {
-  if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith("localhost")) {
+  if (!context.DOMAIN_NAME) {
+    throw new Error("DOMAIN_NAME environment variable must be set.")
+  }
+
+  if (context.DOMAIN_NAME.startsWith("localhost")) {
     throw new Error("Cannot save environment variables on local environment: edit your .env file and restart.");
   }
 
@@ -75,6 +79,9 @@ async function setEnvironmentVariable(context, environment, key, value, override
 }
 
 function getBaseUrl(context) {
+  if(!context.DOMAIN_NAME) {
+    throw new Error("DOMAIN_NAME environment variable must be set.")
+  }
   if (context.DOMAIN_NAME.startsWith("localhost")) {
     return `http://${context.DOMAIN_NAME}`;
   } else {

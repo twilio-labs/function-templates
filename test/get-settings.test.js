@@ -1,8 +1,8 @@
 const sinon = require('sinon');
 const rewire = require('rewire');
+
 let Twilio = require('twilio');
 const { Response } = require('../node_modules/twilio-run/dist/runtime/internal/response');
-const twilio = require('twilio');
 Twilio.Response = Response;
 
 let getSettings = rewire('../functions/get-settings');
