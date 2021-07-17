@@ -1375,7 +1375,7 @@
     ],
     "patient-appointment-management": [
       {
-        "key": "ADMIN_PASSWORD",
+        "key": "APPLICATION_PASSWORD",
         "required": true,
         "format": "secret",
         "description": "Set a password for your app. Users who want download data in, will need this password.",
@@ -1455,7 +1455,7 @@
         "contentKey": null
       },
       {
-        "key": "REMINDER_FIRST_OFFSET",
+        "key": "REMINDER_FIRST_TIMING",
         "required": true,
         "format": "text",
         "description": "Reminder 1st outreach offset (HHMM). default 4800",
@@ -1465,7 +1465,7 @@
         "contentKey": null
       },
       {
-        "key": "REMINDER_SECOND_OFFSET",
+        "key": "REMINDER_SECOND_TIMING",
         "required": true,
         "format": "text",
         "description": "Reminder 2nd outreach offset (HHMM). default 2400",
