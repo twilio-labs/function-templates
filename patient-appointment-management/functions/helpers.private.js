@@ -15,34 +15,6 @@
  *
  * --------------------------------------------------------------------------------
  */
-const AWS = require('aws-sdk');
-const Twilio = require('twilio');
-
-const THIS_APPLICATION_NAME = 'patient-appointment-management';
-const CONSTANTS = {
-  APPLICATION_NAME: THIS_APPLICATION_NAME,
-  FILENAME_APPOINTMENT: 'appointment{appointment_id}-patient{patient_id}.json',
-  _S3_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}`,
-  _CF_STACK_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}-bucket`,
-  _CF_STACK_APPLICATION_BASE: `twilio-${THIS_APPLICATION_NAME}-application`,
-  _SEND_REMINDERS_BASE: 'twilio-send-appointment-reminders',
-  _QUERY_STATE_BASE: 'twilio-query-appointment-state',
-  _QUERY_HISTORY_BASE: 'twilio-query-appointment-history',
-  _GLUE_CRAWLER_BASE: `twilio-${THIS_APPLICATION_NAME}`,
-  _GLUE_DATABASE_BASE: 'patient_appointments',
-};
-
-function determineRuntimeEnvironment(context) {
-  if (context === null || Object.keys(context).length === 0) {
-    return 'local';
-  } else if (
-    context.DOMAIN_NAME &&
-    context.DOMAIN_NAME.startsWith('localhost')
-  ) {
-    return 'localhost';
-  }
-  return 'server';
-}
 
 /*
  * --------------------------------------------------------------------------------
@@ -50,56 +22,46 @@ function determineRuntimeEnvironment(context) {
  * --------------------------------------------------------------------------------
  */
 async function setParam(context, key, value) {
+  const Twilio = require('twilio');
+
   const onLocalhost = Boolean(
     context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')
   );
   console.debug('Runtime environment is localhost:', onLocalhost);
 
-  switch (determineRuntimeEnvironment(context)) {
-    case 'local':
-      process.env[key] = value;
-      break;
-    case 'localhost':
-      process.env[key] = value;
-      break;
-    case 'server':
-      const client = context.getTwilioClient();
-      console.log('twilioClient', client);
-      // eslint-disable-next-line no-use-before-define
-      const service_sid = await getParam(context, 'TWILIO_SERVICE_SID');
-      console.log('service_sid', service_sid);
-      // eslint-disable-next-line no-use-before-define
-      const environment_sid = await getParam(context, 'TWILIO_ENVIRONMENT_SID');
-      console.log('environment_sid', environment_sid);
+  const client = context.getTwilioClient();
+  console.log('twilioClient', client);
+  // eslint-disable-next-line no-use-before-define
+  const service_sid = await getParam(context, 'TWILIO_SERVICE_SID');
+  console.log('service_sid', service_sid);
+  // eslint-disable-next-line no-use-before-define
+  const environment_sid = await getParam(context, 'TWILIO_ENVIRONMENT_SID');
+  console.log('environment_sid', environment_sid);
 
-      let variable_sid = null;
-      await client.serverless
-        .services(service_sid)
-        .environments(environment_sid)
-        .variables.list()
-        .then((variables) =>
-          variables.forEach((v) => {
-            if (v.key === key) variable_sid = v.sid;
-          })
-        );
+  let variable_sid = null;
+  await client.serverless
+    .services(service_sid)
+    .environments(environment_sid)
+    .variables.list()
+    .then((variables) =>
+      variables.forEach((v) => {
+        if (v.key === key) variable_sid = v.sid;
+      })
+    );
 
-      if (variable_sid === null) {
-        await client.serverless
-          .services(service_sid)
-          .environments(environment_sid)
-          .variables.create({ key, value })
-          .then((v) => console.log('Created variable', v.key));
-      } else {
-        await client.serverless
-          .services(service_sid)
-          .environments(environment_sid)
-          .variables(variable_sid)
-          .update({ value })
-          .then((v) => console.log('Updated variable', v.key));
-      }
-      break;
-    default:
-      break;
+  if (variable_sid === null) {
+    await client.serverless
+      .services(service_sid)
+      .environments(environment_sid)
+      .variables.create({ key, value })
+      .then((v) => console.log('Created variable', v.key));
+  } else {
+    await client.serverless
+      .services(service_sid)
+      .environments(environment_sid)
+      .variables(variable_sid)
+      .update({ value })
+      .then((v) => console.log('Updated variable', v.key));
   }
   console.log('Assigned', key, '=', value);
 }
@@ -116,11 +78,32 @@ async function setParam(context, key, value) {
  * --------------------------------------------------------------------------------
  */
 async function getParam(context, key) {
-  if (CONSTANTS[key]) return CONSTANTS[key];
-  if (context[key] && context[key] !== null && context[key] !== '')
+  const AWS = require('aws-sdk');
+  const Twilio = require('twilio');
+
+  const THIS_APPLICATION_NAME = 'patient-appointment-management';
+  const CONSTANTS = {
+    APPLICATION_NAME: THIS_APPLICATION_NAME,
+    FILENAME_APPOINTMENT:
+      'appointment{appointment_id}-patient{patient_id}.json',
+    _S3_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}`,
+    _CF_STACK_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}-bucket`,
+    _CF_STACK_APPLICATION_BASE: `twilio-${THIS_APPLICATION_NAME}-application`,
+    _SEND_REMINDERS_BASE: 'twilio-send-appointment-reminders',
+    _QUERY_STATE_BASE: 'twilio-query-appointment-state',
+    _QUERY_HISTORY_BASE: 'twilio-query-appointment-history',
+    _GLUE_CRAWLER_BASE: `twilio-${THIS_APPLICATION_NAME}`,
+    _GLUE_DATABASE_BASE: 'patient_appointments',
+  };
+
+  // first return context non-null context value
+  if (context[key]) return context[key];
+
+  // second return CONSTANTS value
+  if (CONSTANTS[key]) {
+    context[key] = CONSTANTS[key];
     return context[key];
-  if (process.env[key] && process.env[key] !== null && process.env[key] !== '')
-    return process.env[key];
+  }
 
   const account_sid = context.ACCOUNT_SID
     ? context.ACCOUNT_SID
@@ -129,7 +112,6 @@ async function getParam(context, key) {
     ? context.AUTH_TOKEN
     : process.env.AUTH_TOKEN;
   const client = context.getTwilioClient();
-  // const client = Twilio(account_sid, auth_token);
 
   switch (key) {
     case 'AWS_ACCESS_KEY_ID': {

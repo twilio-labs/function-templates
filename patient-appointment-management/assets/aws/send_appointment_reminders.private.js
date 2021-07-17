@@ -112,26 +112,29 @@ exports.handler = async function (event, context) {
     const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
     const REMINDER_OUTREACH_START = process.env.REMINDER_OUTREACH_START;
     const REMINDER_OUTREACH_FINISH = process.env.REMINDER_OUTREACH_FINISH;
-    const REMINDER_FIRST_OFFSET = process.env.REMINDER_FIRST_OFFSET;
-    const REMINDER_SECOND_OFFSET = process.env.REMINDER_SECOND_OFFSET;
+    const REMINDER_FIRST_TIMING = process.env.REMINDER_FIRST_TIMING;
+    const REMINDER_SECOND_TIMING = process.env.REMINDER_SECOND_TIMING;
 
     // initialize s3 client
     const s3 = new AWS.S3();
 
     // ---------- set reminder time criteria
-    const reminder_outreach_start_tod = REMINDER_OUTREACH_START;
     const reminder_outreach_finish_tod = REMINDER_OUTREACH_FINISH;
     const reminder_1st_offset_ms =
-      3600 * 1000 * REMINDER_FIRST_OFFSET.substring(0, 2) +
-      60 * 1000 * REMINDER_FIRST_OFFSET.substring(2, 4);
-    const reminder_2ndt_offset_ms =
-      3600 * 1000 * REMINDER_SECOND_OFFSET.substring(0, 2) +
-      60 * 1000 * REMINDER_SECOND_OFFSET.substring(2, 4);
+      3600 * 1000 * REMINDER_FIRST_TIMING.substring(0, 2) +
+      60 * 1000 * REMINDER_FIRST_TIMING.substring(2, 4);
+    const reminder_2nd_offset_ms =
+      3600 * 1000 * REMINDER_SECOND_TIMING.substring(0, 2) +
+      60 * 1000 * REMINDER_SECOND_TIMING.substring(2, 4);
 
-    console.log('reminder_outreach_start_tod=', reminder_1st_offset_ms);
-    console.log('reminder_outreach_finish_tod=', reminder_1st_offset_ms);
-    console.log('reminder_1st_offset_ms=', reminder_1st_offset_ms);
-    console.log('reminder_2ndt_offset_ms=', reminder_2ndt_offset_ms);
+    console.log(`REMINDER_OUTREACH_START = ${REMINDER_OUTREACH_START}`);
+    console.log(`REMINDER_OUTREACH_FINISH= ${REMINDER_OUTREACH_FINISH}`);
+    console.log(
+      `REMINDER_FIRST_TIMING = ${REMINDER_FIRST_TIMING} (${reminder_1st_offset_ms})`
+    );
+    console.log(
+      `REMINDER_SECOND_TIMING= ${REMINDER_SECOND_TIMING} (${reminder_2nd_offset_ms})`
+    );
 
     // ---------- find all appointments in QUEUED & REMINDED-1
     let params = {
@@ -177,21 +180,14 @@ exports.handler = async function (event, context) {
         appointment_ltz.toISOString().substring(11, 13) +
         appointment_ltz.toISOString().substring(14, 16);
 
-      if (appointment_tod < reminder_outreach_start_tod) {
+      if (
+        appointment_tod >= REMINDER_OUTREACH_START &&
+        appointment_tod < REMINDER_OUTREACH_FINISH
+      ) {
+        console.log('appointment time-of-day within outreach window');
+      } else {
         console.log(
-          '  skip: appointment_ltz=',
-          appointment_ltz.toISOString(),
-          'before',
-          reminder_outreach_start_tod
-        );
-        continue;
-      }
-      if (appointment_tod >= reminder_outreach_finish_tod) {
-        console.log(
-          '  skip: appointment_ltz=',
-          appointment_ltz.toISOString(),
-          'after',
-          reminder_outreach_finish_tod
+          'appointment time-of-day outside outreach window, skipping'
         );
         continue;
       }
@@ -215,7 +211,7 @@ exports.handler = async function (event, context) {
       console.log('appointment datetime utc=', appointment_utc);
 
       const reminder_2_utc = new Date(
-        appointment_utc.getTime() - reminder_2ndt_offset_ms
+        appointment_utc.getTime() - reminder_2nd_offset_ms
       );
       console.log('reminder_2  datetime utc=', reminder_2_utc);
 
@@ -231,8 +227,8 @@ exports.handler = async function (event, context) {
       else disposition = null;
       if (disposition === null) continue; // error case, skip for now
 
-      if (appointment_utc <= current_utc) {
-        console.log('expire: appointment_utc <= current_utc');
+      if (current_utc >= appointment_utc) {
+        console.log('expire: current_utc >= appointment_utc');
 
         appointment.event_type = 'EXPIRE';
 
@@ -265,91 +261,48 @@ exports.handler = async function (event, context) {
         console.log('PUT - ', params.Key);
 
         continue;
+      } else if (current_utc < reminder_1_utc) {
+        console.log('not ready: current_utc < reminder_1_utc');
+
+        continue;
       } else if (
-        reminder_2_utc <= current_utc &&
+        current_utc < reminder_2_utc &&
+        current_utc >= reminder_1_utc &&
         appointment.event_type !== 'CANCELED' &&
         appointment.event_type !== 'NOSHOWED' &&
         appointment.event_type !== 'OPTED-OUT' &&
         appointment.event_type !== 'EXPIRE'
       ) {
-        console.log('send reminder-2: reminder_2_utc <= current_utc');
+        console.log(
+          'send reminder-1: reminder_1_utc <= current_utc < reminder_2_utc'
+        );
 
         appointment.event_type = 'REMIND';
-
-        params = {
-          Bucket: AWS_S3_BUCKET,
-          Key: s3key.replace(disposition, 'REMINDED-2'),
-          Body: JSON.stringify(appointment),
-          ServerSideEncryption: 'AES256',
-        };
-        let results = await s3.putObject(params).promise();
-        console.log('PUT - ', params.Key);
-
-        params = {
-          Bucket: AWS_S3_BUCKET,
-          Key: s3key,
-        };
-        results = await s3.deleteObject(params).promise();
-        console.log('DELETE - ', params.Key);
-
-        params = {
-          Bucket: AWS_S3_BUCKET,
-          Key: s3key
-            .replace('state', 'history')
-            .replace(disposition, 'REMINDED-2')
-            .replace('.json', `${new Date().getTime()}.json`),
-          Body: JSON.stringify(appointment),
-          ServerSideEncryption: 'AES256',
-        };
-        results = await s3.putObject(params).promise();
-        console.log('PUT - ', params.Key);
       } else if (
-        reminder_1_utc <= current_utc &&
+        current_utc < appointment_utc &&
+        current_utc >= reminder_2_utc &&
         appointment.event_type !== 'CANCELED' &&
         appointment.event_type !== 'NOSHOWED' &&
         appointment.event_type !== 'OPTED-OUT' &&
         appointment.event_type !== 'EXPIRE'
       ) {
-        console.log('send reminder-1: reminder_1_utc <= current_utc');
+        console.log(
+          'send reminder-2: reminder_2_utc <= current_utc < appointment_utc'
+        );
 
         appointment.event_type = 'REMIND';
-
-        params = {
-          Bucket: AWS_S3_BUCKET,
-          Key: s3key.replace(disposition, 'REMINDED-1'),
-          Body: JSON.stringify(appointment),
-          ServerSideEncryption: 'AES256',
-        };
-        let results = await s3.putObject(params).promise();
-        console.log('PUT - ', params.Key);
-
-        params = {
-          Bucket: AWS_S3_BUCKET,
-          Key: s3key,
-        };
-        results = await s3.deleteObject(params).promise();
-        console.log('DELETE - ', params.Key);
-
-        params = {
-          Bucket: AWS_S3_BUCKET,
-          Key: s3key
-            .replace('state', 'history')
-            .replace(disposition, 'REMINDED-1')
-            .replace('.json', `${new Date().getTime()}.json`),
-          Body: JSON.stringify(appointment),
-          ServerSideEncryption: 'AES256',
-        };
-        results = await s3.putObject(params).promise();
-        console.log('PUT - ', params.Key);
       } else {
-        console.log('error condition, skipping');
+        console.log('skipping: error condition');
 
         continue;
       }
 
       try {
         // ---------- execute twilio studio flow
-        console.log('executing appointment=', appointment.appointment_id);
+        console.log(
+          'send reminder for appointment=',
+          appointment.appointment_id
+        );
         const params = {
           twilio_flow_sid: TWILIO_FLOW_SID,
           twilio_account_sid: ACCOUNT_SID,

@@ -126,7 +126,7 @@ exports.handler = async function (event, context) {
     }
 
     // ---------- execute athena query
-    const query = `select * from ${database_name}.state`;
+    const query = `select * from ${database_name}.history`;
     const queryExecution = await execute_query(query, S3_BUCKET, AWS);
 
     // ---------- generate s3 signed URL

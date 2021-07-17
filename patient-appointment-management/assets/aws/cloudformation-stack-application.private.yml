@@ -217,8 +217,8 @@ Resources:
           FILENAME_APPOINTMENT: !Ref ParameterFilenamePatternAppointment
           REMINDER_OUTREACH_START: !Ref ParameterReminderOutreachStart
           REMINDER_OUTREACH_FINISH: !Ref ParameterReminderOutreachFinish
-          REMINDER_FIRST_OFFSET: !Ref ParameterReminderFirstOffset
-          REMINDER_SECOND_OFFSET: !Ref ParameterReminderSecondOffset
+          REMINDER_FIRST_TIMING: !Ref ParameterReminderFirstOffset
+          REMINDER_SECOND_TIMING: !Ref ParameterReminderSecondOffset
       MemorySize: 256
       Timeout: 60
       ReservedConcurrentExecutions: 1

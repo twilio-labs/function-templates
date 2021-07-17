@@ -42,6 +42,15 @@
     <p id="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
 
     <section>
+      <div id="invalid-environment-variable" style="display: none;" class="deployer">
+        <h4>Please correct the following environment variables</h4>
+      </div>
+      <div id="valid-environment-variable" style="display: none;" class="deployer">
+        <h4><span class="checkmark">&#10003;</span> Validated Environment Variables</h4>
+      </div>
+    </section>
+
+    <section>
       <div class="flow-loader"></div>
       <div id="flow-deploy" style="display: none;" class="deployer">
           <h4>Your Studio Flow is not yet deployed</h4>
@@ -63,7 +72,7 @@
         <div id="aws-bucket-loader button-loader" style="display: none;"></div>
       </div>
       <div id="aws-bucket-deploying" style="display: none;" class="deployer">
-        <h4>Your AWS bucket in being deployed ...</h4>
+        <h4>Your AWS bucket is being deployed ...</h4>
         <p>Please periodically refresh this page until deployment is complete</p>
       </div>
       <div id="aws-bucket-deployed" style="display: none;" class="deployer">
@@ -80,7 +89,7 @@
         <div id="aws-application-loader button-loader" style="display: none;"></div>
       </div>
       <div id="aws-application-deploying" style="display: none;" class="deployer">
-        <h4>Your AWS application in being deployed ...</h4>
+        <h4>Your AWS application is being deployed ...</h4>
         <p>Please periodically refresh this page until deployment is complete</p>
       </div>
       <div id="aws-application-deployed" style="display: none;" class="deployer">

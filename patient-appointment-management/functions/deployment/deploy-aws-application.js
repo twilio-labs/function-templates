@@ -79,13 +79,13 @@ exports.handler = async function (context, event, callback) {
       context,
       'REMINDER_OUTREACH_FINISH'
     );
-    const REMINDER_FIRST_OFFSET = await getParam(
+    const REMINDER_FIRST_TIMING = await getParam(
       context,
-      'REMINDER_FIRST_OFFSET'
+      'REMINDER_FIRST_TIMING'
     );
-    const REMINDER_SECOND_OFFSET = await getParam(
+    const REMINDER_SECOND_TIMING = await getParam(
       context,
-      'REMINDER_SECOND_OFFSET'
+      'REMINDER_SECOND_TIMING'
     );
     const FILENAME_APPOINTMENT = await getParam(
       context,
@@ -322,11 +322,11 @@ exports.handler = async function (context, event, callback) {
               },
               {
                 ParameterKey: 'ParameterReminderFirstOffset',
-                ParameterValue: REMINDER_FIRST_OFFSET,
+                ParameterValue: REMINDER_FIRST_TIMING,
               },
               {
                 ParameterKey: 'ParameterReminderSecondOffset',
-                ParameterValue: REMINDER_SECOND_OFFSET,
+                ParameterValue: REMINDER_SECOND_TIMING,
               },
             ],
             OnFailure: 'ROLLBACK',
