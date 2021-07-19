@@ -31,7 +31,7 @@ describe("#save-settings", () => {
             callback = sinon.spy(() => {});
         });
         
-        it("returns 307 if admin phone number not included in request", () => {
+        it("returns 301 if admin phone number not included in request", () => {
             let event = {
                 'admin-password': 123,
             }
