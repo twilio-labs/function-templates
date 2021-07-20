@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patient Appointment Management Application</title>
+  <title>Appointment Management with EHR Integration Application</title>
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
   <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
   <link rel="stylesheet" href="https://unpkg.com/milligram/dist/milligram.min.css">
@@ -11,16 +11,17 @@
 </head>
 <body>
   <header>
-    <h1>Patient Appointment Management Application</h1>
+    <h1>Appointment Management with EHR Integration Application</h1>
     <div id="hipaa-disclaimer" style="margin-bottom: 20px;">
         Note that this application is designed for prototyping purposes only and you should<br/>
         <a href="https://ahoy.twilio.com/patient-appointment-management" target="_blank">consult with a Twilio Expert</a>
         before publicly offering this service in a production context.
     </div>
     <p>
-        This application is designed for healthcare providers to implement patient appointment reminders.
-        Patients will receive various appointment event such as booking & reminders via SMS
-        and can respond with confirmation and/or cancellations.
+      This application is designed to support healthcare provider organizations
+      that are interested in building an in-house appointment management solution.
+      The app packages together the core components of a deployable prototype for basic,
+      two-way SMS communication between patient and provider.
     </p>
   </header>
   <main>
@@ -28,7 +29,10 @@
     let token = null;
     </script>
     <div id="password-form" style="display: none;">
-      <p>To protect sensitive data, a password is required. This was the admin password you set when launching your app. Or it can be found in the <code>.env</code>file in the root of your application.</p>
+      <p>
+        To protect sensitive data, a password is required.
+        This was the application password you set when launching your app.
+        Or it can be found in the <code>.env</code>file in the root of your application.</p>
       <p id="login-error" style="color:red;"></p>
       <form>
         <div>

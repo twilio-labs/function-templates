@@ -1,12 +1,8 @@
 # Appointment Management with EHR Integration App: Technical Guide
 
-*This document is intended to serve as a technical guide for customers
-who are interested in the architecture of the Appointment Management with EHR Integration application
-, and for understanding customization possibilities.*
+*This document is intended to serve as a technical guide for customers who are interested in the architecture of the Appointment Management with EHR Integration application, and for understanding installation and customization possibilities.*
 
-*Installation of this application is supported using the latest versions of Chrome and Firefox.
-Installation via Internet Explorer has not been officially tested
-and although issues are not expected, unforeseen problems may occur*
+*Installation of this application is supported using the latest versions of Chrome and Firefox. Installation via Internet Explorer has not been officially tested and although issues are not expected, unforeseen problems may occur.*
 
 ## Application Overview
 
@@ -14,20 +10,9 @@ and although issues are not expected, unforeseen problems may occur*
 
 ***
 
-The Appointment Management with EHR Integration app packages together
-the core components of a deployable prototype for basic
-, two-way SMS communication between patient
-and provider using appointment information
-that is shared between the application
-and an integrated [Electronic Health Record (EHR)](https://www.healthit.gov/faq/what-electronic-health-record-ehr).
-This app is intended to support healthcare providers
-who are interested in building their own appointment management solution
-to understand what is possible using Twilio
-, and to accelarate the path to success by providing core building blocks
-and necessary workflows for implementing SMS appointment communication
-such as scheduling confirmations, reminders and cancelations.
+The Appointment Management with EHR Integration app packages together the core components of a deployable prototype for basic, two-way SMS communication between patient and provider using appointment information that is shared between the application and an integrated [Electronic Health Record (EHR)](https://www.healthit.gov/faq/what-electronic-health-record-ehr). This app is intended to support healthcare providers who are interested in building their own appointment management solution to understand what is possible using Twilio, and to accelerate the path to success by providing core building blocks and necessary workflows for implementing SMS appointment communication such as scheduling confirmations, reminders and cancelations.
 
-The application includes the necessary Twilio components and an appointment reminder scheduling service, all pre-configured for deployment of a working prototype, ready to integrate directly with an EHR for demonstration of the possibilities (the separate step of EHR integration is required for the app to work). This application is not intended to be a production-ready app, but rather will allow you install a functioning prototype into your test environment, establish a working EHR integration, and to explore how different Twilio components and functions can be leveraged to meet your needs.
+The application includes the necessary Twilio components and an appointment reminder scheduling service, all pre-configured for deployment of a working prototype, ready to integrate directly with an EHR for demonstration of the possibilities (the separate step of EHR integration is required for the app to work). This application is not intended to be a production-ready app, but rather will allow you to install a functioning prototype into your test environment, establish a working EHR integration, and to explore how different Twilio components and functions can be leveraged to meet your needs.
 
 Specifically, the Appointment Management with EHR Integration application implements the following capabilities:
 
@@ -45,8 +30,8 @@ Specifically, the Appointment Management with EHR Integration application implem
 
 - (*Outbound*) SMS reminders sent to patient based on scheduled appointments (up to 2 reminders per patient per day)
 
-*For more details on appointment events supported by this application,
-please reference the EHR Integration Guide linked in [this blog post]().*
+*(For more details on appointment events supported by this application
+, please reference the [EHR Integration Guide](https://twilio-cms-prod.s3.amazonaws.com/documents/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf))*
 
 ## Architecture Highlights
 
@@ -54,30 +39,27 @@ please reference the EHR Integration Guide linked in [this blog post]().*
 
 ***
 
-This section provides a high-level overview of the application's architecture, including a discussion of the baked-in application components, the EHR integration that is necessary for the app to function, and a Reference Architecture diagram showing how the pieces  fit together.
+This section provides a high-level overview of the application's architecture, including a discussion of the baked-in application components, the EHR integration that is necessary for the app to function, and a Reference Architecture diagram showing how the pieces fit together.
 
 ### Application Components
+
+***
+
 The application's architecture consists of 3 main components that interact closely together: Twilio Studio Flow, Twilio Functions and AWS resources.
 - **Twilio Studio Flow** implements the SMS interaction with the patient (i.e. customizable message text and workflow) by taking configured parameters (from both the EHR messages and from your preferred message details configured in the Flow itself) and sending appropriate messages.
-- **Twilio Functions** collect appointment events from the EHR and stores them in AWS S3 (for appointment reminders)
-- **Amazon Web Services (AWS) Resources** are used to build a persistent data layer which serves as the source of true for scheduling notifications that are not triggered by real-time events from the EHR, and to queue appointment information for initiating scheduled reminder messages. This includes:
+- **Twilio Functions** collect appointment events from the EHR and store them in AWS S3 (for appointment reminders).
+- **Amazon Web Services (AWS) Resources** are used to build a persistent data layer which drives the appointment reminder messages. The AWS layer serves as the source of truth for scheduling notifications that are not triggered by real-time events from the EHR, and to queue the appointment information for initiating scheduled reminders. The AWS layer consists of:
   - an **S3** bucket for storing up-to-date appointment information
   - a **Lambda** function to identify triggering events and communicate with Studio Flow, and
   - a **scheduler** to trigger the appropriately timed appointment reminders
 
-*(Although the baked-in architecture leverages AWS offerings for the persistent data layer
-, the application can be modified to use other cloud services providers
-such as Micrsoft Azure and GCP (Google Cloud Platform)
-that offer similar capabilities).*
+*(Although the baked-in architecture leverages AWS offerings for the persistent data layer, the application can be modified to use other cloud services providers, such as Microsoft Azure and GCP (Google Cloud Platform), that offer similar capabilities)*
 
 ### EHR Integration
-This application is intended to sit next to your EHR, and will rely on a near real-time EHR integration interface coupled with the application's components.  As long as your EHR integration interface can facilitate the real-time data exchange with the EHR, the app can integrate with a variety of integration methods including HL7 v2 messaging, FHIR, native EHR APIs, or available third-party integration APIs. Once scheduling messages are received by Twilio from your EHR, they are converted into JSON to complete the information flow through Twilio and AWS.
 
-### Reference Architecture
+***
 
-The Reference Architecture diagram below shows a more detailed description of process and data flow between the Application components and an integrated EHR.
-
-![Technical Architecture](assets/architecture.png)
+This application is intended to sit next to your EHR, and will rely on a near real-time EHR integration interface coupled with the application's components, in order to function.  As long as your EHR integration interface can facilitate the real-time data exchange with the EHR, the app can integrate with a variety of integration methods including HL7 v2 messaging, FHIR, native EHR APIs, or available third-party integration APIs. Once scheduling messages are received by Twilio from your EHR, they are converted into JSON to complete the information flow through Twilio and AWS.
 
 ## Installation Information
 
@@ -85,65 +67,64 @@ The Reference Architecture diagram below shows a more detailed description of pr
 
 ***
 
-This section details the requirements for a successful deployment and installation of the prototype application, including the necessary pre-requisite steps, the variables that are needed to initiate installation, and the installation steps themselves.
+This section details the requirements for a successful deployment and installation of the prototype application, including the necessary prerequisite steps, the variables that are needed to initiate installation, and the installation steps themselves.
 
-### Pre-requisites
+### Prerequisites
 
 ***
 
-The following pre-requisites must be satisfied prior to installing this application.
+The following prerequisites must be satisfied prior to installing this application.
 
-### Provision Twilio Assets
+#### Provision Twilio Assets
 You will need the following Twilio assets ready prior to installation:
 - **Twilio account**
   - Create a Twilio account by signing up [here](https://www.twilio.com/try-twilio).
-  - You will use your login information to get started with the Quick Deploy installation on the app's CodeExchange page.
-- **Twilio phone number** (this will be the number patients receive texts from)
+  - *(You will use your login information to get started with the Quick Deploy installation on the app's CodeExchange page)*
+- **Twilio phone number** 
   - After provisioning your Twilio account, you will need to [purchase a phone number](https://www.twilio.com/console/phone-numbers/incoming) to use in the application.
   - Make sure the phone number is SMS enabled
+  - *(This will be the number patients receive texts from)*
 
-### Provision AWS Assets
+#### Provision AWS Assets
 You will need the following AWS assets ready prior to installation:
 - **AWS Account**
   - Create a dedicated AWS account for this application deployment
     (https://aws.amazon.com/resources/create-account/).
     - As admin-level privilege will be required to create various AWS resources (including IAM role/user/policy), we **strongly** recommend that you create a dedicated AWS account separate from other AWS accounts that your organization owns.
     - You may place the new AWS account within your [AWS Organizations](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html) for consolidated billing, if desired (not required).
-- **AWS credentials for IAM user** (credentials for the "deployer")
+- **AWS credentials for IAM user** (the "deployer")
   - (i.e. `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESSS_KEY`)
-  - IAM user must have AWS `AdministratorAccess` policy assigned.
-  - This IAM user will be used to create the `CloudFormation` stacks of this application.
+  - Create an IAM user with `AdministratorAccess` policy assigned.
+  - *(This IAM user will be used to create the `CloudFormation` stacks of this application)*
+  - *(Note that once the application is fully deployed and working, you can remove the credentials to further secure your application and data)*
 
 ### Environment Variables
 
 ***
 
-The following environment variables are required for proper deployment of this application (you will input all environment variables in the app's initial CodeExchange page prior to deployment). After the application is deployed, you can find these environment variables in your `.env` file:
+The following environment variables are required for proper deployment of this application (you will input necessary environment variables in the app's initial CodeExchange page prior to deployment). After the application is deployed, you can find these environment variables in your `.env` file:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-|`CUSTOMER_NAME` |Your organization's name, which will appear in the SMS to the patient |Yes|
-|`CUSTOMER_CODE` |Your organization's short name, which will be suffixed to AWS resources|Yes|
-|`CUSTOMER_EHR_ENDPOINT_URL` |Your organization's inbound EHR endpoint for communication from Twilio via HTTP POST. Please refer to the [EHR Integration Guide]() for more details.|Yes|
-|`REMINDER_OUTREACH_START` |Appointment reminder outreach window start time (HHMM) in local timezone, inclusive. default 0000 (i.e., midnight)|Yes|
-|`REMINDER_OUTREACH_FINISH` |Appointment reminder outreach window end time (HHMM) in local timezone, exclusive. default 2400 (i.e., midnight)|Yes|
-|`REMINDER_FIRST_TIMING` |Offset (HHMM) when the 1st appointment reminder is to be sent. default 4800|Yes|
-|`REMINDER_SECOND_TIMING` |Offset (HHMM) when the 2nd appointment reminder is to be sent. default 2400|Yes|
-|`TWILIO_PHONE_NUMBER` |Your Twilio phone number for sending and receiving SMS|Yes|
-|`APPLICATION_PASSWORD` |Password to restrict access to sensitive data|Yes|
+|`CUSTOMER_NAME` |The organization name which can be configured to appear in the SMS to the patient|Yes|
+|`CUSTOMER_CODE` |The organization short name, which will be suffixed to AWS resources|Yes|
+|`CUSTOMER_EHR_ENDPOINT_URL` |The organization's inbound EHR endpoint for communication from Twilio via HTTP POST (please refer to the [EHR Integration Guide](https://twilio-cms-prod.s3.amazonaws.com/documents/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf) for more details.|Yes|
+|`REMINDER_OUTREACH_START` |The start time of the outreach window in which SMS can be sent to patients for appointment reminders (the outreach window can be used, for example, to ensure SMS are not sent to patients at unreasonable times of day): *configure as HHMM; this variable is inclusive; default is 0000 (i.e. midnight); the app will honor the patient’s local timezone*|Yes|
+|`REMINDER_OUTREACH_FINISH` |The end time of the outreach window in which SMS can be sent to patients for appointment reminders: *configure as HHMM; this variable is exclusive; the app will honor the patient’s local timezone*|Yes|
+|`REMINDER_FIRST_TIMING` |The hours/minutes prior to appointment time in which the first reminder should be sent to the patient: *configure as HHMM; default is 4800*|Yes|
+|`REMINDER_SECOND_TIMING` |The hours/minutes prior to appointment time in which the second reminder should be sent to the patient: *configure as HHMM; default is 2400; second reminder can be turned off by setting this variable to 0000*|Yes|
+|`TWILIO_PHONE_NUMBER` |The Twilio phone number you want to use for sending and receiving SMS through the app|Yes|
+|`APPLICATION_PASSWORD` |The Password used to restrict access to sensitive data (this password will be required to access and manipulate the application after deployment)|Yes|
 |`SALT` |Change this to invalidate existing auth tokens|No|
-|`DEPLOYER_AWS_ACCESS_KEY_ID` |`AWS_ACCESS_KEY_ID` of the IAM user you provisioned for deploying this application|Yes|
-|`DEPLOYER_AWS_SECRET_ACCESS_KEY`|`AWS_SECRET_ACCESSS_KEY` of the IAM user you provisioned for deploying this application|Yes|
-|`AWS_REGION` |`AWS_REGION` where your AWS resources will be deployed. We **strongly** recommend not changing this from the default, due to slight differences between AWS regions.|Yes|
+|`DEPLOYER_AWS_ACCESS_KEY_ID` |The `AWS_ACCESS_KEY_ID` of the IAM user you provisioned for deploying this application|Yes|
+|`DEPLOYER_AWS_SECRET_ACCESS_KEY`|The `AWS_SECRET_ACCESSS_KEY` of the IAM user you provisioned for deploying this application|Yes|
+|`AWS_REGION` |The `AWS_REGION` where your AWS resources will be deployed (we **strongly** recommend not changing this from the default, due to slight differences between AWS regions)|Yes|
 
-*To keep your tokens and secrets secure
-, make sure to not commit the `.env` file in git.
-When setting up the project with*
+To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with
 ```shell
 twilio serverless:init
 ```
-*the Twilio CLI will create a `.gitignore` file
-that excludes `.env` from the version history.*
+the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
 ## Architecture Details
 
@@ -170,9 +151,12 @@ This application includes a preconfigured Twilio Studio Flow, which implements:
 *For more information on how the Studio Flow component works, check out [Twilio Studio Documentation](https://www.twilio.com/docs/studio).*
 
 #### Twilio Service (Assets & Functions)
-The applicaiton leverages service assets and functions, which are part of Twilio Runtime (***? true?***). Check out [Twilio Runtime Documentation](https://www.twilio.com/docs/runtime) for additional information.
+The application leverages service assets and functions
+, which are part of Twilio Runtime.
+Check out [Twilio Runtime Documentation](https://www.twilio.com/docs/runtime)
+for additional information.
 
-### Assets
+#### Assets
 Static assets (files) of the application:
 
 | Asset (under `/assets`) | Description |
@@ -189,7 +173,7 @@ Static assets (files) of the application:
 |`/aws/query_appointment_state.js` |Lambda function code for querying appointment event state (snapshot) stored in S3|
 |`/aws/send_appointment_reminders.js` |Lambda function code for sending appointment reminders per 4 reminder configuration parameters|
 
-### Functions
+#### Functions
 Functions used in the application:
 
 | Functions (under `/functions`) | Description |
@@ -200,7 +184,7 @@ Functions used in the application:
 |`/login.js` |Handles login from `index.html` page|
 |`/save-booked.js` |Saved booked appointment notification event to S3 bucket|
 |`/save-cancel.js` |Saves cancel appointment request event to S3 bucket|
-|`/save-canceled.js` |Saves canceld appointment notification event to S3 bucket|
+|`/save-canceled.js` |Saves canceled appointment notification event to S3 bucket|
 |`/save-confirm.js` |Saves confirm appointment request event to S3 bucket|
 |`/save-confirmed.js` |Saves confirmed appointment notification event to S3 bucket|
 |`/save-modified.js` |Saves modified appointment notification event to S3 bucket|
@@ -243,19 +227,11 @@ AWS Resources used in the application:
 
 ***
 
-The state of an appointment is represented through transition of dispositions based on various events.
-The blue box in the diagram below represents the `disposition`
-that appointments transition through based on events.
-EHR initiated events are highlighted in blue,
-while Twilio (or the patient response to SMS) initiated events are highlighted in red.
+The state of an appointment is represented through transition of dispositions based on various events. The blue box in the diagram below represents the `disposition` that appointments transition through based on events. EHR initiated events are highlighted in blue, while Twilio (or the patient response to SMS) initiated events are highlighted in red.
 
 ![State Transition](assets/state-transition.png)
 
-Ideally, initial appointment event should be `booked`.
-However, appointment events integrated from your EHR will include appointments
-that are already booked in the EHR system.
-Therefore, the application can accept any appointment event as the initial event
-and correctly transition the disposition state.
+Ideally, the initial appointment event should be `booked`. However, appointment events integrated from your EHR will include appointments that are already booked in the EHR system. Therefore, the application can accept any appointment event as the initial event and correctly transition the disposition state.
 
 ## Technical Customization Guide
 
@@ -263,11 +239,13 @@ and correctly transition the disposition state.
 
 ***
 
-This section is intended for technical developers who wish to customize this application to meet your organization's specific requirements. Here you will find an outline of requirements for setting up a development-specific environment for modifying the prototype application, as well as steps for customizing your Twilio Studio Flow, Services, and AWS Resources.
+This section is intended for technical developers who wish to customize this application to meet your organization's specific requirements. Here you will find an outline of requirements for setting up and deploying a development-specific environment for modifying the prototype application, testing the application after deployment, as well as steps for customizing your Twilio Studio Flow, Services, and AWS Resources.
 
-### Setup Development Environment
+### Deploying and Setting up a Development Environment
 
 ***
+
+#### Setup Development Environment
 
 1. **Create new app instance:** in order to create a separate instance of the application for modification and development purposes, you will first need to provision a separate (1) Twilio account; (2) AWS account; and (3) EHR endpoint to avoid resource name clashes
 2. **Twilio CLI:** installing the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
@@ -301,11 +279,9 @@ twilio serverless:start --env=.env.localhost
   - AWS Application
 
 
-### Generate Token for Programmatic Function Execution
+#### Generate Token for Programmatic Function Execution
 
-In order to execution the application functions programmtically via `curl`,
-generate the security token by executing the following function in `nodejs`
-using your Twilio account credentials and variables set in `.env.localhost`
+In order to execute the application functions programmatically via `curl`, generate the security token by executing the following function in `nodejs` using your Twilio account credentials and variables set in `.env.localhost`.
 
 ```kotlin
 function generateToken(account_sid, auth_token, password, salt) {
@@ -320,36 +296,28 @@ function generateToken(account_sid, auth_token, password, salt) {
 }
 ```
 
-Save the returned token to replace `YOUR_TOKEN`
-in `curl` commands below.
+Save the returned token to replace `YOUR_TOKEN` in `curl` commands below.
 
 
 ### Test Post-Deployment
 
 ***
 
-Once the application is fully deployed,
-you can test the application without the EHR integration.
-Only the outbound SMS capability and appointment reminders will be tested
-using a designated phone number.
+Once the application is fully deployed, you can test the application without the EHR integration. Only the outbound SMS capability and appointment reminders will be tested using a designated phone number.
 
 1. Fully deploy the application (i.e., Twilio service, Twilio studio flow & AWS resources)
-
 2. Start the application locally
 
 ```shell
 twilio serverless:start --env=.env.localhost
 ```
-3. Execute the test
-   , replacing `YOUR_TOKEN` and `YOUR_PHONE` with appropriate values
+3. Execute the test, replacing `YOUR_TOKEN` and `YOUR_PHONE` with appropriate values
 
 ```shell
 curl "http://localhost:3000/deployment/test-deployment?token=YOUR_TOKEN=&to_number=YOUR_PHONE"
 ```
 
-4. Monitor the SMS messages on the designed phone
-   as well as the output of serverless for PASS/FAIL messages.
-   *DO NOT REPLY TO ANY SMS MESSAGES* as it will break the testing script.
+4. Monitor the SMS messages on the designed phone as well as the output of serverless for PASS/FAIL messages. *DO NOT REPLY TO ANY SMS MESSAGES* as it will break the testing script.
 
 ### Customizing Twilio Studio Flow
 
@@ -367,7 +335,7 @@ You can customize the Twilio service assets & functions to meet your needs. Plea
 
 You can test your service locally against deployed Studio Flow and AWS resources.
 
-When you are satified with your changes, deploy your functions and assets with either of the following command:
+When you are satisfied with your changes, deploy your functions and assets with either of the following command:
 
 ```shell
 twilio serverless:deploy
@@ -378,7 +346,9 @@ twilio serverless:deploy
 
 ### Customizing AWS Resources
 
-All AWS resources are deployed through `CloudFormation` template. Therefore, while any resource change made through AWS Web Console is possible, the changes will not be permanent. To make your changes permanent, you will need to update the `CloudFormation` template file. To deploy the updated template file, with the project running locally, run the following:
+***
+
+All AWS resources are deployed through the `CloudFormation` template. Therefore, while any resource change made through AWS Web Console is possible, the changes will not be permanent. To make your changes permanent, you will need to update the `CloudFormation` template file. To deploy the updated template file, with the project running locally, run the following:
 
 - *(If bucket template was changed)*
 
@@ -401,8 +371,9 @@ curl "http://localhost:3000/deployment/deploy-aws-code?token=YOUR_TOKEN"
 
 ### Deleting AWS Resources
 
-The deployed AWS resources can be easily removed
-when you no longer want to keep them.
+***
+
+The deployed AWS resources can be easily removed when you no longer want to keep them.
 
 1. *(delete application CloudFormation stack)*
 
@@ -417,7 +388,6 @@ curl "http://localhost:3000/deployment/deploy-aws-bucket?action=DELETE&token=YOU
 ```
 
 
-***
 
-***
+
 
