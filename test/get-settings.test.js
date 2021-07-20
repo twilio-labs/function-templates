@@ -84,12 +84,52 @@ describe("#get-settings", () => {
         expect(response.statusCode).toEqual(200);
     });
 
-    it("returns empty string for each setting rather than undefined", () => {
+    it("returns empty string for each optional setting rather than undefined", () => {
         handler({}, {}, callback);
         let respBody = callback.getCall(0).args[1].body;
 
-        for (item in respBody) {
-            expect(respBody[item]).toEqual("");
-        }
+        expect(respBody['logoUrl']).toEqual("")
+        expect(respBody['buttonCta']).toEqual("")
+        expect(respBody['backgroundColor']).toEqual("")
+        expect(respBody['fontColor']).toEqual("")
+        expect(respBody['customCss']).toEqual("")
+        expect(respBody['domainName']).toEqual("")
+        expect(respBody['dataSource']).toEqual("")
+        expect(respBody['webhookUrl']).toEqual("")
+        expect(respBody['segmentWriteKey']).toEqual("")
+        expect(respBody['airtableApiKey']).toEqual("")
+        expect(respBody['airtableBaseId']).toEqual("")
+        expect(respBody['airtableTableName']).toEqual("")
+        expect(respBody['airtablePhoneColumnName']).toEqual("")
+        expect(respBody['airtableOptInColumnName']).toEqual("")
+    });
+
+    describe('#set-compliance-warning', () => {
+        it("returns predefined text for compliance related fields and sets warning label", () => {
+            handler({}, {}, callback);
+            let respBody = callback.getCall(0).args[1].body;
+            
+            expect(respBody['complianceWarning']).toEqual(['campaignTitle', 'campaignDescription', 'messageFrequency', 'contactInformation', 'privacyPolicyLink']);
+            expect(respBody['campaignTitle']).toEqual("Campaign Title Placeholder");
+            expect(respBody['campaignDescription']).toEqual("This is a placeholder for a brief description of your campaign.");
+            expect(respBody['messageFrequency']).toEqual("Message frequency placeholder");
+            expect(respBody['contactInformation']).toEqual("Contact information placeholder");
+            expect(respBody['privacyPolicyLink']).toEqual("Placeholder privacy policy link");
+        });
+
+        it("does not return a complianceWarning key if all compliance fields are set", () => {
+            let context = {
+                CAMPAIGN_TITLE: 'whocares',
+                CAMPAIGN_DESCRIPTION: 'whocares',
+                MESSAGE_FREQUENCY: 'whocares',
+                CONTACT_INFORMATION: 'whocares',
+                PRIVACY_POLICY_LINK: 'whocares',
+            }
+
+            handler(context, {}, callback);
+            let respBody = callback.getCall(0).args[1].body;
+
+            expect(respBody['complianceWarning']).toEqual(undefined);
+        });
     });
 });
