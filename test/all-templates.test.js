@@ -15,6 +15,8 @@ const skipList = ['conversations', 'vaccine-standby'];
 const excludedPaths =
   ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
 const projectRoot = path.resolve(__dirname, '..');
+const templatesJson = path.join(projectRoot, 'templates.json');
+
 /*
  * Assemble a list of template directories here, since templates.json
  * may not have all of them:
@@ -29,6 +31,13 @@ const templates = fs
       !excludedPaths.includes(file.name)
   )
   .map((dir) => dir.name);
+
+fs.readFileSync(templatesJson);
+const templatesJsonData = JSON.parse(fs.readFileSync(templatesJson));
+const templatesMap = {};
+for (const entry of templatesJsonData.templates) {
+  templatesMap[entry.id] = entry;
+}
 
 describe('CI template verification', () => {
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -196,6 +205,25 @@ describe('CI template verification', () => {
           expect(data.constructor).toBe(Object);
           done();
         });
+      });
+    });
+
+    describe('its templates.json entry', () => {
+      it('should exist and have all required fields', () => {
+        if (!templatesMap[template]) {
+          throw new Error(`${template} does not have a templates.json entry`);
+        }
+        const entry = templatesMap[template];
+
+        if (!entry.name) {
+          throw new Error(
+            `${template} does not have a "name" field in templates.json`
+          );
+        } else if (!entry.description) {
+          throw new Error(
+            `${template} does not have a "description" field in templates.json`
+          );
+        }
       });
     });
   });
