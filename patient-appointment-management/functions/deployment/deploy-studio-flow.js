@@ -32,10 +32,6 @@ exports.handler = async function (context, event, callback) {
 
     // ---------- parameters
     const CUSTOMER_NAME = await getParam(context, 'CUSTOMER_NAME');
-    const CUSTOMER_EHR_ENDPOINT_URL = await getParam(
-      context,
-      'CUSTOMER_EHR_ENDPOINT_URL'
-    );
     const APPLICATION_NAME = await getParam(context, 'APPLICATION_NAME');
     const TWILIO_PHONE_NUMBER = await getParam(context, 'TWILIO_PHONE_NUMBER');
     const TWILIO_SERVICE_SID = await getParam(context, 'TWILIO_SERVICE_SID');
@@ -54,11 +50,6 @@ exports.handler = async function (context, event, callback) {
       THIS,
       'Replacing YOUR_HEALTH_SYSTEM_NAME      ->',
       CUSTOMER_NAME
-    );
-    console.log(
-      THIS,
-      'Replacing YOUR_EHR_ENDPOINT_URL        ->',
-      CUSTOMER_EHR_ENDPOINT_URL
     );
     console.log(
       THIS,
@@ -81,7 +72,6 @@ exports.handler = async function (context, event, callback) {
       .readFileSync(flow_definition_file)
       .toString('utf-8')
       .replace('YOUR_HEALTH_SYSTEM_NAME', CUSTOMER_NAME)
-      .replace('YOUR_EHR_ENDPOINT_URL', CUSTOMER_EHR_ENDPOINT_URL)
       .replace(/YOUR_TWILIO_SERVICE_SID/g, TWILIO_SERVICE_SID)
       .replace(/YOUR_TWILIO_ENVIRONMENT_SID/g, TWILIO_ENVIRONMENT_SID)
       .replace(

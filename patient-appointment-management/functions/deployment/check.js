@@ -32,14 +32,6 @@ async function checkParameters(context) {
   const format = /[A-Z !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
   if (format.test(v)) errors.push({ CUSTOMER_CODE: `${v} is invalid` });
 
-  v = context.CUSTOMER_EHR_ENDPOINT_URL;
-  if (!v) errors.push({ CUSTOMER_EHR_ENDPOINT_URL: 'cannot be empty' });
-  try {
-    const url = new URL(v);
-  } catch (err) {
-    errors.push({ CUSTOMER_EHR_ENDPOINT_URL: `${v} is invalid url` });
-  }
-
   v = context.REMINDER_OUTREACH_START;
   if (!v) errors.push({ REMINDER_OUTREACH_START: 'cannot be empty' });
   if (!/^\d+$/.test(v))
@@ -125,10 +117,6 @@ async function listParameters(context) {
     AWS_CF_STACK_BUCKET: await getParam(context, 'AWS_CF_STACK_BUCKET'),
     CUSTOMER_CODE: await getParam(context, 'CUSTOMER_CODE'),
     CUSTOMER_NAME: await getParam(context, 'CUSTOMER_NAME'),
-    CUSTOMER_EHR_ENDPOINT_URL: await getParam(
-      context,
-      'CUSTOMER_EHR_ENDPOINT_URL'
-    ),
     DEPLOYER_AWS_ACCESS_KEY_ID: await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
