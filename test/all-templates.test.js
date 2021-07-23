@@ -12,6 +12,12 @@ const { parser } = require('configure-env');
  * for now, but will in the long term
  */
 const skipList = ['conversations', 'vaccine-standby'];
+const incompleteTests = [
+  'covid-vaccine-faq-bot',
+  'patient-appointment-management',
+  'sip-quickstart',
+  'voicemail',
+];
 const excludedPaths =
   ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
 const projectRoot = path.resolve(__dirname, '..');
@@ -224,6 +230,49 @@ describe('CI template verification', () => {
             `${template} does not have a "description" field in templates.json`
           );
         }
+      });
+    });
+
+    describe('its unit tests', () => {
+      it('should have one per Function', (done) => {
+        const functionsDir = path.join(projectRoot, template, 'functions');
+        const testsDir = path.join(projectRoot, template, 'tests');
+        const missingTests = [];
+
+        if (incompleteTests.includes(template)) {
+          done();
+          return;
+        }
+
+        fs.readdir(functionsDir, (err, functions) => {
+          expect(err).toBeFalsy();
+          fs.readdir(testsDir, (err, tests) => {
+            expect(err).toBeFalsy();
+            expect(testsDir.length).toBeGreaterThan(0);
+            testsMap = {};
+            for (const t of tests) {
+              const testName = path.basename(t).split('.')[0];
+              testsMap[testName] = true;
+            }
+
+            for (const f of functions) {
+              const functionName = path.basename(f).split('.')[0];
+              if (!testsMap[functionName]) {
+                missingTests.push(functionName);
+              }
+            }
+
+            if (missingTests.length > 0) {
+              throw new Error(
+                `The following Functions lack unit tests: ${missingTests.join(
+                  ', '
+                )}`
+              );
+            }
+
+            done();
+          });
+        });
       });
     });
   });
