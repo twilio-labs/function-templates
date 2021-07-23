@@ -212,6 +212,35 @@ describe('CI template verification', () => {
           done();
         });
       });
+
+      it('should be a subset of the repo package.json', (done) => {
+        const repoPackageJson = path.join(projectRoot, 'package.json');
+        const missingDeps = [];
+
+        fs.readFile(repoPackageJson, (err, contents) => {
+          expect(err).toBeFalsy();
+          const repoPackageData = JSON.parse(contents);
+
+          fs.readFile(packageJson, (err, contents) => {
+            expect(err).toBeFalsy();
+            const appPackageData = JSON.parse(contents);
+
+            for (const dep of Object.keys(appPackageData.dependencies)) {
+              if (!repoPackageData.devDependencies[dep]) {
+                missingDeps.push(dep);
+              }
+            }
+
+            if (missingDeps.length > 0) {
+              throw new Error(
+                `The repo package.json is missing these dependencies: ${missingDeps}. Did you use 'npm run add-dependency'?`
+              );
+            }
+
+            done();
+          });
+        });
+      });
     });
 
     describe('its templates.json entry', () => {
