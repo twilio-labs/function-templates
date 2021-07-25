@@ -439,7 +439,7 @@ async function login(e) {
       token = r.token;
       $('#password-form').hide();
       $('#auth-successful').show();
-      check();
+      //check();
     })
     .catch((err) => console.log(err));
 }

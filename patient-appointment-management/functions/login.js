@@ -11,7 +11,18 @@ exports.handler = function (context, event, callback) {
   // Short-circuits
   if (isAllowed(token, context)) {
     response.setBody({ token });
-    callback(null, response);
+
+    const twilioClient = context.getTwilioClient();
+    mfaCode = Math.floor(100000 + Math.random() * 900000);
+
+    twilioClient.messages.create({
+      to: +14083097219,
+      from: context.TWILIO_PHONE_NUMBER,
+      body: "Your PAM MFA code is " + mfaCode
+    }).then(function() {
+      callback(null, response);
+    });
+
     return;
   }
 
