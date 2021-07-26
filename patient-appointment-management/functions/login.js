@@ -1,25 +1,32 @@
 /* eslint-disable prefer-destructuring, dot-notation */
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
-  const { createToken, isAllowed } = require(path);
+  const { createToken, createPreMfaToken, isAllowed } = require(path);
   const ac = context.ACCOUNT_SID;
 
-  const token = createToken(event.password, context);
+  const loginToken = createToken(event.password, context);
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
   // Short-circuits
-  if (isAllowed(token, context)) {
-    response.setBody({ token });
+  if (isAllowed(loginToken, context)) {
 
     const twilioClient = context.getTwilioClient();
     mfaCode = Math.floor(100000 + Math.random() * 900000);
 
     twilioClient.messages.create({
-      to: +14083097219,
+      to: context.ADMINISTRATOR_PHONE,
       from: context.TWILIO_PHONE_NUMBER,
-      body: "Your PAM MFA code is " + mfaCode
+      body:  mfaCode + " is your code for the PAM application. It is valid for five minutes."
     }).then(function() {
+      response.setBody({
+        token: createPreMfaToken(mfaCode,context)
+      });
+      callback(null, response);
+    }).catch(function(){
+      // if there is any problem in sending SMS
+      response.setStatusCode(500);
+      response.setBody({});
       callback(null, response);
     });
 

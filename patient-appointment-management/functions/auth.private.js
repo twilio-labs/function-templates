@@ -1,5 +1,6 @@
 /* eslint-disable no-negated-condition, no-else-return */
 const crypto = require('crypto');
+var jwt = require('jsonwebtoken');
 
 function createToken(password, context) {
   const tokenString = `${context.ACCOUNT_SID}:${password}:${context.SALT}`;
@@ -8,6 +9,22 @@ function createToken(password, context) {
     .createHmac('sha1', context.AUTH_TOKEN)
     .update(Buffer.from(tokenString, 'utf-8'))
     .digest('base64');
+}
+
+function createPreMfaToken(mfaCode, context){
+
+  mfaEncrypt= crypto
+      .createHmac('sha256', context.AUTH_TOKEN)
+      .update(Buffer.from(`${mfaCode}:${context.SALT}`, 'utf-8'))
+      .digest('base64');
+
+  var jwtToken = jwt.sign(
+      { data: mfaEncrypt },
+      context.AUTH_TOKEN,
+      {expiresIn: 5 * 60, audience: "mfa", issuer: "login", subject: "administrator"});
+  console.log("F");
+
+  return jwtToken;
 }
 
 function isAllowed(token, context) {
@@ -102,6 +119,7 @@ async function setEnvironmentVariable(
 module.exports = {
   createToken,
   isAllowed,
+  createPreMfaToken,
   getCurrentEnvironment,
   getEnvironmentVariables,
   getEnvironmentVariable,
