@@ -40,7 +40,7 @@
           },
           {
             "key": "IE_ENDPOINT",
-            "value": "YOUR_EHR_ENDPOINT_URL"
+            "value": "https://your_ehr_endpoint.com/"
           }
         ],
         "offset": {
