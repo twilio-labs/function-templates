@@ -103,20 +103,25 @@ exports.handler = async function (event, context) {
     const assert = require('assert');
     const AWS = require('aws-sdk');
 
+    // initialize AWS client
+    const s3 = new AWS.S3();
+
+    // SecretsManager client requires region to be specified
+    const SM = new AWS.SecretsManager({ region: process.env.AWS_REGION });
+    const data = await SM.getSecretValue({ SecretId: process.env.TWILIO_SECRET }).promise();
+    const secret = JSON.parse(data.SecretString);
+
     // ---------- environment variables & input event
     const AWS_S3_BUCKET = process.env.AWS_S3_BUCKET;
     const FILENAME_APPOINTMENT = process.env.FILENAME_APPOINTMENT;
-    const ACCOUNT_SID = process.env.ACCOUNT_SID;
-    const AUTH_TOKEN = process.env.AUTH_TOKEN;
+    const ACCOUNT_SID = secret.ACCOUNT_SID;
+    const AUTH_TOKEN = secret.AUTH_TOKEN;
     const TWILIO_FLOW_SID = process.env.TWILIO_FLOW_SID;
     const TWILIO_PHONE_NUMBER = process.env.TWILIO_PHONE_NUMBER;
     const REMINDER_OUTREACH_START = process.env.REMINDER_OUTREACH_START;
     const REMINDER_OUTREACH_FINISH = process.env.REMINDER_OUTREACH_FINISH;
     const REMINDER_FIRST_TIMING = process.env.REMINDER_FIRST_TIMING;
     const REMINDER_SECOND_TIMING = process.env.REMINDER_SECOND_TIMING;
-
-    // initialize s3 client
-    const s3 = new AWS.S3();
 
     // ---------- set reminder time criteria
     const reminder_outreach_finish_tod = REMINDER_OUTREACH_FINISH;
@@ -328,9 +333,7 @@ exports.handler = async function (event, context) {
     };
   } catch (err) {
     console.log(err);
-    if (err.code === 'ERR_ASSERTION')
-      return callback({ error: 'ERR_ASSERTION', message: err.message });
-    return callback(err);
+    return { statusCode: 400, message: err.message };
   } finally {
     console.timeEnd(THIS);
   }

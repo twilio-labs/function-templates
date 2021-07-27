@@ -43,6 +43,7 @@ exports.handler = async function (context, event, callback) {
       'DEPLOYER_AWS_SECRET_ACCESS_KEY'
     );
     const AWS_REGION = await getParam(context, 'AWS_REGION');
+    const AWS_TWILIO_SECRET = await getParam(context, 'AWS_TWILIO_SECRET');
     const TWILIO_ACCOUNT_SID = await getParam(context, 'TWILIO_ACCOUNT_SID');
     const TWILIO_AUTH_TOKEN = await getParam(context, 'TWILIO_AUTH_TOKEN');
     const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
@@ -161,6 +162,10 @@ exports.handler = async function (context, event, callback) {
               },
               { ParameterKey: 'ParameterS3Bucket', UsePreviousValue: true },
               {
+                ParameterKey: 'ParameterTwilioSecret',
+                UsePreviousValue: true,
+              },
+              {
                 ParameterKey: 'ParameterTwilioAccountSID',
                 UsePreviousValue: true,
               },
@@ -263,6 +268,10 @@ exports.handler = async function (context, event, callback) {
               {
                 ParameterKey: 'ParameterS3Bucket',
                 ParameterValue: AWS_S3_BUCKET,
+              },
+              {
+                ParameterKey: 'ParameterTwilioSecret',
+                ParameterValue: AWS_TWILIO_SECRET,
               },
               {
                 ParameterKey: 'ParameterTwilioAccountSID',
