@@ -211,6 +211,11 @@
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
     },
     {
+      "id": "verify-retry",
+      "name": "Verification with Retry Logic",
+      "description": "Best practices UI for resending SMS verification codes and voice channel fallback."
+    },
+    {
       "id": "verify-push-backend",
       "name": "Verify Push Backend",
       "description": "Issue access tokens and create push challenges from this helpful app and dashboard."

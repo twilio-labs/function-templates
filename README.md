@@ -37,6 +37,7 @@ This is the list of Functions available in this repo:
 - [Verify](verify) - Functions to send and check one-time passwords via SMS or Voice for phone verification
 - [Email Verification Magic Links](magic-links) - Send one-click email verification using Verify and SendGrid
 - [Verify Testing Dashboard](verify-dashboard) - Helpful dashboard for testing and debugging during your development with Twilio Verify.
+- [SMS verification retry best practices](verify-retry) - Best practices UI for resending SMS verification codes and voice channel fallback.
 
 ## Github Pages
 
