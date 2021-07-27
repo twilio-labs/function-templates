@@ -14,6 +14,9 @@ Parameters:
   ParameterS3Bucket:
     Type: String
 
+  ParameterTwilioSecret:
+    Type: String
+
   ParameterTwilioAccountSID:
     Type: String
 
@@ -102,6 +105,14 @@ Outputs:
 Resources:
 
 
+  SecretTwilio:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Delete
+    Properties:
+      Description: 'Twilio credentials ACCOUNT_SID & AUTH_TOKEN'
+      Name: !Ref ParameterTwilioSecret
+      SecretString: !Sub '{"ACCOUNT_SID": "${ParameterTwilioAccountSID}", "AUTH_TOKEN": "${ParameterTwilioAuthToken}"}'
+
   UserForExecution:
     Type: AWS::IAM::User
     DeletionPolicy: Delete
@@ -136,6 +147,23 @@ Resources:
                 - lambda.amazonaws.com
                 - glue.amazonaws.com
                 - states.amazonaws.com
+      Policies:
+        - PolicyName: 'SecretsManagerPermissions' # SecretsManager permissions MUST be defined inline
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:DescribeSecret
+                  - secretsmanager:GetSecretValue
+                  - secretsmanager:GetResourcePolicy
+                  - secretsmanager:ListSecretVersionIds
+                Resource:
+                  - !Ref SecretTwilio
+              - Effect: Allow
+                Action:
+                  - secretsmanager:ListSecrets
+                Resource: '*'
 
   PolicyForStack:
     Type: AWS::IAM::ManagedPolicy
@@ -209,8 +237,7 @@ Resources:
       FunctionName: !Ref ParameterLambdaSendReminders
       Environment:
         Variables:
-          ACCOUNT_SID: !Ref ParameterTwilioAccountSID
-          AUTH_TOKEN: !Ref ParameterTwilioAuthToken
+          TWILIO_SECRET: !Ref ParameterTwilioSecret
           TWILIO_FLOW_SID: !Ref ParameterTwilioFlowSID
           TWILIO_PHONE_NUMBER: !Ref ParameterTwilioPhoneNumber
           AWS_S3_BUCKET: !Ref ParameterS3Bucket

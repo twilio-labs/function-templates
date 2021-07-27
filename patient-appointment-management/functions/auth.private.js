@@ -11,6 +11,10 @@ function createToken(password, context) {
 }
 
 function isAllowed(token, context) {
+  // localhost is always allowed, for supporting development
+  if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')) {
+    return true;
+  }
   // Create the token with the environment password
   const masterToken = createToken(context.APPLICATION_PASSWORD, context);
   return masterToken === token;

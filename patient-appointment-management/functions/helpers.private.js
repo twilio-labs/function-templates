@@ -216,6 +216,10 @@ async function getParam(context, key) {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
       return `${CONSTANTS._S3_BUCKET_BASE}-${CUSTOMER_CODE}`;
     }
+    case 'AWS_TWILIO_SECRET': {
+      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
+      return `twilio-${CONSTANTS.APPLICATION_NAME}-${CUSTOMER_CODE}/credentials`;
+    }
     case 'TWILIO_ACCOUNT_SID': {
       return getParam(context, 'ACCOUNT_SID');
     }
