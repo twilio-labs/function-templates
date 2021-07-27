@@ -26,7 +26,6 @@ const mockClient = {
 
 const testContext = {
   VERIFY_SERVICE_SID: 'default',
-  BROADCAST_ADMIN_NUMBER: '+12223334444',
   getTwilioClient: () => mockClient,
 };
 
@@ -145,8 +144,7 @@ describe('verify-retry/start-verify', () => {
     };
 
     const callback = (err, result) => {
-      expect(err).toBeDefined();
-      expect(result).toBeDefined();
+      expect(err).toBeNull();
       expect(result._body.success).toEqual(false);
       expect(result._body.message).toEqual(`Invalid phone number: '123'`);
       done();
