@@ -15,9 +15,28 @@
  *    "message": string
  *  }
  */
+const assets = Runtime.getAssets();
+const { detectMissingParams, VerificationException } = require(assets[
+  '/utils.js'
+].path);
 
-// eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+async function checkVerification(client, service, to, code) {
+  const check = await client.verify
+    .services(service)
+    .verificationChecks.create({
+      to,
+      code,
+    });
+
+  if (check.status === 'approved') {
+    return 'Verification success.';
+    // eslint-disable-next-line no-else-return
+  } else {
+    throw new VerificationException(401, 'Incorrect token.');
+  }
+}
+
+exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -28,48 +47,34 @@ exports.handler = function (context, event, callback) {
    * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
    */
 
-  if (typeof event.to === 'undefined' || typeof event.code === 'undefined') {
+  try {
+    const missingParams = detectMissingParams(['to', 'code'], event);
+    if (missingParams.length > 0) {
+      throw new VerificationException(
+        400,
+        `Missing parameter; please provide: '${missingParams.join(', ')}'.`
+      );
+    }
+
+    const client = context.getTwilioClient();
+    const service = context.VERIFY_SERVICE_SID;
+    const { to, code } = event;
+
+    const message = await checkVerification(client, service, to, code);
+
+    response.setStatusCode(200);
+    response.setBody({
+      success: true,
+      message,
+    });
+    return callback(null, response);
+  } catch (error) {
+    console.error(error);
+    response.setStatusCode(error.status);
     response.setBody({
       success: false,
-      message: 'Missing parameter.',
+      message: error.message,
     });
-    response.setStatusCode(400);
     return callback(null, response);
   }
-
-  const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
-  const { to, code } = event;
-
-  client.verify
-    .services(service)
-    .verificationChecks.create({
-      to,
-      code,
-    })
-    .then((check) => {
-      if (check.status === 'approved') {
-        response.setStatusCode(200);
-        response.setBody({
-          success: true,
-          message: 'Verification success.',
-        });
-        return callback(null, response);
-      }
-      response.setStatusCode(401);
-      response.setBody({
-        success: false,
-        message: 'Incorrect token.',
-      });
-      return callback(null, response);
-    })
-    .catch((error) => {
-      console.log(error);
-      response.setStatusCode(error.status);
-      response.setBody({
-        success: false,
-        message: error.message,
-      });
-      return callback(null, response);
-    });
 };

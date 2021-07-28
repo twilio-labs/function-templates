@@ -1,5 +1,5 @@
-const startVerifyFunction = require('../functions/start-verify').handler;
 const helpers = require('../../test/test-helper');
+const { VerificationException } = require('../assets/utils.private');
 
 const mockService = {
   verifications: {
@@ -31,7 +31,17 @@ const testContext = {
 
 describe('verify-retry/start-verify', () => {
   beforeAll(() => {
-    helpers.setup({});
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset('/utils.js', '../assets/utils.private.js');
+    helpers.setup(testContext, runtime);
+    jest.mock('../assets/utils.private.js', () => {
+      const utils = jest.requireActual('../assets/utils.private.js');
+      return {
+        detectMissingParams: utils.detectMissingParams,
+        VerificationException: utils.VerificationException,
+      };
+    });
+    startVerifyFunction = require('../functions/start-verify').handler;
   });
   afterAll(() => {
     helpers.teardown();
@@ -42,7 +52,7 @@ describe('verify-retry/start-verify', () => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
       expect(result._body.message).toEqual(
-        'Missing parameter; please provide a phone number.'
+        "Missing parameter; please provide: 'to'."
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
@@ -50,6 +60,20 @@ describe('verify-retry/start-verify', () => {
       done();
     };
     const event = {};
+    startVerifyFunction(testContext, event, callback);
+  });
+
+  test('uses SMS as default if no channel is provided', (done) => {
+    const callback = (err, result) => {
+      expect(err).toBeNull();
+      expect(result).toBeDefined();
+      const expectedContext = { channel: 'sms', to: '+17341234567' };
+      expect(mockService.verifications.create).toHaveBeenCalledWith(
+        expectedContext
+      );
+      done();
+    };
+    const event = { to: '+17341234567' };
     startVerifyFunction(testContext, event, callback);
   });
 
@@ -120,14 +144,14 @@ describe('verify-retry/start-verify', () => {
       );
       done();
     };
-    const event = { to: '+17341234567' };
+    const event = { to: '+17341234567', channel: 'sms' };
     startVerifyFunction(testContext, event, callback);
   });
 
   test('throws an error if the lookup returns an invalid number', (done) => {
     const mockFetchError = {
-      fetch: jest.fn().mockImplementation(() => {
-        throw new Error('error!');
+      fetch: jest.fn().mockImplementation(async () => {
+        throw new VerificationException(404, 'Phone Number Not Found!');
       }),
     };
 

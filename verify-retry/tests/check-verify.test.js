@@ -1,4 +1,3 @@
-const checkVerifyFunction = require('../functions/check-verify').handler;
 const helpers = require('../../test/test-helper');
 
 const mockService = {
@@ -24,7 +23,17 @@ const testContext = {
 
 describe('verify-retry/check-verification', () => {
   beforeAll(() => {
-    helpers.setup({});
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset('/utils.js', '../assets/utils.private.js');
+    helpers.setup(testContext, runtime);
+    jest.mock('../assets/utils.private.js', () => {
+      const utils = jest.requireActual('../assets/utils.private.js');
+      return {
+        detectMissingParams: utils.detectMissingParams,
+        VerificationException: utils.VerificationException,
+      };
+    });
+    checkVerifyFunction = require('../functions/check-verify').handler;
   });
   afterAll(() => {
     helpers.teardown();
@@ -34,6 +43,9 @@ describe('verify-retry/check-verification', () => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
+      expect(result._body.message).toEqual(
+        "Missing parameter; please provide: 'to'."
+      );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
@@ -49,6 +61,9 @@ describe('verify-retry/check-verification', () => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
+      expect(result._body.message).toEqual(
+        "Missing parameter; please provide: 'code'."
+      );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
@@ -64,6 +79,9 @@ describe('verify-retry/check-verification', () => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
+      expect(result._body.message).toEqual(
+        "Missing parameter; please provide: 'to, code'."
+      );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
@@ -96,7 +114,7 @@ describe('verify-retry/check-verification', () => {
     checkVerifyFunction(testContext, event, callback);
   });
 
-  test('returns error with invalid tokent', (done) => {
+  test('returns error with invalid token', (done) => {
     const mockInvalidTokenService = {
       verificationChecks: {
         create: jest.fn(() =>

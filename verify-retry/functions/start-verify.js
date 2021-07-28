@@ -17,8 +17,27 @@
  *  }
  */
 
-// eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+const assets = Runtime.getAssets();
+const { detectMissingParams, VerificationException } = require(assets[
+  '/utils.js'
+].path);
+
+async function getLineType(client, to) {
+  try {
+    const response = await client.lookups.v1
+      .phoneNumbers(to)
+      .fetch({ type: ['carrier'] });
+
+    return response.carrier.type;
+  } catch (error) {
+    throw new VerificationException(
+      error.status,
+      `Invalid phone number: '${to}'`
+    );
+  }
+}
+
+exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -29,70 +48,53 @@ exports.handler = function (context, event, callback) {
    * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
    */
 
-  if (typeof event.to === 'undefined') {
+  try {
+    const missingParams = detectMissingParams(['to'], event);
+    if (missingParams.length > 0) {
+      throw new VerificationException(
+        400,
+        `Missing parameter; please provide: '${missingParams.join(', ')}'.`
+      );
+    }
+
+    const client = context.getTwilioClient();
+    const service = context.VERIFY_SERVICE_SID;
+    const { to } = event;
+
+    const lineType = await getLineType(client, to);
+
+    let channel;
+    let message;
+
+    if (lineType === 'landline') {
+      channel = 'call';
+      message = `Landline detected. Sent ${channel} verification to: ${to}`;
+    } else {
+      channel = typeof event.channel === 'undefined' ? 'sms' : event.channel;
+      message = `Sent ${channel} verification to: ${to}`;
+    }
+
+    const verification = await client.verify
+      .services(service)
+      .verifications.create({
+        to,
+        channel,
+      });
+
+    response.setStatusCode(200);
+    response.setBody({
+      success: true,
+      attempts: verification.sendCodeAttempts.length,
+      message,
+    });
+    return callback(null, response);
+  } catch (error) {
+    console.log(error);
+    response.setStatusCode(error.status);
     response.setBody({
       success: false,
-      message: 'Missing parameter; please provide a phone number.',
+      message: error.message,
     });
-    response.setStatusCode(400);
     return callback(null, response);
   }
-
-  const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
-  const { to } = event;
-
-  const lookupResponse = client.lookups.v1
-    .phoneNumbers(to)
-    .fetch({ type: ['carrier'] })
-    .then((pn) => pn.carrier.type);
-
-  lookupResponse
-    .then((lineType) => {
-      let channel;
-      let message;
-
-      if (lineType === 'landline') {
-        channel = 'call';
-        message = `Landline detected. Sent ${channel} verification to: ${to}`;
-      } else {
-        channel = typeof event.channel === 'undefined' ? 'sms' : event.channel;
-        message = `Sent ${channel} verification to: ${to}`;
-      }
-
-      client.verify
-        .services(service)
-        .verifications.create({
-          to,
-          channel,
-        })
-        .then((verification) => {
-          console.log(`Sent verification ${verification.sid}`);
-          response.setStatusCode(200);
-          response.setBody({
-            success: true,
-            attempts: verification.sendCodeAttempts.length,
-            message,
-          });
-          return callback(null, response);
-        })
-        .catch((error) => {
-          console.log(error);
-          response.setStatusCode(error.status);
-          response.setBody({
-            success: false,
-            message: error.message,
-          });
-          return callback(null, response);
-        });
-    })
-    .catch((error) => {
-      console.log(error);
-      response.setStatusCode(error.status);
-      response.setBody({
-        success: false,
-        message: `Invalid phone number: '${to}'`,
-      });
-      return callback(null, response);
-    });
 };
