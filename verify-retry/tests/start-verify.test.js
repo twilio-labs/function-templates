@@ -150,7 +150,7 @@ describe('verify-retry/start-verify', () => {
 
   test('throws an error if the lookup returns an invalid number', (done) => {
     const mockFetchError = {
-      fetch: jest.fn().mockImplementation(async () => {
+      fetch: jest.fn().mockImplementation(() => {
         throw new VerificationException(404, 'Phone Number Not Found!');
       }),
     };

@@ -69,7 +69,6 @@ exports.handler = async function (context, event, callback) {
     });
     return callback(null, response);
   } catch (error) {
-    console.error(error);
     response.setStatusCode(error.status);
     response.setBody({
       success: false,

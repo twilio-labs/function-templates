@@ -63,15 +63,12 @@ exports.handler = async function (context, event, callback) {
 
     const lineType = await getLineType(client, to);
 
-    let channel;
-    let message;
+    let channel = typeof event.channel === 'undefined' ? 'sms' : event.channel;
+    let message = `Sent ${channel} verification to: ${to}`;
 
     if (lineType === 'landline') {
       channel = 'call';
       message = `Landline detected. Sent ${channel} verification to: ${to}`;
-    } else {
-      channel = typeof event.channel === 'undefined' ? 'sms' : event.channel;
-      message = `Sent ${channel} verification to: ${to}`;
     }
 
     const verification = await client.verify
@@ -89,7 +86,6 @@ exports.handler = async function (context, event, callback) {
     });
     return callback(null, response);
   } catch (error) {
-    console.log(error);
     response.setStatusCode(error.status);
     response.setBody({
       success: false,
