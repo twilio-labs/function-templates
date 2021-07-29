@@ -189,6 +189,7 @@ function checkAWSApplication() {
       } else if (status === 'DEPLOYING') {
         $('#aws-application-deploying').show();
         $('#aws-application-deploy').hide();
+        setTimeout(checkAWSApplication,5000);
       } else if (status === 'DEPLOYED') {
         $('#aws-application-deployed').show();
         $('#aws-application-deploying').hide();
@@ -267,6 +268,7 @@ function checkAWSBucket(resource) {
       } else if (status === 'DEPLOYING') {
         $('#aws-bucket-deploying').show();
         $('#aws-bucket-deploy').hide();
+        setTimeout(checkAWSBucket,5000);
       } else if (status === 'FAILED') {
         throw new Error();
       } else {
@@ -485,3 +487,4 @@ async function mfa(e) {
 $('#password-form').show();
 $('#auth-successful').hide();
 $('#mfa-form').hide();
+$('#password-input').focus();

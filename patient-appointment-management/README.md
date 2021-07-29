@@ -108,7 +108,6 @@ The following environment variables are required for proper deployment of this a
 | :------- | :---------- | :------- |
 |`CUSTOMER_NAME` |The organization name which can be configured to appear in the SMS to the patient|Yes|
 |`CUSTOMER_CODE` |The organization short name, which will be suffixed to AWS resources|Yes|
-|`CUSTOMER_EHR_ENDPOINT_URL` |The organization's inbound EHR endpoint for communication from Twilio via HTTP POST (please refer to the [EHR Integration Guide](https://twilio-cms-prod.s3.amazonaws.com/documents/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf) for more details.|Yes|
 |`REMINDER_OUTREACH_START` |The start time of the outreach window in which SMS can be sent to patients for appointment reminders (the outreach window can be used, for example, to ensure SMS are not sent to patients at unreasonable times of day): *configure as HHMM; this variable is inclusive; default is 0000 (i.e. midnight); the app will honor the patient’s local timezone*|Yes|
 |`REMINDER_OUTREACH_FINISH` |The end time of the outreach window in which SMS can be sent to patients for appointment reminders: *configure as HHMM; this variable is exclusive; the app will honor the patient’s local timezone*|Yes|
 |`REMINDER_FIRST_TIMING` |The hours/minutes prior to appointment time in which the first reminder should be sent to the patient: *configure as HHMM; default is 4800*|Yes|
