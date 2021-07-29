@@ -42,6 +42,7 @@
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
+    "superagent": "^6.1.0",
     "twilio": "^3.64.0",
     "uuid": "^8.3.2"
   },

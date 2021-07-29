@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "superagent": "^6.1.0",
+    "twilio": "^3.56"
+  }
+}
