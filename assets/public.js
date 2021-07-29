@@ -194,9 +194,22 @@ function displaySettings(data) {
   }
 }
 
+function setComplianceWarning(data) {
+  if(data.hasOwnProperty('complianceWarning')) {
+    data.complianceWarning.map((missingField) => {
+      let formattedField = missingField.split(/(?=[A-Z])/).join(" ");
+      formattedField = formattedField[0].toUpperCase() + formattedField.slice(1);
+      $("#missing-fields").append(`<li>${formattedField}</li>`)
+    })
+
+    $("#compliance-warning").show();
+  }
+}
+
 // Customizes the opt-in form on page load.
 function setHomeConfig(data) {
   displaySettings(data);
+  setComplianceWarning(data);
 
   const el = document.querySelector( '#loading' );
   const main = $("#main");
