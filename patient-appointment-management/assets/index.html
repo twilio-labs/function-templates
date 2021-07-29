@@ -43,6 +43,20 @@
         <button class="button" onclick="login(event)">Authenticate</button>
       </form>
     </div>
+    <div id="mfa-form" style="display: none;">
+      <p>
+        Your password was accepted. For additional security, please enter the code we sent to your phone.
+      </p>
+      <p id="mfa-error" style="color:red;"></p>
+      <form>
+        <div>
+          <label for="mfacode">
+            <input id="mfa-input" type="text" name="mfacode">
+          </label>
+        </div>
+        <button class="button" onclick="mfa(event)">Verify Code</button>
+      </form>
+    </div>
     <p id="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
 
     <section>

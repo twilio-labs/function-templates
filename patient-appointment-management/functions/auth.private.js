@@ -11,8 +11,13 @@ function createToken(password, context) {
     .digest('base64');
 }
 
+function checkPassword(password, context){
+  return password === context.APPLICATION_PASSWORD
+}
+
 function createPreMfaToken(mfaCode, context){
 
+  // encrypt the mfaCode to avoid showing in the browser
   mfaEncrypt= crypto
       .createHmac('sha256', context.AUTH_TOKEN)
       .update(Buffer.from(`${mfaCode}:${context.SALT}`, 'utf-8'))
@@ -23,6 +28,25 @@ function createPreMfaToken(mfaCode, context){
       context.AUTH_TOKEN,
       {expiresIn: 5 * 60, audience: "mfa", issuer: "login", subject: "administrator"});
   console.log("F");
+
+  return jwtToken;
+}
+
+function checkAppToken(token, context){
+  console.log("In check App token");
+  return jwt.verify(token, context.AUTH_TOKEN, {audience: "app"});
+}
+
+
+function createAppMfaToken(context){
+
+  // encrypt the mfaCode to avoid showing in the browser
+  console.log("G")
+  var jwtToken = jwt.sign(
+      { },
+      context.AUTH_TOKEN,
+      {expiresIn: 5 * 60, audience: "app", issuer: "mfa", subject: "administrator"});
+  console.log("H");
 
   return jwtToken;
 }
@@ -118,10 +142,14 @@ async function setEnvironmentVariable(
 
 module.exports = {
   createToken,
+  checkPassword,
   isAllowed,
   createPreMfaToken,
+  createAppMfaToken,
+  checkAppToken,
   getCurrentEnvironment,
   getEnvironmentVariables,
   getEnvironmentVariable,
   setEnvironmentVariable,
+
 };

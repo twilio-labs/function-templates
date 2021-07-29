@@ -11,14 +11,14 @@ const aws = require('aws-sdk');
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
 const path1 = Runtime.getFunctions()['auth'].path;
-const { isAllowed } = require(path1);
+const { checkAppToken } = require(path1);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Starting');
   console.time(THIS);
   try {
     assert(event.token, 'missing event.token');
-    if (!isAllowed(event.token, context)) {
+    if (!checkAppToken(event.token, context)) {
       const response = new Twilio.Response();
       response.setStatusCode(401);
       response.appendHeader('Content-Type', 'application/json');

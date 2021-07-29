@@ -438,12 +438,50 @@ async function login(e) {
     .then((r) => {
       token = r.token;
       $('#password-form').hide();
-      $('#auth-successful').show();
+      $('#mfa-form').show();
       //check();
     })
     .catch((err) => console.log(err));
 }
 
+// -------------------------------------------------------------------------------
+async function mfa(e) {
+  e.preventDefault();
+
+  console.log("From 1");
+  const mfaInput = $('#mfa-input').val();
+  fetch('/mfa', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ mfaCode: mfaInput, token: token }),
+  })
+      .then((response) => {
+        if (!response.ok) {
+          $('#mfa-error').text(
+              response.status === 401
+                  ? 'Incorrect MFA code, please try again.'
+                  : 'There was an error in verifying MFA.'
+          );
+          throw Error(response.statusText);
+        }
+
+        return response;
+      })
+      .then((response) => response.json())
+      .then((r) => {
+        token = r.token;
+
+        $('#mfa-form').hide();
+        $('#auth-successful').show();
+
+        check();
+      })
+      .catch((err) => console.log(err));
+}
 // --------------------------------------------------------------------------------
 $('#password-form').show();
 $('#auth-successful').hide();
+$('#mfa-form').hide();
