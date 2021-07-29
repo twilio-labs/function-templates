@@ -44,7 +44,7 @@ function zipColumns(columnNames, columns) {
   return properties;
 }
 
-exports.handler = async function (context, event, callback) {
+async function handler(context, event, callback) {
   const twiml = new Twilio.twiml.MessagingResponse();
 
   try {
@@ -64,4 +64,10 @@ exports.handler = async function (context, event, callback) {
     twiml.message(`Error: ${error.message}`);
     return callback(null, twiml);
   }
+}
+
+module.exports = {
+  parseBodyToColumns,
+  zipColumns,
+  handler,
 };

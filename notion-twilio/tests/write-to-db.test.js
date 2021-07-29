@@ -1,5 +1,9 @@
 const helpers = require('../../test/test-helper');
-const dbFunction = require('../functions/write-to-db').handler;
+const {
+  parseBodyToColumns,
+  handler,
+  zipColumns,
+} = require('../functions/write-to-db');
 const Twilio = require('twilio');
 
 const textContext = {};
@@ -12,44 +16,116 @@ describe('notion-twilio/write-to-db', () => {
     helpers.teardown();
   });
 
+  test('parses the string with 2 elements', (done) => {
+    const event = { Body: 'hi,hello' };
+    const columns = parseBodyToColumns(event, 3);
+    expect(columns).toEqual(['hi', 'hello']);
+    done();
+  });
+
+  test('parses the string with 3 elements', (done) => {
+    const event = { Body: 'hi,hello,hey' };
+    const columns = parseBodyToColumns(event, 3);
+    expect(columns).toEqual(['hi', 'hello', 'hey']);
+    done();
+  });
+
+  test('truncates the columns whent there are 4 elements', (done) => {
+    const event = { Body: 'hi,hello,hey,ahoy' };
+    const columns = parseBodyToColumns(event, 3);
+    expect(columns).toEqual(['hi', 'hello', 'hey']);
+    done();
+  });
+
+  test('combines the column headers and columns as expected with 3 elements', (done) => {
+    const columnNames = ['Name', 'Where', 'Price'];
+    const columns = ['hi', 'hello', 'hey'];
+    const expected = {
+      Name: [
+        {
+          text: {
+            content: `hi`,
+          },
+        },
+      ],
+      Where: [
+        {
+          text: {
+            content: `hello`,
+          },
+        },
+      ],
+      Price: [
+        {
+          text: {
+            content: `hey`,
+          },
+        },
+      ],
+    };
+
+    const actual = zipColumns(columnNames, columns);
+    expect(actual).toEqual(expected);
+    done();
+  });
+
+  test('combines the column headers and columns as expected with 2 elements', (done) => {
+    const columnNames = ['Name', 'Where', 'Price'];
+    const columns = ['hi', 'hello'];
+    const expected = {
+      Name: [
+        {
+          text: {
+            content: `hi`,
+          },
+        },
+      ],
+      Where: [
+        {
+          text: {
+            content: `hello`,
+          },
+        },
+      ],
+    };
+
+    const actual = zipColumns(columnNames, columns);
+    expect(actual).toEqual(expected);
+    done();
+  });
+
+  test('combines the column headers and columns as expected with 1 element', (done) => {
+    const columnNames = ['Name', 'Where', 'Price'];
+    const columns = ['hi'];
+    const expected = {
+      Name: [
+        {
+          text: {
+            content: `hi`,
+          },
+        },
+      ],
+    };
+
+    const actual = zipColumns(columnNames, columns);
+    expect(actual).toEqual(expected);
+    done();
+  });
+
   test('returns an error if there is no inbound message', (done) => {
     const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
       expect(result.toString()).toMatch(
-        '<?xml version="1.0" encoding="UTF-8"?><Response><Message>Error: No message provided. Please include a message.</Message></Response>'
+        '<Message>Error: No message provided. Please include a message.</Message>'
       );
       done();
     };
 
     const event = {};
-    dbFunction(textContext, event, callback);
+    handler(textContext, event, callback);
   });
 
-  test('returns the right number of columns when 1 is provided', (done) => {
-    const callback = (_err, result) => {
-      expect(result.toString()).toMatch(
-        '<Message>Wrote 1 columns: Name to the Notion page!</Message>'
-      );
-      done();
-    };
-
-    const event = { Body: 'hi' };
-    dbFunction(textContext, event, callback);
-  });
-
-  test('returns the right number of columns when 2 are provided', (done) => {
-    const callback = (_err, result) => {
-      expect(result.toString()).toMatch(
-        '<Message>Wrote 2 columns: Name, Where to the Notion page!</Message>'
-      );
-      done();
-    };
-
-    const event = { Body: 'hi,hello' };
-    dbFunction(textContext, event, callback);
-  });
-
-  test('returns the right number of columns when 3 are provided', (done) => {
+  test('returns the expected message', (done) => {
     const callback = (_err, result) => {
       expect(result.toString()).toMatch(
         '<Message>Wrote 3 columns: Name, Where, Price to the Notion page!</Message>'
@@ -58,7 +134,7 @@ describe('notion-twilio/write-to-db', () => {
     };
 
     const event = { Body: 'hi,hello,hey' };
-    dbFunction(textContext, event, callback);
+    handler(textContext, event, callback);
   });
 
   test('ignores any columns after 3', (done) => {
@@ -70,6 +146,6 @@ describe('notion-twilio/write-to-db', () => {
     };
 
     const event = { Body: 'hi,hello,hey,ahoy,salutations' };
-    dbFunction(textContext, event, callback);
+    handler(textContext, event, callback);
   });
 });
