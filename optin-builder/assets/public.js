@@ -1,3 +1,10 @@
+const descriptionId = '#description';
+const cardContainerId = '#card-container';
+const messageFrequencySpanId = '#messageFrequency';
+const messageFrequencyInputId = '#message-frequency';
+const webhookTabId = '#webhook-tab';
+const ctaButtonId = '#cta-button';
+
 function getMobileOperatingSystem() {
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
@@ -41,7 +48,7 @@ function settingsUpdate(input) {
       break;
 
     case 'campaign-description':
-      $('#description').html(input.value);
+      $(descriptionId).html(input.value);
       break;
 
     case 'background-color':
@@ -49,11 +56,11 @@ function settingsUpdate(input) {
       break;
 
     case 'font-color':
-      $('#card-container').css('color', input.value);
+      $(cardContainerId).css('color', input.value);
       break;
 
     case 'message-frequency':
-      $('#messageFrequency').html(input.value);
+      $(messageFrequencySpanId).html(input.value);
       break;
 
     case 'message-quantity':
@@ -62,8 +69,8 @@ function settingsUpdate(input) {
       const quantityUpdate = `${input.value} message${
         input.value > 1 ? 's' : ''
       } per ${interval}`;
-      $('#message-frequency').val(quantityUpdate);
-      $('#messageFrequency').html(quantityUpdate);
+      $(messageFrequencyInputId).val(quantityUpdate);
+      $(messageFrequencySpanId).html(quantityUpdate);
       break;
 
     case 'message-interval':
@@ -71,8 +78,8 @@ function settingsUpdate(input) {
       const intervalUpdate = `${quantity} message${
         quantity > 1 ? 's' : ''
       } per ${input.value}`;
-      $('#message-frequency').val(intervalUpdate);
-      $('#messageFrequency').html(intervalUpdate);
+      $(messageFrequencyInputId).val(intervalUpdate);
+      $(messageFrequencySpanId).html(intervalUpdate);
       break;
 
     case 'button-cta':
@@ -95,7 +102,7 @@ function settingsUpdate(input) {
 function setOpenDataPanel(dataSource) {
   switch (dataSource) {
     case 'webhook':
-      $('#webhook-tab').tab('show');
+      $(webhookTabId).tab('show');
       break;
 
     case 'segment':
@@ -107,32 +114,33 @@ function setOpenDataPanel(dataSource) {
       break;
 
     default:
-      $('#webhook-tab').tab('show');
+      $(webhookTabId).tab('show');
       break;
   }
 }
 
 function bindMessageFrequencyTabs() {
   $('#frequency-varies-tab').on('click', function (e) {
-    $('#message-frequency').val('Message frequency varies');
-    $('#messageFrequency').html('Message frequency varies');
+    $(messageFrequencyInputId).val('Message frequency varies');
+    $(messageFrequencySpanId).html('Message frequency varies');
   });
 }
 
 function bindDataSourceTabs() {
-  $('#webhook-tab').on('click', function (e) {
+  const dataSourceId = 'data-source';
+  $(webhookTabId).on('click', function (e) {
     const dataSource = e.target.innerText.toLocaleLowerCase();
-    settingsUpdate({ id: 'data-source', value: dataSource });
+    settingsUpdate({ id: dataSourceId, value: dataSource });
   });
 
   $('#segment-tab').on('click', function (e) {
     const dataSource = e.target.innerText.toLocaleLowerCase();
-    settingsUpdate({ id: 'data-source', value: dataSource });
+    settingsUpdate({ id: dataSourceId, value: dataSource });
   });
 
   $('#airtable-tab').on('click', function (e) {
     const dataSource = e.target.innerText.toLocaleLowerCase();
-    settingsUpdate({ id: 'data-source', value: dataSource });
+    settingsUpdate({ id: dataSourceId, value: dataSource });
   });
 }
 
@@ -157,8 +165,8 @@ function displaySettings(data) {
   }
 
   if (window.location.href.indexOf('context=iframe') < 1) {
-    $('#card-container').removeClass('offset-md-4');
-    $('#card-container').toggleClass('offset-md-2');
+    $(cardContainerId).removeClass('offset-md-4');
+    $(cardContainerId).toggleClass('offset-md-2');
     $('#settings').css('display', 'block');
 
     $('#logo-url').val(data.logoUrl);
@@ -170,7 +178,7 @@ function displaySettings(data) {
     $('#font-color').val(data.fontColor);
     $('#custom-css').val(data.customCss);
 
-    $('#message-frequency').val(data.messageFrequency);
+    $(messageFrequencyInputId).val(data.messageFrequency);
     $('#opt-in-keyword').val(data.optInKeyword);
     $('#contact-information').val(data.contactInformation);
     $('#privacy-policy-link').val(data.privacyPolicyLink);
@@ -204,7 +212,7 @@ function setComplianceWarning(data) {
       let formattedField = missingField.split(/(?=[A-Z])/).join(' ');
       formattedField =
         formattedField[0].toUpperCase() + formattedField.slice(1);
-      $('#missing-fields').append(`<li>${formattedField}</li>`);
+      return $('#missing-fields').append(`<li>${formattedField}</li>`);
     });
 
     $('#compliance-warning').show();
@@ -221,15 +229,15 @@ function setHomeConfig(data) {
 
   const deviceType = getMobileOperatingSystem();
   if (deviceType === 'Windows Phone' || deviceType === 'Android') {
-    $('#cta-button').html(
+    $(ctaButtonId).html(
       `<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095?body=${data.optInKeyword}">Join Us</a>`
     );
   } else if (deviceType === 'iOS') {
-    $('#cta-button').html(
+    $(ctaButtonId).html(
       `<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095&body=${data.optInKeyword}">Join Us</a>`
     );
   } else if (deviceType === 'Desktop') {
-    $('#cta-button').html(`
+    $(ctaButtonId).html(`
     <div class="input-group mb-3">
       <input id="phone-number" type="text" class="form-control" placeholder="Your phone number" aria-label="Recipient's username" aria-describedby="button-addon2">
       <button class="btn btn-outline-primary" type="button" id="buttonCta" onClick="sendSMS()"></button>
@@ -239,14 +247,14 @@ function setHomeConfig(data) {
 
   $('#logo').attr('src', data.logoUrl);
   $('#title').html(data.campaignTitle);
-  $('#description').html(data.campaignDescription);
+  $(descriptionId).html(data.campaignDescription);
   $('#buttonCta').html(data.buttonCta);
 
   $('#body').css('background', data.backgroundColor);
-  $('#card-container').css('color', data.fontColor);
+  $(cardContainerId).css('color', data.fontColor);
   appendCustomCss(data.customCss);
   console.log(data.messageFrequency);
-  $('#messageFrequency').html(data.messageFrequency);
+  $(messageFrequencySpanId).html(data.messageFrequency);
   $('#privacyPolicyLink').attr('href', data.privacyPolicyLink);
 
   el.parentNode.removeChild(el);
@@ -255,9 +263,9 @@ function setHomeConfig(data) {
 
 function updateTos(data) {
   $('#title').html(data.campaignTitle);
-  $('#description').html(data.campaignDescription);
+  $(descriptionId).html(data.campaignDescription);
   $('#contact-information').html(data.contactInformation);
-  $('#messageFrequency').html(data.messageFrequency);
+  $(messageFrequencySpanId).html(data.messageFrequency);
   $('#privacy-policy-link').attr('href', data.privacyPolicyLink);
 }
 

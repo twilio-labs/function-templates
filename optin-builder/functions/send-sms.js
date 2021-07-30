@@ -1,4 +1,5 @@
 exports.handler = function (context, event, callback) {
+  // eslint-disable-next-line prefer-const
   let client = context.getTwilioClient();
 
   client.messages

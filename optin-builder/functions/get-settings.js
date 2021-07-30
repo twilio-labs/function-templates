@@ -1,27 +1,18 @@
+/* eslint-disable prefer-const */
+// eslint-disable-next-line sonarjs/cognitive-complexity, complexity
 exports.handler = function (context, event, callback) {
-  let response = new Twilio.Response();
+  // eslint-disable-next-line dot-notation
+  const { path } = Runtime.getAssets().utils;
+  const { redactVariable } = require(path);
+
+  const response = new Twilio.Response();
   response.appendHeader('Access-Control-Allow-Origin', '*');
   response.appendHeader('Access-Control-Allow-Methods', 'GET');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
   response.appendHeader('Content-Type', 'application/json');
 
   let body;
-  let missingComplianceFields = [];
-
-  // This function only returns public settings, private variables are redacted.
-  function redactVariable(envVar) {
-    if (envVar) {
-      let redacted = envVar
-        .split('')
-        .map(() => {
-          return '•';
-        })
-        .join('');
-      return redacted;
-    }
-
-    return;
-  }
+  const missingComplianceFields = [];
 
   function setComplianceWarning(field, defaultSetting) {
     missingComplianceFields.push(field);
@@ -85,7 +76,7 @@ exports.handler = function (context, event, callback) {
   };
 
   if (missingComplianceFields.length > 0) {
-    body['complianceWarning'] = missingComplianceFields;
+    body.complianceWarning = missingComplianceFields;
   }
 
   response.setStatusCode(200);

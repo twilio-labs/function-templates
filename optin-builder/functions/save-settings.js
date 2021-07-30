@@ -1,7 +1,7 @@
 exports.handler = async function (context, event, callback) {
-  const path = Runtime.getFunctions()['utils'].path;
-  let { getCurrentEnvironment, setEnvironmentVariable } = require(path);
-  let response = new Twilio.Response();
+  const { path } = Runtime.getFunctions().utils;
+  const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
+  const response = new Twilio.Response();
 
   try {
     if (
@@ -23,11 +23,11 @@ exports.handler = async function (context, event, callback) {
 
     const environment = await getCurrentEnvironment(context);
 
-    let promises = [];
+    const promises = [];
 
     for (const property in event) {
       if (event[property] !== '' || event[property !== undefined]) {
-        let envVarConvention = property.split('-').join('_').toUpperCase();
+        const envVarConvention = property.split('-').join('_').toUpperCase();
         promises.push(
           setEnvironmentVariable(
             context,
@@ -57,7 +57,8 @@ exports.handler = async function (context, event, callback) {
   } catch (err) {
     response.setStatusCode(307);
     response.appendHeader('Location', `/index.html?error=${err}`);
+
+    // eslint-disable-next-line callback-return
     callback(null, response);
-    return;
   }
 };
