@@ -12,7 +12,7 @@
     "jest": "^27.0.6",
     "rewire": "^5.0.0",
     "sinon": "^11.1.2",
-    "twilio-run": "^2.6.0"
+    "twilio-run": "^2.9.0"
   },
   "engines": {
     "node": "12"
