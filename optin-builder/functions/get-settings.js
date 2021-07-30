@@ -2,7 +2,7 @@
 // eslint-disable-next-line sonarjs/cognitive-complexity, complexity
 exports.handler = function (context, event, callback) {
   // eslint-disable-next-line dot-notation
-  const { path } = Runtime.getAssets().utils;
+  const { path } = Runtime.getFunctions().utils;
   const { redactVariable } = require(path);
 
   const response = new Twilio.Response();

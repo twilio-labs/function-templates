@@ -2,6 +2,16 @@ const sinon = require('sinon');
 const rewire = require('rewire');
 const Twilio = require('twilio');
 
+class Runtime {}
+
+function getFunctions() {
+  return {
+    utils: {
+      path: '../functions/utils.private.js',
+    },
+  };
+}
+
 const {
   Response,
 } = require('../node_modules/twilio-run/dist/runtime/internal/response');
@@ -10,6 +20,8 @@ Twilio.Response = Response;
 
 const getSettings = rewire('../functions/get-settings');
 getSettings.__set__('Twilio', Twilio);
+getSettings.__set__('Runtime', Runtime);
+getSettings.__set__('Runtime.getFunctions', getFunctions);
 
 const { handler } = getSettings;
 
