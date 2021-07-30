@@ -1,17 +1,21 @@
-exports.handler = async function(context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const path = Runtime.getFunctions()['utils'].path;
   let { getCurrentEnvironment, setEnvironmentVariable } = require(path);
   let response = new Twilio.Response();
-  
-  
+
   try {
-    if (!event['admin-phone-number'] ||
-        !event['admin-password'] ||
-        event['admin-phone-number'] !== context.ADMIN_PHONE_NUMBER ||
-        event['admin-password'] !== context.ADMIN_PASSWORD) {
+    if (
+      !event['admin-phone-number'] ||
+      !event['admin-password'] ||
+      event['admin-phone-number'] !== context.ADMIN_PHONE_NUMBER ||
+      event['admin-password'] !== context.ADMIN_PASSWORD
+    ) {
       // eslint-disable-next-line no-undef
-      response.setStatusCode(301)
-      response.appendHeader('Location', `/index.html?error=Unauthorized:%20check%20your%20admin%20phone%20number%20and%20admin%20password%20and%20try%20again.`);
+      response.setStatusCode(301);
+      response.appendHeader(
+        'Location',
+        `/index.html?error=Unauthorized:%20check%20your%20admin%20phone%20number%20and%20admin%20password%20and%20try%20again.`
+      );
 
       callback(null, response);
       return;
@@ -24,27 +28,36 @@ exports.handler = async function(context, event, callback) {
     for (const property in event) {
       if (event[property] !== '' || event[property !== undefined]) {
         let envVarConvention = property.split('-').join('_').toUpperCase();
-        promises.push(setEnvironmentVariable(context, environment, envVarConvention, event[property]));
+        promises.push(
+          setEnvironmentVariable(
+            context,
+            environment,
+            envVarConvention,
+            event[property]
+          )
+        );
       }
     }
-    
-    Promise.all(promises)
-      .then(values => {
-        response.setStatusCode(307);
-        response.appendHeader('Location', `/index.html?success=Sucessfully%20saved%20settings!`);
 
-        callback(null, response)
+    Promise.all(promises)
+      .then((values) => {
+        response.setStatusCode(307);
+        response.appendHeader(
+          'Location',
+          `/index.html?success=Sucessfully%20saved%20settings!`
+        );
+
+        callback(null, response);
       })
-      .catch(err => {
+      .catch((err) => {
         response.setStatusCode(307);
         response.appendHeader('Location', `/index.html?error=${err}`);
         callback(null, response);
       });
-      
   } catch (err) {
-    response.setStatusCode(307)
+    response.setStatusCode(307);
     response.appendHeader('Location', `/index.html?error=${err}`);
     callback(null, response);
     return;
   }
-}
+};

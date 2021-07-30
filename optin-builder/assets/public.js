@@ -1,30 +1,31 @@
 function getMobileOperatingSystem() {
-  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-    if (/windows phone/i.test(userAgent)) {
-        return "Windows Phone";
-    }
+  if (/windows phone/i.test(userAgent)) {
+    return 'Windows Phone';
+  }
 
-    if (/android/i.test(userAgent)) {
-        return "Android";
-    }
+  if (/android/i.test(userAgent)) {
+    return 'Android';
+  }
 
-    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-        return "iOS";
-    }
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return 'iOS';
+  }
 
-    return "Desktop";
+  return 'Desktop';
 }
 
 function appendCustomCss(cssUrl) {
   if (cssUrl !== undefined) {
-    var link = document.createElement( "link" );
+    // eslint-disable-next-line prefer-const
+    let link = document.createElement('link');
     link.href = cssUrl;
-    link.type = "text/css";
-    link.rel = "stylesheet";
-    link.media = "screen,print";
-  
-    document.getElementsByTagName( "head" )[0].appendChild( link );
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.media = 'screen,print';
+
+    document.getElementsByTagName('head')[0].appendChild(link);
   }
 }
 
@@ -38,7 +39,7 @@ function settingsUpdate(input) {
     case 'campaign-title':
       $('#title').html(input.value);
       break;
-    
+
     case 'campaign-description':
       $('#description').html(input.value);
       break;
@@ -46,26 +47,30 @@ function settingsUpdate(input) {
     case 'background-color':
       $('#body').css('background', input.value);
       break;
-    
+
     case 'font-color':
       $('#card-container').css('color', input.value);
       break;
-    
+
     case 'message-frequency':
       $('#messageFrequency').html(input.value);
       break;
 
     case 'message-quantity':
       console.log('quantity changed');
-      let interval = $('#message-interval').val();
-      let quantityUpdate = `${input.value} message${input.value > 1 ? 's' : ''} per ${interval}`;
+      const interval = $('#message-interval').val();
+      const quantityUpdate = `${input.value} message${
+        input.value > 1 ? 's' : ''
+      } per ${interval}`;
       $('#message-frequency').val(quantityUpdate);
       $('#messageFrequency').html(quantityUpdate);
       break;
 
     case 'message-interval':
-      let quantity = $('#message-quantity').val();
-      let intervalUpdate = `${quantity} message${quantity > 1 ? 's' : ''} per ${input.value}`;
+      const quantity = $('#message-quantity').val();
+      const intervalUpdate = `${quantity} message${
+        quantity > 1 ? 's' : ''
+      } per ${input.value}`;
       $('#message-frequency').val(intervalUpdate);
       $('#messageFrequency').html(intervalUpdate);
       break;
@@ -73,15 +78,15 @@ function settingsUpdate(input) {
     case 'button-cta':
       $('#buttonCta').html(input.value);
       break;
-    
+
     case 'privacy-policy-link':
       $('#privacyPolicyLink').attr('href', input.value);
       break;
-    
+
     case 'data-source':
       $('#data-source').val(input.value);
       break;
-  
+
     default:
       break;
   }
@@ -89,54 +94,53 @@ function settingsUpdate(input) {
 
 function setOpenDataPanel(dataSource) {
   switch (dataSource) {
-      case 'webhook':
-        $('#webhook-tab').tab('show');
-        break;
-    
-      case 'segment':
-        $('#segment-tab').tab('show');
-        break;
+    case 'webhook':
+      $('#webhook-tab').tab('show');
+      break;
 
-      case 'airtable':
-        $('#airtable-tab').tab('show');
-        break;
-        
-      default:
-        $('#webhook-tab').tab('show');
-        break;
-    }
+    case 'segment':
+      $('#segment-tab').tab('show');
+      break;
+
+    case 'airtable':
+      $('#airtable-tab').tab('show');
+      break;
+
+    default:
+      $('#webhook-tab').tab('show');
+      break;
+  }
 }
 
 function bindMessageFrequencyTabs() {
   $('#frequency-varies-tab').on('click', function (e) {
     $('#message-frequency').val('Message frequency varies');
-    $('#messageFrequency').html('Message frequency varies')
+    $('#messageFrequency').html('Message frequency varies');
   });
 }
 
 function bindDataSourceTabs() {
   $('#webhook-tab').on('click', function (e) {
-    let dataSource = e.target.innerText.toLocaleLowerCase()
-    settingsUpdate({id: 'data-source', value: dataSource});
+    const dataSource = e.target.innerText.toLocaleLowerCase();
+    settingsUpdate({ id: 'data-source', value: dataSource });
   });
 
   $('#segment-tab').on('click', function (e) {
-    let dataSource = e.target.innerText.toLocaleLowerCase()
-    settingsUpdate({id: 'data-source', value: dataSource});
+    const dataSource = e.target.innerText.toLocaleLowerCase();
+    settingsUpdate({ id: 'data-source', value: dataSource });
   });
 
   $('#airtable-tab').on('click', function (e) {
-    let dataSource = e.target.innerText.toLocaleLowerCase()
-    settingsUpdate({id: 'data-source', value: dataSource});
+    const dataSource = e.target.innerText.toLocaleLowerCase();
+    settingsUpdate({ id: 'data-source', value: dataSource });
   });
 }
 
 function sendSMS() {
-  let inputValue = $('#phone-number').val();
-  fetch(`/send-sms?to=${inputValue}`)
-    .then(data => {
-      $('#sms-confirmation').css('display', 'block');
-    });
+  const inputValue = $('#phone-number').val();
+  fetch(`/send-sms?to=${inputValue}`).then(() => {
+    $('#sms-confirmation').css('display', 'block');
+  });
 }
 
 // Displays settings and prefills setting values from stored settings.
@@ -172,7 +176,7 @@ function displaySettings(data) {
     $('#privacy-policy-link').val(data.privacyPolicyLink);
 
     setOpenDataPanel(data.dataSource);
-    
+
     $('#webhook-url').val(data.webhookUrl);
 
     $('#segment-write-key').attr('placeholder', data.segmentWriteKey);
@@ -183,9 +187,9 @@ function displaySettings(data) {
     $('#airtable-phone-column-name').val(data.airtablePhoneColumnName);
     $('#airtable-opt-in-column-name').val(data.airtableOptInColumnName);
 
-    let iframeTemplate = `<code>
+    const iframeTemplate = `<code>
     &lt;iframe style="border:0" height="500px" width="100%" src="${data.domainName}/index.html?context=iframe"&gt;&lt;/iframe&gt;
-    </code>`
+    </code>`;
 
     $('#iframe-panel').html(iframeTemplate);
 
@@ -195,14 +199,15 @@ function displaySettings(data) {
 }
 
 function setComplianceWarning(data) {
-  if(data.hasOwnProperty('complianceWarning')) {
+  if (data.hasOwnProperty('complianceWarning')) {
     data.complianceWarning.map((missingField) => {
-      let formattedField = missingField.split(/(?=[A-Z])/).join(" ");
-      formattedField = formattedField[0].toUpperCase() + formattedField.slice(1);
-      $("#missing-fields").append(`<li>${formattedField}</li>`)
-    })
+      let formattedField = missingField.split(/(?=[A-Z])/).join(' ');
+      formattedField =
+        formattedField[0].toUpperCase() + formattedField.slice(1);
+      $('#missing-fields').append(`<li>${formattedField}</li>`);
+    });
 
-    $("#compliance-warning").show();
+    $('#compliance-warning').show();
   }
 }
 
@@ -211,26 +216,30 @@ function setHomeConfig(data) {
   displaySettings(data);
   setComplianceWarning(data);
 
-  const el = document.querySelector( '#loading' );
-  const main = $("#main");
-  
-  let deviceType = getMobileOperatingSystem();
+  const el = document.querySelector('#loading');
+  const main = $('#main');
+
+  const deviceType = getMobileOperatingSystem();
   if (deviceType === 'Windows Phone' || deviceType === 'Android') {
-    $('#cta-button').html(`<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095?body=${data.optInKeyword}">Join Us</a>`)
+    $('#cta-button').html(
+      `<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095?body=${data.optInKeyword}">Join Us</a>`
+    );
   } else if (deviceType === 'iOS') {
-    $('#cta-button').html(`<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095&body=${data.optInKeyword}">Join Us</a>`)
+    $('#cta-button').html(
+      `<a id="buttonCta" class="btn btn-primary" href="sms:+14155344095&body=${data.optInKeyword}">Join Us</a>`
+    );
   } else if (deviceType === 'Desktop') {
     $('#cta-button').html(`
     <div class="input-group mb-3">
       <input id="phone-number" type="text" class="form-control" placeholder="Your phone number" aria-label="Recipient's username" aria-describedby="button-addon2">
       <button class="btn btn-outline-primary" type="button" id="buttonCta" onClick="sendSMS()"></button>
     </div>
-    `)
+    `);
   }
 
   $('#logo').attr('src', data.logoUrl);
   $('#title').html(data.campaignTitle);
-  $('#description').html(data.campaignDescription); 
+  $('#description').html(data.campaignDescription);
   $('#buttonCta').html(data.buttonCta);
 
   $('#body').css('background', data.backgroundColor);
@@ -240,23 +249,22 @@ function setHomeConfig(data) {
   $('#messageFrequency').html(data.messageFrequency);
   $('#privacyPolicyLink').attr('href', data.privacyPolicyLink);
 
-
-  el.parentNode.removeChild( el );
+  el.parentNode.removeChild(el);
   main.css('display', 'block');
 }
 
 function updateTos(data) {
   $('#title').html(data.campaignTitle);
   $('#description').html(data.campaignDescription);
-  $('#contact-information').html( data.contactInformation);
+  $('#contact-information').html(data.contactInformation);
   $('#messageFrequency').html(data.messageFrequency);
   $('#privacy-policy-link').attr('href', data.privacyPolicyLink);
 }
 
 function getText() {
   fetch('/get-settings')
-    .then(response => response.json())
-    .then(data => {
+    .then((response) => response.json())
+    .then((data) => {
       if (window.location.href.indexOf('index.html') > 0) {
         setHomeConfig(data);
       } else {

@@ -10,16 +10,18 @@ async function getEnvironmentVariable(context, environment, key) {
   const client = context.getTwilioClient();
   // The list filter method isn't implemented yet.
   const envVars = await getEnvironmentVariables(context, environment);
-  return envVars.find(variable => variable.key === key);
+  return envVars.find((variable) => variable.key === key);
 }
 
 async function getCurrentEnvironment(context) {
   if (!context.DOMAIN_NAME) {
-    throw new Error("DOMAIN_NAME environment variable must be set.")
+    throw new Error('DOMAIN_NAME environment variable must be set.');
   }
 
-  if (context.DOMAIN_NAME.startsWith("localhost")) {
-    throw new Error("Cannot save environment variables on local environment: edit your .env file and restart.");
+  if (context.DOMAIN_NAME.startsWith('localhost')) {
+    throw new Error(
+      'Cannot save environment variables on local environment: edit your .env file and restart.'
+    );
   }
 
   let client = context.getTwilioClient();
@@ -29,7 +31,7 @@ async function getCurrentEnvironment(context) {
       .services(service.sid)
       .environments.list();
     const environment = environments.find(
-      env => env.domainName === context.DOMAIN_NAME
+      (env) => env.domainName === context.DOMAIN_NAME
     );
     if (environment) {
       // Exit the function
@@ -38,7 +40,13 @@ async function getCurrentEnvironment(context) {
   }
 }
 
-async function setEnvironmentVariable(context, environment, key, value, override=true) {
+async function setEnvironmentVariable(
+  context,
+  environment,
+  key,
+  value,
+  override = true
+) {
   try {
     const currentVariable = await getEnvironmentVariable(
       context,
@@ -52,7 +60,9 @@ async function setEnvironmentVariable(context, environment, key, value, override
           await currentVariable.update({ value });
           return true;
         } else {
-          console.log(`Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`);
+          console.log(
+            `Not overriding existing variable '${key}' which is set to '${currentVariable.value}'`
+          );
           return false;
         }
       } else {
@@ -67,9 +77,11 @@ async function setEnvironmentVariable(context, environment, key, value, override
         .environments(environment.sid)
         .variables.create({
           key,
-          value
+          value,
         })
-        .catch(err => { console.log(err)});
+        .catch((err) => {
+          console.log(err);
+        });
     }
   } catch (err) {
     console.log(err);
@@ -79,10 +91,10 @@ async function setEnvironmentVariable(context, environment, key, value, override
 }
 
 function getBaseUrl(context) {
-  if(!context.DOMAIN_NAME) {
-    throw new Error("DOMAIN_NAME environment variable must be set.")
+  if (!context.DOMAIN_NAME) {
+    throw new Error('DOMAIN_NAME environment variable must be set.');
   }
-  if (context.DOMAIN_NAME.startsWith("localhost")) {
+  if (context.DOMAIN_NAME.startsWith('localhost')) {
     return `http://${context.DOMAIN_NAME}`;
   } else {
     return `https://${context.DOMAIN_NAME}`;
@@ -94,5 +106,5 @@ module.exports = {
   getEnvironmentVariable,
   getCurrentEnvironment,
   setEnvironmentVariable,
-  getBaseUrl
-}
+  getBaseUrl,
+};
