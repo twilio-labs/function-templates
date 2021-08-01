@@ -13,6 +13,8 @@
  */
 let phoneNumber;
 let flowSid;
+let userActive = true;
+const TOKEN_REFRESH_INTERVAL = 30 * 60 * 1000;
 
 const baseUrl = new URL(location.href);
 baseUrl.pathname = baseUrl.pathname.replace(/\/index\.html$/, '');
@@ -36,6 +38,7 @@ const timer = (ms) => new Promise((res) => setTimeout(res, ms));
 // --------------------------------------------------------------------------------
 function checkHistory() {
   THIS = 'checkHistory:';
+  userActive = true;
   console.log(THIS, 'running');
   fetch(`/deployment/check-query?table=history`, {
     method: 'POST',
@@ -55,6 +58,7 @@ function checkHistory() {
       } else if (url === 'RUNNING') {
         $('#history-querying').show();
         $('#history-query').hide();
+        setTimeout(checkHistory,5000);
       } else if (url === 'FAILED') {
         throw new Error();
       } else {
@@ -72,6 +76,7 @@ function checkHistory() {
 function downloadHistory(e) {
   THIS = 'downloadHistory:';
   console.log(THIS, 'running');
+  userActive = true;
   e.preventDefault();
   $('#history-download .button').addClass('loading');
   $('.history-downloader.button-loader').show();
@@ -99,6 +104,8 @@ function downloadHistory(e) {
 function checkState() {
   THIS = 'checkState:';
   console.log(THIS, 'running');
+  userActive = true;
+
   fetch(`/deployment/check-query?table=state`, {
     method: 'POST',
     headers: {
@@ -117,6 +124,7 @@ function checkState() {
       } else if (url === 'RUNNING') {
         $('#state-querying').show();
         $('#state-query').hide();
+        setTimeout(checkState,5000);
       } else if (url === 'FAILED') {
         throw new Error();
       } else {
@@ -134,6 +142,8 @@ function checkState() {
 function downloadState(e) {
   THIS = 'downloadState:';
   console.log(THIS, 'running');
+  userActive = true;
+
   e.preventDefault();
   $('#state-download .button').addClass('loading');
   $('.state-downloader.button-loader').show();
@@ -171,6 +181,7 @@ function readyToUse() {
 function checkAWSApplication() {
   THIS = 'checkAWSApplication:';
   console.log(THIS, 'running');
+  userActive = true;
   fetch('/deployment/check-aws-application', {
     method: 'POST',
     headers: {
@@ -212,6 +223,8 @@ function checkAWSApplication() {
 function deployAWSApplication(e) {
   THIS = 'deployAWSApplication:';
   console.log(THIS, 'running');
+  userActive = true;
+
   e.preventDefault();
   $('#aws-application-deploy .button').addClass('loading');
   $('.aws-application-loader.button-loader').show();
@@ -250,6 +263,8 @@ function deployAWSApplication(e) {
 function checkAWSBucket(resource) {
   THIS = 'checkAWSBucket:';
   console.log(THIS, 'running');
+  userActive = true;
+
   fetch('/deployment/check-aws-bucket', {
     method: 'POST',
     headers: {
@@ -291,6 +306,8 @@ function checkAWSBucket(resource) {
 function deployAWSBucket(e) {
   THIS = 'deployAWSBucket:';
   console.log(THIS, 'running');
+  userActive = true;
+
   e.preventDefault();
   $('#aws-bucket-deploy .button').addClass('loading');
   $('.aws-bucket-loader.button-loader').show();
@@ -318,6 +335,8 @@ function deployAWSBucket(e) {
 function checkStudioFlow() {
   THIS = 'checkStudioFlow:';
   console.log(THIS, 'running');
+  userActive = true;
+
   fetch('/deployment/check-studio-flow', {
     method: 'POST',
     headers: {
@@ -326,7 +345,15 @@ function checkStudioFlow() {
     },
     body: JSON.stringify({ token }),
   })
-    .then((response) => response.text())
+      .then((response) => {
+        if (!response.ok)
+        {
+          if (response.status === 401)
+            handleInvalidToken();
+          throw Error(response.statusText);
+        }
+        return response.text()
+      })
     .then((sid) => {
       console.log(THIS, sid);
       $('#flow-deploy .button').removeClass('loading');
@@ -356,6 +383,8 @@ function checkStudioFlow() {
 function deployStudioFlow(e) {
   THIS = 'deployStudioFlow:';
   console.log(THIS, 'running');
+  userActive = true;
+
   e.preventDefault();
   $('#flow-deploy .button').addClass('loading');
   $('.flow-loader.button-loader').show();
@@ -368,6 +397,15 @@ function deployStudioFlow(e) {
     },
     body: JSON.stringify({ token }),
   })
+      .then((response) => {
+        if (!response.ok)
+        {
+          if (response.status === 401)
+            handleInvalidToken();
+          throw Error(response.statusText);
+        }
+        return response.text()
+      })
     .then(() => {
       console.log(THIS, 'success');
       checkStudioFlow();
@@ -383,6 +421,8 @@ function deployStudioFlow(e) {
 function check() {
   THIS = 'check:';
   console.log(THIS, 'running');
+  userActive = true;
+
   fetch('/deployment/check', {
     method: 'POST',
     headers: {
@@ -391,7 +431,12 @@ function check() {
     },
     body: JSON.stringify({ token: token }),
   })
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok)
+        if (response.status === 401)
+          handleInvalidToken();
+      return response.text()
+    })
     .then((text) => {
       errors = JSON.parse(text);
       if (errors.length === 0) {
@@ -414,6 +459,7 @@ function check() {
 // --------------------------------------------------------------------------------
 async function login(e) {
   e.preventDefault();
+  userActive = true;
 
   const passwordInput = $('#password-input').val();
   fetch('/login', {
@@ -440,17 +486,35 @@ async function login(e) {
     .then((r) => {
       token = r.token;
       $('#password-form').hide();
-      $('#mfa-form').show();
-      //check();
+      $('#password-input').val("");
+      var decodedToken = parseJwt(token);
+      if (decodedToken["aud"] === "app"){
+        $('#auth-successful').show();
+        scheduleTokenRefresh();
+        check();
+      } else{
+        $('#mfa-form').show();
+        $('#mfa-input').focus();
+      }
     })
     .catch((err) => console.log(err));
 }
 
+function parseJwt (token) {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+};
+
 // -------------------------------------------------------------------------------
 async function mfa(e) {
   e.preventDefault();
+  userActive = true;
 
-  console.log("From 1");
   const mfaInput = $('#mfa-input').val();
   fetch('/mfa', {
     method: 'POST',
@@ -464,8 +528,8 @@ async function mfa(e) {
         if (!response.ok) {
           $('#mfa-error').text(
               response.status === 401
-                  ? 'Incorrect MFA code, please try again.'
-                  : 'There was an error in verifying MFA.'
+                  ? response.headers.get("Error-Message")
+                  : 'There was an error in verifying your security code.'
           );
           throw Error(response.statusText);
         }
@@ -477,11 +541,47 @@ async function mfa(e) {
         token = r.token;
 
         $('#mfa-form').hide();
+        $('#mfa-input').val("");
         $('#auth-successful').show();
-
+        scheduleTokenRefresh();
         check();
       })
       .catch((err) => console.log(err));
+}
+function scheduleTokenRefresh(){
+  setTimeout( refreshToken, TOKEN_REFRESH_INTERVAL)
+}
+
+
+async function refreshToken() {
+  if (!userActive)
+    return;
+  userActive = false;
+
+  fetch('/refresh-token', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({token: token }),
+  })
+      .then((response) => {
+        return response;
+      })
+      .then((response) => response.json())
+      .then((r) => {
+        scheduleTokenRefresh();
+        token = r.token;
+      })
+      .catch((err) => console.log(err));
+}
+
+function handleInvalidToken(){
+  $('#password-form').show();
+  $('#auth-successful').hide();
+  $('#mfa-form').hide();
+  $('#password-input').focus();
 }
 // --------------------------------------------------------------------------------
 $('#password-form').show();

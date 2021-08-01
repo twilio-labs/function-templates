@@ -45,7 +45,7 @@
     </div>
     <div id="mfa-form" style="display: none;">
       <p>
-        Your password was accepted. For additional security, please enter the code we sent to your phone.
+        Your password was accepted. For additional security, please enter the security code we sent to your phone.
       </p>
       <p id="mfa-error" style="color:red;"></p>
       <form>
@@ -54,7 +54,7 @@
             <input id="mfa-input" type="text" name="mfacode">
           </label>
         </div>
-        <button class="button" onclick="mfa(event)">Verify Code</button>
+        <button class="button" onclick="mfa(event)">Verify Security Code</button>
       </form>
     </div>
     <p id="auth-successful"><span class="checkmark">&#10003;</span> Authenticated successfully</p>
@@ -160,8 +160,8 @@
           <div id="state-downloader button-loader" style="display: none;"></div>
         </div>
         <div id="state-querying" style="display: none;" class="deployer">
-          <h4>Appointment State data is being prepared ...</h4>
-          <p>Please periodically refresh this page until ready to download</p>
+          <h4>Appointment State data is being prepared.</h4>
+          <p><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><div class="ellipses-text">Please wait, this may take up some time.</div></p>
         </div>
         <div id="state-ready" style="display: none;" class="deployer">
           <a id="state-download" class="button button-outline" href="" target="_blank">Download State Data</a>
@@ -173,8 +173,8 @@
           <div id="history-downloader button-loader" style="display: none;"></div>
         </div>
         <div id="history-querying" style="display: none;" class="deployer">
-          <h4>Appointment History data is being prepared ...</h4>
-          <p>Please periodically refresh this page until ready to download</p>
+          <h4>Appointment History data is being prepared.</h4>
+          <p><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div><div class="ellipses-text">Please wait, this may take up some time.</div></p>
         </div>
         <div id="history-ready" style="display: none;" class="deployer">
           <a id="history-download" class="button button-outline" href="" target="_blank">Download History Data</a>

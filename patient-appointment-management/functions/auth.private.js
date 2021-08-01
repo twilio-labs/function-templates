@@ -1,21 +1,22 @@
 /* eslint-disable no-negated-condition, no-else-return */
 const crypto = require('crypto');
 var jwt = require('jsonwebtoken');
+const MFA_TOKEN_DURATION = 5 * 60;
+const APP_TOKEN_DURATION = 30 * 60;
 
-function createToken(password, context) {
-  const tokenString = `${context.ACCOUNT_SID}:${password}:${context.SALT}`;
-
-  return crypto
-    .createHmac('sha1', context.AUTH_TOKEN)
-    .update(Buffer.from(tokenString, 'utf-8'))
-    .digest('base64');
+function isValidPassword(password, context){
+  return checkDisableAuthForLocalhost(context) ||
+      (password === context.APPLICATION_PASSWORD)
 }
 
-function checkPassword(password, context){
-  return password === context.APPLICATION_PASSWORD
+function checkDisableAuthForLocalhost(context){
+  return context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost') && context.DISABLE_AUTH_FOR_LOCALHOST && context.DISABLE_AUTH_FOR_LOCALHOST === "true";
 }
 
-function createPreMfaToken(mfaCode, context){
+function createMfaToken(issuer, mfaCode, context){
+  if (checkDisableAuthForLocalhost(context)) {
+    return createAppToken(issuer, context);
+  }
 
   // encrypt the mfaCode to avoid showing in the browser
   mfaEncrypt= crypto
@@ -26,39 +27,38 @@ function createPreMfaToken(mfaCode, context){
   var jwtToken = jwt.sign(
       { data: mfaEncrypt },
       context.AUTH_TOKEN,
-      {expiresIn: 5 * 60, audience: "mfa", issuer: "login", subject: "administrator"});
-  console.log("F");
+      {expiresIn: MFA_TOKEN_DURATION, audience: "mfa", issuer: issuer, subject: "administrator"});
 
   return jwtToken;
 }
 
-function checkAppToken(token, context){
-  console.log("In check App token");
-  return jwt.verify(token, context.AUTH_TOKEN, {audience: "app"});
+function isValidMfaToken(token, context){
+  try{
+    return checkDisableAuthForLocalhost(context) ||
+        jwt.verify(token, context.AUTH_TOKEN, {audience: "mfa"});
+  }catch(err){
+    return false;
+  }
 }
 
-
-function createAppMfaToken(context){
-
-  // encrypt the mfaCode to avoid showing in the browser
-  console.log("G")
-  var jwtToken = jwt.sign(
+function createAppToken(issuer, context){
+  return jwt.sign(
       { },
       context.AUTH_TOKEN,
-      {expiresIn: 5 * 60, audience: "app", issuer: "mfa", subject: "administrator"});
-  console.log("H");
-
-  return jwtToken;
+      {expiresIn: APP_TOKEN_DURATION, audience: "app", issuer: issuer, subject: "administrator"}
+  );
 }
 
-function isAllowed(token, context) {
-  // localhost is always allowed, for supporting development
-  if (context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost')) {
-    return true;
+function isValidAppToken(token, context){
+  console.log("In check App token");
+  try{
+    return checkDisableAuthForLocalhost(context) ||
+        jwt.verify(token, context.AUTH_TOKEN, {audience: "app"});
+  }catch(err){
+    console.log(err);
+    return false;
   }
-  // Create the token with the environment password
-  const masterToken = createToken(context.APPLICATION_PASSWORD, context);
-  return masterToken === token;
+
 }
 
 async function getCurrentEnvironment(context) {
@@ -145,15 +145,13 @@ async function setEnvironmentVariable(
 }
 
 module.exports = {
-  createToken,
-  checkPassword,
-  isAllowed,
-  createPreMfaToken,
-  createAppMfaToken,
-  checkAppToken,
+  createAppToken,
+  createMfaToken,
+  isValidAppToken,
+  isValidMfaToken,
+  isValidPassword,
   getCurrentEnvironment,
   getEnvironmentVariables,
   getEnvironmentVariable,
   setEnvironmentVariable,
-
 };
