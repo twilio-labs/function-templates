@@ -581,6 +581,18 @@ function handleInvalidToken(){
   $('#password-form').show();
   $('#auth-successful').hide();
   $('#mfa-form').hide();
+  $('#invalid-environment-variable').hide();
+  $('#valid-environment-variable').hide();
+  $('#flow-loader').hide();
+  $('#flow-deploy').hide();
+  $('#flow-deployed').hide();
+  $('#aws-bucket-deploy').hide();
+  $('#aws-bucket-deploying').hide();
+  $('#aws-bucket-deployed').hide();
+  $('#aws-application-deploy').hide();
+  $('#aws-application-deploying').hide();
+  $('#aws-application-deployed').hide();
+
   $('#password-input').focus();
 }
 // --------------------------------------------------------------------------------
