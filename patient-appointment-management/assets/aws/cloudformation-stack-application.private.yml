@@ -14,9 +14,6 @@ Parameters:
   ParameterS3Bucket:
     Type: String
 
-  ParameterTwilioSecret:
-    Type: String
-
   ParameterTwilioAccountSID:
     Type: String
 
@@ -28,24 +25,6 @@ Parameters:
     Type: String
 
   ParameterTwilioPhoneNumber:
-    Type: String
-
-  ParameterLambdaSendReminders:
-    Type: String
-
-  ParameterLambdaQueryState:
-    Type: String
-
-  ParameterSFNQueryState:
-    Type: String
-
-  ParameterLambdaQueryHistory:
-    Type: String
-
-  ParameterSFNQueryHistory:
-    Type: String
-
-  ParameterGlueCrawler:
     Type: String
 
   ParameterGlueDatabase:
@@ -80,26 +59,32 @@ Conditions:
 Outputs:
 
 
-  PatientAppointmentManagementAWSAccessKeyId:
-    Value: !Ref UserAccessKey
+  PatientAppointmentManagementSecretAWSArn:
+    Value: !Ref SecretAWS
 
-  PatientAppointmentManagementAWSSecretAccessKey:
-    Value: !GetAtt UserAccessKey.SecretAccessKey
+  PatientAppointmentManagementSecretTwilioArn:
+    Value: !Ref SecretTwilio
 
-  PatientAppointmentManagementAWSRegion:
-    Value: !Ref AWS::Region
+  PatientAppointmentManagementCrawlerAppointments:
+    Value: !Ref CrawlerAppointments
 
-  PatientAppointmentManagementReminderOutreachStart:
-    Value: !Ref ParameterReminderOutreachStart
+  PatientAppointmentManagementLambdaSendReminders:
+    Value: !Ref LambdaSendReminders
 
-  PatientAppointmentManagementReminderOutreachFinish:
-    Value: !Ref ParameterReminderOutreachFinish
+  PatientAppointmentManagementAthenaWorkGroup:
+    Value: !Ref AthenaWorkGroup
 
-  PatientAppointmentManagementReminderFirstOffset:
-    Value: !Ref ParameterReminderFirstOffset
+  PatientAppointmentManagementLambdaQueryState:
+    Value: !Ref LambdaQueryState
 
-  PatientAppointmentManagementReminderSecondOffset:
-    Value: !Ref ParameterReminderSecondOffset
+  PatientAppointmentManagementLambdaQueryHistory:
+    Value: !Ref LambdaQueryHistory
+
+  PatientAppointmentManagementStepFunctionQueryState:
+    Value: !GetAtt StepFunctionQueryState.Name
+
+  PatientAppointmentManagementStepFunctionQueryHistory:
+    Value: !GetAtt StepFunctionQueryHistory.Name
 
 
 Resources:
@@ -110,14 +95,38 @@ Resources:
     DeletionPolicy: Delete
     Properties:
       Description: 'Twilio credentials ACCOUNT_SID & AUTH_TOKEN'
-      Name: !Ref ParameterTwilioSecret
+      Name: !Sub 'twilio/patient-appointment-management-${ParameterCustomerCode}/twilio'
       SecretString: !Sub '{"ACCOUNT_SID": "${ParameterTwilioAccountSID}", "AUTH_TOKEN": "${ParameterTwilioAuthToken}"}'
+
+  SecretAWS:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Delete
+    Properties:
+      Description: 'Twilio credentials ACCOUNT_SID & AUTH_TOKEN'
+      Name: !Sub 'twilio/patient-appointment-management-${ParameterCustomerCode}/aws'
+      SecretString: !Join
+        - ''
+        - - '{"AWS_ACCESS_KEY_ID": "'
+          - !Ref UserAccessKey
+          - '", "AWS_SECRET_ACCESS_KEY": "'
+          - !GetAtt UserAccessKey.SecretAccessKey
+          - '"}'
 
   UserForExecution:
     Type: AWS::IAM::User
     DeletionPolicy: Delete
     Properties:
       UserName: !Sub 'twilio-${ParameterApplicationName}-user-${ParameterCustomerCode}'
+      Policies:
+        - PolicyName: 'CloudFormationPermissions'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - cloudformation:DescribeStacks
+                Resource:
+                  - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/twilio-${ParameterApplicationName}-*'
 
   UserAccessKey:
     Type: AWS::IAM::AccessKey
@@ -147,23 +156,7 @@ Resources:
                 - lambda.amazonaws.com
                 - glue.amazonaws.com
                 - states.amazonaws.com
-      Policies:
-        - PolicyName: 'SecretsManagerPermissions' # SecretsManager permissions MUST be defined inline
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - secretsmanager:DescribeSecret
-                  - secretsmanager:GetSecretValue
-                  - secretsmanager:GetResourcePolicy
-                  - secretsmanager:ListSecretVersionIds
-                Resource:
-                  - !Ref SecretTwilio
-              - Effect: Allow
-                Action:
-                  - secretsmanager:ListSecrets
-                Resource: '*'
+
 
   PolicyForStack:
     Type: AWS::IAM::ManagedPolicy
@@ -177,6 +170,12 @@ Resources:
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
+          - Sid: 'SecretsManagerPermissions'
+            Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource:
+              - !Ref SecretTwilio
           - Sid: 'S3Permissions'
             Effect: Allow
             Action:
@@ -189,10 +188,36 @@ Resources:
             Action:
               - states:*
             Resource:
-              - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:${ParameterSFNQueryState}'
-              - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:stateMachine:${ParameterSFNQueryHistory}'
-              - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:execution:${ParameterSFNQueryState}:*'
-              - !Sub 'arn:aws:states:${AWS::Region}:${AWS::AccountId}:execution:${ParameterSFNQueryHistory}:*'
+              - !Join
+                - ':'
+                - - 'arn:aws:states'
+                  - !Sub ${AWS::Region}
+                  - !Sub ${AWS::AccountId}
+                  - 'stateMachine'
+                  - !GetAtt StepFunctionQueryState.Name
+              - !Join
+                - ':'
+                - - 'arn:aws:states'
+                  - !Sub ${AWS::Region}
+                  - !Sub ${AWS::AccountId}
+                  - 'stateMachine'
+                  - !GetAtt StepFunctionQueryHistory.Name
+              - !Join
+                - ':'
+                - - 'arn:aws:states'
+                  - !Sub ${AWS::Region}
+                  - !Sub ${AWS::AccountId}
+                  - 'execution'
+                  - !GetAtt StepFunctionQueryState.Name
+                  - '*'
+              - !Join
+                - ':'
+                - - 'arn:aws:states'
+                  - !Sub ${AWS::Region}
+                  - !Sub ${AWS::AccountId}
+                  - 'execution'
+                  - !GetAtt StepFunctionQueryHistory.Name
+                  - '*'
           - Sid: 'EventInvokePermissions'
             Effect: Allow
             Action:
@@ -206,7 +231,7 @@ Resources:
     Type: AWS::Glue::Crawler
     DeletionPolicy: Delete
     Properties:
-      Name: !Ref ParameterGlueCrawler
+      Name: !Sub 'twilio-${ParameterApplicationName}-${ParameterCustomerCode}'
       DatabaseName: !Ref ParameterGlueDatabase
       Role: !GetAtt RoleForExecution.Arn
       SchemaChangePolicy:
@@ -218,7 +243,7 @@ Resources:
           - Path: !Sub 's3://${ParameterS3Bucket}/state'
           - Path: !Sub 's3://${ParameterS3Bucket}/history'
 
-  AthenaWorkGroupAppointments:
+  AthenaWorkGroup:
     Type: AWS::Athena::WorkGroup
     Properties:
       Name: !Sub 'twilio-${ParameterApplicationName}-${ParameterCustomerCode}'
@@ -234,10 +259,10 @@ Resources:
     UpdateReplacePolicy: Delete
     DeletionPolicy: Delete
     Properties:
-      FunctionName: !Ref ParameterLambdaSendReminders
+      FunctionName: !Sub 'twilio-send-appointment-reminders-${ParameterCustomerCode}'
       Environment:
         Variables:
-          TWILIO_SECRET: !Ref ParameterTwilioSecret
+          TWILIO_SECRET_ARN: !Ref SecretTwilio
           TWILIO_FLOW_SID: !Ref ParameterTwilioFlowSID
           TWILIO_PHONE_NUMBER: !Ref ParameterTwilioPhoneNumber
           AWS_S3_BUCKET: !Ref ParameterS3Bucket
@@ -288,11 +313,11 @@ Resources:
     UpdateReplacePolicy: Delete
     DeletionPolicy: Delete
     Properties:
-      FunctionName: !Ref ParameterLambdaQueryState
+      FunctionName: !Sub 'twilio-query-appointment-state-${ParameterCustomerCode}'
       Environment:
         Variables:
           S3_BUCKET: !Ref ParameterS3Bucket
-          GLUE_CRAWLER: !Ref ParameterGlueCrawler
+          GLUE_CRAWLER: !Ref CrawlerAppointments
       MemorySize: 256
       Timeout: 900
       ReservedConcurrentExecutions: 1
@@ -308,11 +333,11 @@ Resources:
     UpdateReplacePolicy: Delete
     DeletionPolicy: Delete
     Properties:
-      FunctionName: !Ref ParameterLambdaQueryHistory
+      FunctionName: !Sub 'twilio-query-appointment-history-${ParameterCustomerCode}'
       Environment:
         Variables:
           S3_BUCKET: !Ref ParameterS3Bucket
-          GLUE_CRAWLER: !Ref ParameterGlueCrawler
+          GLUE_CRAWLER: !Ref CrawlerAppointments
       MemorySize: 256
       Timeout: 900
       ReservedConcurrentExecutions: 1
@@ -328,12 +353,12 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
-      StateMachineName: !Ref ParameterSFNQueryState
+      StateMachineName: 'twilio-query-appointment-state-owlhealth'
       RoleArn: !GetAtt RoleForExecution.Arn
       DefinitionSubstitutions:
         AWSRegion: !Ref AWS::Region
         AWSAccountId: !Ref AWS::AccountId
-        LambdaFunction: !Ref ParameterLambdaQueryState
+        LambdaFunction: !Ref LambdaQueryState
       DefinitionString: |-
         {
           "Comment": "invokes lambda function synchronously",
@@ -353,12 +378,12 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
-      StateMachineName: !Ref ParameterSFNQueryHistory
+      StateMachineName: 'twilio-query-appointment-history-owlhealth'
       RoleArn: !GetAtt RoleForExecution.Arn
       DefinitionSubstitutions:
         AWSRegion: !Ref AWS::Region
         AWSAccountId: !Ref AWS::AccountId
-        LambdaFunction: !Ref ParameterLambdaQueryHistory
+        LambdaFunction: !Ref LambdaQueryHistory
       DefinitionString: |-
         {
           "Comment": "invokes lambda function synchronously",

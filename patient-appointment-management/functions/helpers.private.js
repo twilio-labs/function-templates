@@ -18,9 +18,11 @@
 
 /*
  * --------------------------------------------------------------------------------
- *
+ * sets environment variable
  * --------------------------------------------------------------------------------
  */
+const AWS = require("aws-sdk");
+
 async function setParam(context, key, value) {
   const Twilio = require('twilio');
 
@@ -78,15 +80,13 @@ async function setParam(context, key, value) {
  * --------------------------------------------------------------------------------
  */
 async function getParam(context, key) {
-  const AWS = require('aws-sdk');
-  const Twilio = require('twilio');
-
   const THIS_APPLICATION_NAME = 'patient-appointment-management';
   const CONSTANTS = {
     APPLICATION_NAME: THIS_APPLICATION_NAME,
     FILENAME_APPOINTMENT:
       'appointment{appointment_id}-patient{patient_id}.json',
     _S3_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}`,
+    _CF_STACK_DEPLOYER_BASE: `twilio-${THIS_APPLICATION_NAME}-deployer`,
     _CF_STACK_BUCKET_BASE: `twilio-${THIS_APPLICATION_NAME}-bucket`,
     _CF_STACK_APPLICATION_BASE: `twilio-${THIS_APPLICATION_NAME}-application`,
     _SEND_REMINDERS_BASE: 'twilio-send-appointment-reminders',
@@ -113,60 +113,60 @@ async function getParam(context, key) {
     : process.env.AUTH_TOKEN;
   const client = context.getTwilioClient();
 
-  switch (key) {
-    case 'AWS_ACCESS_KEY_ID': {
-      // ---------- get aws clients
-      const options = {
-        accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
-        secretAccessKey: await getParam(
-          context,
-          'DEPLOYER_AWS_SECRET_ACCESS_KEY'
-        ),
-        region: await getParam(context, 'AWS_REGION'),
-      };
-      const cf = new AWS.CloudFormation(options);
+  const AWS = require('aws-sdk');
+  const options = {
+    accessKeyId: context.DEPLOYER_AWS_ACCESS_KEY_ID,
+    secretAccessKey: context.DEPLOYER_AWS_SECRET_ACCESS_KEY,
+    region: context.AWS_REGION,
+  };
+  const CF = new AWS.CloudFormation(options);
+  // ---------- get CloudFormation Stack Outputs value
+  async function getCFOutputs(stack, key) {
+    try {
+      const response = await CF.describeStacks({ StackName: stack }).promise();
+      const output = response.Stacks[0].Outputs.find(function (o) {
+        // Note that CF Output key MUST match that in the CF template
+        return o.OutputKey === key;
+      });
+      return output === null ? null : output.OutputValue;
+    } catch (AmazonCloudFormationException) {
+      return null; // stack does not exist yet
+    }
+  }
+  // ----------------------------------------------------------------------
 
+  switch (key) {
+    case 'DEPLOYER_AWS_ROLE_ARN': {
+      const stack = await getParam(context, 'AWS_CF_STACK_DEPLOYER');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementDeployerRoleArn');
+    }
+    case 'AWS_ACCESS_KEY_ID': {
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      const secretArn = await getCFOutputs(stack, 'PatientAppointmentManagementSecretAWSArn');
       try {
-        const stack_name = await getParam(context, 'AWS_CF_STACK_APPLICATION');
-        const response = await cf
-          .describeStacks({ StackName: stack_name })
-          .promise();
-        const output = response.Stacks[0].Outputs.find(function (o) {
-          // Note that CF Output key MUST match that in the CF template
-          return o.OutputKey === 'PatientAppointmentManagementAWSAccessKeyId';
-        });
-        return output === null ? null : output.OutputValue;
-      } catch (AmazonCloudFormationException) {
-        return null; // stack does not exist yet
+        const SM = new AWS.SecretsManager({ region: context.AWS_REGION });
+        const data = await SM.getSecretValue({SecretId: secretArn}).promise();
+        const secret = JSON.parse(data.SecretString);
+        return secret.AWS_ACCESS_KEY_ID;
+      } catch (err) {
+        return null;
       }
     }
     case 'AWS_SECRET_ACCESS_KEY': {
-      // ---------- get aws clients
-      const options = {
-        accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
-        secretAccessKey: await getParam(
-          context,
-          'DEPLOYER_AWS_SECRET_ACCESS_KEY'
-        ),
-        region: await getParam(context, 'AWS_REGION'),
-      };
-      const cf = new AWS.CloudFormation(options);
-
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      const secretArn = await getCFOutputs(stack, 'PatientAppointmentManagementSecretAWSArn');
       try {
-        const stack_name = await getParam(context, 'AWS_CF_STACK_APPLICATION');
-        const response = await cf
-          .describeStacks({ StackName: stack_name })
-          .promise();
-        const output = response.Stacks[0].Outputs.find(function (o) {
-          // Note that CF Output key MUST match that in the CF template
-          return (
-            o.OutputKey === 'PatientAppointmentManagementAWSSecretAccessKey'
-          );
-        });
-        return output === null ? null : output.OutputValue;
-      } catch (AmazonCloudFormationException) {
-        return null; // stack does not exist yet
+        const SM = new AWS.SecretsManager({ region: context.AWS_REGION });
+        const data = await SM.getSecretValue({SecretId: secretArn}).promise();
+        const secret = JSON.parse(data.SecretString);
+        return secret.AWS_SECRET_ACCESS_KEY;
+      } catch (err) {
+        return null;
       }
+    }
+    case 'AWS_ATHENA_WORKGROUP': {
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementAthenaWorkGroup');
     }
     case 'AWS_CF_STACK_APPLICATION': {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
@@ -176,49 +176,52 @@ async function getParam(context, key) {
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
       return `${CONSTANTS._CF_STACK_BUCKET_BASE}-${CUSTOMER_CODE}`;
     }
+    case 'AWS_CF_STACK_DEPLOYER': {
+      return `${CONSTANTS._CF_STACK_DEPLOYER_BASE}`;
+    }
     case 'AWS_GLUE_CRAWLER': {
-      return [
-        CONSTANTS._GLUE_CRAWLER_BASE,
-        await getParam(context, 'CUSTOMER_CODE'),
-      ].join('-');
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementCrawlerAppointments');
     }
     case 'AWS_GLUE_DATABASE': {
+      // TODO: change to fetch from crawler data
       return [
         CONSTANTS._GLUE_DATABASE_BASE,
         await getParam(context, 'CUSTOMER_CODE'),
       ].join('_');
     }
     case 'AWS_LAMBDA_SEND_REMINDERS': {
-      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return `${CONSTANTS._SEND_REMINDERS_BASE}-${CUSTOMER_CODE}`;
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementLambdaSendReminders');
     }
     case 'AWS_LAMBDA_QUERY_STATE': {
-      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return `${CONSTANTS._QUERY_STATE_BASE}-${CUSTOMER_CODE}`;
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementLambdaQueryState');
     }
     case 'AWS_LAMBDA_QUERY_HISTORY': {
-      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return `${CONSTANTS._QUERY_HISTORY_BASE}-${CUSTOMER_CODE}`;
-    }
-    case 'AWS_SFN_QUERY_STATE': {
-      return [
-        CONSTANTS._QUERY_STATE_BASE,
-        await getParam(context, 'CUSTOMER_CODE'),
-      ].join('-');
-    }
-    case 'AWS_SFN_QUERY_HISTORY': {
-      return [
-        CONSTANTS._QUERY_HISTORY_BASE,
-        await getParam(context, 'CUSTOMER_CODE'),
-      ].join('-');
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementLambdaQueryHistory');
     }
     case 'AWS_S3_BUCKET': {
+      // TODO: change to fetch from stack
       const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
       return `${CONSTANTS._S3_BUCKET_BASE}-${CUSTOMER_CODE}`;
     }
-    case 'AWS_TWILIO_SECRET': {
-      const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
-      return `twilio-${CONSTANTS.APPLICATION_NAME}-${CUSTOMER_CODE}/credentials`;
+    case 'AWS_SECRET_AWS_ARN': {
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementSecretAWSArn');
+    }
+    case 'AWS_SECRET_TWILIO_ARN': {
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementSecretTwilioArn');
+    }
+    case 'AWS_SFN_QUERY_STATE': {
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementStepFunctionQueryState');
+    }
+    case 'AWS_SFN_QUERY_HISTORY': {
+      const stack = await getParam(context, 'AWS_CF_STACK_APPLICATION');
+      return await getCFOutputs(stack, 'PatientAppointmentManagementStepFunctionQueryHistory');
     }
     case 'TWILIO_ACCOUNT_SID': {
       return getParam(context, 'ACCOUNT_SID');
@@ -234,7 +237,6 @@ async function getParam(context, key) {
       const environments = await client.serverless
         .services(service_sid)
         .environments.list();
-      console.debug(environments[0]);
       return environments[0].sid;
     }
     case 'TWILIO_ENVIRONMENT_DOMAIN_NAME': {
@@ -275,7 +277,6 @@ async function getParam(context, key) {
         })
       );
       if (service_sid !== null) {
-        console.log('Found', service_sid);
         return service_sid;
       }
       console.log(
