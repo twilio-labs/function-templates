@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring, dot-notation */
+/* eslint-disable prefer-destructuring, dot-notation, consistent-return, spaced-comment */
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
   const { createAppToken, isValidAppToken } = require(path);

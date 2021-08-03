@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, object-shorthand, prefer-destructuring */
+/* eslint-disable camelcase, object-shorthand, prefer-destructuring, no-use-before-define, sonarjs/no-collapsible-if, vars-on-top, no-var, dot-notation, prefer-template */
 
 /*
  * main controller javascript used by index.html
