@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Management with EHR Integration Quick Deploy App</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic">
+    <link rel="stylesheet" href="https://unpkg.com/normalize.css/normalize.css">
+    <link rel="stylesheet" href="https://unpkg.com/milligram/dist/milligram.min.css">
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header>
+    <h4>Appointment Management with EHR Integration Application</h4>
+
+    <h4><strong>Event Simulation</strong></h4>
+    <p>
+        Use these event simulation steps to test the application's flow of message events prior to integrating
+        with your EHR. A few primary event types can be simulated here to ensure the application is working
+        appropriately: BOOKED, REMIND, CANCEL/CONFIRM. Although the app also supports additional event types,
+        these events will allow you to test that messages are properly flowing between all the primary architecture
+        components - Twilio, AWS, inbound/oubound "from/to the EHR". In this simulation, hard-coded event messages
+        are being used in lieu of live messages that will ultimately come from your EHR. Every other step of the
+        simulation will use the built-in app functionality.
+    </p>
+    <h4><strong>Simulation Variables</strong></h4>
+    <p>
+        For event simulation, you will need to provide the Name and Number of "the patient" to whom you would like
+        simulation messages to be sent. All other variables used in the simulation come from the Environment Variables
+        you configured during application deployment, are automatically generated, or are hard-coded for testing
+        purposes. Appointment details that are typically shared from the EHR (such as appointment date, time,
+        facility and provider) will be pre-populated for the simulation and are not editable. Hover over the info
+        button next to each input below for more information about that specific variable.
+    </p>
+</header>
+<main>
+    <script>
+        let token = null;
+    </script>
+    <div id="simulation-form">
+
+        <p id="login-error" style="color:red;"></p>
+        <form>
+
+            <div class=form-group>
+                <h5><strong>Messages sent to</strong></h5>
+                <div class="ht">tooltip
+                    <span class="tooltip">Input the name to whom you would like the SMS to be addressed</span>
+                </div>
+                <label for="name-sent-to">Name:
+                    <input id="name-sent-to" type="text" name="name-sent-to">
+                </label>
+                <label for="number-sent-to">Number:
+                    <input id="number-sent-to" type="text" name="number-sent-to">
+                </label>
+            </div>
+
+            <div class="form-group">
+                <h5><strong>Messages sent from</strong></h5>
+                <label for="name-sent-from">Name:
+                    <input id="name-sent-from" type="text" name="name-sent-from">
+                </label>
+                <label for="number-sent-from">Number:
+                    <input id="number-sent-from" type="text" name="number-sent-from">
+                </label>
+            </div>
+
+            <div class="form-group">
+                <h5><strong>Other Variables</strong></h5>
+                <label for="date-time">Location:
+                    <input id="date-time" type="text" name="date-time">
+                </label>
+                <label for="provider">Provider:
+                    <input id="provider" type="text" name="provider">
+                </label>
+                <label for="location">Location:
+                    <input id="location" type="text" name="location">
+                </label>
+            </div>
+            <div>
+
+            <section>
+                <h4><strong>Simulation Steps</strong></h4>
+                <h5><strong>Appointment Booking and Reminder</strong></h5>
+                <p>
+                    To simulate an appointment booking message to "the patient", click the BOOKED button below.
+                    This will create an appointment for 24 hours in the future, trigger an SMS notification, and
+                    store the appointment information in AWS (simulating steps 2-4 in the
+                    <a href="https://twilio-cms-prod.s3.amazonaws.com/documents/reference-architecture.png" target="_blank">Reference Architecture</a>).
+                </p>
+                <p>
+                    To simulate an appointment reminder message to "the patient", click the REMIND button below.
+                    This will trigger the AWS scheduler to check for appointments that are within the next 24 hours and
+                    send a reminder SMS (simulating steps 5-7).
+                </p>
+                <p>
+                    *Note: Do not respond to the BOOKED message with a cancelation request, or the reminder
+                    simulation will not work. Test appointment cancelation using the simulation steps further below.
+                </p>
+
+            </section>
+
+            <button class="button simulate" onclick="login(event)">BOOKED Simulate appointment booking </button>
+            <button class="button" onclick="login(event)">REMIND Simulate appointment reminder </button>
+            </div>
+        </form>
+
+    </div>
+
+
+
+    <section>
+        <!-- APP_INFO_V2 -->
+    </section>
+
+
+
+</main>
+<footer>
+    <span class="statement">We can't wait to see what you build.</span>
+</footer>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+        crossorigin="anonymous"></script>
+<script type="application/javascript" src="/controller.js"></script>
+</body>
+</html>

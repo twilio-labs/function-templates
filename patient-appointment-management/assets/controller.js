@@ -592,8 +592,14 @@ function handleInvalidToken() {
 
   $('#password-input').focus();
 }
+
+// --------------------------------------------------------------------------------
+async function simulateParameters(){
+
+}
 // --------------------------------------------------------------------------------
 $('#password-form').show();
 $('#auth-successful').hide();
 $('#mfa-form').hide();
 $('#password-input').focus();
+

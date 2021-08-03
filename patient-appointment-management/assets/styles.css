@@ -125,15 +125,14 @@ tr.table-placeholder td {
   font-size: 14px;
 }
 
-#password-form,
-#mfa-form {
+
+#password-form, #mfa-form, #simulation-form {
   padding: 30px 30px 5px 30px;
   background: rgb(244, 244, 246);
   margin-bottom: 40px;
 }
 
-#password-form input,
-#mfa-form input {
+#password-form input, #mfa-form input, #simulation-form input {
   background: white;
 }
 
@@ -206,4 +205,62 @@ tr.table-placeholder td {
   display: inline-block;
   height: 36px;
   padding-top: 5px;
+}
+
+/* for simulation events page */
+.messages-sent-to {
+  width: 30%;
+  border: 1px solid lightgrey;
+  padding: 30px 30px 5px 30px;
+
+  margin-bottom: 40px;
+}
+
+.form-group {
+ // background-color: #FFF;
+  border : 1px solid gray;
+  width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 40px;
+  margin-top: 0px;
+  border-radius: 10px;
+  padding: 10px;
+  text-align:center;
+  display: inline-block;
+}
+
+
+.simulate {
+  width: 200px;
+  display: block;
+  border-bottom-left-radius: 25%;
+  border-bottom-right-radius: 25%;
+  line-height: 2em;
+  padding: 0.2em;
+  margin:0.3em;
+  border: 1px solid  #ccc ;
+  border-radius: 8px;
+  font-size: 1em;
+  word-wrap: break-word;
+  white-space: normal;
+  text-transform: none;
+}
+
+.ht:hover .tooltip {
+  display:block;
+}
+
+.tooltip {
+  display: none;
+  color: black;
+  margin-left: 90px; /* moves the tooltip to the right */
+  margin-top: 10px; /* moves it down */
+  position: absolute;
+  z-index: 1000;
+
+  width: 200px;
+  background: azure;
+  border: 1px solid azure;
+  padding: 5px;
 }
