@@ -54,7 +54,6 @@ exports.handler = async function (context, event, callback) {
         return callback(null, 'DEPLOYING');
       }
       return callback(null, 'FAILED');
-
     } catch (AmazonCloudFormationException) {
       // AWS will throw exception if matching stack is not found
       return callback(null, 'NOT-DEPLOYED');
