@@ -125,13 +125,15 @@ tr.table-placeholder td {
   font-size: 14px;
 }
 
-#password-form, #mfa-form {
+#password-form,
+#mfa-form {
   padding: 30px 30px 5px 30px;
   background: rgb(244, 244, 246);
   margin-bottom: 40px;
 }
 
-#password-form input, #mfa-form input {
+#password-form input,
+#mfa-form input {
   background: white;
 }
 

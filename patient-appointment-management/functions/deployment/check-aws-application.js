@@ -30,41 +30,38 @@ exports.handler = async function (context, event, callback) {
       return callback(null, response);
     }
 
-    const AWS_CF_STACK_APPLICATION = await getParam(
-      context,
-      'AWS_CF_STACK_APPLICATION'
-    );
-    const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
-      context,
-      'DEPLOYER_AWS_ACCESS_KEY_ID'
-    );
-    const DEPLOYER_AWS_SECRET_ACCESS_KEY = await getParam(
-      context,
-      'DEPLOYER_AWS_SECRET_ACCESS_KEY'
-    );
-    const AWS_REGION = await getParam(context, 'AWS_REGION');
-
     // ---------- get aws clients
     const options = {
-      accessKeyId: DEPLOYER_AWS_ACCESS_KEY_ID,
-      secretAccessKey: DEPLOYER_AWS_SECRET_ACCESS_KEY,
-      region: AWS_REGION,
+      accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
+      secretAccessKey: await getParam(
+        context,
+        'DEPLOYER_AWS_SECRET_ACCESS_KEY'
+      ),
+      region: await getParam(context, 'AWS_REGION'),
     };
     const cf = new aws.CloudFormation(options);
 
     // ---------- look for dependent stack
     try {
+      const AWS_CF_STACK_APPLICATION = await getParam(
+        context,
+        'AWS_CF_STACK_APPLICATION'
+      );
       const response = await cf
         .describeStacks({ StackName: AWS_CF_STACK_APPLICATION })
         .promise();
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);
-      if (status.endsWith('_COMPLETE')) return callback(null, 'DEPLOYED');
-      else if (status.endsWith('_IN_PROGRESS'))
+      if (status === 'CREATE_COMPLETE' || status === 'UPDATE_COMPLETE') {
+        return callback(null, 'DEPLOYED');
+      } else if (status.endsWith('_IN_PROGRESS')) {
         return callback(null, 'DEPLOYING');
+      }
       return callback(null, 'FAILED');
+
     } catch (AmazonCloudFormationException) {
+      // AWS will throw exception if matching stack is not found
       return callback(null, 'NOT-DEPLOYED');
     }
   } finally {

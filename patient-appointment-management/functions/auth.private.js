@@ -4,61 +4,74 @@ var jwt = require('jsonwebtoken');
 const MFA_TOKEN_DURATION = 5 * 60;
 const APP_TOKEN_DURATION = 30 * 60;
 
-function isValidPassword(password, context){
-  return checkDisableAuthForLocalhost(context) ||
-      (password === context.APPLICATION_PASSWORD)
+function isValidPassword(password, context) {
+  return (
+    checkDisableAuthForLocalhost(context) ||
+    password === context.APPLICATION_PASSWORD
+  );
 }
 
-function checkDisableAuthForLocalhost(context){
-  return context.DOMAIN_NAME && context.DOMAIN_NAME.startsWith('localhost') && context.DISABLE_AUTH_FOR_LOCALHOST && context.DISABLE_AUTH_FOR_LOCALHOST === "true";
+function checkDisableAuthForLocalhost(context) {
+  return (
+    context.DOMAIN_NAME &&
+    context.DOMAIN_NAME.startsWith('localhost') &&
+    context.DISABLE_AUTH_FOR_LOCALHOST &&
+    context.DISABLE_AUTH_FOR_LOCALHOST === 'true'
+  );
 }
 
-function createMfaToken(issuer, mfaCode, context){
+function createMfaToken(issuer, mfaCode, context) {
   if (checkDisableAuthForLocalhost(context)) {
     return createAppToken(issuer, context);
   }
 
   // encrypt the mfaCode to avoid showing in the browser
-  mfaEncrypt= crypto
-      .createHmac('sha256', context.AUTH_TOKEN)
-      .update(Buffer.from(`${mfaCode}:${context.SALT}`, 'utf-8'))
-      .digest('base64');
+  mfaEncrypt = crypto
+    .createHmac('sha256', context.AUTH_TOKEN)
+    .update(Buffer.from(`${mfaCode}:${context.SALT}`, 'utf-8'))
+    .digest('base64');
 
-  var jwtToken = jwt.sign(
-      { data: mfaEncrypt },
-      context.AUTH_TOKEN,
-      {expiresIn: MFA_TOKEN_DURATION, audience: "mfa", issuer: issuer, subject: "administrator"});
+  var jwtToken = jwt.sign({ data: mfaEncrypt }, context.AUTH_TOKEN, {
+    expiresIn: MFA_TOKEN_DURATION,
+    audience: 'mfa',
+    issuer: issuer,
+    subject: 'administrator',
+  });
 
   return jwtToken;
 }
 
-function isValidMfaToken(token, context){
-  try{
-    return checkDisableAuthForLocalhost(context) ||
-        jwt.verify(token, context.AUTH_TOKEN, {audience: "mfa"});
-  }catch(err){
+function isValidMfaToken(token, context) {
+  try {
+    return (
+      checkDisableAuthForLocalhost(context) ||
+      jwt.verify(token, context.AUTH_TOKEN, { audience: 'mfa' })
+    );
+  } catch (err) {
     return false;
   }
 }
 
-function createAppToken(issuer, context){
-  return jwt.sign(
-      { },
-      context.AUTH_TOKEN,
-      {expiresIn: APP_TOKEN_DURATION, audience: "app", issuer: issuer, subject: "administrator"}
-  );
+function createAppToken(issuer, context) {
+  return jwt.sign({}, context.AUTH_TOKEN, {
+    expiresIn: APP_TOKEN_DURATION,
+    audience: 'app',
+    issuer: issuer,
+    subject: 'administrator',
+  });
 }
 
-function isValidAppToken(token, context){
-  console.log("In check App token");
-  try{
-    return checkDisableAuthForLocalhost(context) ||
-        jwt.verify(token, context.AUTH_TOKEN, {audience: "app"});
-  }catch(err){
+function isValidAppToken(token, context) {
+  console.log('In check App token');
+  try {
+    return (
+      checkDisableAuthForLocalhost(context) ||
+      jwt.verify(token, context.AUTH_TOKEN, { audience: 'app' })
+    );
+  } catch (err) {
     console.log(err);
     return false;
   }
-
 }
 
 async function getCurrentEnvironment(context) {

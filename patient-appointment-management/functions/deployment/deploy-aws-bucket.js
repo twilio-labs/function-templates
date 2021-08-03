@@ -31,8 +31,13 @@ exports.handler = async function (context, event, callback) {
       return callback(null, response);
     }
 
+    const APPLICATION_NAME = await getParam(context, 'APPLICATION_NAME');
     const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
     const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
+    const DEPLOYER_AWS_ROLE_ARN = await getParam(
+      context,
+      'DEPLOYER_AWS_ROLE_ARN'
+    );
     const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
@@ -93,7 +98,12 @@ exports.handler = async function (context, event, callback) {
           const params = {
             StackName: AWS_CF_STACK_BUCKET,
             TemplateBody: `${definition}`,
+            RoleARN: DEPLOYER_AWS_ROLE_ARN,
             Parameters: [
+              {
+                ParameterKey: 'ParameterApplicationName',
+                UsePreviousValue: true,
+              },
               {
                 ParameterKey: 'ParameterCustomerCode',
                 UsePreviousValue: true,
@@ -123,7 +133,12 @@ exports.handler = async function (context, event, callback) {
         const params = {
           StackName: AWS_CF_STACK_BUCKET,
           TemplateBody: `${definition}`,
+          RoleARN: DEPLOYER_AWS_ROLE_ARN,
           Parameters: [
+            {
+              ParameterKey: 'ParameterApplicationName',
+              ParameterValue: APPLICATION_NAME,
+            },
             {
               ParameterKey: 'ParameterCustomerCode',
               ParameterValue: CUSTOMER_CODE,
