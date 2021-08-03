@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring, dot-notation */
+/* eslint-disable prefer-destructuring, dot-notation, prefer-template */
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
   const { isValidPassword, createMfaToken } = require(path);

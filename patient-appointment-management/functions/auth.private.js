@@ -1,4 +1,4 @@
-/* eslint-disable no-negated-condition, no-else-return */
+/* eslint-disable no-negated-condition, no-else-return, import/newline-after-import, no-use-before-define, vars-on-top, no-var, object-shorthand, sonarjs/prefer-immediate-return */
 const crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 const MFA_TOKEN_DURATION = 5 * 60;
