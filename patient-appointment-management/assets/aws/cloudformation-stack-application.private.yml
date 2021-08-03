@@ -56,39 +56,80 @@ Conditions:
   isTwilioInternal: !Equals [!Ref AWS::AccountId, 757418860937]
 
 
-Outputs:
-
-
-  PatientAppointmentManagementSecretAWSArn:
-    Value: !Ref SecretAWS
-
-  PatientAppointmentManagementSecretTwilioArn:
-    Value: !Ref SecretTwilio
-
-  PatientAppointmentManagementCrawlerAppointments:
-    Value: !Ref CrawlerAppointments
-
-  PatientAppointmentManagementLambdaSendReminders:
-    Value: !Ref LambdaSendReminders
-
-  PatientAppointmentManagementAthenaWorkGroup:
-    Value: !Ref AthenaWorkGroup
-
-  PatientAppointmentManagementLambdaQueryState:
-    Value: !Ref LambdaQueryState
-
-  PatientAppointmentManagementLambdaQueryHistory:
-    Value: !Ref LambdaQueryHistory
-
-  PatientAppointmentManagementStepFunctionQueryState:
-    Value: !GetAtt StepFunctionQueryState.Name
-
-  PatientAppointmentManagementStepFunctionQueryHistory:
-    Value: !GetAtt StepFunctionQueryHistory.Name
-
-
 Resources:
 
+
+  SSMPatientAppointmentManagementSecretAWSArn:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/aws-secret'
+      Value: !Ref SecretAWS
+      Type: String
+
+  SSMPatientAppointmentManagementSecretTwilioArn:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/twilio-secret'
+      Value: !Ref SecretTwilio
+      Type: String
+
+  SSMPatientAppointmentManagementCrawlerAppointments:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/crawler'
+      Value: !Ref CrawlerAppointments
+      Type: String
+
+  SSMPatientAppointmentManagementLambdaSendReminders:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/lambda-send-reminders'
+      Value: !Ref LambdaSendReminders
+      Type: String
+
+  SSMPatientAppointmentManagementAthenaWorkGroup:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/athena-workgroup'
+      Value: !Ref AthenaWorkGroup
+      Type: String
+
+  SSMPatientAppointmentManagementLambdaQueryState:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/lambda-query-state'
+      Value: !Ref LambdaQueryState
+      Type: String
+
+  SSMPatientAppointmentManagementLambdaQueryHistory:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/lambda-query-history'
+      Value: !Ref LambdaQueryHistory
+      Type: String
+
+  SSMPatientAppointmentManagementStepFunctionQueryState:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/sfn-query-state'
+      Value: !GetAtt StepFunctionQueryState.Name
+      Type: String
+
+  SSMPatientAppointmentManagementStepFunctionQueryHistory:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/patient-appointment-management-${ParameterCustomerCode}/application/sfn-query-history'
+      Value: !GetAtt StepFunctionQueryHistory.Name
+      Type: String
 
   SecretTwilio:
     Type: AWS::SecretsManager::Secret
@@ -158,6 +199,41 @@ Resources:
                 - states.amazonaws.com
 
 
+  PolicyForSecret:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    Properties:
+      ManagedPolicyName: !Sub 'twilio-${ParameterApplicationName}-secret-policy-${ParameterCustomerCode}'
+      Roles:
+        - !Ref RoleForExecution
+        - !ImportValue PatientAppointmentManagementDeployerRole
+      Users:
+        - !Ref UserForExecution
+        - !ImportValue PatientAppointmentManagementDeployerUser
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'SecretsManagerPermissions'
+            Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource:
+              - !Ref SecretTwilio
+              - !Ref SecretAWS
+          - Sid: 'SSMParameterDescribePermissions'
+            Effect: Allow
+            Action:
+              - ssm:DescribeParameters
+            Resource:
+              - '*'
+          - Sid: 'SSMParameterPermissions'
+            Effect: Allow
+            Action:
+              - ssm:GetParameter
+            Resource:
+              - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/twilio/patient-appointment-management-${ParameterCustomerCode}*'
+
+
   PolicyForStack:
     Type: AWS::IAM::ManagedPolicy
     DeletionPolicy: Delete
@@ -170,12 +246,6 @@ Resources:
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
-          - Sid: 'SecretsManagerPermissions'
-            Effect: Allow
-            Action:
-              - secretsmanager:GetSecretValue
-            Resource:
-              - !Ref SecretTwilio
           - Sid: 'S3Permissions'
             Effect: Allow
             Action:

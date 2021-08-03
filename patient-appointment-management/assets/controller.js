@@ -58,7 +58,7 @@ function checkHistory() {
       } else if (url === 'RUNNING') {
         $('#history-querying').show();
         $('#history-query').hide();
-        setTimeout(checkHistory,5000);
+        setTimeout(checkHistory, 5000);
       } else if (url === 'FAILED') {
         throw new Error();
       } else {
@@ -124,7 +124,7 @@ function checkState() {
       } else if (url === 'RUNNING') {
         $('#state-querying').show();
         $('#state-query').hide();
-        setTimeout(checkState,5000);
+        setTimeout(checkState, 5000);
       } else if (url === 'FAILED') {
         throw new Error();
       } else {
@@ -200,7 +200,7 @@ function checkAWSApplication() {
       } else if (status === 'DEPLOYING') {
         $('#aws-application-deploying').show();
         $('#aws-application-deploy').hide();
-        setTimeout(checkAWSApplication,5000);
+        setTimeout(checkAWSApplication, 5000);
       } else if (status === 'DEPLOYED') {
         $('#aws-application-deployed').show();
         $('#aws-application-deploying').hide();
@@ -283,7 +283,7 @@ function checkAWSBucket(resource) {
       } else if (status === 'DEPLOYING') {
         $('#aws-bucket-deploying').show();
         $('#aws-bucket-deploy').hide();
-        setTimeout(checkAWSBucket,5000);
+        setTimeout(checkAWSBucket, 5000);
       } else if (status === 'FAILED') {
         throw new Error();
       } else {
@@ -345,15 +345,13 @@ function checkStudioFlow() {
     },
     body: JSON.stringify({ token }),
   })
-      .then((response) => {
-        if (!response.ok)
-        {
-          if (response.status === 401)
-            handleInvalidToken();
-          throw Error(response.statusText);
-        }
-        return response.text()
-      })
+    .then((response) => {
+      if (!response.ok) {
+        if (response.status === 401) handleInvalidToken();
+        throw Error(response.statusText);
+      }
+      return response.text();
+    })
     .then((sid) => {
       console.log(THIS, sid);
       $('#flow-deploy .button').removeClass('loading');
@@ -397,15 +395,13 @@ function deployStudioFlow(e) {
     },
     body: JSON.stringify({ token }),
   })
-      .then((response) => {
-        if (!response.ok)
-        {
-          if (response.status === 401)
-            handleInvalidToken();
-          throw Error(response.statusText);
-        }
-        return response.text()
-      })
+    .then((response) => {
+      if (!response.ok) {
+        if (response.status === 401) handleInvalidToken();
+        throw Error(response.statusText);
+      }
+      return response.text();
+    })
     .then(() => {
       console.log(THIS, 'success');
       checkStudioFlow();
@@ -432,10 +428,8 @@ function check() {
     body: JSON.stringify({ token: token }),
   })
     .then((response) => {
-      if (!response.ok)
-        if (response.status === 401)
-          handleInvalidToken();
-      return response.text()
+      if (!response.ok) if (response.status === 401) handleInvalidToken();
+      return response.text();
     })
     .then((text) => {
       errors = JSON.parse(text);
@@ -486,13 +480,13 @@ async function login(e) {
     .then((r) => {
       token = r.token;
       $('#password-form').hide();
-      $('#password-input').val("");
+      $('#password-input').val('');
       var decodedToken = parseJwt(token);
-      if (decodedToken["aud"] === "app"){
+      if (decodedToken['aud'] === 'app') {
         $('#auth-successful').show();
         scheduleTokenRefresh();
         check();
-      } else{
+      } else {
         $('#mfa-form').show();
         $('#mfa-input').focus();
       }
@@ -500,15 +494,20 @@ async function login(e) {
     .catch((err) => console.log(err));
 }
 
-function parseJwt (token) {
+function parseJwt(token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+  var jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
 
   return JSON.parse(jsonPayload);
-};
+}
 
 // -------------------------------------------------------------------------------
 async function mfa(e) {
@@ -524,38 +523,36 @@ async function mfa(e) {
     },
     body: JSON.stringify({ mfaCode: mfaInput, token: token }),
   })
-      .then((response) => {
-        if (!response.ok) {
-          $('#mfa-error').text(
-              response.status === 401
-                  ? response.headers.get("Error-Message")
-                  : 'There was an error in verifying your security code.'
-          );
-          throw Error(response.statusText);
-        }
+    .then((response) => {
+      if (!response.ok) {
+        $('#mfa-error').text(
+          response.status === 401
+            ? response.headers.get('Error-Message')
+            : 'There was an error in verifying your security code.'
+        );
+        throw Error(response.statusText);
+      }
 
-        return response;
-      })
-      .then((response) => response.json())
-      .then((r) => {
-        token = r.token;
+      return response;
+    })
+    .then((response) => response.json())
+    .then((r) => {
+      token = r.token;
 
-        $('#mfa-form').hide();
-        $('#mfa-input').val("");
-        $('#auth-successful').show();
-        scheduleTokenRefresh();
-        check();
-      })
-      .catch((err) => console.log(err));
+      $('#mfa-form').hide();
+      $('#mfa-input').val('');
+      $('#auth-successful').show();
+      scheduleTokenRefresh();
+      check();
+    })
+    .catch((err) => console.log(err));
 }
-function scheduleTokenRefresh(){
-  setTimeout( refreshToken, TOKEN_REFRESH_INTERVAL)
+function scheduleTokenRefresh() {
+  setTimeout(refreshToken, TOKEN_REFRESH_INTERVAL);
 }
-
 
 async function refreshToken() {
-  if (!userActive)
-    return;
+  if (!userActive) return;
   userActive = false;
 
   fetch('/refresh-token', {
@@ -564,20 +561,20 @@ async function refreshToken() {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({token: token }),
+    body: JSON.stringify({ token: token }),
   })
-      .then((response) => {
-        return response;
-      })
-      .then((response) => response.json())
-      .then((r) => {
-        scheduleTokenRefresh();
-        token = r.token;
-      })
-      .catch((err) => console.log(err));
+    .then((response) => {
+      return response;
+    })
+    .then((response) => response.json())
+    .then((r) => {
+      scheduleTokenRefresh();
+      token = r.token;
+    })
+    .catch((err) => console.log(err));
 }
 
-function handleInvalidToken(){
+function handleInvalidToken() {
   $('#password-form').show();
   $('#auth-successful').hide();
   $('#mfa-form').hide();

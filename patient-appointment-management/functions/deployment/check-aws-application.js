@@ -32,8 +32,11 @@ exports.handler = async function (context, event, callback) {
 
     // ---------- get aws clients
     const options = {
-      accessKeyId: await getParam(context,'DEPLOYER_AWS_ACCESS_KEY_ID'),
-      secretAccessKey: await getParam(context,'DEPLOYER_AWS_SECRET_ACCESS_KEY'),
+      accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
+      secretAccessKey: await getParam(
+        context,
+        'DEPLOYER_AWS_SECRET_ACCESS_KEY'
+      ),
       region: await getParam(context, 'AWS_REGION'),
     };
     const cf = new aws.CloudFormation(options);
@@ -50,14 +53,13 @@ exports.handler = async function (context, event, callback) {
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);
-      if (status === 'CREATE_COMPLETE')
+      if (status === 'CREATE_COMPLETE' || status === 'UPDATE_COMPLETE') {
         return callback(null, 'DEPLOYED');
-      else if (status === 'UPDATE_COMPLETE')
-        return callback(null, 'DEPLOYED');
-      else if (status.endsWith('_IN_PROGRESS'))
+      } else if (status.endsWith('_IN_PROGRESS')) {
         return callback(null, 'DEPLOYING');
-      else
-        return callback(null, 'FAILED');
+      }
+      return callback(null, 'FAILED');
+
     } catch (AmazonCloudFormationException) {
       // AWS will throw exception if matching stack is not found
       return callback(null, 'NOT-DEPLOYED');

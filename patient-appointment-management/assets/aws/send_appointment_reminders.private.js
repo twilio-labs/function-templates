@@ -108,7 +108,9 @@ exports.handler = async function (event, context) {
 
     // SecretsManager client requires region to be specified
     const SM = new AWS.SecretsManager({ region: process.env.AWS_REGION });
-    const data = await SM.getSecretValue({ SecretId: process.env.TWILIO_SECRET_ARN }).promise();
+    const data = await SM.getSecretValue({
+      SecretId: process.env.TWILIO_SECRET_ARN,
+    }).promise();
     const secret = JSON.parse(data.SecretString);
 
     // ---------- environment variables & input event

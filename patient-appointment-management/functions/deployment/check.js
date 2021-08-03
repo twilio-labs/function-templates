@@ -102,26 +102,34 @@ async function checkParameters(context) {
 
 // --------------------------------------------------------------------------------
 async function listParameters(context) {
-
   return {
     ACCOUNT_SID: await getParam(context, 'ACCOUNT_SID'),
     AUTH_TOKEN:
-      await getParam(context, 'AUTH_TOKEN') !== null
-        ? (await getParam(context, 'AUTH_TOKEN')).replace(/./g, '*')
-        : null,
+      (await getParam(context, 'AUTH_TOKEN')) === null
+        ? null
+        : (await getParam(context, 'AUTH_TOKEN')).replace(/./g, '*'),
     DEPLOYER_AWS_ROLE_ARN: await getParam(context, 'DEPLOYER_AWS_ROLE_ARN'),
-    DEPLOYER_AWS_ACCESS_KEY_ID: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
+    DEPLOYER_AWS_ACCESS_KEY_ID: await getParam(
+      context,
+      'DEPLOYER_AWS_ACCESS_KEY_ID'
+    ),
     DEPLOYER_AWS_SECRET_ACCESS_KEY:
-      await getParam(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY') !== null
-        ? (await getParam(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY')).replace(/./g, '*')
-        : null,
+      (await getParam(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY')) === null
+        ? null
+        : (await getParam(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY')).replace(
+            /./g,
+            '*'
+          ),
     AWS_ACCESS_KEY_ID: await getParam(context, 'AWS_ACCESS_KEY_ID'),
     AWS_SECRET_ACCESS_KEY:
-      await getParam(context, 'AWS_SECRET_ACCESS_KEY') !== null
-        ? (await getParam(context, 'AWS_SECRET_ACCESS_KEY')).replace(/./g, '*')
-        : null,
+      (await getParam(context, 'AWS_SECRET_ACCESS_KEY')) === null
+        ? null
+        : (await getParam(context, 'AWS_SECRET_ACCESS_KEY')).replace(/./g, '*'),
     AWS_ATHENA_WORKGROUP: await getParam(context, 'AWS_ATHENA_WORKGROUP'),
-    AWS_CF_STACK_APPLICATION: await getParam(context, 'AWS_CF_STACK_APPLICATION'),
+    AWS_CF_STACK_APPLICATION: await getParam(
+      context,
+      'AWS_CF_STACK_APPLICATION'
+    ),
     AWS_CF_STACK_BUCKET: await getParam(context, 'AWS_CF_STACK_BUCKET'),
     AWS_CF_STACK_DEPLOYER: await getParam(context, 'AWS_CF_STACK_DEPLOYER'),
     AWS_GLUE_CRAWLER: await getParam(context, 'AWS_GLUE_CRAWLER'),

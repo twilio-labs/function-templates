@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Twilio Patient Appointment Management Deployer User and Role'
+
+
+Parameters:
+
+
+  ApplicationName:
+    Type: String
+    Default: 'patient-appointment-management'
+    AllowedValues:
+      - 'patient-appointment-management'
+
+Outputs:
+
+  PatientAppointmentManagementDeployerUser:
+    Value: !Ref UserDeployer
+    Export:
+      Name:
+        'PatientAppointmentManagementDeployerUser'
+
+  PatientAppointmentManagementDeployerRole:
+    Value: !Ref RoleDeployer
+    Export:
+      Name:
+        'PatientAppointmentManagementDeployerRole'
+
+
+Resources:
+
+
+  SSMPatientAppointmentManagementSecretDeployerUser:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/${ApplicationName}/deployer/user-secret'
+      Value: !Ref SecretDeployerUser
+      Type: String
+
+  SSMPatientAppointmentManagementDeployerUser:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/${ApplicationName}/deployer/user'
+      Value: !Ref UserDeployer
+      Type: String
+
+  SSMPatientAppointmentManagementDeployerRole:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/${ApplicationName}/deployer/role'
+      Value: !Ref RoleDeployer
+      Type: String
+
+  SSMPatientAppointmentManagementDeployerRoleArn:
+    Type: AWS::SSM::Parameter
+    DeletionPolicy: Delete
+    Properties:
+      Name: !Sub '/twilio/${ApplicationName}/deployer/role-arn'
+      Value: !GetAtt RoleDeployer.Arn
+      Type: String
+
+  UserDeployer:
+    Type: AWS::IAM::User
+    DeletionPolicy: Delete
+    Properties:
+      UserName: !Sub 'twilio-${ApplicationName}-deployer-user'
+      Policies:
+        - PolicyName: 'CloudFormationPermissions'
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: 'IAMPermissions'
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - !GetAtt RoleDeployer.Arn
+              - Sid: 'CFStackSpecificPermissions'
+                Effect: Allow
+                Action:
+                  - cloudformation:*
+                Resource:
+                  - !Sub 'arn:aws:cloudformation:${AWS::Region}:${AWS::AccountId}:stack/twilio-${ApplicationName}-*'
+              - Sid: 'CFPermissions'
+                Effect: Allow
+                Action:
+                  - cloudformation:ValidateTemplate
+                Resource:
+                  - '*'
+              - Sid: 'GluePermissions'
+                Effect: Allow
+                Action:
+                  - glue:GetCrawler
+                Resource:
+                  - !Sub 'arn:aws:glue:${AWS::Region}:${AWS::AccountId}:crawler/twilio-${ApplicationName}-*'
+
+  AccessKeyUserDeployer:
+    Type: AWS::IAM::AccessKey
+    DeletionPolicy: Delete
+    Properties:
+      UserName:
+        !Ref UserDeployer
+
+  SecretDeployerUser:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Delete
+    Properties:
+      Description: 'Twilio credentials ACCOUNT_SID & AUTH_TOKEN'
+      Name: !Sub 'twilio/${ApplicationName}/deployer' # make sure name is same a policy above
+      SecretString: !Join
+        - ''
+        - - '{"DEPLOYER_AWS_ACCESS_KEY_ID": "'
+          - !Ref AccessKeyUserDeployer
+          - '", "DEPLOYER_AWS_SECRET_ACCESS_KEY": "'
+          - !GetAtt AccessKeyUserDeployer.SecretAccessKey
+          - '"}'
+
+  RoleDeployer:
+    Type: AWS::IAM::Role
+    DeletionPolicy: Delete
+    Properties:
+      RoleName: !Sub 'twilio-${ApplicationName}-deployer-role'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+
+  PolicyReadSecret:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    Properties:
+      ManagedPolicyName: !Sub 'twilio-${ApplicationName}-policy-secret'
+      Roles:
+        - !Ref RoleDeployer
+      Users:
+        - !Ref UserDeployer
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'SecretsManagerPermissions'
+            Effect: Allow
+            Action:
+              - secretsmanager:GetSecretValue
+            Resource:
+              - !Ref SecretDeployerUser
+          - Sid: 'SSMParameterDescribePermissions'
+            Effect: Allow
+            Action:
+              - ssm:DescribeParameters
+            Resource:
+              - '*'
+          - Sid: 'SSMParameterPermissions'
+            Effect: Allow
+            Action:
+              - ssm:GetParameter
+            Resource:
+              - !Sub 'arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/twilio/${ApplicationName}*'

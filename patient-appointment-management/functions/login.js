@@ -10,23 +10,31 @@ exports.handler = function (context, event, callback) {
     // Generate and send six digit MFA code to administrator's phone
     const twilioClient = context.getTwilioClient();
     mfaCode = Math.floor(100000 + Math.random() * 900000);
-    twilioClient.messages.create({
-      to: context.ADMINISTRATOR_PHONE,
-      from: context.TWILIO_PHONE_NUMBER,
-      body:  mfaCode + " is your security code for the PAM application. It is valid for five minutes."
-    }).then(function() {
-      // SMS was sent successfully
-      response.setBody({
-        token: createMfaToken("login",mfaCode,context)
-      });
+    twilioClient.messages
+      .create({
+        to: context.ADMINISTRATOR_PHONE,
+        from: context.TWILIO_PHONE_NUMBER,
+        body:
+          mfaCode +
+          ' is your security code for the PAM application. It is valid for five minutes.',
+      })
+      .then(function () {
+        // SMS was sent successfully
+        response.setBody({
+          token: createMfaToken('login', mfaCode, context),
+        });
 
-      callback(null, response);
-    }).catch(function(){
-      // if there is any problem in sending SMS
-      response.setStatusCode(500);
-      response.setBody({message: "Unable to send security code to your phone at this time. Please try later."});
-      callback(null, response);
-    });
+        callback(null, response);
+      })
+      .catch(function () {
+        // if there is any problem in sending SMS
+        response.setStatusCode(500);
+        response.setBody({
+          message:
+            'Unable to send security code to your phone at this time. Please try later.',
+        });
+        callback(null, response);
+      });
     return;
   }
 
