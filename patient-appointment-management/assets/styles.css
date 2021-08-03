@@ -125,14 +125,17 @@ tr.table-placeholder td {
   font-size: 14px;
 }
 
-
-#password-form, #mfa-form, #simulation-form {
+#password-form,
+#mfa-form,
+#simulation-form {
   padding: 30px 30px 5px 30px;
   background: rgb(244, 244, 246);
   margin-bottom: 40px;
 }
 
-#password-form input, #mfa-form input, #simulation-form input {
+#password-form input,
+#mfa-form input,
+#simulation-form input {
   background: white;
 }
 
@@ -217,29 +220,36 @@ tr.table-placeholder td {
 }
 
 .form-group {
- // background-color: #FFF;
-  border : 1px solid gray;
-  width: 400px;
+  border: 1px solid gray;
+ // width: 400px;
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 40px;
   margin-top: 0px;
   border-radius: 10px;
   padding: 10px;
-  text-align:center;
+  text-align: center;
   display: inline-block;
+}
+
+.form-group label {
+//  position: relative;
+  width: 140px;
+  display: inline-block;
+}
+.form-group input{
+
 }
 
 
 .simulate {
-  width: 200px;
-  display: block;
-  border-bottom-left-radius: 25%;
-  border-bottom-right-radius: 25%;
+ // width: 200px;
+  display:inline-block;
+
   line-height: 2em;
   padding: 0.2em;
-  margin:0.3em;
-  border: 1px solid  #ccc ;
+  margin: 0.3em;
+  border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 1em;
   word-wrap: break-word;
@@ -248,7 +258,7 @@ tr.table-placeholder td {
 }
 
 .ht:hover .tooltip {
-  display:block;
+  display: block;
 }
 
 .tooltip {
