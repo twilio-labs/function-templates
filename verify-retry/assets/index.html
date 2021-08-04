@@ -36,8 +36,8 @@
         max-width: 100%;
       }
 
-      input[type="submit"],
-      input[type="tel"] {
+      input[type='submit'],
+      input[type='tel'] {
         font: inherit;
         border: 1px solid rgb(136, 145, 170);
         border-radius: 4px;
@@ -144,7 +144,7 @@
               <input type="submit" value="Verify" />
             </div>
           </form>
-          <button id="retry" disabled="true" style="display: none"></button>
+          <button id="retry" style="display: none" disabled></button>
           <button id="call" style="display: none">
             📞 Having trouble receiving SMS, call me instead
           </button>
@@ -159,28 +159,28 @@
   <script>
     // Handle international prefixes, format phone input field
     // Uses intl-tel-input library
-    const phoneInputField = document.querySelector("#phone_number");
+    const phoneInputField = document.querySelector('#phone_number');
     const phoneInput = window.intlTelInput(phoneInputField, {
       // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-      preferredCountries: ["us", "gb", "de", "co", "jp", "sg"],
+      preferredCountries: ['us', 'gb', 'de', 'co', 'jp', 'sg'],
       utilsScript:
-        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js",
+        'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js',
     });
 
     function showError(error) {
       console.error(error);
-      showStatus(error, (color = "#a94442"));
+      showStatus(error, (color = '#a94442'));
     }
 
-    function showStatus(message, color = "gray") {
-      let status = document.getElementById("status");
+    function showStatus(message, color = 'gray') {
+      let status = document.getElementById('status');
       status.style.color = color;
       status.textContent = message;
     }
 
     function showReset(message) {
       document.getElementById(
-        "reset"
+        'reset'
       ).innerHTML = `<a href="#" onclick="window.location.reload(false);">${message}</a>`;
     }
 
@@ -201,25 +201,25 @@
     }
 
     function showOtpForm() {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("otp").style.display = "block";
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('otp').style.display = 'block';
     }
 
     function showCallFallback(attempts) {
       let minAttemptForVoice = 3;
       if (attempts < minAttemptForVoice) return;
 
-      document.getElementById("call").style.display = "block";
+      document.getElementById('call').style.display = 'block';
     }
 
     let timer;
     let timeRemaining;
-    let retryButton = document.getElementById("retry");
+    let retryButton = document.getElementById('retry');
 
     function startCountdown(attempts) {
       clearInterval(timer);
-      retryButton.setAttribute("disabled", true);
-      retryButton.style.display = "block";
+      retryButton.setAttribute('disabled', 'true');
+      retryButton.style.display = 'block';
 
       console.log(`Attempt number: ${attempts}`);
       timeRemaining = getRetryTimeout(attempts);
@@ -229,8 +229,8 @@
     function countdown(attempts) {
       if (timeRemaining == 0) {
         clearInterval(timer);
-        retryButton.removeAttribute("disabled");
-        retryButton.innerHTML = "🔁 Resend code";
+        retryButton.removeAttribute('disabled');
+        retryButton.innerHTML = '🔁 Resend code';
       } else {
         if (timeRemaining == 15) {
           showCallFallback(attempts);
@@ -242,20 +242,20 @@
 
     var to;
 
-    function sendVerificationToken(event, channel = "sms") {
+    function sendVerificationToken(event, channel = 'sms') {
       event.preventDefault();
       let statusMessage =
-        channel == "call" ? "☎️ calling..." : "Sending verification code...";
+        channel == 'call' ? '☎️ calling...' : 'Sending verification code...';
       showStatus(statusMessage);
 
       to = phoneInput.getNumber();
 
       const data = new URLSearchParams();
-      data.append("channel", channel);
-      data.append("to", to);
+      data.append('channel', channel);
+      data.append('to', to);
 
-      fetch("./start-verify", {
-        method: "POST",
+      fetch('./start-verify', {
+        method: 'POST',
         body: data,
       })
         .then((response) => {
@@ -265,11 +265,11 @@
             showError(
               `You have attempted to verify the phone number ${to} too many times. If you received a code, enter it below. Otherwise, please wait 10 minutes and `
             );
-            showReset("try again.");
+            showReset('try again.');
           } else if (response.status >= 400) {
             clearStatus();
-            document.getElementById("otp").style.display = "none";
-            document.getElementById("login").style.display = "flex";
+            document.getElementById('otp').style.display = 'none';
+            document.getElementById('login').style.display = 'flex';
 
             return response.json().then(({ message }) => {
               showError(message);
@@ -283,22 +283,22 @@
               } else {
                 showError(json.message);
               }
-              showReset("Edit phone number.");
+              showReset('Edit phone number.');
             });
           }
         })
         .catch(() => {
           showError(`Something went wrong while sending code to ${to}.`);
-          showReset("Edit phone number.");
+          showReset('Edit phone number.');
         });
     }
 
     function clearStatus() {
       clearInterval(timer);
-      document.getElementById("status").textContent = "";
-      document.getElementById("reset").innerHTML = "";
-      document.getElementById("retry").style.display = "none";
-      document.getElementById("call").style.display = "none";
+      document.getElementById('status').textContent = '';
+      document.getElementById('reset').innerHTML = '';
+      document.getElementById('retry').style.display = 'none';
+      document.getElementById('call').style.display = 'none';
     }
 
     function retrySend(event) {
@@ -308,23 +308,23 @@
 
     function sendVoiceToken(event) {
       clearStatus();
-      sendVerificationToken(event, (channel = "call"));
+      sendVerificationToken(event, (channel = 'call'));
     }
 
     function validateToken(event) {
       event.preventDefault();
       clearStatus();
-      showStatus("Checking code...");
+      showStatus('Checking code...');
 
       const data = new URLSearchParams();
-      data.append("to", to);
-      data.append("code", document.getElementById("code").value);
+      data.append('to', to);
+      data.append('code', document.getElementById('code').value);
 
-      var tags = document.querySelectorAll("input[name=tags]:checked");
-      tags.forEach((tag) => data.append("tags", tag.value));
+      var tags = document.querySelectorAll('input[name=tags]:checked');
+      tags.forEach((tag) => data.append('tags', tag.value));
 
-      fetch("./check-verify", {
-        method: "POST",
+      fetch('./check-verify', {
+        method: 'POST',
         body: data,
       })
         .then((response) => {
@@ -333,15 +333,15 @@
         .then((json) => {
           if (json.success) {
             clearStatus();
-            document.getElementById("otp").style.display = "none";
-            showStatus(json.message, (color = "#3c763d"));
+            document.getElementById('otp').style.display = 'none';
+            showStatus(json.message, (color = '#3c763d'));
           } else {
             showError(`${json.message} Check the code sent to ${to}.`);
           }
           showReset(
-            "Use a different phone number or start a new verification."
+            'Use a different phone number or start a new verification.'
           );
-          document.getElementById("code").value = "";
+          document.getElementById('code').value = '';
         })
         .catch((error) => {
           showError(error);
@@ -349,10 +349,10 @@
     }
 
     document
-      .getElementById("login")
-      .addEventListener("submit", sendVerificationToken);
-    document.getElementById("retry").addEventListener("click", retrySend);
-    document.getElementById("call").addEventListener("click", sendVoiceToken);
-    document.getElementById("otp").addEventListener("submit", validateToken);
+      .getElementById('login')
+      .addEventListener('submit', sendVerificationToken);
+    document.getElementById('retry').addEventListener('click', retrySend);
+    document.getElementById('call').addEventListener('click', sendVoiceToken);
+    document.getElementById('otp').addEventListener('submit', validateToken);
   </script>
 </html>
