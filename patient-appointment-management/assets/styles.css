@@ -227,7 +227,7 @@ tr.table-placeholder td {
   margin-bottom: 40px;
   margin-top: 0px;
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   text-align: center;
   display: inline-block;
 }
@@ -236,8 +236,6 @@ tr.table-placeholder td {
   //  position: relative;
   width: 140px;
   display: inline-block;
-}
-.form-group input {
 }
 
 .simulate {
@@ -262,13 +260,76 @@ tr.table-placeholder td {
 .tooltip {
   display: none;
   color: black;
-  margin-left: 90px; /* moves the tooltip to the right */
-  margin-top: 10px; /* moves it down */
+  font-weight: normal;
+  font-size: 15px;
+  margin-left: 40px; /* moves the tooltip to the right */
+  margin-top: -25px; /* moves it down */
   position: absolute;
   z-index: 1000;
-
   width: 200px;
-  background: azure;
-  border: 1px solid azure;
+  background: lightblue;
+  border: 1px solid gray;
+  border-radius: 10px;
   padding: 5px;
+}
+
+.tooltip.simulate-error {
+  margin-left: 750px;
+  margin-top: 15px;
+  width: 300px;
+  text-align: center;
+}
+
+.info-circle {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: solid 1px gray;
+  cursor: default;
+  color: blue;
+}
+.simulate-label {
+  display: inline-block;
+  padding-top: 5px;
+  width: 80px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+.simulate-label-long {
+  display: inline-block;
+  width: 200px;
+  padding-top: 5px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+.simulate-input {
+  display: inline-block;
+  padding-top: 5px;
+  width: 300px;
+}
+
+.simulate-input input::placeholder {
+  color: lightgrey;
+  font-style: italic;
+}
+
+.other-variables {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.main-menu {
+  font-size: 25px;
+  color: purple;
+  text-align:right;
+}
+
+.reset-display {
+  display: block;
 }

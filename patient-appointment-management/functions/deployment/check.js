@@ -77,9 +77,14 @@ async function checkParameters(context) {
   if (!v.startsWith('us'))
     errors.push({ AWS_REGION: `${v} only us aws regions` });
 
+  v = context.DEPLOYER_AWS_SECRET_ACCESS_KEY;
+  if (!v) errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'cannot be empty' });
+  if (v.length < 16 || v.length > 128)
+    errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'length is not between 16 and 128' });
   v = context.DEPLOYER_AWS_ACCESS_KEY_ID;
   if (!v) errors.push({ DEPLOYER_AWS_ACCESS_KEY_ID: 'cannot be empty' });
-  if (!v) errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'cannot be empty' });
+  if (v.length < 16 || v.length > 128)
+    errors.push({ DEPLOYER_AWS_ACCESS_KEY_ID: 'length is not between 16 and 128' });
   try {
     const options = {
       accessKeyId: context.DEPLOYER_AWS_ACCESS_KEY_ID,
@@ -87,14 +92,14 @@ async function checkParameters(context) {
       region: context.AWS_REGION,
     };
     const sts = new AWS.STS(options);
+    await sts.getCallerIdentity({}).promise();
   } catch (err) {
-    console.log(err);
     errors.push({
       DEPLOYER_AWS_ACCESS_KEY_ID: `${v} may be invalid, unable to authenticate to AWS`,
     });
     errors.push({
       DEPLOYER_AWS_SECRET_ACCESS_KEY:
-        'may be invalid, unable to authenticate to AWS',
+          'may be invalid, unable to authenticate to AWS',
     });
   }
   return errors;

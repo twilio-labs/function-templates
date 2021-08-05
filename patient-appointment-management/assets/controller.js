@@ -494,6 +494,8 @@ async function login(e) {
     .catch((err) => console.log(err));
 }
 
+// --------------------------------------------------------------------------------
+
 function parseJwt(token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -550,7 +552,7 @@ async function mfa(e) {
 function scheduleTokenRefresh() {
   setTimeout(refreshToken, TOKEN_REFRESH_INTERVAL);
 }
-
+// -----------------------------------------------------------------------------
 async function refreshToken() {
   if (!userActive) return;
   userActive = false;
@@ -572,7 +574,44 @@ async function refreshToken() {
       token = r.token;
     })
     .catch((err) => console.log(err));
+
+
+
+// -----------------------------------------------------------------------------
+  async function getSimulationParameters() {
+    THIS = 'getSimulationParameters:';
+    console.log(THIS, 'running');
+    userActive = true;
+
+    fetch('/deployment/simulate-parameters', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    })
+        .then((response) => response.json())
+        .then((r) => {
+          let date = new Date(r['appointmentTimestamp']);
+          var ds = date.toDateString() + " " +  date.toLocaleTimeString() ;
+
+          $('#name-sent-from').val(r['customerName']);
+          $('#number-sent-from').val(r['customerPhoneNumber']);
+          $('#date-time').val(ds);
+          $('#provider').val(r['provider']);
+          $('#location').val(r['location']);
+          // Aug 23, 2021 at 4:30 PM
+          console.log("Sim params:", r);
+        })
+        .catch((err) => {
+          console.log(THIS, err);
+
+        });
+  }
+
 }
+// --------------------------------------------------------------------------------
 
 function handleInvalidToken() {
   $('#password-form').show();
@@ -592,11 +631,44 @@ function handleInvalidToken() {
 
   $('#password-input').focus();
 }
+// --------------------------------------------------------------------------------
+
+function goHome(){
+  $('main').show();
+  $('simulate').hide();
+  $('.menu-main').hide();
+  $('.menu-simulate').show()
+}
+// --------------------------------------------------------------------------------
+
+function goSimulate(){
+  try {
+    decodedToken = parseJwt(token);
+    console.log(decodedToken["exp"] * 1000)
+    console.log(Date.now())
+    //switch to simulate page only if token is NOT expired or if it is app token
+    if (Date.now() <= (decodedToken["exp"] * 1000) && decodedToken["aud"] === "app") {
+      $('main').hide();
+      $('simulate').show();
+      $('.menu-main').show();
+      $('.menu-simulate').hide()
+      getSimulationParameters();
+    } else
+      throw Error();
+  } catch(e){
+    $(".simulate-error").fadeIn();
+    setTimeout(function() {
+      $(".simulate-error").fadeOut()
+    },5000)
+  }
+}
 
 // --------------------------------------------------------------------------------
-async function simulateParameters() {}
-// --------------------------------------------------------------------------------
-$('#password-form').show();
 $('#auth-successful').hide();
 $('#mfa-form').hide();
+$('.menu-main').hide();
+$('simulate').hide();
+$('#password-form').show();
 $('#password-input').focus();
+
+
