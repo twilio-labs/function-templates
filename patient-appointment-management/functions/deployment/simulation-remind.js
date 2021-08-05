@@ -26,18 +26,16 @@ exports.handler = function (context, event, callback) {
 
   // Main function
 
-
   // Call studio flow with appointment
   remindAppointment(context)
-      .then(function() {
-        response.setBody({});
-        callback(null, response);
-
-      })
-      .catch(function(err) {
-        console.log(err)
-        callback(null);
-      })
+    .then(function () {
+      response.setBody({});
+      callback(null, response);
+    })
+    .catch(function (err) {
+      console.log(err);
+      callback(null);
+    });
 };
 
 async function remindAppointment(context) {
@@ -48,8 +46,8 @@ async function remindAppointment(context) {
   };
   context.Lambda = new AWS.Lambda(AWS_CONFIG);
   context.AWS_LAMBDA_SEND_REMINDERS = await getParam(
-      context,
-      'AWS_LAMBDA_SEND_REMINDERS'
+    context,
+    'AWS_LAMBDA_SEND_REMINDERS'
   );
   console.log(context);
   let params = {
@@ -57,5 +55,4 @@ async function remindAppointment(context) {
     InvocationType: 'RequestResponse',
   };
   let response = await context.Lambda.invoke(params).promise();
-
 }

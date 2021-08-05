@@ -280,11 +280,11 @@ tr.table-placeholder td {
   text-align: center;
 }
 
-.tooltip.success{
+.tooltip.success {
   background: lightgreen;
 }
 
-.tooltip.failure{
+.tooltip.failure {
   background: orange;
 }
 

@@ -27,7 +27,6 @@ exports.handler = function (context, event, callback) {
 
   console.log(context);
 
-
   // Create an appointment object
   var ts = Math.round(new Date().getTime() / 1000);
   var tsTomorrow = ts + 24 * 3600;
@@ -52,15 +51,14 @@ exports.handler = function (context, event, callback) {
   // Call studio flow with appointment
   console.log(appointment);
   createAppointment(context, appointment)
-      .then(function() {
-        response.setBody({});
-        callback(null, response);
-
-      })
-      .catch(function(err) {
-        console.log(err)
-        callback(null);
-      })
+    .then(function () {
+      response.setBody({});
+      callback(null, response);
+    })
+    .catch(function (err) {
+      console.log(err);
+      callback(null);
+    });
 };
 
 async function createAppointment(context, appointment) {
@@ -85,17 +83,16 @@ async function createAppointment(context, appointment) {
 
   // ---------- if still active, stop flow
   response = await context
-      .getTwilioClient()
-      .studio.flows(context.TWILIO_FLOW_SID)
-      .executions(execution_sid)
-      .fetch();
+    .getTwilioClient()
+    .studio.flows(context.TWILIO_FLOW_SID)
+    .executions(execution_sid)
+    .fetch();
   if (response.status === 'active') {
     // if 'active' wait 10 secs and stop flow execution
     await context
-        .getTwilioClient()
-        .studio.flows(context.TWILIO_FLOW_SID)
-        .executions(execution_sid)
-        .update({ status: 'ended' });
+      .getTwilioClient()
+      .studio.flows(context.TWILIO_FLOW_SID)
+      .executions(execution_sid)
+      .update({ status: 'ended' });
   }
-
 }

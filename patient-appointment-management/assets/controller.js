@@ -590,39 +590,39 @@ async function getSimulationParameters() {
     },
     body: JSON.stringify({ token }),
   })
-      .then((response) => response.json())
-      .then((r) => {
-        let date = new Date(r['appointmentTimestamp']);
-        var ds = date.toDateString() + ' ' + date.toLocaleTimeString();
+    .then((response) => response.json())
+    .then((r) => {
+      let date = new Date(r['appointmentTimestamp']);
+      var ds = date.toDateString() + ' ' + date.toLocaleTimeString();
 
-        $('#name-sent-from').val(r['customerName']);
-        $('#number-sent-from').val(r['customerPhoneNumber']);
-        $('#date-time').val(ds);
-        $('#provider').val(r['provider']);
-        $('#location').val(r['location']);
-        // Aug 23, 2021 at 4:30 PM
-        console.log('Sim params:', r);
-      })
-      .catch((err) => {
-        console.log(THIS, err);
-      });
+      $('#name-sent-from').val(r['customerName']);
+      $('#number-sent-from').val(r['customerPhoneNumber']);
+      $('#date-time').val(ds);
+      $('#provider').val(r['provider']);
+      $('#location').val(r['location']);
+      // Aug 23, 2021 at 4:30 PM
+      console.log('Sim params:', r);
+    })
+    .catch((err) => {
+      console.log(THIS, err);
+    });
 }
 // --------------------------------------------------------------------------------
-async function bookAppointment(e){
+async function bookAppointment(e) {
   e.preventDefault();
   THIS = 'bookAppointment:';
   userActive = true;
 
-  simResponse = $(".simulate-response");
+  simResponse = $('.simulate-response');
 
   $('#book_appointment_btn').addClass('loading');
-  simResponse.text("Please wait...").show();
+  simResponse.text('Please wait...').show();
 
   const patientName = $('#patient-name').val();
   const phoneNumber = $('#patient-phone-number').val();
 
-  if (patientName === "" || phoneNumber === ""){
-    showSimReponseError("Patient name and phone number must be filled");
+  if (patientName === '' || phoneNumber === '') {
+    showSimReponseError('Patient name and phone number must be filled');
     return;
   }
 
@@ -632,28 +632,66 @@ async function bookAppointment(e){
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token:token, firstName: patientName, phoneNumber: phoneNumber}),
+    body: JSON.stringify({
+      token: token,
+      firstName: patientName,
+      phoneNumber: phoneNumber,
+    }),
+  })
+    .then((response) => response.json())
+    .then((r) => {
+      showSimReponseSuccess('Your appointment request has been sent');
+    })
+    .catch((err) => {
+      showSimReponseError('Unable to send your appointment request.');
+    })
+    .finally(() => {
+      $('#book_appointment_btn').removeClass('loading');
+    });
+}
+
+
+// --------------------------------------------------------------------------------
+async function remindAppointment(e) {
+  e.preventDefault();
+  THIS = 'remindAppointment:';
+  userActive = true;
+
+  simResponse = $('.simulate-response');
+
+  $('#remind_appointment_btn').addClass('loading');
+  simResponse.text('Please wait...').show();
+
+  fetch('/deployment/simulation-remind', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token: token,
+    }),
   })
       .then((response) => response.json())
       .then((r) => {
-        showSimReponseSuccess("Your appointment request has been sent");
+        showSimReponseSuccess('Your appointment reminder request has been sent');
       })
       .catch((err) => {
-        showSimReponseError("Unable to send your appointment request.")
-
+        showSimReponseError('Unable to send your appointment reminder request.');
       })
       .finally(() => {
-        $('#book_appointment_btn').removeClass('loading');
+        $('#remind_appointment_btn').removeClass('loading');
       });
 }
 
-function showSimReponseError(message){
-  simResponse.text(message).addClass("failure");
-  setTimeout(()=> simResponse.fadeOut().removeClass("failure"),4000);
+// --------------------------------------------------------------------------
+function showSimReponseError(message) {
+  simResponse.text(message).addClass('failure');
+  setTimeout(() => simResponse.fadeOut().removeClass('failure'), 4000);
 }
-function showSimReponseSuccess(message){
-  simResponse.text(message).addClass("success");
-  setTimeout(()=> simResponse.fadeOut().removeClass("success"),4000);
+function showSimReponseSuccess(message) {
+  simResponse.text(message).addClass('success');
+  setTimeout(() => simResponse.fadeOut().removeClass('success'), 4000);
 }
 // --------------------------------------------------------------------------------
 
