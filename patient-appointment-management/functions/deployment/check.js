@@ -80,11 +80,15 @@ async function checkParameters(context) {
   v = context.DEPLOYER_AWS_SECRET_ACCESS_KEY;
   if (!v) errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'cannot be empty' });
   if (v.length < 16 || v.length > 128)
-    errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'length is not between 16 and 128' });
+    errors.push({
+      DEPLOYER_AWS_SECRET_ACCESS_KEY: 'length is not between 16 and 128',
+    });
   v = context.DEPLOYER_AWS_ACCESS_KEY_ID;
   if (!v) errors.push({ DEPLOYER_AWS_ACCESS_KEY_ID: 'cannot be empty' });
   if (v.length < 16 || v.length > 128)
-    errors.push({ DEPLOYER_AWS_ACCESS_KEY_ID: 'length is not between 16 and 128' });
+    errors.push({
+      DEPLOYER_AWS_ACCESS_KEY_ID: 'length is not between 16 and 128',
+    });
   try {
     const options = {
       accessKeyId: context.DEPLOYER_AWS_ACCESS_KEY_ID,
@@ -99,7 +103,7 @@ async function checkParameters(context) {
     });
     errors.push({
       DEPLOYER_AWS_SECRET_ACCESS_KEY:
-          'may be invalid, unable to authenticate to AWS',
+        'may be invalid, unable to authenticate to AWS',
     });
   }
   return errors;
