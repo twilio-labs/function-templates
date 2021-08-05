@@ -574,21 +574,22 @@ async function refreshToken() {
       token = r.token;
     })
     .catch((err) => console.log(err));
+}
 
-  // -----------------------------------------------------------------------------
-  async function getSimulationParameters() {
-    THIS = 'getSimulationParameters:';
-    console.log(THIS, 'running');
-    userActive = true;
+// -----------------------------------------------------------------------------
+async function getSimulationParameters() {
+  THIS = 'getSimulationParameters:';
+  console.log(THIS, 'running');
+  userActive = true;
 
-    fetch('/deployment/simulate-parameters', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token }),
-    })
+  fetch('/deployment/simulate-parameters', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
       .then((response) => response.json())
       .then((r) => {
         let date = new Date(r['appointmentTimestamp']);
@@ -605,7 +606,54 @@ async function refreshToken() {
       .catch((err) => {
         console.log(THIS, err);
       });
+}
+// --------------------------------------------------------------------------------
+async function bookAppointment(e){
+  e.preventDefault();
+  THIS = 'bookAppointment:';
+  userActive = true;
+
+  simResponse = $(".simulate-response");
+
+  $('#book_appointment_btn').addClass('loading');
+  simResponse.text("Please wait...").show();
+
+  const patientName = $('#patient-name').val();
+  const phoneNumber = $('#patient-phone-number').val();
+
+  if (patientName === "" || phoneNumber === ""){
+    showSimReponseError("Patient name and phone number must be filled");
+    return;
   }
+
+  fetch('/deployment/simulation-event', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token:token, firstName: patientName, phoneNumber: phoneNumber}),
+  })
+      .then((response) => response.json())
+      .then((r) => {
+        showSimReponseSuccess("Your appointment request has been sent");
+      })
+      .catch((err) => {
+        showSimReponseError("Unable to send your appointment request.")
+
+      })
+      .finally(() => {
+        $('#book_appointment_btn').removeClass('loading');
+      });
+}
+
+function showSimReponseError(message){
+  simResponse.text(message).addClass("failure");
+  setTimeout(()=> simResponse.fadeOut().removeClass("failure"),4000);
+}
+function showSimReponseSuccess(message){
+  simResponse.text(message).addClass("success");
+  setTimeout(()=> simResponse.fadeOut().removeClass("success"),4000);
 }
 // --------------------------------------------------------------------------------
 

@@ -280,6 +280,21 @@ tr.table-placeholder td {
   text-align: center;
 }
 
+.tooltip.success{
+  background: lightgreen;
+}
+
+.tooltip.failure{
+  background: orange;
+}
+
+.tooltip.simulate-response {
+  margin-left: 150px;
+  margin-top: -50px;
+  width: 600px;
+  text-align: center;
+}
+
 .info-circle {
   display: inline-block;
   font-size: 10px;

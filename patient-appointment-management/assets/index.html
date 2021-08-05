@@ -245,7 +245,7 @@
               <div class="simulate-label"> Name:
               </div>
               <div class="simulate-input">
-                <input  id="name-sent-to" type="text" name="name-sent-to" placeholder="First Last">
+                <input  id="patient-name" type="text" name="patient-name" placeholder="First Last">
               </div>
             </div>
             <div>
@@ -255,7 +255,7 @@
               <div class="simulate-label"> Number:
               </div>
               <div class="simulate-input">
-                <input id="number-sent-to" type="text" name="number-sent-to" placeholder="+14085551234">
+                <input id="patient-phone-number" type="text" name="patient-phone-number" placeholder="+14085551234">
               </div>
             </div>
           </div>
@@ -346,8 +346,12 @@
 
             </section>
 
-            <button class="button" onclick="login(event)">SIMULATE APPOINTMENT BOOKING</button>
+            <div class="tooltip simulate-response">
+              HELLO
+            </div>
+            <button id="book_appointment_btn" class="button" onclick="bookAppointment(event)">SIMULATE APPOINTMENT BOOKING</button>
             <button class="button" onclick="login(event)">SIMULATE APPOINTMENT REMINDER</button>
+
           </div>
         </form>
 
