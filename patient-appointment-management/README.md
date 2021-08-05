@@ -186,6 +186,7 @@ Functions used in the application:
 |`/helpers.js` |Shared functions used by other functions|
 |`/login.js` |Handles login from `index.html` page|
 |`/mfa.js` |Handles MFA logic from `index.html` page|
+|`/refresh-token.js` | Provides updated token periodically to `index.html` page|
 |`/save-booked.js` |Saved booked appointment notification event to S3 bucket|
 |`/save-cancel.js` |Saves cancel appointment request event to S3 bucket|
 |`/save-canceled.js` |Saves canceled appointment notification event to S3 bucket|

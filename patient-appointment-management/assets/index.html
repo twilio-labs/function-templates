@@ -137,6 +137,9 @@
           you'll need to provide the following information to your EHR integration implementor.
           For more details, please refer to <a href="https://twilio-cms-prod.s3.amazonaws.com/documents/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf">EHR Integration Guide</a>.
         </p>
+        <p>
+          <button onClick="goSimulate()">Go To Simulation Page</button>
+        </p>
         <table width="100%">
           <tr>
             <th>Name</th>
@@ -245,7 +248,7 @@
               <div class="simulate-label"> Name:
               </div>
               <div class="simulate-input">
-                <input  id="patient-name" type="text" name="patient-name" placeholder="First Last">
+                <input  id="patient-name" type="text" name="patient-name" placeholder="First Name">
               </div>
             </div>
             <div>
@@ -314,7 +317,7 @@
               <div class="ht info-circle">i
                 <span class="tooltip">
                           Hard coded for application testing purposes.
-                      </span>
+                </span>
               </div>
               <div class="simulate-label-long">Location:</div>
               <div class="simulate-input">

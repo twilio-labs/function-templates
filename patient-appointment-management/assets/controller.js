@@ -592,7 +592,7 @@ async function getSimulationParameters() {
   })
     .then((response) => response.json())
     .then((r) => {
-      let date = new Date(r['appointmentTimestamp']);
+      const date = new Date(r['appointmentTimestamp']);
       var ds = date.toDateString() + ' ' + date.toLocaleTimeString();
 
       $('#name-sent-from').val(r['customerName']);
@@ -642,14 +642,13 @@ async function bookAppointment(e) {
     .then((r) => {
       showSimReponseSuccess('Your appointment request has been sent');
     })
-    .catch((err) => {
+    .catch(() => {
       showSimReponseError('Unable to send your appointment request.');
     })
     .finally(() => {
       $('#book_appointment_btn').removeClass('loading');
     });
 }
-
 
 // --------------------------------------------------------------------------------
 async function remindAppointment(e) {
@@ -672,16 +671,16 @@ async function remindAppointment(e) {
       token: token,
     }),
   })
-      .then((response) => response.json())
-      .then((r) => {
-        showSimReponseSuccess('Your appointment reminder request has been sent');
-      })
-      .catch((err) => {
-        showSimReponseError('Unable to send your appointment reminder request.');
-      })
-      .finally(() => {
-        $('#remind_appointment_btn').removeClass('loading');
-      });
+    .then((response) => response.json())
+    .then((r) => {
+      showSimReponseSuccess('Your appointment reminder request has been sent');
+    })
+    .catch(() => {
+      showSimReponseError('Unable to send your appointment reminder request.');
+    })
+    .finally(() => {
+      $('#remind_appointment_btn').removeClass('loading');
+    });
 }
 
 // --------------------------------------------------------------------------
@@ -728,7 +727,7 @@ function goSimulate() {
     decodedToken = parseJwt(token);
     console.log(decodedToken['exp'] * 1000);
     console.log(Date.now());
-    //switch to simulate page only if token is NOT expired or if it is app token
+    // switch to simulate page only if token is NOT expired or if it is app token
     if (
       Date.now() <= decodedToken['exp'] * 1000 &&
       decodedToken['aud'] === 'app'

@@ -2,6 +2,46 @@
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
+const ts = Math.round(new Date().getTime() / 1000);
+const tsTomorrow = ts + 24 * 3600;
+
+
+async function createAppointment(context, appointment) {
+  context.TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
+  console.log(context.TWILIO_FLOW_SID);
+  // ---------- execute flow
+  const now = new Date();
+  appointment.event_datetime_utc = now.toISOString();
+  const params = {
+    to: appointment.patient_phone,
+    from: context.TWILIO_PHONE_NUMBER,
+    parameters: appointment,
+  };
+  let response = await context
+      .getTwilioClient()
+      .studio.flows(context.TWILIO_FLOW_SID)
+      .executions.create(params);
+  const execution_sid = response.sid;
+
+  // ---------- wait 10 sec to let flow execute
+  await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
+
+  // ---------- if still active, stop flow
+  response = await context
+      .getTwilioClient()
+      .studio.flows(context.TWILIO_FLOW_SID)
+      .executions(execution_sid)
+      .fetch();
+  if (response.status === 'active') {
+    // if 'active' wait 10 secs and stop flow execution
+    await context
+        .getTwilioClient()
+        .studio.flows(context.TWILIO_FLOW_SID)
+        .executions(execution_sid)
+        .update({ status: 'ended' });
+  }
+}
+
 
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
@@ -28,9 +68,7 @@ exports.handler = function (context, event, callback) {
   console.log(context);
 
   // Create an appointment object
-  var ts = Math.round(new Date().getTime() / 1000);
-  var tsTomorrow = ts + 24 * 3600;
-  const appt_datetime = new Date(tsTomorrow * 1000);
+  const apptDatetime = new Date(tsTomorrow * 1000);
 
   const appointment = {
     event_type: 'BOOKED',
@@ -46,7 +84,7 @@ exports.handler = function (context, event, callback) {
     appointment_location: 'Pacific Primary Care',
     appointment_id: '20000',
     appointment_timezone: '-0700',
-    appointment_datetime: appt_datetime.toISOString(),
+    appointment_datetime: apptDatetime.toISOString(),
   };
   // Call studio flow with appointment
   console.log(appointment);
@@ -60,39 +98,3 @@ exports.handler = function (context, event, callback) {
       callback(null);
     });
 };
-
-async function createAppointment(context, appointment) {
-  context.TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
-  console.log(context.TWILIO_FLOW_SID);
-  // ---------- execute flow
-  const now = new Date();
-  appointment.event_datetime_utc = now.toISOString();
-  let params = {
-    to: appointment.patient_phone,
-    from: context.TWILIO_PHONE_NUMBER,
-    parameters: appointment,
-  };
-  let response = await context
-    .getTwilioClient()
-    .studio.flows(context.TWILIO_FLOW_SID)
-    .executions.create(params);
-  const execution_sid = response.sid;
-
-  // ---------- wait 10 sec to let flow execute
-  await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
-
-  // ---------- if still active, stop flow
-  response = await context
-    .getTwilioClient()
-    .studio.flows(context.TWILIO_FLOW_SID)
-    .executions(execution_sid)
-    .fetch();
-  if (response.status === 'active') {
-    // if 'active' wait 10 secs and stop flow execution
-    await context
-      .getTwilioClient()
-      .studio.flows(context.TWILIO_FLOW_SID)
-      .executions(execution_sid)
-      .update({ status: 'ended' });
-  }
-}
