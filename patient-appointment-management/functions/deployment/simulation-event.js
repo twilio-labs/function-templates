@@ -4,7 +4,6 @@ const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
 const AWS = require('aws-sdk');
 
-
 const ts = Math.round(new Date().getTime() / 1000);
 const tsTomorrow = ts + 24 * 3600;
 
@@ -22,7 +21,7 @@ async function createAppointment(context, appointment) {
     .getTwilioClient()
     .studio.flows(context.TWILIO_FLOW_SID)
     .executions.create(params);
-  const execution_sid = response.sid;
+  const executionSid = response.sid;
 
   // ---------- wait 10 sec to let flow execute
   await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
@@ -31,18 +30,17 @@ async function createAppointment(context, appointment) {
   response = await context
     .getTwilioClient()
     .studio.flows(context.TWILIO_FLOW_SID)
-    .executions(execution_sid)
+    .executions(executionSid)
     .fetch();
   if (response.status === 'active') {
     // if 'active' wait 10 secs and stop flow execution
     await context
       .getTwilioClient()
       .studio.flows(context.TWILIO_FLOW_SID)
-      .executions(execution_sid)
+      .executions(executionSid)
       .update({ status: 'ended' });
   }
 }
-
 
 async function remindAppointment(context) {
   const AWS_CONFIG = {
@@ -52,8 +50,8 @@ async function remindAppointment(context) {
   };
   context.Lambda = new AWS.Lambda(AWS_CONFIG);
   context.AWS_LAMBDA_SEND_REMINDERS = await getParam(
-      context,
-      'AWS_LAMBDA_SEND_REMINDERS'
+    context,
+    'AWS_LAMBDA_SEND_REMINDERS'
   );
   const params = {
     FunctionName: context.AWS_LAMBDA_SEND_REMINDERS,
@@ -61,7 +59,6 @@ async function remindAppointment(context) {
   };
   const response = await context.Lambda.invoke(params).promise();
 }
-
 
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
@@ -82,8 +79,8 @@ exports.handler = function (context, event, callback) {
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  switch(event.command){
-    case "BOOKED":
+  switch (event.command) {
+    case 'BOOKED':
       const apptDatetime = new Date(tsTomorrow * 1000);
 
       const appointment = {
@@ -104,28 +101,31 @@ exports.handler = function (context, event, callback) {
       };
       // Call studio flow with appointment
       createAppointment(context, appointment)
-          .then(function () {
-            response.setBody({});
-            callback(null, response);
-          })
-          .catch(function (err) {
-            console.log(err);
-            callback(null);
-          });
+        .then(function () {
+          response.setBody({});
+          callback(null, response);
+        })
+        .catch(function (err) {
+          console.log(err);
+          callback(null);
+        });
       break;
 
-    case "REMIND":
+    case 'REMIND':
       // Call studio flow with appointment
       remindAppointment(context)
-          .then(function () {
-            response.setBody({});
-            callback(null, response);
-          })
-          .catch(function (err) {
-            console.log(err);
-            callback(null);
-          });
+        .then(function () {
+          response.setBody({});
+          callback(null, response);
+        })
+        .catch(function (err) {
+          console.log(err);
+          callback(err);
+        });
+      break;
 
+    default:
+      callback("Invalid command");
   }
 
   // Create an appointment object

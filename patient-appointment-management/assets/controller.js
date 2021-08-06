@@ -634,7 +634,7 @@ async function bookAppointment(e) {
     },
     body: JSON.stringify({
       token: token,
-      command: "BOOKED",
+      command: 'BOOKED',
       firstName: patientName,
       phoneNumber: phoneNumber,
     }),
@@ -671,8 +671,7 @@ async function remindAppointment(e) {
     },
     body: JSON.stringify({
       token: token,
-      command: "REMIND",
-
+      command: 'REMIND',
     }),
   })
     .then((response) => response.json())
@@ -725,9 +724,9 @@ function goHome() {
 // --------------------------------------------------------------------------------
 
 function goSimulate() {
-    $('main').hide();
-    $('simulate').show();
-    getSimulationParameters();
+  $('main').hide();
+  $('simulate').show();
+  getSimulationParameters();
 }
 
 // --------------------------------------------------------------------------------
@@ -737,4 +736,3 @@ $('simulate').hide();
 $('#password-form').show();
 $('#password-input').focus();
 $('#remind_appointment_btn').hide();
-
