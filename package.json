@@ -30,6 +30,7 @@
     "eslint": "^5.16.0",
     "eslint-config-twilio": "^1.34.2",
     "googleapis": "^65.0.0",
+    "got": "^6.7.1",
     "husky": "^6.0.0",
     "inquirer": "^7.0.4",
     "jest-cli": "^26.6.3",

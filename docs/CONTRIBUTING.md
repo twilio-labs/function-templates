@@ -136,6 +136,16 @@ or alternatively:
 npx jest --watch
 ```
 
+#### Fix any repository verification test failures
+
+The majority of the test failures you will see from an `npm test` run will be in the unit tests you have written for your app. Occasionally, you may see a failure that originates in `all-templates.test.js`, which contains a suite of verifications that run against the entire `function-templates` codebase and help ensure that your code will successfully deploy once merged into the repository. Common failure cases for this test suite are:
+
+- An app has a missing or poorly-formed entry in `templates.json`. Usually this is the result of modifying the `templates.json` file by hand. Compare the failing app's entry in `templates.json` against an entry for an app that passes and ensure all fields are present, and that all field names and the app's ID are correctly spelled. A syntax error parsing `templates.json` can also cause a failure here; use a verification tool to track down any syntax issues that may exist in the file.
+
+- Your app's `package.json` file has dependencies that are not in the `function-templates` repository root `package.json`. Usually this is the result of adding dependencies by hand instead of using the `npm run add-dependency` script recommended in this document. To fix this, either use `npm run add-dependency` or edit the repository root `package.json` to contain the correct dependency for your app.
+
+- Your app does not have one unit test file per Function. We encourage thorough testing for all of our apps, and generally prefer each JavaScript file in the `functions` directory to have a matching test file in the `tests` directory. This may not be ideal for the structure of every app; if your app is thoroughly tested but fails this verification, it may make sense to add its ID to the `incompleteTests` variable in `test/all-templates.test.js` so that it skips this verification. This test also only applies to files in the top level of the `functions` directory, so placing any JavaScript files that fail verification in a subdirectory of `functions` will also skip this test for those files.
+
 ### Deploy and test to a hosted Twilio serverless environment
 
 1. Create a profile/api key, if you don't already have one
