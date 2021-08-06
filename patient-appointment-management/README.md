@@ -108,7 +108,7 @@ You will need the following AWS assets ready prior to installation:
 - Take note of AWS Deployer Key ID and Access Key
   - Once the deployer user and role have been created, a key ID and Access Key will be available, which are required for app deployment from the Twilio Code Exchange page.
   - Select this [link](https://us-west-2.console.aws.amazon.com/secretsmanager/home?region=us-west-2#!/secret?name=twilio%2Fpatient-appointment-management%2Fdeployer) to be navigated to your Secrets Manager
-  - Scroll down to the “Secret value” section and select “Retrieve Secret Value”
+  - Scroll down to the “Secret Value” section and select “Retrieve Secret Value”
   - Take note of the Key ID and Access Key. These variables will be required for application deployment
 
 
