@@ -125,8 +125,8 @@ exports.handler = function (context, event, callback) {
       break;
 
     default:
-      callback("Invalid command");
+      callback('Invalid command');
   }
-
+  return;
   // Create an appointment object
 };
