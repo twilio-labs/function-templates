@@ -5,7 +5,7 @@ const { getParam, setParam } = require(path0);
 const AWS = require('aws-sdk');
 
 const ts = Math.round(new Date().getTime() / 1000);
-const tsTomorrow = ts + 24 * 3600;
+const tsTomorrow = ts + 17 * 3600;
 
 async function createAppointment(context, appointment) {
   context.TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
@@ -92,7 +92,7 @@ exports.handler = function (context, event, callback) {
         patient_phone: event.phoneNumber,
         provider_id: 'afauci',
         provider_first_name: 'Anthony',
-        provider_last_name: 'Dr. Diaz',
+        provider_last_name: 'Diaz',
         provider_callback_phone: '(800) 555-2222',
         appointment_location: 'Pacific Primary Care',
         appointment_id: '20000',

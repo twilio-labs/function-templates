@@ -601,7 +601,6 @@ async function getSimulationParameters() {
       $('#provider').val(r['provider']);
       $('#location').val(r['location']);
       // Aug 23, 2021 at 4:30 PM
-      console.log('Sim params:', r);
     })
     .catch((err) => {
       console.log(THIS, err);

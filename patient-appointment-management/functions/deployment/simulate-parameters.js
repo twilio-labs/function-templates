@@ -2,8 +2,8 @@
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
   const { isValidAppToken } = require(path);
-  const ts = Math.round(new Date().getTime() / 1000);
-  const tsTomorrow = ts + 24 * 3600;
+  const ts = Math.round(new Date().getTime());
+  const tsTomorrow = ts + 24 * 3600 * 1000;
 
   if (!isValidAppToken(event.token, context)) {
     const response = new Twilio.Response();
