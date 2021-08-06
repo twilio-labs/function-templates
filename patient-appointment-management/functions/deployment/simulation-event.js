@@ -103,11 +103,11 @@ exports.handler = function (context, event, callback) {
       createAppointment(context, appointment)
         .then(function () {
           response.setBody({});
-          callback(null, response);
+          return callback(null, response);
         })
         .catch(function (err) {
           console.log(err);
-          callback(null);
+          return callback(null);
         });
       break;
 
@@ -116,17 +116,16 @@ exports.handler = function (context, event, callback) {
       remindAppointment(context)
         .then(function () {
           response.setBody({});
-          callback(null, response);
+          return callback(null, response);
         })
         .catch(function (err) {
           console.log(err);
-          callback(err);
+          return callback(err);
         });
       break;
 
     default:
-      callback('Invalid command');
-      return;
+      return callback('Invalid command');
   }
   // Create an appointment object
 };
