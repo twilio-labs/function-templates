@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring, dot-notation, consistent-return, spaced-comment */
+/* eslint-disable camelcase, prefer-destructuring, dot-notation, consistent-return, spaced-comment */
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
