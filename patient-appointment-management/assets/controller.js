@@ -494,6 +494,8 @@ async function login(e) {
     .catch((err) => console.log(err));
 }
 
+// --------------------------------------------------------------------------------
+
 function parseJwt(token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -550,7 +552,7 @@ async function mfa(e) {
 function scheduleTokenRefresh() {
   setTimeout(refreshToken, TOKEN_REFRESH_INTERVAL);
 }
-
+// -----------------------------------------------------------------------------
 async function refreshToken() {
   if (!userActive) return;
   userActive = false;
@@ -574,6 +576,126 @@ async function refreshToken() {
     .catch((err) => console.log(err));
 }
 
+// -----------------------------------------------------------------------------
+async function getSimulationParameters() {
+  THIS = 'getSimulationParameters:';
+  console.log(THIS, 'running');
+  userActive = true;
+
+  fetch('/deployment/simulate-parameters', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token }),
+  })
+    .then((response) => response.json())
+    .then((r) => {
+      const date = new Date(r['appointmentTimestamp']);
+      var ds = date.toDateString() + ' ' + date.toLocaleTimeString();
+
+      $('#name-sent-from').val(r['customerName']);
+      $('#number-sent-from').val(r['customerPhoneNumber']);
+      $('#date-time').val(ds);
+      $('#provider').val(r['provider']);
+      $('#location').val(r['location']);
+      // Aug 23, 2021 at 4:30 PM
+    })
+    .catch((err) => {
+      console.log(THIS, err);
+    });
+}
+// --------------------------------------------------------------------------------
+async function bookAppointment(e) {
+  e.preventDefault();
+  THIS = 'bookAppointment:';
+  userActive = true;
+
+  simResponse = $('.simulate-response');
+
+  $('#book_appointment_btn').addClass('loading');
+  simResponse.text('Please wait...').show();
+
+  const patientName = $('#patient-name').val();
+  const phoneNumber = $('#patient-phone-number').val();
+
+  if (patientName === '' || phoneNumber === '') {
+    showSimReponseError('Patient name and phone number must be filled');
+    return;
+  }
+
+  fetch('/deployment/simulation-event', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token: token,
+      command: 'BOOKED',
+      firstName: patientName,
+      phoneNumber: phoneNumber,
+    }),
+  })
+    .then((response) => response.json())
+    .then((r) => {
+      showSimReponseSuccess('Your appointment request has been sent');
+      $('#remind_appointment_btn').show();
+    })
+    .catch(() => {
+      showSimReponseError('Unable to send your appointment request.');
+    })
+    .finally(() => {
+      $('#book_appointment_btn').removeClass('loading');
+    });
+}
+
+// --------------------------------------------------------------------------------
+async function remindAppointment(e) {
+  e.preventDefault();
+  THIS = 'remindAppointment:';
+  userActive = true;
+
+  simResponse = $('.simulate-response');
+
+  $('#remind_appointment_btn').addClass('loading');
+  simResponse.text('Please wait...').show();
+
+  fetch('/deployment/simulation-event', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      token: token,
+      command: 'REMIND',
+    }),
+  })
+    .then((response) => response.json())
+    .then((r) => {
+      showSimReponseSuccess('Your appointment reminder request has been sent');
+    })
+    .catch(() => {
+      showSimReponseError('Unable to send your appointment reminder request.');
+    })
+    .finally(() => {
+      $('#remind_appointment_btn').removeClass('loading');
+    });
+}
+
+// --------------------------------------------------------------------------
+function showSimReponseError(message) {
+  simResponse.text(message).addClass('failure');
+  setTimeout(() => simResponse.fadeOut().removeClass('failure'), 4000);
+}
+function showSimReponseSuccess(message) {
+  simResponse.text(message).addClass('success');
+  setTimeout(() => simResponse.fadeOut().removeClass('success'), 4000);
+}
+// --------------------------------------------------------------------------------
+
 function handleInvalidToken() {
   $('#password-form').show();
   $('#auth-successful').hide();
@@ -593,7 +715,23 @@ function handleInvalidToken() {
   $('#password-input').focus();
 }
 // --------------------------------------------------------------------------------
-$('#password-form').show();
+
+function goHome() {
+  $('main').show();
+  $('simulate').hide();
+}
+// --------------------------------------------------------------------------------
+
+function goSimulate() {
+  $('main').hide();
+  $('simulate').show();
+  getSimulationParameters();
+}
+
+// --------------------------------------------------------------------------------
 $('#auth-successful').hide();
 $('#mfa-form').hide();
+$('simulate').hide();
+$('#password-form').show();
 $('#password-input').focus();
+$('#remind_appointment_btn').hide();

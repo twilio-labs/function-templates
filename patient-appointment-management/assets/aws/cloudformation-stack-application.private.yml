@@ -423,7 +423,7 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
-      StateMachineName: 'twilio-query-appointment-state-owlhealth'
+      StateMachineName: !Sub 'twilio-query-appointment-state-${ParameterCustomerCode}'
       RoleArn: !GetAtt RoleForExecution.Arn
       DefinitionSubstitutions:
         AWSRegion: !Ref AWS::Region
@@ -448,7 +448,7 @@ Resources:
     DeletionPolicy: Delete
     UpdateReplacePolicy: Delete
     Properties:
-      StateMachineName: 'twilio-query-appointment-history-owlhealth'
+      StateMachineName: !Sub 'twilio-query-appointment-history-${ParameterCustomerCode}'
       RoleArn: !GetAtt RoleForExecution.Arn
       DefinitionSubstitutions:
         AWSRegion: !Ref AWS::Region
