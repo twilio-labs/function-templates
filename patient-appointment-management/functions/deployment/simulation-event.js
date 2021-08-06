@@ -2,13 +2,14 @@
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
+const AWS = require('aws-sdk');
+
+
 const ts = Math.round(new Date().getTime() / 1000);
 const tsTomorrow = ts + 24 * 3600;
 
-
 async function createAppointment(context, appointment) {
   context.TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
-  console.log(context.TWILIO_FLOW_SID);
   // ---------- execute flow
   const now = new Date();
   appointment.event_datetime_utc = now.toISOString();
@@ -18,9 +19,9 @@ async function createAppointment(context, appointment) {
     parameters: appointment,
   };
   let response = await context
-      .getTwilioClient()
-      .studio.flows(context.TWILIO_FLOW_SID)
-      .executions.create(params);
+    .getTwilioClient()
+    .studio.flows(context.TWILIO_FLOW_SID)
+    .executions.create(params);
   const execution_sid = response.sid;
 
   // ---------- wait 10 sec to let flow execute
@@ -28,18 +29,37 @@ async function createAppointment(context, appointment) {
 
   // ---------- if still active, stop flow
   response = await context
-      .getTwilioClient()
-      .studio.flows(context.TWILIO_FLOW_SID)
-      .executions(execution_sid)
-      .fetch();
+    .getTwilioClient()
+    .studio.flows(context.TWILIO_FLOW_SID)
+    .executions(execution_sid)
+    .fetch();
   if (response.status === 'active') {
     // if 'active' wait 10 secs and stop flow execution
     await context
-        .getTwilioClient()
-        .studio.flows(context.TWILIO_FLOW_SID)
-        .executions(execution_sid)
-        .update({ status: 'ended' });
+      .getTwilioClient()
+      .studio.flows(context.TWILIO_FLOW_SID)
+      .executions(execution_sid)
+      .update({ status: 'ended' });
   }
+}
+
+
+async function remindAppointment(context) {
+  const AWS_CONFIG = {
+    accessKeyId: await getParam(context, 'AWS_ACCESS_KEY_ID'),
+    secretAccessKey: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
+    region: await getParam(context, 'AWS_REGION'),
+  };
+  context.Lambda = new AWS.Lambda(AWS_CONFIG);
+  context.AWS_LAMBDA_SEND_REMINDERS = await getParam(
+      context,
+      'AWS_LAMBDA_SEND_REMINDERS'
+  );
+  const params = {
+    FunctionName: context.AWS_LAMBDA_SEND_REMINDERS,
+    InvocationType: 'RequestResponse',
+  };
+  const response = await context.Lambda.invoke(params).promise();
 }
 
 
@@ -62,39 +82,51 @@ exports.handler = function (context, event, callback) {
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+  switch(event.command){
+    case "BOOKED":
+      const apptDatetime = new Date(tsTomorrow * 1000);
 
-  // Main function
+      const appointment = {
+        event_type: 'BOOKED',
+        event_datetime_utc: null,
+        patient_id: '1000',
+        patient_first_name: event.firstName,
+        patient_last_name: 'Doe',
+        patient_phone: event.phoneNumber,
+        provider_id: 'afauci',
+        provider_first_name: 'Anthony',
+        provider_last_name: 'Dr. Diaz',
+        provider_callback_phone: '(800) 555-2222',
+        appointment_location: 'Pacific Primary Care',
+        appointment_id: '20000',
+        appointment_timezone: '-0700',
+        appointment_datetime: apptDatetime.toISOString(),
+      };
+      // Call studio flow with appointment
+      createAppointment(context, appointment)
+          .then(function () {
+            response.setBody({});
+            callback(null, response);
+          })
+          .catch(function (err) {
+            console.log(err);
+            callback(null);
+          });
+      break;
 
-  console.log(context);
+    case "REMIND":
+      // Call studio flow with appointment
+      remindAppointment(context)
+          .then(function () {
+            response.setBody({});
+            callback(null, response);
+          })
+          .catch(function (err) {
+            console.log(err);
+            callback(null);
+          });
+
+  }
 
   // Create an appointment object
-  const apptDatetime = new Date(tsTomorrow * 1000);
-
-  const appointment = {
-    event_type: 'BOOKED',
-    event_datetime_utc: null,
-    patient_id: '1000',
-    patient_first_name: event.firstName,
-    patient_last_name: 'Doe',
-    patient_phone: event.phoneNumber,
-    provider_id: 'afauci',
-    provider_first_name: 'Anthony',
-    provider_last_name: 'Dr. Diaz',
-    provider_callback_phone: '(800) 555-2222',
-    appointment_location: 'Pacific Primary Care',
-    appointment_id: '20000',
-    appointment_timezone: '-0700',
-    appointment_datetime: apptDatetime.toISOString(),
-  };
-  // Call studio flow with appointment
-  console.log(appointment);
-  createAppointment(context, appointment)
-    .then(function () {
-      response.setBody({});
-      callback(null, response);
-    })
-    .catch(function (err) {
-      console.log(err);
-      callback(null);
-    });
 };

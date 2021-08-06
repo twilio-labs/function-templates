@@ -30,12 +30,6 @@
       into the application in order to both complete installation and to run the simulation steps.
     </p>
   </header>
-  <p class="main-menu"><span class="menu-main" style="cursor:pointer" onClick="goHome()">Back to Main Page</span><span class="menu-simulate" style="cursor:pointer" onClick="goSimulate()">Go To Simulation Page</span>
-    <span class="tooltip simulate-error">
-                        You must login on the home page before you can run simulation.<br/>
-                        (If you already logged in, your session may have expired)
-    </span>
-  </p>
   <main>
     <script>
     let token = null;
@@ -343,8 +337,8 @@
                 send a reminder SMS (simulating steps 5-7 in the Reference Architecture).
               </p>
               <p>
-                *Note: Do not respond to the BOOKED message with a cancellation request, or the reminder
-                simulation will not work. Test appointment cancellation using the simulation steps further below.
+                *Note: The event simulation does not currently include the ability to test bi-directional messaging,
+                therefore responding to either appointment booking or reminder message will not create results.
               </p>
 
             </section>
@@ -356,6 +350,9 @@
             <button id="remind_appointment_btn" class="button" onclick="remindAppointment(event)">SIMULATE APPOINTMENT REMINDER</button>
 
           </div>
+          <p class="main-menu"><span class="menu-main" style="cursor:pointer" onClick="goHome()">Click here to return to main page</span>
+          </p>
+
         </form>
 
       </div>

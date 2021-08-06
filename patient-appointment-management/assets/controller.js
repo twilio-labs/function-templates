@@ -634,6 +634,7 @@ async function bookAppointment(e) {
     },
     body: JSON.stringify({
       token: token,
+      command: "BOOKED",
       firstName: patientName,
       phoneNumber: phoneNumber,
     }),
@@ -641,6 +642,7 @@ async function bookAppointment(e) {
     .then((response) => response.json())
     .then((r) => {
       showSimReponseSuccess('Your appointment request has been sent');
+      $('#remind_appointment_btn').show();
     })
     .catch(() => {
       showSimReponseError('Unable to send your appointment request.');
@@ -661,7 +663,7 @@ async function remindAppointment(e) {
   $('#remind_appointment_btn').addClass('loading');
   simResponse.text('Please wait...').show();
 
-  fetch('/deployment/simulation-remind', {
+  fetch('/deployment/simulation-event', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -669,6 +671,8 @@ async function remindAppointment(e) {
     },
     body: JSON.stringify({
       token: token,
+      command: "REMIND",
+
     }),
   })
     .then((response) => response.json())
@@ -717,39 +721,20 @@ function handleInvalidToken() {
 function goHome() {
   $('main').show();
   $('simulate').hide();
-  $('.menu-main').hide();
-  $('.menu-simulate').show();
 }
 // --------------------------------------------------------------------------------
 
 function goSimulate() {
-  try {
-    decodedToken = parseJwt(token);
-    console.log(decodedToken['exp'] * 1000);
-    console.log(Date.now());
-    // switch to simulate page only if token is NOT expired or if it is app token
-    if (
-      Date.now() <= decodedToken['exp'] * 1000 &&
-      decodedToken['aud'] === 'app'
-    ) {
-      $('main').hide();
-      $('simulate').show();
-      $('.menu-main').show();
-      $('.menu-simulate').hide();
-      getSimulationParameters();
-    } else throw Error();
-  } catch (e) {
-    $('.simulate-error').fadeIn();
-    setTimeout(function () {
-      $('.simulate-error').fadeOut();
-    }, 5000);
-  }
+    $('main').hide();
+    $('simulate').show();
+    getSimulationParameters();
 }
 
 // --------------------------------------------------------------------------------
 $('#auth-successful').hide();
 $('#mfa-form').hide();
-$('.menu-main').hide();
 $('simulate').hide();
 $('#password-form').show();
 $('#password-input').focus();
+$('#remind_appointment_btn').hide();
+

@@ -5,7 +5,6 @@ exports.handler = function (context, event, callback) {
   const ts = Math.round(new Date().getTime() / 1000);
   const tsTomorrow = ts + 24 * 3600;
 
-
   if (!isValidAppToken(event.token, context)) {
     const response = new Twilio.Response();
     response.setStatusCode(401);
@@ -30,6 +29,5 @@ exports.handler = function (context, event, callback) {
     location: 'Pacific Primary Care',
   };
   response.setBody(simulationParameters);
-  console.log('simulationParameters: ', simulationParameters);
   callback(null, response);
 };
