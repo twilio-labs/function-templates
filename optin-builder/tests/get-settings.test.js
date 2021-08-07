@@ -14,7 +14,7 @@ function getFunctions() {
 
 const {
   Response,
-} = require(`${__dirname}/../node_modules/twilio-run/dist/runtime/internal/response`);
+} = require(`${__dirname}/../../node_modules/twilio-run/dist/runtime/internal/response`);
 
 Twilio.Response = Response;
 
