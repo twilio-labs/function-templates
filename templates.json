@@ -269,6 +269,11 @@
       "id": "patient-appointment-management",
       "name": "Patient Appointment Management",
       "description": "Patient Appointment Management including notification and reminders sent via SMS"
+    },
+    {
+      "id": "optin-builder",
+      "name": "Twilio SMS Opt-In Builder",
+      "description": "Build a custom branded SMS opt-in landing page"
     }
   ]
 }

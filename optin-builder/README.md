@@ -1,4 +1,4 @@
-# Twilio Keyword Signup Builder
+# Twilio Opt-In Builder
 
 Easily create an embedable SMS Opt-In form to collect contacts for your campaign.
 
