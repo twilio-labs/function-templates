@@ -1,6 +1,5 @@
-/* eslint-disable prefer-destructuring, dot-notation, prefer-template */
 exports.handler = function (context, event, callback) {
-  const path = Runtime.getFunctions()['auth'].path;
+  const { path } = Runtime.getFunctions().auth;
   const { isValidPassword, createMfaToken } = require(path);
 
   const response = new Twilio.Response();
@@ -14,9 +13,7 @@ exports.handler = function (context, event, callback) {
       .create({
         to: context.ADMINISTRATOR_PHONE,
         from: context.TWILIO_PHONE_NUMBER,
-        body:
-          mfaCode +
-          ' is your security code for the PAM application. It is valid for five minutes.',
+        body: `${mfaCode} is your security code for the PAM application. It is valid for five minutes.`,
       })
       .then(function () {
         // SMS was sent successfully

@@ -1,15 +1,9 @@
-/* eslint-disable no-negated-condition, no-else-return, import/newline-after-import, no-use-before-define, vars-on-top, no-var, object-shorthand, sonarjs/prefer-immediate-return */
+/* eslint-disable no-else-return,  no-negated-condition */
 const crypto = require('crypto');
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+
 const MFA_TOKEN_DURATION = 5 * 60;
 const APP_TOKEN_DURATION = 30 * 60;
-
-function isValidPassword(password, context) {
-  return (
-    checkDisableAuthForLocalhost(context) ||
-    password === context.APPLICATION_PASSWORD
-  );
-}
 
 function checkDisableAuthForLocalhost(context) {
   return (
@@ -18,6 +12,22 @@ function checkDisableAuthForLocalhost(context) {
     context.DISABLE_AUTH_FOR_LOCALHOST &&
     context.DISABLE_AUTH_FOR_LOCALHOST === 'true'
   );
+}
+
+function isValidPassword(password, context) {
+  return (
+    checkDisableAuthForLocalhost(context) ||
+    password === context.APPLICATION_PASSWORD
+  );
+}
+
+function createAppToken(issuer, context) {
+  return jwt.sign({}, context.AUTH_TOKEN, {
+    expiresIn: APP_TOKEN_DURATION,
+    audience: 'app',
+    issuer,
+    subject: 'administrator',
+  });
 }
 
 function createMfaToken(issuer, mfaCode, context) {
@@ -31,14 +41,12 @@ function createMfaToken(issuer, mfaCode, context) {
     .update(Buffer.from(`${mfaCode}:${context.SALT}`, 'utf-8'))
     .digest('base64');
 
-  var jwtToken = jwt.sign({ data: mfaEncrypt }, context.AUTH_TOKEN, {
+  return jwt.sign({ data: mfaEncrypt }, context.AUTH_TOKEN, {
     expiresIn: MFA_TOKEN_DURATION,
     audience: 'mfa',
-    issuer: issuer,
+    issuer,
     subject: 'administrator',
   });
-
-  return jwtToken;
 }
 
 function isValidMfaToken(token, context) {
@@ -50,15 +58,6 @@ function isValidMfaToken(token, context) {
   } catch (err) {
     return false;
   }
-}
-
-function createAppToken(issuer, context) {
-  return jwt.sign({}, context.AUTH_TOKEN, {
-    expiresIn: APP_TOKEN_DURATION,
-    audience: 'app',
-    issuer: issuer,
-    subject: 'administrator',
-  });
 }
 
 function isValidAppToken(token, context) {

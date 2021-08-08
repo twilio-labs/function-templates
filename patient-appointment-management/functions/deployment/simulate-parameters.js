@@ -1,4 +1,4 @@
-/* eslint-disable prefer-destructuring, dot-notation, consistent-return, spaced-comment */
+/* eslint-disable prefer-destructuring, dot-notation */
 exports.handler = function (context, event, callback) {
   const path = Runtime.getFunctions()['auth'].path;
   const { isValidAppToken } = require(path);
@@ -29,5 +29,5 @@ exports.handler = function (context, event, callback) {
     location: 'Pacific Primary Care',
   };
   response.setBody(simulationParameters);
-  callback(null, response);
+  return callback(null, response);
 };

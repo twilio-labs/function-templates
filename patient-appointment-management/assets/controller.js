@@ -14,6 +14,7 @@
 let phoneNumber;
 let flowSid;
 let userActive = true;
+let simRemindTimeout = 0;
 const TOKEN_REFRESH_INTERVAL = 30 * 60 * 1000;
 
 const baseUrl = new URL(location.href);
@@ -638,10 +639,10 @@ async function bookAppointment(e) {
       phoneNumber: phoneNumber,
     }),
   })
-    .then((response) => response.json())
-    .then((r) => {
-      showSimReponseSuccess('Your appointment request has been sent');
-      $('#remind_appointment_btn').show();
+    .then(() => {
+      simRemindTimeout = 120; // seconds
+      setTimeout(updateSimRemindTimeout, 1000);
+      showSimReponseSuccess();
     })
     .catch(() => {
       showSimReponseError('Unable to send your appointment request.');
@@ -649,6 +650,17 @@ async function bookAppointment(e) {
     .finally(() => {
       $('#book_appointment_btn').removeClass('loading');
     });
+}
+// ------------------------------------------------------------------------------
+function updateSimRemindTimeout() {
+  simRemindTimeout -= 1;
+  showSimReponseSuccess();
+  if (simRemindTimeout < 1) {
+    simResponse.fadeOut().removeClass('success');
+    $('#remind_appointment_btn').show();
+  } else {
+    setTimeout(updateSimRemindTimeout, 1000);
+  }
 }
 
 // --------------------------------------------------------------------------------
@@ -675,7 +687,7 @@ async function remindAppointment(e) {
   })
     .then((response) => response.json())
     .then((r) => {
-      showSimReponseSuccess('Your appointment reminder request has been sent');
+      showSimReminderSuccess();
     })
     .catch(() => {
       showSimReponseError('Unable to send your appointment reminder request.');
@@ -690,10 +702,19 @@ function showSimReponseError(message) {
   simResponse.text(message).addClass('failure');
   setTimeout(() => simResponse.fadeOut().removeClass('failure'), 4000);
 }
-function showSimReponseSuccess(message) {
-  simResponse.text(message).addClass('success');
+function showSimReponseSuccess() {
+  simResponse
+    .text(
+      `Your appointment request has been sent. Please wait ${simRemindTimeout} seconds to simulate a reminder.`
+    )
+    .addClass('success');
+  // setTimeout(() => simResponse.fadeOut().removeClass('success'), 4000);
+}
+function showSimReminderSuccess() {
+  simResponse.text(`Your reminder request has been sent.`).addClass('success');
   setTimeout(() => simResponse.fadeOut().removeClass('success'), 4000);
 }
+
 // --------------------------------------------------------------------------------
 
 function handleInvalidToken() {
@@ -718,20 +739,20 @@ function handleInvalidToken() {
 
 function goHome() {
   $('main').show();
-  $('simulate').hide();
+  $('#simulate-section').hide();
 }
 // --------------------------------------------------------------------------------
 
 function goSimulate() {
   $('main').hide();
-  $('simulate').show();
+  $('#simulate-section').show();
   getSimulationParameters();
 }
 
 // --------------------------------------------------------------------------------
 $('#auth-successful').hide();
 $('#mfa-form').hide();
-$('simulate').hide();
+$('#simulate-section').hide();
 $('#password-form').show();
 $('#password-input').focus();
 $('#remind_appointment_btn').hide();

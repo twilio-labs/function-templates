@@ -1,4 +1,4 @@
-/* eslint-disable camelcase, prefer-destructuring, dot-notation, consistent-return, spaced-comment */
+/* eslint-disable camelcase, prefer-destructuring, dot-notation, consistent-return */
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
@@ -9,6 +9,7 @@ const tsTomorrow = ts + 17 * 3600;
 
 async function createAppointment(context, appointment) {
   context.TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
+
   // ---------- execute flow
   const now = new Date();
   appointment.event_datetime_utc = now.toISOString();
@@ -17,29 +18,11 @@ async function createAppointment(context, appointment) {
     from: context.TWILIO_PHONE_NUMBER,
     parameters: appointment,
   };
-  let response = await context
+  const response = await context
     .getTwilioClient()
     .studio.flows(context.TWILIO_FLOW_SID)
     .executions.create(params);
   const executionSid = response.sid;
-
-  // ---------- wait 10 sec to let flow execute
-  await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
-
-  // ---------- if still active, stop flow
-  response = await context
-    .getTwilioClient()
-    .studio.flows(context.TWILIO_FLOW_SID)
-    .executions(executionSid)
-    .fetch();
-  if (response.status === 'active') {
-    // if 'active' wait 10 secs and stop flow execution
-    await context
-      .getTwilioClient()
-      .studio.flows(context.TWILIO_FLOW_SID)
-      .executions(executionSid)
-      .update({ status: 'ended' });
-  }
 }
 
 async function remindAppointment(context) {
@@ -103,11 +86,11 @@ exports.handler = function (context, event, callback) {
       createAppointment(context, appointment)
         .then(function () {
           response.setBody({});
-          return callback(null, response);
+          callback(null, response);
         })
         .catch(function (err) {
           console.log(err);
-          return callback(null);
+          callback(err, null);
         });
       break;
 
@@ -116,16 +99,15 @@ exports.handler = function (context, event, callback) {
       remindAppointment(context)
         .then(function () {
           response.setBody({});
-          return callback(null, response);
+          callback(null, response);
         })
         .catch(function (err) {
           console.log(err);
-          return callback(err);
+          callback(err, null);
         });
       break;
 
     default:
-      return callback('Invalid command');
+      return callback('Invalid command', null);
   }
-  // Create an appointment object
 };

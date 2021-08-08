@@ -1,15 +1,14 @@
-/* eslint-disable prefer-destructuring, dot-notation, consistent-return, no-var, spaced-comment */
 exports.handler = function (context, event, callback) {
-  const path = Runtime.getFunctions()['auth'].path;
+  const { path } = Runtime.getFunctions().auth;
   const { createAppToken, isValidMfaToken } = require(path);
 
   const ac = context.ACCOUNT_SID;
 
-  var jwt = require('jsonwebtoken');
+  const jwt = require('jsonwebtoken');
 
   const crypto = require('crypto');
 
-  //assert(event.token, 'missing event.token');
+  // assert(event.token, 'missing event.token');
   if (!isValidMfaToken(event.token, context)) {
     const response = new Twilio.Response();
     response.setStatusCode(401);
@@ -54,5 +53,5 @@ exports.handler = function (context, event, callback) {
     );
   }
   console.log('came to mfa.js');
-  callback(null, response);
+  return callback(null, response);
 };
