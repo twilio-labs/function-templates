@@ -1502,8 +1502,8 @@
         "format": "text",
         "description": "AWS region to deploy resources",
         "link": null,
-        "default": "false",
-        "configurable": true,
+        "default": "us-west-2",
+        "configurable": false,
         "contentKey": null
       },
       {
