@@ -44,7 +44,8 @@
     "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
     "twilio": "^3.64.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "jsonwebtoken": "^8.5.1"
   },
   "jest": {
     "testEnvironment": "node",

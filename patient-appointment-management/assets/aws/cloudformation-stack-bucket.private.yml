@@ -5,6 +5,9 @@ Description: 'Twilio Patient Appointment Management Bucket'
 Parameters:
 
 
+  ParameterApplicationName:
+    Type: String
+
   ParameterCustomerCode:
     Type: String
 
@@ -71,3 +74,28 @@ Resources:
             Condition:
               Bool:
                 aws:SecureTransport: false
+
+  PolicyForDeployer:
+    Type: AWS::IAM::ManagedPolicy
+    DeletionPolicy: Delete
+    Properties:
+      ManagedPolicyName: !Sub 'twilio-${ParameterApplicationName}-policy-s3-${ParameterCustomerCode}'
+      Users:
+        - !ImportValue 'PatientAppointmentManagementDeployerUser'
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'S3ObjectPermissions'
+            Effect: Allow
+            Action:
+              - s3:DeleteObject
+              - s3:GetObject
+              - s3:PutObject
+            Resource:
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}/*'
+          - Sid: 'S3BucketPermissions'
+            Effect: Allow
+            Action:
+              - s3:ListBucket
+            Resource:
+              - !Sub 'arn:aws:s3:::${ParameterS3Bucket}'

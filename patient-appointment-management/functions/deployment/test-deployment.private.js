@@ -792,11 +792,8 @@ exports.handler = async function (context, event, callback) {
     );
 
     const AWS_CONFIG = {
-      accessKeyId: await getParam(context, 'DEPLOYER_AWS_ACCESS_KEY_ID'),
-      secretAccessKey: await getParam(
-        context,
-        'DEPLOYER_AWS_SECRET_ACCESS_KEY'
-      ),
+      accessKeyId: await getParam(context, 'AWS_ACCESS_KEY_ID'),
+      secretAccessKey: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
       region: await getParam(context, 'AWS_REGION'),
     };
     context.S3 = new AWS.S3(AWS_CONFIG);
