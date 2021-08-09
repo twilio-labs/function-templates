@@ -1427,16 +1427,6 @@
         "contentKey": null
       },
       {
-        "key": "CUSTOMER_EHR_ENDPOINT_URL",
-        "required": true,
-        "format": "text",
-        "description": "Customer EHR endpoint url for communication from Twilio via HTTP POST",
-        "link": null,
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
         "key": "TWILIO_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
@@ -1512,7 +1502,17 @@
         "format": "text",
         "description": "AWS region to deploy resources",
         "link": null,
-        "default": "us-west-2",
+        "default": "false",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ADMINISTRATOR_PHONE",
+        "required": true,
+        "format": "phone_number",
+        "description": "Administrator phone number to receive security code for 2nd factor authentication.",
+        "link": null,
+        "default": null,
         "configurable": true,
         "contentKey": null
       }
