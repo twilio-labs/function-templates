@@ -15,14 +15,14 @@ const aws = require('aws-sdk');
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
 const path1 = Runtime.getFunctions()['auth'].path;
-const { isAllowed } = require(path1);
+const { isValidAppToken } = require(path1);
 
 exports.handler = async function (context, event, callback) {
   console.log('Starting:', THIS);
   console.time(THIS);
   try {
     assert(event.token, 'missing event.token');
-    if (!isAllowed(event.token, context)) {
+    if (!isValidAppToken(event.token, context)) {
       const response = new Twilio.Response();
       response.setStatusCode(401);
       response.appendHeader('Content-Type', 'application/json');
@@ -34,6 +34,10 @@ exports.handler = async function (context, event, callback) {
     const APPLICATION_NAME = await getParam(context, 'APPLICATION_NAME');
     const CUSTOMER_CODE = await getParam(context, 'CUSTOMER_CODE');
     const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
+    const DEPLOYER_AWS_ROLE_ARN = await getParam(
+      context,
+      'DEPLOYER_AWS_ROLE_ARN'
+    );
     const DEPLOYER_AWS_ACCESS_KEY_ID = await getParam(
       context,
       'DEPLOYER_AWS_ACCESS_KEY_ID'
@@ -47,24 +51,6 @@ exports.handler = async function (context, event, callback) {
     const TWILIO_AUTH_TOKEN = await getParam(context, 'TWILIO_AUTH_TOKEN');
     const TWILIO_FLOW_SID = await getParam(context, 'TWILIO_FLOW_SID');
     const TWILIO_PHONE_NUMBER = await getParam(context, 'TWILIO_PHONE_NUMBER');
-    const AWS_LAMBDA_SEND_REMINDERS = await getParam(
-      context,
-      'AWS_LAMBDA_SEND_REMINDERS'
-    );
-    const AWS_LAMBDA_QUERY_STATE = await getParam(
-      context,
-      'AWS_LAMBDA_QUERY_STATE'
-    );
-    const AWS_SFN_QUERY_STATE = await getParam(context, 'AWS_SFN_QUERY_STATE');
-    const AWS_LAMBDA_QUERY_HISTORY = await getParam(
-      context,
-      'AWS_LAMBDA_QUERY_HISTORY'
-    );
-    const AWS_SFN_QUERY_HISTORY = await getParam(
-      context,
-      'AWS_SFN_QUERY_HISTORY'
-    );
-    const AWS_GLUE_CRAWLER = await getParam(context, 'AWS_GLUE_CRAWLER');
     const AWS_GLUE_DATABASE = await getParam(context, 'AWS_GLUE_DATABASE');
     const AWS_CF_STACK_BUCKET = await getParam(context, 'AWS_CF_STACK_BUCKET');
     const AWS_CF_STACK_APPLICATION = await getParam(
@@ -103,7 +89,6 @@ exports.handler = async function (context, event, callback) {
       region: AWS_REGION,
     };
     const cf = new aws.CloudFormation(options);
-    const s3 = new aws.S3(options);
 
     // ---------- look for dependent stack
     try {
@@ -150,6 +135,7 @@ exports.handler = async function (context, event, callback) {
           const params = {
             StackName: AWS_CF_STACK_APPLICATION,
             TemplateBody: `${definition}`,
+            RoleARN: DEPLOYER_AWS_ROLE_ARN,
             Parameters: [
               {
                 ParameterKey: 'ParameterApplicationName',
@@ -174,30 +160,6 @@ exports.handler = async function (context, event, callback) {
               },
               {
                 ParameterKey: 'ParameterTwilioPhoneNumber',
-                UsePreviousValue: true,
-              },
-              {
-                ParameterKey: 'ParameterLambdaSendReminders',
-                UsePreviousValue: true,
-              },
-              {
-                ParameterKey: 'ParameterLambdaQueryState',
-                UsePreviousValue: true,
-              },
-              {
-                ParameterKey: 'ParameterSFNQueryState',
-                UsePreviousValue: true,
-              },
-              {
-                ParameterKey: 'ParameterLambdaQueryHistory',
-                UsePreviousValue: true,
-              },
-              {
-                ParameterKey: 'ParameterSFNQueryHistory',
-                UsePreviousValue: true,
-              },
-              {
-                ParameterKey: 'ParameterGlueCrawler',
                 UsePreviousValue: true,
               },
               {
@@ -251,6 +213,7 @@ exports.handler = async function (context, event, callback) {
           const params = {
             StackName: AWS_CF_STACK_APPLICATION,
             TemplateBody: `${definition}`,
+            RoleARN: DEPLOYER_AWS_ROLE_ARN,
             Parameters: [
               {
                 ParameterKey: 'ParameterApplicationName',
@@ -279,30 +242,6 @@ exports.handler = async function (context, event, callback) {
               {
                 ParameterKey: 'ParameterTwilioPhoneNumber',
                 ParameterValue: TWILIO_PHONE_NUMBER,
-              },
-              {
-                ParameterKey: 'ParameterLambdaSendReminders',
-                ParameterValue: AWS_LAMBDA_SEND_REMINDERS,
-              },
-              {
-                ParameterKey: 'ParameterLambdaQueryState',
-                ParameterValue: AWS_LAMBDA_QUERY_STATE,
-              },
-              {
-                ParameterKey: 'ParameterSFNQueryState',
-                ParameterValue: AWS_SFN_QUERY_STATE,
-              },
-              {
-                ParameterKey: 'ParameterLambdaQueryHistory',
-                ParameterValue: AWS_LAMBDA_QUERY_HISTORY,
-              },
-              {
-                ParameterKey: 'ParameterSFNQueryHistory',
-                ParameterValue: AWS_SFN_QUERY_HISTORY,
-              },
-              {
-                ParameterKey: 'ParameterGlueCrawler',
-                ParameterValue: AWS_GLUE_CRAWLER,
               },
               {
                 ParameterKey: 'ParameterGlueDatabase',

@@ -50,7 +50,12 @@ describe('#receive-sms', () => {
         Body: 'Join',
       };
 
-      mockRequire = createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy);
+      mockRequire = createMockRequire(
+        segmentSpy,
+        webhookSpy,
+        airtableOptInSpy,
+        airtableRemoveOptInSpy
+      );
       receiveSms.__set__('require', mockRequire);
       receiveSms.handler(context, event, () => {});
 
@@ -74,7 +79,12 @@ describe('#receive-sms', () => {
         Body: 'Join',
       };
 
-      mockRequire = createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy);
+      mockRequire = createMockRequire(
+        segmentSpy,
+        webhookSpy,
+        airtableOptInSpy,
+        airtableRemoveOptInSpy
+      );
       receiveSms.__set__('require', mockRequire);
       receiveSms.handler(context, event, () => {});
 
@@ -100,7 +110,12 @@ describe('#receive-sms', () => {
         Body: 'Join',
       };
 
-      mockRequire = createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy);
+      mockRequire = createMockRequire(
+        segmentSpy,
+        webhookSpy,
+        airtableOptInSpy,
+        airtableRemoveOptInSpy
+      );
       receiveSms.__set__('require', mockRequire);
       receiveSms.handler(context, event, () => {});
 
@@ -128,7 +143,12 @@ describe('#receive-sms', () => {
         Body: 'STOP',
       };
 
-      mockRequire = createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy);
+      mockRequire = createMockRequire(
+        segmentSpy,
+        webhookSpy,
+        airtableOptInSpy,
+        airtableRemoveOptInSpy
+      );
       receiveSms.__set__('require', mockRequire);
       receiveSms.handler(context, event, () => {});
 
@@ -152,7 +172,12 @@ describe('#receive-sms', () => {
         Body: 'Quit',
       };
 
-      mockRequire = createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy);
+      mockRequire = createMockRequire(
+        segmentSpy,
+        webhookSpy,
+        airtableOptInSpy,
+        airtableRemoveOptInSpy
+      );
       receiveSms.__set__('require', mockRequire);
       receiveSms.handler(context, event, () => {});
 
@@ -178,7 +203,12 @@ describe('#receive-sms', () => {
         Body: 'stop',
       };
 
-      mockRequire = createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy);
+      mockRequire = createMockRequire(
+        segmentSpy,
+        webhookSpy,
+        airtableOptInSpy,
+        airtableRemoveOptInSpy
+      );
       receiveSms.__set__('require', mockRequire);
       receiveSms.handler(context, event, () => {});
 

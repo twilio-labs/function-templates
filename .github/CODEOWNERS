@@ -1,0 +1,15 @@
+# By default, assign reviews to the core reviewers team
+* @twilio-labs/function-core-reviewers
+
+# Assign all subdirectories to the apps review team
+# (more strict patterns later in this file will refine review assignment)
+
+/*/ @twilio-labs/function-reviewers
+
+# Assign core subdirectories to the core reviewers team
+/docs/ @twilio-labs/function-core-reviewers
+/.github/ @twilio-labs/function-core-reviewers
+/.husky/ @twilio-labs/function-core-reviewers
+/test/ @twilio-labs/function-core-reviewers
+/_helpers/ @twilio-labs/function-core-reviewers
+/__mocks__/ @twilio-labs/function-core-reviewers

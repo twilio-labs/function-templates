@@ -125,13 +125,17 @@ tr.table-placeholder td {
   font-size: 14px;
 }
 
-#password-form {
+#password-form,
+#mfa-form,
+#simulation-form {
   padding: 30px 30px 5px 30px;
   background: rgb(244, 244, 246);
   margin-bottom: 40px;
 }
 
-#password-form input {
+#password-form input,
+#mfa-form input,
+#simulation-form input {
   background: white;
 }
 
@@ -140,4 +144,207 @@ tr.table-placeholder td {
   display: inline-block;
   padding: 5px 10px;
   margin-bottom: 20px;
+}
+
+/* from https://loading.io/css/ under CC0 license */
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 36px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 11px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #9b4dca;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+.ellipses-text {
+  position: absolute;
+  display: inline-block;
+  height: 36px;
+  padding-top: 5px;
+}
+
+/* for simulation events page */
+.messages-sent-to {
+  width: 30%;
+  border: 1px solid lightgrey;
+  padding: 30px 30px 5px 30px;
+
+  margin-bottom: 40px;
+}
+
+.form-group {
+  border: 1px solid gray;
+  // width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 40px;
+  margin-top: 0px;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  display: inline-block;
+}
+
+.form-group label {
+  //  position: relative;
+  width: 140px;
+  display: inline-block;
+}
+
+.simulate {
+  // width: 200px;
+  display: inline-block;
+
+  line-height: 2em;
+  padding: 0.2em;
+  margin: 0.3em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1em;
+  word-wrap: break-word;
+  white-space: normal;
+  text-transform: none;
+}
+
+.ht:hover .tooltip {
+  display: block;
+}
+
+.tooltip {
+  display: none;
+  color: black;
+  font-weight: normal;
+  font-size: 15px;
+  margin-left: 40px; /* moves the tooltip to the right */
+  margin-top: -25px; /* moves it down */
+  position: absolute;
+  z-index: 1000;
+  width: 200px;
+  background: lightblue;
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.tooltip.simulate-error {
+  margin-left: 750px;
+  margin-top: 15px;
+  width: 300px;
+  text-align: center;
+}
+
+.tooltip.success {
+  background: lightgreen;
+}
+
+.tooltip.failure {
+  background: orange;
+}
+
+.tooltip.simulate-response {
+  margin-left: 150px;
+  margin-top: -50px;
+  width: 650px;
+  text-align: center;
+}
+
+.info-circle {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: solid 1px gray;
+  cursor: default;
+  color: blue;
+}
+.simulate-label {
+  display: inline-block;
+  padding-top: 5px;
+  width: 80px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+.simulate-label-long {
+  display: inline-block;
+  width: 200px;
+  padding-top: 5px;
+  padding-left: 10px;
+  text-align: left;
+}
+
+.simulate-input {
+  display: inline-block;
+  padding-top: 5px;
+  width: 300px;
+}
+
+.simulate-input input::placeholder {
+  color: lightgrey;
+  font-style: italic;
+}
+
+.other-variables {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.main-menu {
+  font-size: 25px;
+  color: purple;
+  text-align: right;
+}
+
+.reset-display {
+  display: block;
 }

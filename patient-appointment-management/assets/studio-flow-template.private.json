@@ -1,5 +1,4 @@
 {
-  "description": "template patient appointment management flow",
   "states": [
     {
       "transitions": [
@@ -18,7 +17,7 @@
       "name": "Trigger",
       "properties": {
         "offset": {
-          "y": 10,
+          "y": -180,
           "x": -410
         }
       }
@@ -27,7 +26,7 @@
       "transitions": [
         {
           "event": "next",
-          "next": "split_on_event_type"
+          "next": "get-datetime-parts"
         }
       ],
       "type": "set-variables",
@@ -40,12 +39,12 @@
           },
           {
             "key": "IE_ENDPOINT",
-            "value": "YOUR_EHR_ENDPOINT_URL"
+            "value": "https://you_ehr_endpoint_url.com/inbound"
           }
         ],
         "offset": {
-          "y": 220,
-          "x": 260
+          "y": -10,
+          "x": -150
         }
       }
     },
@@ -185,7 +184,7 @@
       "type": "send-message",
       "name": "send_canceled",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} at {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}} has been canceled.\n\nIf you would like to reschedule, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} for {{widgets.get-datetime-parts.parsed.readable_datetime}} at {{flow.data.appointment_location}} has been canceled.\n\nIf you would like to reschedule, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -208,7 +207,7 @@
       "type": "send-message",
       "name": "send_modified",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} has been modified. Your appointment is now scheduled for {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} has been modified. Your appointment is now scheduled for {{widgets.get-datetime-parts.parsed.readable_datetime}} at {{flow.data.appointment_location}}.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -231,7 +230,7 @@
       "type": "send-message",
       "name": "send_noshowed",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. You missed your appointment with Dr. {{flow.data.provider_last_name}} which was scheduled for {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nPlease call us at {{flow.data.provider_callback_phone}} to reschedule.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
+        "body": "Hello, {{flow.data.patient_first_name}}. You missed your appointment with Dr. {{flow.data.provider_last_name}} which was scheduled for {{widgets.get-datetime-parts.parsed.readable_datetime}} at {{flow.data.appointment_location}}.\n\nIf you would like to reschedule, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -365,7 +364,7 @@
       "type": "send-and-wait-for-reply",
       "name": "send_remind",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. This is a reminder that you have an appointment scheduled with Dr. {{flow.data.provider_last_name}} at  {{flow.data.appointment_time_of_day}} on\n{{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nPlease respond to this message with CONFIRM APPT to confirm or CANCEL APPT to cancel your appointment.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
+        "body": "Hello, {{flow.data.patient_first_name}}. This is a reminder that you have an appointment scheduled with Dr. {{flow.data.provider_last_name}} for  {{widgets.get-datetime-parts.parsed.readable_datetime}}  at {{flow.data.appointment_location}}.\n\nPlease respond to this message with CONFIRM APPT to confirm or CANCEL APPT to cancel your appointment.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "timeout": "120",
@@ -586,7 +585,7 @@
       "type": "send-message",
       "name": "send_rescheduled",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr {{flow.data.provider_last_name}} is rescheduled for {{flow.data.appointment_date}} at {{flow.data.appointment_time_of_day}}\nat {{flow.data.appointment_location}}.\n\nPlease call {{flow.data.provider_callback_phone}} if you wish to make additional changes.",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} is rescheduled for {{widgets.get-datetime-parts.parsed.readable_datetime}} at {{flow.data.appointment_location}}.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "to": "{{contact.channel.address}}",
@@ -692,7 +691,7 @@
       "type": "send-and-wait-for-reply",
       "name": "send_booked",
       "properties": {
-        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} is scheduled for {{flow.data.appointment_time_of_day}} on {{flow.data.appointment_date}} at {{flow.data.appointment_location}}.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}, or to cancel your appointment you can respond CANCEL APPT to this message.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
+        "body": "Hello, {{flow.data.patient_first_name}}. Your appointment with Dr. {{flow.data.provider_last_name}} is scheduled for {{widgets.get-datetime-parts.parsed.readable_datetime}} at {{flow.data.appointment_location}}.\n\nPlease respond to this message with CANCEL APPT to cancel your appointment.\n\nIf you would like to make changes to your appointment details, please call us at {{flow.data.provider_callback_phone}}.\n\n- From {{flow.variables.CUSTOMER_NAME}}",
         "from": "{{flow.channel.address}}",
         "service": "{{trigger.message.InstanceSid}}",
         "timeout": "120",
@@ -711,9 +710,9 @@
         {
           "conditions": [
             {
+              "type": "equal_to",
               "friendly_name": "Cancel",
               "arguments": ["{{widgets.send_booked.inbound.Body}}"],
-              "type": "equal_to",
               "value": "CANCEL APPT"
             }
           ],
@@ -752,10 +751,40 @@
           "x": 850
         }
       }
+    },
+    {
+      "transitions": [
+        {
+          "event": "success",
+          "next": "split_on_event_type"
+        },
+        {
+          "event": "fail"
+        }
+      ],
+      "type": "run-function",
+      "name": "get-datetime-parts",
+      "properties": {
+        "parameters": [
+          {
+            "key": "datetime_iso",
+            "value": "{{flow.data.appointment_datetime}}"
+          }
+        ],
+        "url": "https://YOUR_TWILIO_ENVIRONMENT_DOMAIN_NAME/get-datetime-parts",
+        "environment_sid": "YOUR_TWILIO_ENVIRONMENT_SID",
+        "offset": {
+          "y": 220,
+          "x": -140
+        },
+        "function_sid": "YOUR_FUNCTION_SID[get-datetime-parts]",
+        "service_sid": "YOUR_TWILIO_SERVICE_SID"
+      }
     }
   ],
   "initial_state": "Trigger",
   "flags": {
     "allow_concurrent_calls": true
-  }
+  },
+  "description": "template patient appointment management flow"
 }

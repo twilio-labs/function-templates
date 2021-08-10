@@ -1,5 +1,10 @@
 /* eslint-disable no-empty-function */
-function createMockRequire(segmentSpy, webhookSpy, airtableOptInSpy, airtableRemoveOptInSpy) {
+function createMockRequire(
+  segmentSpy,
+  webhookSpy,
+  airtableOptInSpy,
+  airtableRemoveOptInSpy
+) {
   function Airtable() {
     this.base = () => {};
   }
