@@ -33,6 +33,7 @@
     "eslint": "^5.16.0",
     "eslint-config-twilio": "^1.34.2",
     "googleapis": "^65.0.0",
+    "got": "^6.7.1",
     "husky": "^6.0.0",
     "inquirer": "^7.0.4",
     "jest": "^27.0.6",
@@ -50,7 +51,8 @@
     "stripe": "^8.20.0",
     "twilio": "^3.64.0",
     "twilio-run": "^3.2.2",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "jsonwebtoken": "^8.5.1"
   },
   "jest": {
     "testEnvironment": "node",

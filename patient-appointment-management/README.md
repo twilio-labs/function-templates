@@ -39,7 +39,9 @@ Specifically, the Appointment Management with EHR Integration application implem
 
 ***
 
-This section provides a high-level overview of the application's architecture, including a discussion of the baked-in application components, the EHR integration that is necessary for the app to function, and a Reference Architecture diagram showing how the pieces fit together.
+This section provides a high-level overview of the application's architecture, including a discussion of the baked-in application components, the EHR integration that is necessary for the app to function, and an  Architecture diagram.
+
+![State Transition](assets/architecture.png)
 
 ### Application Components
 
@@ -85,20 +87,30 @@ You will need the following Twilio assets ready prior to installation:
   - Make sure the phone number is SMS enabled
   - *(This will be the number patients receive texts from)*
 
-#### Provision AWS Assets
+#### Prepare AWS Assets
 You will need the following AWS assets ready prior to installation:
 - **AWS Account**
   - Create a dedicated AWS account for this application deployment
     (https://aws.amazon.com/resources/create-account/).
     - As admin-level privilege will be required to create various AWS resources (including IAM role/user/policy), we **strongly** recommend that you create a dedicated AWS account separate from other AWS accounts that your organization owns.
     - You may place the new AWS account within your [AWS Organizations](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html) for consolidated billing, if desired (not required).
-- **AWS credentials for IAM user** (the "deployer")
-  - (i.e. `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESSS_KEY`)
-  - Create an IAM user with `AdministratorAccess` policy assigned.
-  - *(This IAM user will be used to create the `CloudFormation` stacks of this application)*
-  - *(Note that once the application is fully deployed and working, you can remove the credentials to further secure your application and data)*
 
+- **Create AWS deployer user and role 
+  - In order to deploy the application's AWS components, you will need a deployer user and a role.
+  - Use this [link](https://us-west-2.console.aws.amazon.com) to create your AWS deployer user and role through CloudFormation Quick Create
+    -Note: this runs a CloudFormation template file to create the CloudFormation stack that creates the deployer user and role. If desired, you can inspect this file [here](https://twilio-cms-prod.s3.amazonaws.com/documents/cloudformation-stack-deployer.yml).
+    -Select “I acknowledge that AWS CloudFormation might create IAM resources with custom names” and then select “Create Stack”
+    -Once the stack is created successfully, you will be taken to the CloudFormation console page that shows the newly created ‘twilio-patient-appointment-managment-deployer’ stack.
 ### Environment Variables
+
+### PAM V2 - Suggested ReadMe updates
+   - Note: This [link](https://us-west-2.console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/) can be used to check whether the deployer user and role have been created successfully. 
+- Take note of AWS Deployer Key ID and Access Key
+  - Once the deployer user and role have been created, a key ID and Access Key will be available, which are required for app deployment from the Twilio Code Exchange page.
+  - Select this [link](https://us-west-2.console.aws.amazon.com/secretsmanager/home?region=us-west-2#!/secret?name=twilio%2Fpatient-appointment-management%2Fdeployer) to be navigated to your Secrets Manager
+  - Scroll down to the “Secret Value” section and select “Retrieve Secret Value”
+  - Take note of the Key ID and Access Key. These variables will be required for application deployment
+
 
 ***
 
@@ -108,7 +120,6 @@ The following environment variables are required for proper deployment of this a
 | :------- | :---------- | :------- |
 |`CUSTOMER_NAME` |The organization name which can be configured to appear in the SMS to the patient|Yes|
 |`CUSTOMER_CODE` |The organization short name, which will be suffixed to AWS resources|Yes|
-|`CUSTOMER_EHR_ENDPOINT_URL` |The organization's inbound EHR endpoint for communication from Twilio via HTTP POST (please refer to the [EHR Integration Guide](https://twilio-cms-prod.s3.amazonaws.com/documents/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf) for more details.|Yes|
 |`REMINDER_OUTREACH_START` |The start time of the outreach window in which SMS can be sent to patients for appointment reminders (the outreach window can be used, for example, to ensure SMS are not sent to patients at unreasonable times of day): *configure as HHMM; this variable is inclusive; default is 0000 (i.e. midnight); the app will honor the patient’s local timezone*|Yes|
 |`REMINDER_OUTREACH_FINISH` |The end time of the outreach window in which SMS can be sent to patients for appointment reminders: *configure as HHMM; this variable is exclusive; the app will honor the patient’s local timezone*|Yes|
 |`REMINDER_FIRST_TIMING` |The hours/minutes prior to appointment time in which the first reminder should be sent to the patient: *configure as HHMM; default is 4800*|Yes|
@@ -119,6 +130,7 @@ The following environment variables are required for proper deployment of this a
 |`DEPLOYER_AWS_ACCESS_KEY_ID` |The `AWS_ACCESS_KEY_ID` of the IAM user you provisioned for deploying this application|Yes|
 |`DEPLOYER_AWS_SECRET_ACCESS_KEY`|The `AWS_SECRET_ACCESSS_KEY` of the IAM user you provisioned for deploying this application|Yes|
 |`AWS_REGION` |The `AWS_REGION` where your AWS resources will be deployed (we **strongly** recommend not changing this from the default, due to slight differences between AWS regions)|Yes|
+|`ADMINISTRATOR_PHONE_NUMBER` |The phone number where you will receive six digit multi-factor authentication (MFA) code after logging in with your password. This needs to be entered as the next step to fully authenticate. |Yes|
 
 To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with
 ```shell
@@ -167,6 +179,7 @@ Static assets (files) of the application:
 |`/state-transition.png` |Disposition/state transition diagram|
 |`/studio-flow-template.json` |Deployable Studio Flow template|
 |`/style.css` |Stylesheet used in `index.html`|
+|`/token-flow.png` |MFA-based token flow diagram|
 |`/aws/cloudformation-stack-application.yml`|AWS CloudFormation template for applications resources|
 |`/aws/cloudformation-stack-bucket.yml` |AWS CloudFormation template for S3 bucket|
 |`/aws/query_appointment_history.js` |Lambda function code for querying appointment event history stored in S3|
@@ -182,6 +195,8 @@ Functions used in the application:
 |`/get-datetime-parts.js` |Returns multiple datetime parts from ISO8601 string|
 |`/helpers.js` |Shared functions used by other functions|
 |`/login.js` |Handles login from `index.html` page|
+|`/mfa.js` |Handles MFA logic from `index.html` page|
+|`/refresh-token.js` | Provides updated token periodically to `index.html` page|
 |`/save-booked.js` |Saved booked appointment notification event to S3 bucket|
 |`/save-cancel.js` |Saves cancel appointment request event to S3 bucket|
 |`/save-canceled.js` |Saves canceled appointment notification event to S3 bucket|
@@ -202,6 +217,8 @@ Functions used in the application:
 |`deployment/deploy-aws-code.js` |Deploys AWS Lambda code|
 |`deployment/deploy-studio-flow.js` |Deploys Twilio Studio Flow|
 |`deployment/execute-query.js` |Executes appointment data query|
+|`deployment/simulation-parameters.js` |Gets customer parameters for display in simulation page |
+|`deployment/simulation-event.js` | Simulates events in the simulation page |
 |`deployment/test-deployment.js` |Executes tests post deployment (excludes inbound communication to EHR)|
 
 #### AWS Resources
@@ -221,6 +238,12 @@ AWS Resources used in the application:
 |`AWS::IAM::ManagedPolicy`|twilio-patient-appointment-management-policy-owlhealth|Shared AWS permissions for application|
 |`AWS::IAM::Role` |twilio-patient-appointment-management-role-owlhealth|Role used by all AWS resources of this application|
 |`AWS::IAM::User` |twilio-patient-appointment-management-user-owlhealth|User used by Twilio to authenticate to AWS resources of this application|
+
+#### Multi-Factor Authentication
+
+This application uses multi-factor authentication using JSON Web Tokens and a six digit MFA code. When you login to the application with a password, a six digit code is sent to the `ADMINISTRATOR_PHONE_NUMBER` which must be entered on the next prompt from the application. The logic uses two JSON Web Tokens (JWT). The `JWT for MFA` is generated by `login.js` and is valid for validating the MFA code entered by the user. This token contains the code as a payload in an encrypted form so that `mfa.js` can compare the code entered on the UI with that inside the token to confirm authentication. The following diagram shows the overall flow of token exchange between the browser and the Twilio functions. 
+
+![MFA Token Flow](assets/token-flow.png)
 
 
 ### Appointment States (Events & Dispositions)
@@ -303,21 +326,9 @@ Save the returned token to replace `YOUR_TOKEN` in `curl` commands below.
 
 ***
 
-Once the application is fully deployed, you can test the application without the EHR integration. Only the outbound SMS capability and appointment reminders will be tested using a designated phone number.
+Once the application is fully deployed, you can leverage the event simulation steps to test that everything is working appropriately and to see the app in action prior to integration with your EHR.  Although the app supports additional event types as well, the BOOKED and REMIND simulations will allow you to test that messages are properly flowing between the primary architecture components - Twilio, AWS, and outbound "to the EHR". In the simulations, hard-coded event messages will be used in lieu of live messages that will ultimately come from your EHR. Every other step of the simulation will use the built-in app functionality.
 
-1. Fully deploy the application (i.e., Twilio service, Twilio studio flow & AWS resources)
-2. Start the application locally
-
-```shell
-twilio serverless:start --env=.env.localhost
-```
-3. Execute the test, replacing `YOUR_TOKEN` and `YOUR_PHONE` with appropriate values
-
-```shell
-curl "http://localhost:3000/deployment/test-deployment?token=YOUR_TOKEN=&to_number=YOUR_PHONE"
-```
-
-4. Monitor the SMS messages on the designed phone as well as the output of serverless for PASS/FAIL messages. *DO NOT REPLY TO ANY SMS MESSAGES* as it will break the testing script.
+For further details on using event simulation to test post-deployment, check out the Application Testing section of our [Implementation Guide](https://www.twilio.com/docs/documents/347/EHR_Appointment_Management_App_Implementation_Guide.pdf), or follow the prompts in the Event Simulation section of the application page.
 
 ### Customizing Twilio Studio Flow
 

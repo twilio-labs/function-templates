@@ -16,14 +16,14 @@ const assert = require('assert');
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
 const path1 = Runtime.getFunctions()['auth'].path;
-const { isAllowed } = require(path1);
+const { isValidAppToken } = require(path1);
 
 exports.handler = async function (context, event, callback) {
   console.log(THIS, 'Begin');
   console.time(THIS);
   try {
     assert(event.token, 'missing event.token');
-    if (!isAllowed(event.token, context)) {
+    if (!isValidAppToken(event.token, context)) {
       const response = new Twilio.Response();
       response.setStatusCode(401);
       response.appendHeader('Content-Type', 'application/json');
@@ -46,7 +46,7 @@ exports.handler = async function (context, event, callback) {
             callback(null, TWILIO_FLOW_SID);
           }
         });
-        callback(null, 'NOT-DEPLOYED');
+        //  callback(null, 'NOT-DEPLOYED');
       })
       .catch((err) => callback(err));
   } finally {

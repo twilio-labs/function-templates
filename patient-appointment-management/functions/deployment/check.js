@@ -17,7 +17,7 @@ const AWS = require('aws-sdk');
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
 const path1 = Runtime.getFunctions()['auth'].path;
-const { isAllowed } = require(path1);
+const { isValidAppToken } = require(path1);
 
 // --------------------------------------------------------------------------------
 async function checkParameters(context) {
@@ -31,14 +31,6 @@ async function checkParameters(context) {
   if (!v) errors.push({ CUSTOMER_CODE: 'cannot be empty' });
   const format = /[A-Z !@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
   if (format.test(v)) errors.push({ CUSTOMER_CODE: `${v} is invalid` });
-
-  v = context.CUSTOMER_EHR_ENDPOINT_URL;
-  if (!v) errors.push({ CUSTOMER_EHR_ENDPOINT_URL: 'cannot be empty' });
-  try {
-    const url = new URL(v);
-  } catch (err) {
-    errors.push({ CUSTOMER_EHR_ENDPOINT_URL: `${v} is invalid url` });
-  }
 
   v = context.REMINDER_OUTREACH_START;
   if (!v) errors.push({ REMINDER_OUTREACH_START: 'cannot be empty' });
@@ -85,9 +77,18 @@ async function checkParameters(context) {
   if (!v.startsWith('us'))
     errors.push({ AWS_REGION: `${v} only us aws regions` });
 
+  v = context.DEPLOYER_AWS_SECRET_ACCESS_KEY;
+  if (!v) errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'cannot be empty' });
+  if (v.length < 16 || v.length > 128)
+    errors.push({
+      DEPLOYER_AWS_SECRET_ACCESS_KEY: 'length is not between 16 and 128',
+    });
   v = context.DEPLOYER_AWS_ACCESS_KEY_ID;
   if (!v) errors.push({ DEPLOYER_AWS_ACCESS_KEY_ID: 'cannot be empty' });
-  if (!v) errors.push({ DEPLOYER_AWS_SECRET_ACCESS_KEY: 'cannot be empty' });
+  if (v.length < 16 || v.length > 128)
+    errors.push({
+      DEPLOYER_AWS_ACCESS_KEY_ID: 'length is not between 16 and 128',
+    });
   try {
     const options = {
       accessKeyId: context.DEPLOYER_AWS_ACCESS_KEY_ID,
@@ -95,8 +96,8 @@ async function checkParameters(context) {
       region: context.AWS_REGION,
     };
     const sts = new AWS.STS(options);
+    await sts.getCallerIdentity({}).promise();
   } catch (err) {
-    console.log(err);
     errors.push({
       DEPLOYER_AWS_ACCESS_KEY_ID: `${v} may be invalid, unable to authenticate to AWS`,
     });
@@ -112,51 +113,54 @@ async function checkParameters(context) {
 async function listParameters(context) {
   return {
     ACCOUNT_SID: await getParam(context, 'ACCOUNT_SID'),
-    FILENAME_APPOINTMENT: await getParam(context, 'FILENAME_APPOINTMENT'),
-    AWS_S3_BUCKET: await getParam(context, 'AWS_S3_BUCKET'),
-    AUTH_TOKEN: await getParam(context, 'AUTH_TOKEN'),
+    AUTH_TOKEN:
+      (await getParam(context, 'AUTH_TOKEN')) === null
+        ? null
+        : (await getParam(context, 'AUTH_TOKEN')).replace(/./g, '*'),
+    DEPLOYER_AWS_ROLE_ARN: await getParam(context, 'DEPLOYER_AWS_ROLE_ARN'),
+    DEPLOYER_AWS_ACCESS_KEY_ID: await getParam(
+      context,
+      'DEPLOYER_AWS_ACCESS_KEY_ID'
+    ),
+    DEPLOYER_AWS_SECRET_ACCESS_KEY:
+      (await getParam(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY')) === null
+        ? null
+        : (await getParam(context, 'DEPLOYER_AWS_SECRET_ACCESS_KEY')).replace(
+            /./g,
+            '*'
+          ),
     AWS_ACCESS_KEY_ID: await getParam(context, 'AWS_ACCESS_KEY_ID'),
-    AWS_SECRET_ACCESS_KEY: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
-    AWS_REGION: await getParam(context, 'AWS_REGION'),
+    AWS_SECRET_ACCESS_KEY:
+      (await getParam(context, 'AWS_SECRET_ACCESS_KEY')) === null
+        ? null
+        : (await getParam(context, 'AWS_SECRET_ACCESS_KEY')).replace(/./g, '*'),
+    AWS_ATHENA_WORKGROUP: await getParam(context, 'AWS_ATHENA_WORKGROUP'),
     AWS_CF_STACK_APPLICATION: await getParam(
       context,
       'AWS_CF_STACK_APPLICATION'
     ),
     AWS_CF_STACK_BUCKET: await getParam(context, 'AWS_CF_STACK_BUCKET'),
-    CUSTOMER_CODE: await getParam(context, 'CUSTOMER_CODE'),
-    CUSTOMER_NAME: await getParam(context, 'CUSTOMER_NAME'),
-    CUSTOMER_EHR_ENDPOINT_URL: await getParam(
-      context,
-      'CUSTOMER_EHR_ENDPOINT_URL'
-    ),
-    DEPLOYER_AWS_ACCESS_KEY_ID: await getParam(
-      context,
-      'DEPLOYER_AWS_ACCESS_KEY_ID'
-    ),
-    DEPLOYER_AWS_SECRET_ACCESS_KEY: await getParam(
-      context,
-      'DEPLOYER_AWS_SECRET_ACCESS_KEY'
-    ),
-    TWILIO_ENVIRONMENT_SID: await getParam(context, 'TWILIO_ENVIRONMENT_SID'),
-    TWILIO_ENVIRONMENT_DOMAIN_NAME: await getParam(
-      context,
-      'TWILIO_ENVIRONMENT_DOMAIN_NAME'
-    ),
-    TWILIO_FLOW_SID: await getParam(context, 'TWILIO_FLOW_SID'),
-    TWILIO_SERVICE_SID: await getParam(context, 'TWILIO_SERVICE_SID'),
+    AWS_CF_STACK_DEPLOYER: await getParam(context, 'AWS_CF_STACK_DEPLOYER'),
     AWS_GLUE_CRAWLER: await getParam(context, 'AWS_GLUE_CRAWLER'),
     AWS_GLUE_DATABASE: await getParam(context, 'AWS_GLUE_DATABASE'),
-    AWS_LAMBDA_QUERY_HISTORY: await getParam(
-      context,
-      'AWS_LAMBDA_QUERY_HISTORY'
-    ),
-    AWS_LAMBDA_QUERY_STATE: await getParam(context, 'AWS_LAMBDA_QUERY_STATE'),
     AWS_LAMBDA_SEND_REMINDERS: await getParam(
       context,
       'AWS_LAMBDA_SEND_REMINDERS'
     ),
+    AWS_LAMBDA_QUERY_STATE: await getParam(context, 'AWS_LAMBDA_QUERY_STATE'),
+    AWS_LAMBDA_QUERY_HISTORY: await getParam(
+      context,
+      'AWS_LAMBDA_QUERY_HISTORY'
+    ),
+    AWS_REGION: await getParam(context, 'AWS_REGION'),
+    AWS_S3_BUCKET: await getParam(context, 'AWS_S3_BUCKET'),
+    AWS_SECRET_AWS_ARN: await getParam(context, 'AWS_SECRET_AWS_ARN'),
+    AWS_SECRET_TWILIO_ARN: await getParam(context, 'AWS_SECRET_TWILIO_ARN'),
     AWS_SFN_QUERY_HISTORY: await getParam(context, 'AWS_SFN_QUERY_HISTORY'),
     AWS_SFN_QUERY_STATE: await getParam(context, 'AWS_SFN_QUERY_STATE'),
+    CUSTOMER_CODE: await getParam(context, 'CUSTOMER_CODE'),
+    CUSTOMER_NAME: await getParam(context, 'CUSTOMER_NAME'),
+    FILENAME_APPOINTMENT: await getParam(context, 'FILENAME_APPOINTMENT'),
     REMINDER_OUTREACH_START: await getParam(context, 'REMINDER_OUTREACH_START'),
     REMINDER_OUTREACH_FINISH: await getParam(
       context,
@@ -164,6 +168,12 @@ async function listParameters(context) {
     ),
     REMINDER_FIRST_TIMING: await getParam(context, 'REMINDER_FIRST_TIMING'),
     REMINDER_SECOND_TIMING: await getParam(context, 'REMINDER_SECOND_TIMING'),
+    TWILIO_ENVIRONMENT_SID: await getParam(context, 'TWILIO_ENVIRONMENT_SID'),
+    TWILIO_ENVIRONMENT_DOMAIN_NAME: await getParam(
+      context,
+      'TWILIO_ENVIRONMENT_DOMAIN_NAME'
+    ),
+    TWILIO_FLOW_SID: await getParam(context, 'TWILIO_FLOW_SID'),
     TWILIO_SERVICE_SID: await getParam(context, 'TWILIO_SERVICE_SID'),
     TWILIO_PHONE_NUMBER: await getParam(context, 'TWILIO_PHONE_NUMBER'),
   };
@@ -174,7 +184,7 @@ exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {
     assert(event.token, 'missing event.token');
-    if (!isAllowed(event.token, context)) {
+    if (!isValidAppToken(event.token, context)) {
       const response = new Twilio.Response();
       response.setStatusCode(401);
       response.appendHeader('Content-Type', 'application/json');

@@ -12,9 +12,17 @@ const { parser } = require('configure-env');
  * for now, but will in the long term
  */
 const skipList = ['conversations', 'vaccine-standby'];
+const incompleteTests = [
+  'covid-vaccine-faq-bot',
+  'patient-appointment-management',
+  'sip-quickstart',
+  'voicemail',
+];
 const excludedPaths =
   ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
 const projectRoot = path.resolve(__dirname, '..');
+const templatesJson = path.join(projectRoot, 'templates.json');
+
 /*
  * Assemble a list of template directories here, since templates.json
  * may not have all of them:
@@ -29,6 +37,13 @@ const templates = fs
       !excludedPaths.includes(file.name)
   )
   .map((dir) => dir.name);
+
+fs.readFileSync(templatesJson);
+const templatesJsonData = JSON.parse(fs.readFileSync(templatesJson));
+const templatesMap = {};
+for (const entry of templatesJsonData.templates) {
+  templatesMap[entry.id] = entry;
+}
 
 describe('CI template verification', () => {
   // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -195,6 +210,97 @@ describe('CI template verification', () => {
           expect(data).toBeTruthy();
           expect(data.constructor).toBe(Object);
           done();
+        });
+      });
+
+      it('should be a subset of the repo package.json', (done) => {
+        const repoPackageJson = path.join(projectRoot, 'package.json');
+        const missingDeps = [];
+
+        fs.readFile(repoPackageJson, (err, contents) => {
+          expect(err).toBeFalsy();
+          const repoPackageData = JSON.parse(contents);
+
+          fs.readFile(packageJson, (err, contents) => {
+            expect(err).toBeFalsy();
+            const appPackageData = JSON.parse(contents);
+
+            for (const dep of Object.keys(appPackageData.dependencies)) {
+              if (!repoPackageData.devDependencies[dep]) {
+                missingDeps.push(dep);
+              }
+            }
+
+            if (missingDeps.length > 0) {
+              throw new Error(
+                `The repo package.json is missing these dependencies: ${missingDeps}. Did you use 'npm run add-dependency'?`
+              );
+            }
+
+            done();
+          });
+        });
+      });
+    });
+
+    describe('its templates.json entry', () => {
+      it('should exist and have all required fields', () => {
+        if (!templatesMap[template]) {
+          throw new Error(`${template} does not have a templates.json entry`);
+        }
+        const entry = templatesMap[template];
+
+        if (!entry.name) {
+          throw new Error(
+            `${template} does not have a "name" field in templates.json`
+          );
+        } else if (!entry.description) {
+          throw new Error(
+            `${template} does not have a "description" field in templates.json`
+          );
+        }
+      });
+    });
+
+    describe('its unit tests', () => {
+      it('should have one per Function', (done) => {
+        const functionsDir = path.join(projectRoot, template, 'functions');
+        const testsDir = path.join(projectRoot, template, 'tests');
+        const missingTests = [];
+
+        if (incompleteTests.includes(template)) {
+          done();
+          return;
+        }
+
+        fs.readdir(functionsDir, (err, functions) => {
+          expect(err).toBeFalsy();
+          fs.readdir(testsDir, (err, tests) => {
+            expect(err).toBeFalsy();
+            expect(testsDir.length).toBeGreaterThan(0);
+            testsMap = {};
+            for (const t of tests) {
+              const testName = path.basename(t).split('.')[0];
+              testsMap[testName] = true;
+            }
+
+            for (const f of functions) {
+              const functionName = path.basename(f).split('.')[0];
+              if (!testsMap[functionName]) {
+                missingTests.push(functionName);
+              }
+            }
+
+            if (missingTests.length > 0) {
+              throw new Error(
+                `The following Functions lack unit tests: ${missingTests.join(
+                  ', '
+                )}`
+              );
+            }
+
+            done();
+          });
         });
       });
     });
