@@ -1,5 +1,7 @@
 {
   "name": "covid-vaccine-faq-bot",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "@google-cloud/dialogflow": "^4.1.0",
     "crypto": "^1.0.1",

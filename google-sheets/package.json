@@ -1,5 +1,7 @@
 {
   "name": "google-sheets",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "googleapis": "^65.0.0"
   }
