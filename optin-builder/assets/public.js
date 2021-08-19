@@ -196,7 +196,7 @@ function displaySettings(data) {
     $('#airtable-opt-in-column-name').val(data.airtableOptInColumnName);
 
     const iframeTemplate = `<code>
-    &lt;iframe style="border:0" height="500px" width="100%" src="${data.domainName}/index.html?context=iframe"&gt;&lt;/iframe&gt;
+    &lt;iframe style="border:0" height="500px" width="100%" src="https://${data.domainName}/index.html?context=iframe"&gt;&lt;/iframe&gt;
     </code>`;
 
     $('#iframe-panel').html(iframeTemplate);

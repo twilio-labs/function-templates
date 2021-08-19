@@ -119,7 +119,10 @@ function redactVariable(envVar) {
   return redactedVariable;
 }
 
-function segmentTrack(params, analytics) {
+function segmentTrack(params, context) {
+  const Analytics = require('analytics-node');
+  const analytics = new Analytics(context.SEGMENT_WRITE_KEY);
+
   return new Promise((resolve, reject) => {
     analytics.track(params, (err, res) => {
       if (err) {
@@ -131,7 +134,7 @@ function segmentTrack(params, analytics) {
   });
 }
 
-async function segmentOptIn(twiml, optin, analytics, event, callback) {
+async function segmentOptIn(twiml, optin, context, event, callback) {
   // eslint-disable-next-line prefer-const
   let segmentData = {
     userId: event.From,
@@ -142,13 +145,16 @@ async function segmentOptIn(twiml, optin, analytics, event, callback) {
     },
   };
 
+  let responseMessage = null;
+
   if (optin) {
     segmentData.properties.optInStatus = 'active';
+    responseMessage = twiml;
   }
 
-  await segmentTrack(segmentData, analytics);
+  await segmentTrack(segmentData, context);
 
-  return callback(null, optin ? twiml : null);
+  return callback(null, responseMessage);
 }
 
 function webhookOptIn(twiml, optin, context, event, callback) {
@@ -170,8 +176,16 @@ function webhookOptIn(twiml, optin, context, event, callback) {
     });
 }
 
-function airtableCreateOptIn(twiml, base, context, event, callback) {
-  console.log('Airtable opt-in');
+function initAirtableBase(context) {
+  const Airtable = require('airtable');
+
+  return new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
+    context.AIRTABLE_BASE_ID
+  );
+}
+
+function airtableCreateOptIn(twiml, context, event, callback) {
+  const base = initAirtableBase(context);
   const tableName = context.AIRTABLE_TABLE_NAME;
   const phoneColumnName = context.AIRTABLE_PHONE_COLUMN_NAME;
   const optInColumnName = context.AIRTABLE_OPT_IN_COLUMN_NAME;
@@ -226,7 +240,8 @@ function airtableCreateOptIn(twiml, base, context, event, callback) {
     });
 }
 
-function airtableRemoveOptIn(base, context, event, callback) {
+function airtableRemoveOptIn(context, event, callback) {
+  const base = initAirtableBase(context);
   const tableName = context.AIRTABLE_TABLE_NAME;
   const phoneColumnName = context.AIRTABLE_PHONE_COLUMN_NAME;
   const optInColumnName = context.AIRTABLE_OPT_IN_COLUMN_NAME;
