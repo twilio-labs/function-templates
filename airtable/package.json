@@ -1,5 +1,7 @@
 {
   "name": "airtable-sms-save",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "airtable": "^0.11.0"
   }

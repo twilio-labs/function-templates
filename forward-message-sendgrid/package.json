@@ -1,4 +1,6 @@
 {
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "got": "^6.7.1"
   }
