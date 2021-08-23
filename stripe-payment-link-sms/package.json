@@ -1,5 +1,7 @@
 {
   "name": "stripe-payment-link-sms",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "stripe": "^8.20.0"
   }

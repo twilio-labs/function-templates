@@ -1,5 +1,7 @@
 {
   "name": "stripe-sms-receipt",
+  "version": "1.0.0",
+  "private": true,
   "dependencies": {
     "stripe": "^8.20.0"
   }
