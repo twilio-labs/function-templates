@@ -50,9 +50,17 @@
   "jest": {
     "testEnvironment": "node",
     "collectCoverage": true,
+    "coverageThreshold": {
+      "./**/functions/**/*.js": {
+        "statements": 60,
+        "branches": 60
+      }
+    },
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "/test/"
+      "/test/",
+      "/patient-appointment-management/",
+      "/video/"
     ],
     "testPathIgnorePatterns": [
       "/_helpers/",
