@@ -5,7 +5,6 @@ exports.handler = function (context, event, callback) {
   async function verifyMfaCode(code, context) {
     const path0 = Runtime.getFunctions().helpers.path;
     const { getParam, setParam } = require(path0);
-    console.log('mfa - A');
     context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
 
     const twilioClient = context.getTwilioClient();
@@ -18,7 +17,6 @@ exports.handler = function (context, event, callback) {
       });
   }
 
-  const TWILIO_VERIFY_SID = 'TWILIO_VERIFY_SID';
   const ac = context.ACCOUNT_SID;
   const jwt = require('jsonwebtoken');
 
@@ -37,18 +35,15 @@ exports.handler = function (context, event, callback) {
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  const twilioClient = context.getTwilioClient();
 
   verifyMfaCode(event.mfaCode, context)
     .then((verificationCheck) => {
       if (verificationCheck.status === 'approved') {
-
         response.setBody({
           token: createAppToken('mfa', context),
         });
         return callback(null, response);
       }
-
       response.setStatusCode(401);
       response.appendHeader(
         'Error-Message',
