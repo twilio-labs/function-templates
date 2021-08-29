@@ -37,21 +37,17 @@ exports.handler = function (context, event, callback) {
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  console.log('mfa - B');
   const twilioClient = context.getTwilioClient();
-  console.log('mfa - C');
 
   verifyMfaCode(event.mfaCode, context)
     .then((verificationCheck) => {
       if (verificationCheck.status === 'approved') {
-        console.log('mfa - D');
 
         response.setBody({
           token: createAppToken('mfa', context),
         });
         return callback(null, response);
       }
-      console.log('mfa - E');
 
       response.setStatusCode(401);
       response.appendHeader(
