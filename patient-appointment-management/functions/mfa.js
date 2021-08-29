@@ -2,6 +2,22 @@ exports.handler = function (context, event, callback) {
   const { path } = Runtime.getFunctions().auth;
   const { createAppToken, isValidMfaToken } = require(path);
 
+  async function verifyMfaCode(code, context) {
+    const path0 = Runtime.getFunctions().helpers.path;
+    const { getParam, setParam } = require(path0);
+    console.log('mfa - A');
+    context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
+
+    const twilioClient = context.getTwilioClient();
+    const channel = 'sms';
+    return twilioClient.verify
+      .services(context.TWILIO_VERIFY_SID)
+      .verificationChecks.create({
+        to: context.ADMINISTRATOR_PHONE,
+        code,
+      });
+  }
+
   const TWILIO_VERIFY_SID = 'TWILIO_VERIFY_SID';
   const ac = context.ACCOUNT_SID;
   const jwt = require('jsonwebtoken');
@@ -33,17 +49,16 @@ exports.handler = function (context, event, callback) {
         response.setBody({
           token: createAppToken('mfa', context),
         });
-        callback(null, response);
-      } else {
-        console.log('mfa - E');
-
-        response.setStatusCode(401);
-        response.appendHeader(
-          'Error-Message',
-          'Invalid code. Please check your phone for verification code and try again.'
-        );
-        callback(null, response);
+        return callback(null, response);
       }
+      console.log('mfa - E');
+
+      response.setStatusCode(401);
+      response.appendHeader(
+        'Error-Message',
+        'Invalid code. Please check your phone for verification code and try again.'
+      );
+      return callback(null, response);
     })
     .catch((error) => {
       console.error(error);
@@ -54,20 +69,5 @@ exports.handler = function (context, event, callback) {
       );
       callback(false);
     });
+  return null;
 };
-
-async function verifyMfaCode(code, context) {
-  const path0 = Runtime.getFunctions().helpers.path;
-  const { getParam, setParam } = require(path0);
-  console.log('mfa - A');
-  context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
-
-  const twilioClient = context.getTwilioClient();
-  const channel = 'sms';
-  return twilioClient.verify
-    .services(context.TWILIO_VERIFY_SID)
-    .verificationChecks.create({
-      to: context.ADMINISTRATOR_PHONE,
-      code,
-    });
-}
