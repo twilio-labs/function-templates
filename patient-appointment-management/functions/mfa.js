@@ -4,11 +4,10 @@ exports.handler = function (context, event, callback) {
 
   async function verifyMfaCode(code, context) {
     const path0 = Runtime.getFunctions().helpers.path;
-    const { getParam, setParam } = require(path0);
+    const { getParam } = require(path0);
     context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
 
     const twilioClient = context.getTwilioClient();
-    const channel = 'sms';
     return twilioClient.verify
       .services(context.TWILIO_VERIFY_SID)
       .verificationChecks.create({
@@ -16,9 +15,6 @@ exports.handler = function (context, event, callback) {
         code,
       });
   }
-
-  const ac = context.ACCOUNT_SID;
-  const jwt = require('jsonwebtoken');
 
   if (!isValidMfaToken(event.token, context)) {
     const response = new Twilio.Response();
