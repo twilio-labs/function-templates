@@ -2,42 +2,45 @@ exports.handler = function (context, event, callback) {
   const { path } = Runtime.getFunctions().auth;
   const { isValidPassword, createMfaToken } = require(path);
 
+  const TWILIO_VERIFY_SID = 'TWILIO_VERIFY_SID';
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  if (isValidPassword(event.password, context)) {
-    // Generate and send six digit MFA code to administrator's phone
-    const twilioClient = context.getTwilioClient();
-    mfaCode = Math.floor(100000 + Math.random() * 900000);
-    twilioClient.messages
-      .create({
-        to: context.ADMINISTRATOR_PHONE,
-        from: context.TWILIO_PHONE_NUMBER,
-        body: `${mfaCode} is your security code for the PAM application. It is valid for five minutes.`,
-      })
-      .then(function () {
-        // SMS was sent successfully
-        response.setBody({
-          token: createMfaToken('login', mfaCode, context),
-        });
-
-        callback(null, response);
-      })
-      .catch(function () {
-        // if there is any problem in sending SMS
-        response.setStatusCode(500);
-        response.setBody({
-          message:
-            'Unable to send security code to your phone at this time. Please try later.',
-        });
-        callback(null, response);
-      });
-    return;
+  if (!isValidPassword(event.password, context)) {
+    response.setStatusCode(401);
+    response.setBody({ message: 'Unauthorized' });
+    return callback(null, response);
   }
 
-  // eslint-disable-next-line no-undef
-  response.setStatusCode(401);
-  response.setBody({ message: 'Unauthorized' });
-
-  callback(null, response);
+  sendMfaCode(context)
+    .then(function () {
+      response.setBody({
+        token: createMfaToken('login', context),
+      });
+      callback(null, response);
+    })
+    .catch(function (err) {
+      response.setStatusCode(500);
+      response.setBody({
+        message:
+          'Unable to send security code to your phone at this time. Please try later.',
+      });
+      callback(null, response);
+    });
 };
+
+async function sendMfaCode(context) {
+  const path0 = Runtime.getFunctions().helpers.path;
+  const { getParam, setParam } = require(path0);
+  context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
+  console.log(context.TWILIO_VERIFY_SID);
+
+  const twilioClient = context.getTwilioClient();
+  const channel = 'sms';
+  return twilioClient.verify
+    .services(context.TWILIO_VERIFY_SID)
+    .verifications.create({
+      to: context.ADMINISTRATOR_PHONE,
+      channel,
+    });
+}

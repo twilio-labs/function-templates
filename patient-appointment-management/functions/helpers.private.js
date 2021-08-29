@@ -262,6 +262,35 @@ async function getParam(context, key) {
         );
         return null;
       }
+      case 'TWILIO_VERIFY_SID': {
+        let verify_sid = null;
+        await client.verify.services.list().then((services) => {
+          services.forEach((s) => {
+            if (s.friendlyName === context.CUSTOMER_NAME) {
+              verify_sid = s.sid;
+            }
+          });
+        });
+        if (verify_sid !== null) {
+          return verify_sid;
+        }
+        console.log(
+          'Verify service not found so creating a new verify service...'
+        );
+        await client.verify.services
+          .create({ friendlyName: context.CUSTOMER_NAME })
+          .then((result) => {
+            console.log(result);
+            console.log(result.sid);
+            verify_sid = result.sid;
+          });
+        if (verify_sid !== null) {
+          return verify_sid;
+        }
+        console.log('Unable to create a Twilio Verify Service!!! ABORTING!!! ');
+        return null;
+      }
+
       default:
         throw new Error(`Undefined variable ${key} !!!`);
     }

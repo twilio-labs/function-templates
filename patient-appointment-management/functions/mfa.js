@@ -2,13 +2,10 @@ exports.handler = function (context, event, callback) {
   const { path } = Runtime.getFunctions().auth;
   const { createAppToken, isValidMfaToken } = require(path);
 
+  const TWILIO_VERIFY_SID = 'TWILIO_VERIFY_SID';
   const ac = context.ACCOUNT_SID;
-
   const jwt = require('jsonwebtoken');
 
-  const crypto = require('crypto');
-
-  // assert(event.token, 'missing event.token');
   if (!isValidMfaToken(event.token, context)) {
     const response = new Twilio.Response();
     response.setStatusCode(401);
@@ -22,36 +19,55 @@ exports.handler = function (context, event, callback) {
     return callback(null, response);
   }
 
-  // encrypt the mfaCode to avoid showing in the browser
-  mfaInputEncrypt = crypto
-    .createHmac('sha256', context.AUTH_TOKEN)
-    .update(Buffer.from(`${event.mfaCode}:${context.SALT}`, 'utf-8'))
-    .digest('base64');
-
-  mfaEncryptFromToken = jwt.verify(event.token, context.AUTH_TOKEN).data;
-  console.log(
-    'mfaEncrypt ',
-    mfaInputEncrypt,
-    ' : ',
-    'mfaEncryptFromToken ',
-    mfaEncryptFromToken
-  );
-
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  if (mfaInputEncrypt === mfaEncryptFromToken) {
-    console.log(5);
-    response.setBody({
-      token: createAppToken('mfa', context),
+  console.log('mfa - B');
+  const twilioClient = context.getTwilioClient();
+  console.log('mfa - C');
+
+  verifyMfaCode(event.mfaCode, context)
+    .then((verificationCheck) => {
+      if (verificationCheck.status === 'approved') {
+        console.log('mfa - D');
+
+        response.setBody({
+          token: createAppToken('mfa', context),
+        });
+        callback(null, response);
+      } else {
+        console.log('mfa - E');
+
+        response.setStatusCode(401);
+        response.appendHeader(
+          'Error-Message',
+          'Invalid code. Please check your phone for verification code and try again.'
+        );
+        callback(null, response);
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      response.setStatusCode(401);
+      response.appendHeader(
+        'Error-Message',
+        'Invalid code. Please check your phone and try again.'
+      );
+      callback(false);
     });
-  } else {
-    console.log(6);
-    response.setStatusCode(401);
-    response.appendHeader(
-      'Error-Message',
-      'Invalid code. Please check your phone and try again.'
-    );
-  }
-  console.log('came to mfa.js');
-  return callback(null, response);
 };
+
+async function verifyMfaCode(code, context) {
+  const path0 = Runtime.getFunctions().helpers.path;
+  const { getParam, setParam } = require(path0);
+  console.log('mfa - A');
+  context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
+
+  const twilioClient = context.getTwilioClient();
+  const channel = 'sms';
+  return twilioClient.verify
+    .services(context.TWILIO_VERIFY_SID)
+    .verificationChecks.create({
+      to: context.ADMINISTRATOR_PHONE,
+      code,
+    });
+}
