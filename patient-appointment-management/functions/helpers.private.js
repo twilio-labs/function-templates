@@ -271,7 +271,139 @@ async function getParam(context, key) {
   }
 }
 
+
+/*
+ * --------------------------------------------------------------------------------
+ * validates appoointment data to guard against json injection
+ *
+ * param:
+ * - appointment: json of appointment data
+ *     event_type: 'BOOKED',
+ *     event_datetime_utc: null,
+ *     patient_id: '1000',
+ *     patient_first_name: 'Jane',
+ *     patient_last_name: 'Doe',
+ *     patient_phone: test_phone_number,
+ *     provider_id: 'afauci',
+ *     provider_first_name: 'Anthony',
+ *     provider_last_name: 'Fauci',
+ *     provider_callback_phone: '(800) 111-2222',
+ *     appointment_location: 'Owl Health Clinic',
+ *     appointment_id: '20000',
+ *     appointment_timezone: '-0700',
+ *     appointment_datetime: appt_datetime.toISOString(),
+ * --------------------------------------------------------------------------------
+ */
+function validateAppointment(context, appointment) {
+
+  // validates isoDate format ignoring subseconds and timezone
+  function validateISO8601Format(name, value) {
+    assert(value, `Missing ${name}!`);
+    assert(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*/.test(value), `${name} not ISO8601 format: ${value}`);
+    const d = new Date(value.substr(0, 19) + 'Z');
+    return d.toISOString().substr(0, 19) === value.substr(0, 19);
+  }
+
+  // check for null & validates again format
+  function validateFormat(name, value, format) {
+    assert(value, `Missing ${name}!`);
+    assert(format.test(value), `Invalid ${name}: ${value}!`);
+  }
+
+
+  {
+    const v = appointment.event_type;
+    assert(v, 'Missing appointment.event_type!');
+    const validEventTypes = [
+      'BOOKED',
+      'MODIFIED',
+      'RESCHEDULED',
+      'NOSHOWED',
+      'CANCEL',
+      'CANCELED',
+      'CONFIRM',
+      'CONFIRMED',
+      'REMIND',
+      'OPTED-IN',
+      'OPTED-OUT',
+    ];
+    assert(v in validEventTypes, `Invalid event_type=${v}!`);
+  }
+
+  validateISO8601Format('event_datetime_utc', appointment.event_datetime_utc);
+
+  validateFormat(
+    'patient_id',
+    appointment.patient_id,
+    /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/
+  );
+
+  validateFormat(
+    'patient_first_name',
+    appointment.patient_first_name,
+    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
+  );
+
+  validateFormat(
+    'patient_last_name',
+    appointment.patient_last_name,
+    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
+  );
+
+  validateFormat(
+    'patient_phone',
+    appointment.patient_phone,
+    /[0-9+\-() ]+/
+  );
+
+  validateFormat(
+    'provider_id',
+    appointment.provider_id,
+    /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/
+  );
+
+  validateFormat(
+    'provider_first_name',
+    appointment.provider_first_name,
+    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
+  );
+
+  validateFormat(
+    'provider_last_name',
+    appointment.provider_last_name,
+    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
+  );
+
+  validateFormat(
+    'provider_callback_phone',
+    appointment.provider_callback_phone,
+    /[0-9+\-() ]+/
+  );
+
+  validateFormat(
+    'appointment_location',
+    appointment.appointment_location,
+    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
+  );
+
+  validateFormat(
+    'appointment_id',
+    appointment.appointment_id,
+    /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/
+  );
+
+  validateFormat(
+    'appointment_timezone',
+    appointment.appointment_timezone,
+    /^[+\-][0-9]{4}$/
+  );
+
+  validateISO8601Format('appointment_datetime', appointment.appointment_datetime);
+}
+
+
 module.exports = {
   getParam,
   setParam,
+  validateAppointment,
 };
