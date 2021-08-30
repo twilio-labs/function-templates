@@ -271,7 +271,6 @@ async function getParam(context, key) {
   }
 }
 
-
 /*
  * --------------------------------------------------------------------------------
  * validates appoointment data to guard against json injection
@@ -295,11 +294,13 @@ async function getParam(context, key) {
  * --------------------------------------------------------------------------------
  */
 function validateAppointment(context, appointment) {
-
   // validates isoDate format ignoring subseconds and timezone
   function validateISO8601Format(name, value) {
     assert(value, `Missing ${name}!`);
-    assert(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*/.test(value), `${name} not ISO8601 format: ${value}`);
+    assert(
+      /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*/.test(value),
+      `${name} not ISO8601 format: ${value}`
+    );
     const d = new Date(value.substr(0, 19) + 'Z');
     return d.toISOString().substr(0, 19) === value.substr(0, 19);
   }
@@ -309,7 +310,6 @@ function validateAppointment(context, appointment) {
     assert(value, `Missing ${name}!`);
     assert(format.test(value), `Invalid ${name}: ${value}!`);
   }
-
 
   {
     const v = appointment.event_type;
@@ -350,11 +350,7 @@ function validateAppointment(context, appointment) {
     /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
   );
 
-  validateFormat(
-    'patient_phone',
-    appointment.patient_phone,
-    /[0-9+\-() ]+/
-  );
+  validateFormat('patient_phone', appointment.patient_phone, /[0-9+\-() ]+/);
 
   validateFormat(
     'provider_id',
@@ -398,9 +394,11 @@ function validateAppointment(context, appointment) {
     /^[+\-][0-9]{4}$/
   );
 
-  validateISO8601Format('appointment_datetime', appointment.appointment_datetime);
+  validateISO8601Format(
+    'appointment_datetime',
+    appointment.appointment_datetime
+  );
 }
-
 
 module.exports = {
   getParam,
