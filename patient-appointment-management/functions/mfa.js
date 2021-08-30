@@ -2,13 +2,20 @@ exports.handler = function (context, event, callback) {
   const { path } = Runtime.getFunctions().auth;
   const { createAppToken, isValidMfaToken } = require(path);
 
-  const ac = context.ACCOUNT_SID;
+  async function verifyMfaCode(code, context) {
+    const path0 = Runtime.getFunctions().helpers.path;
+    const { getParam } = require(path0);
+    context.TWILIO_VERIFY_SID = await getParam(context, 'TWILIO_VERIFY_SID');
 
-  const jwt = require('jsonwebtoken');
+    const twilioClient = context.getTwilioClient();
+    return twilioClient.verify
+      .services(context.TWILIO_VERIFY_SID)
+      .verificationChecks.create({
+        to: context.ADMINISTRATOR_PHONE,
+        code,
+      });
+  }
 
-  const crypto = require('crypto');
-
-  // assert(event.token, 'missing event.token');
   if (!isValidMfaToken(event.token, context)) {
     const response = new Twilio.Response();
     response.setStatusCode(401);
@@ -22,36 +29,32 @@ exports.handler = function (context, event, callback) {
     return callback(null, response);
   }
 
-  // encrypt the mfaCode to avoid showing in the browser
-  mfaInputEncrypt = crypto
-    .createHmac('sha256', context.AUTH_TOKEN)
-    .update(Buffer.from(`${event.mfaCode}:${context.SALT}`, 'utf-8'))
-    .digest('base64');
-
-  mfaEncryptFromToken = jwt.verify(event.token, context.AUTH_TOKEN).data;
-  console.log(
-    'mfaEncrypt ',
-    mfaInputEncrypt,
-    ' : ',
-    'mfaEncryptFromToken ',
-    mfaEncryptFromToken
-  );
-
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-  if (mfaInputEncrypt === mfaEncryptFromToken) {
-    console.log(5);
-    response.setBody({
-      token: createAppToken('mfa', context),
+
+  verifyMfaCode(event.mfaCode, context)
+    .then((verificationCheck) => {
+      if (verificationCheck.status === 'approved') {
+        response.setBody({
+          token: createAppToken('mfa', context),
+        });
+        return callback(null, response);
+      }
+      response.setStatusCode(401);
+      response.appendHeader(
+        'Error-Message',
+        'Invalid code. Please check your phone for verification code and try again.'
+      );
+      return callback(null, response);
+    })
+    .catch((error) => {
+      console.error(error);
+      response.setStatusCode(401);
+      response.appendHeader(
+        'Error-Message',
+        'Invalid code. Please check your phone and try again.'
+      );
+      callback(false);
     });
-  } else {
-    console.log(6);
-    response.setStatusCode(401);
-    response.appendHeader(
-      'Error-Message',
-      'Invalid code. Please check your phone and try again.'
-    );
-  }
-  console.log('came to mfa.js');
-  return callback(null, response);
+  return null;
 };
