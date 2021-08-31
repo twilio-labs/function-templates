@@ -23,7 +23,7 @@ exports.handler = async function (context, event, callback) {
     const assert = require('assert');
     const AWS = require('aws-sdk');
     const { path } = Runtime.getFunctions().helpers;
-    const { getParam, setParam } = require(path);
+    const { getParam, setParam, validateAppointment } = require(path);
 
     // ---------- validate environment variables & input event
     const AWS_ACCESS_KEY_ID = await getParam(context, 'AWS_ACCESS_KEY_ID');
@@ -70,6 +70,7 @@ exports.handler = async function (context, event, callback) {
       'missing appointment.appointment_datetime'
     );
 
+    validateAppointment(context, appointment);
     appointment.event_type = 'REMIND'; // over-ride
     // event datetime MUST be set here
     appointment.event_datetime_utc = new Date(); // over-ride

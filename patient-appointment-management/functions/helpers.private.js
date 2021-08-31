@@ -22,6 +22,7 @@
  * --------------------------------------------------------------------------------
  */
 const AWS = require('aws-sdk');
+const assert = require('assert');
 
 async function setParam(context, key, value) {
   const Twilio = require('twilio');
@@ -325,7 +326,6 @@ async function getParam(context, key) {
 function validateAppointment(context, appointment) {
   // validates isoDate format ignoring subseconds and timezone
   function validateISO8601Format(name, value) {
-    assert(value, `Missing ${name}!`);
     assert(
       /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*/.test(value),
       `${name} not ISO8601 format: ${value}`
@@ -336,10 +336,10 @@ function validateAppointment(context, appointment) {
 
   // check for null & validates again format
   function validateFormat(name, value, format) {
-    assert(value, `Missing ${name}!`);
     assert(format.test(value), `Invalid ${name}: ${value}!`);
   }
 
+  // ---------- required
   {
     const v = appointment.event_type;
     assert(v, 'Missing appointment.event_type!');
@@ -356,77 +356,112 @@ function validateAppointment(context, appointment) {
       'OPTED-IN',
       'OPTED-OUT',
     ];
-    assert(v in validEventTypes, `Invalid event_type=${v}!`);
+    assert(validEventTypes.includes(v), `Invalid event_type=${v}!`);
   }
 
-  validateISO8601Format('event_datetime_utc', appointment.event_datetime_utc);
+  if (appointment.event_datetime_utc) {
+    validateISO8601Format('event_datetime_utc', appointment.event_datetime_utc);
+  }
 
-  validateFormat(
-    'patient_id',
-    appointment.patient_id,
-    /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/
-  );
+  // ---------- required
+  assert (appointment.patient_id, 'Missing patient_id!');
+  {
+    const format = /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/;
+    assert (
+      format.test(appointment.patient_id),
+      `Invalid patient_id: ${appointment.patient_id}`,
+    );
+  }
 
-  validateFormat(
-    'patient_first_name',
-    appointment.patient_first_name,
-    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
-  );
+  if (appointment.patient_first_name) {
+    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert (
+      format.test(appointment.patient_first_name),
+      `Invalid patient_first_name: ${appointment.patient_first_name}`,
+    );
+  }
 
-  validateFormat(
-    'patient_last_name',
-    appointment.patient_last_name,
-    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
-  );
+  if (appointment.patient_last_name) {
+    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert (
+      format.test(appointment.patient_last_name),
+      `Invalid patient_last_name: ${appointment.patient_last_name}`,
+    );
+  }
 
-  validateFormat('patient_phone', appointment.patient_phone, /[0-9+\-() ]+/);
+  if (appointment.patient_phone) {
+    const format = /[0-9+\-() ]+/;
+    assert (
+      format.test(appointment.patient_phone),
+      `Invalid patient_phone: ${appointment.patient_phone}`,
+    );
+  }
 
-  validateFormat(
-    'provider_id',
-    appointment.provider_id,
-    /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/
-  );
 
-  validateFormat(
-    'provider_first_name',
-    appointment.provider_first_name,
-    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
-  );
+  if (appointment.provider_id) {
+    const format = /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/;
+    assert (
+      format.test(appointment.provider_id),
+      `Invalid provider_id: ${appointment.provider_id}`,
+    );
+  }
 
-  validateFormat(
-    'provider_last_name',
-    appointment.provider_last_name,
-    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
-  );
+  if (appointment.provider_first_name) {
+    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert (
+      format.test(appointment.provider_first_name),
+      `Invalid provider_first_name: ${appointment.provider_first_name}`,
+    );
+  }
 
-  validateFormat(
-    'provider_callback_phone',
-    appointment.provider_callback_phone,
-    /[0-9+\-() ]+/
-  );
+  if (appointment.provider_last_name) {
+    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert (
+      format.test(appointment.provider_last_name),
+      `Invalid provider_last_name: ${appointment.provider_last_name}`,
+    );
+  }
 
-  validateFormat(
-    'appointment_location',
-    appointment.appointment_location,
-    /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u
-  );
+  if (appointment.provider_callback_phone) {
+    const format = /[0-9+\-() ]+/;
+    assert (
+      format.test(appointment.provider_callback_phone),
+      `Invalid provider_callback_phone: ${appointment.provider_callback_phone}`,
+    );
+  }
 
-  validateFormat(
-    'appointment_id',
-    appointment.appointment_id,
-    /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/
-  );
+  if (appointment.appointment_location) {
+    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert(
+      format.test(appointment.appointment_location),
+      `Invalid provider_last_name: ${appointment.appointment_location}`,
+    );
+  }
 
-  validateFormat(
-    'appointment_timezone',
-    appointment.appointment_timezone,
-    /^[+\-][0-9]{4}$/
-  );
+  if (appointment.appointment_id) {
+    const format = /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/;
+    assert (
+      format.test(appointment.appointment_id),
+      `Invalid appointment_id: ${appointment.appointment_id}`,
+    );
+  }
 
-  validateISO8601Format(
-    'appointment_datetime',
-    appointment.appointment_datetime
-  );
+  if (appointment.appointment_timezone) {
+    const format = /^[+\-][0-9]{4}$/;
+    assert (
+      format.test(appointment.appointment_timezone),
+      `Invalid appointment_timezone: ${appointment.appointment_timezone}`,
+    );
+  }
+
+  if (appointment.appointment_datetime) {
+    validateISO8601Format(
+      'appointment_datetime',
+      appointment.appointment_datetime
+    );
+  }
+
+  return true; // validated
 }
 
 module.exports = {
