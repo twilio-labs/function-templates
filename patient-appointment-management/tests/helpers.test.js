@@ -77,6 +77,7 @@ test('abnormal flow of event: validateAppointment invalid event_type', async () 
   } catch (error) {
     return true;
   }
+  return false;
 });
 
 // --------------------------------------------------------------------------------
@@ -91,6 +92,7 @@ test('abnormal flow of event: validateAppointment invalid event_datetime_utc', a
   } catch (error) {
     return true;
   }
+  return false;
 });
 
 // --------------------------------------------------------------------------------
@@ -109,6 +111,7 @@ test('abnormal flow of event: validateAppointment invalid patient_phone', async 
   } catch (error) {
     return true;
   }
+  return false;
 });
 
 // --------------------------------------------------------------------------------
@@ -131,6 +134,7 @@ test('abnormal flow of event: validateAppointment invalid provider_callback_phon
   } catch (error) {
     return true;
   }
+  return false;
 });
 
 // --------------------------------------------------------------------------------
@@ -157,6 +161,7 @@ test('abnormal flow of event: validateAppointment invalid appointment_timezone',
   } catch (error) {
     return true;
   }
+  return false;
 });
 
 // --------------------------------------------------------------------------------
@@ -183,4 +188,5 @@ test('abnormal flow of event: validateAppointment invalid appointment_datetime',
   } catch (error) {
     return true;
   }
+  return false;
 });
