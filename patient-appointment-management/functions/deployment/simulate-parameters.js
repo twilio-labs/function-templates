@@ -25,7 +25,7 @@ exports.handler = function (context, event, callback) {
     customerName: context.CUSTOMER_NAME,
     customerPhoneNumber: context.TWILIO_PHONE_NUMBER,
     appointmentTimestamp: tsTomorrow,
-    provider: 'Dr.Diaz',
+    provider: 'Dr. Diaz',
     location: 'Pacific Primary Care',
   };
   response.setBody(simulationParameters);

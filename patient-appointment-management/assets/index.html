@@ -23,7 +23,7 @@
       The app packages together the core components of a deployable prototype for basic,
       two-way SMS communication between patient and provider.
     </p>
-    <p>
+    <p id="simulation-text">
       This page will walk you through the remainder of the app installation. Once installation
       is complete, you can use the event simulation steps in order to test that everything is working
       appropriately and to see the app in action prior to integration with your EHR. You must be logged
@@ -210,9 +210,9 @@
     <p>
       Use these event simulation steps to test the application's flow of message events prior to integrating
       with your EHR. A few primary event types can be simulated here to ensure the application is working
-      appropriately: BOOKED, REMIND, CANCEL/CONFIRM. Although the app also supports additional event types,
+      appropriately: BOOKED and REMIND. Although the app also supports additional event types,
       these events will allow you to test that messages are properly flowing between all the primary architecture
-      components - Twilio, AWS, inbound/oubound "from/to the EHR". In this simulation, hard-coded event messages
+      components - Twilio, AWS, inbound/outbound "from/to the EHR". In this simulation, hard-coded event messages
       are being used in lieu of live messages that will ultimately come from your EHR. Every other step of the
       simulation will use the built-in app functionality.
     </p>
@@ -267,7 +267,7 @@
               </div>
               <div class="simulate-label">Name: </div>
               <div class="simulate-input">
-                <input id="name-sent-from" type="text" name="name-sent-from">
+                <input id="name-sent-from" type="text" name="name-sent-from" readonly>
               </div>
             </div>
             <div>
@@ -278,7 +278,7 @@
               </div>
               <div class="simulate-label">Number: </div>
               <div class="simulate-input">
-                <input id="number-sent-from" type="text" name="number-sent-from">
+                <input id="number-sent-from" type="text" name="number-sent-from" readonly>
               </div>
             </div>
           </div>
@@ -293,7 +293,7 @@
               </div>
               <div class="simulate-label-long">Appointment Date/Time:</div>
               <div class="simulate-input">
-                <input id="date-time" type="text" name="date-time">
+                <input id="date-time" type="text" name="date-time" readonly>
               </div>
             </div>
             <div>
@@ -304,7 +304,7 @@
               </div>
               <div class="simulate-label-long">Provider: </div>
               <div class="simulate-input">
-                <input id="provider" type="text" name="provider">
+                <input id="provider" type="text" name="provider" readonly>
               </div>
             </div>
             <div>
@@ -315,7 +315,7 @@
               </div>
               <div class="simulate-label-long">Location:</div>
               <div class="simulate-input">
-                <input id="location" type="text" name="location">
+                <input id="location" type="text" name="location" readonly>
               </div>
             </div>
           </div>
