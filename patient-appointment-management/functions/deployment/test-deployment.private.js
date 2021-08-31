@@ -10,7 +10,7 @@ const THIS = 'test-deployment:';
  *
  * usage (substitute your test phone number for +12223334444):
  *
- *    curl --silent "http://localhost:3000/deployment/qa-deployment?to_number=+12223334444'
+ *    curl --silent "http://localhost:3000/deployment/test-deployment?to_number=+12223334444'
  *
  */
 const assert = require('assert');
