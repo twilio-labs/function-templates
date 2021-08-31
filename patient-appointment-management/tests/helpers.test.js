@@ -1,7 +1,11 @@
 /* eslint-disable camelcase */
 const helpers = require('../../test/test-helper');
 const Twilio = require('twilio');
-const { getParam, setParam, validateAppointment } = require('../functions/helpers.private');
+const {
+  getParam,
+  setParam,
+  validateAppointment,
+} = require('../functions/helpers.private');
 
 const context = {
   AWS_REGION: 'us-west-2',
@@ -57,7 +61,7 @@ test('normal flow of event: validateAppointment typical', async () => {
     appointment_timezone: '-0700',
     appointment_datetime: new Date(Date.now()).toISOString(),
   };
-  
+
   const result = validateAppointment(context, appointment);
   expect(result).toStrictEqual(true);
 });
@@ -180,4 +184,3 @@ test('abnormal flow of event: validateAppointment invalid appointment_datetime',
     return true;
   }
 });
-

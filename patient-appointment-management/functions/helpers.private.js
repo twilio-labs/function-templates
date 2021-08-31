@@ -364,93 +364,97 @@ function validateAppointment(context, appointment) {
   }
 
   // ---------- required
-  assert (appointment.patient_id, 'Missing patient_id!');
+  assert(appointment.patient_id, 'Missing patient_id!');
   {
     const format = /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/;
-    assert (
+    assert(
       format.test(appointment.patient_id),
-      `Invalid patient_id: ${appointment.patient_id}`,
+      `Invalid patient_id: ${appointment.patient_id}`
     );
   }
 
   if (appointment.patient_first_name) {
-    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
-    assert (
+    const format =
+      /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert(
       format.test(appointment.patient_first_name),
-      `Invalid patient_first_name: ${appointment.patient_first_name}`,
+      `Invalid patient_first_name: ${appointment.patient_first_name}`
     );
   }
 
   if (appointment.patient_last_name) {
-    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
-    assert (
+    const format =
+      /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert(
       format.test(appointment.patient_last_name),
-      `Invalid patient_last_name: ${appointment.patient_last_name}`,
+      `Invalid patient_last_name: ${appointment.patient_last_name}`
     );
   }
 
   if (appointment.patient_phone) {
     const format = /[0-9+\-() ]+/;
-    assert (
+    assert(
       format.test(appointment.patient_phone),
-      `Invalid patient_phone: ${appointment.patient_phone}`,
+      `Invalid patient_phone: ${appointment.patient_phone}`
     );
   }
 
-
   if (appointment.provider_id) {
     const format = /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/;
-    assert (
+    assert(
       format.test(appointment.provider_id),
-      `Invalid provider_id: ${appointment.provider_id}`,
+      `Invalid provider_id: ${appointment.provider_id}`
     );
   }
 
   if (appointment.provider_first_name) {
-    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
-    assert (
+    const format =
+      /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert(
       format.test(appointment.provider_first_name),
-      `Invalid provider_first_name: ${appointment.provider_first_name}`,
+      `Invalid provider_first_name: ${appointment.provider_first_name}`
     );
   }
 
   if (appointment.provider_last_name) {
-    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
-    assert (
+    const format =
+      /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    assert(
       format.test(appointment.provider_last_name),
-      `Invalid provider_last_name: ${appointment.provider_last_name}`,
+      `Invalid provider_last_name: ${appointment.provider_last_name}`
     );
   }
 
   if (appointment.provider_callback_phone) {
     const format = /[0-9+\-() ]+/;
-    assert (
+    assert(
       format.test(appointment.provider_callback_phone),
-      `Invalid provider_callback_phone: ${appointment.provider_callback_phone}`,
+      `Invalid provider_callback_phone: ${appointment.provider_callback_phone}`
     );
   }
 
   if (appointment.appointment_location) {
-    const format = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
+    const format =
+      /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,\.'-]+$/u;
     assert(
       format.test(appointment.appointment_location),
-      `Invalid provider_last_name: ${appointment.appointment_location}`,
+      `Invalid provider_last_name: ${appointment.appointment_location}`
     );
   }
 
   if (appointment.appointment_id) {
     const format = /[a-zA-Z0-9 !@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]+/;
-    assert (
+    assert(
       format.test(appointment.appointment_id),
-      `Invalid appointment_id: ${appointment.appointment_id}`,
+      `Invalid appointment_id: ${appointment.appointment_id}`
     );
   }
 
   if (appointment.appointment_timezone) {
     const format = /^[+\-][0-9]{4}$/;
-    assert (
+    assert(
       format.test(appointment.appointment_timezone),
-      `Invalid appointment_timezone: ${appointment.appointment_timezone}`,
+      `Invalid appointment_timezone: ${appointment.appointment_timezone}`
     );
   }
 
