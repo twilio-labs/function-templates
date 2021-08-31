@@ -23,7 +23,7 @@
       The app packages together the core components of a deployable prototype for basic,
       two-way SMS communication between patient and provider.
     </p>
-    <p>
+    <p id="simulation-text">
       This page will walk you through the remainder of the app installation. Once installation
       is complete, you can use the event simulation steps in order to test that everything is working
       appropriately and to see the app in action prior to integration with your EHR. You must be logged
@@ -210,9 +210,9 @@
     <p>
       Use these event simulation steps to test the application's flow of message events prior to integrating
       with your EHR. A few primary event types can be simulated here to ensure the application is working
-      appropriately: BOOKED, REMIND, CANCEL/CONFIRM. Although the app also supports additional event types,
+      appropriately: BOOKED and REMIND. Although the app also supports additional event types,
       these events will allow you to test that messages are properly flowing between all the primary architecture
-      components - Twilio, AWS, inbound/oubound "from/to the EHR". In this simulation, hard-coded event messages
+      components - Twilio, AWS, inbound/outbound "from/to the EHR". In this simulation, hard-coded event messages
       are being used in lieu of live messages that will ultimately come from your EHR. Every other step of the
       simulation will use the built-in app functionality.
     </p>

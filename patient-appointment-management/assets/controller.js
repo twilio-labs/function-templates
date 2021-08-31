@@ -739,12 +739,14 @@ function handleInvalidToken() {
 
 function goHome() {
   $('main').show();
+  $('#simulation-text').show();
   $('#simulate-section').hide();
 }
 // --------------------------------------------------------------------------------
 
 function goSimulate() {
   $('main').hide();
+  $('#simulation-text').hide();
   $('#simulate-section').show();
   getSimulationParameters();
 }
