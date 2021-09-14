@@ -92,6 +92,10 @@ If your app has a front-end component to it, you can override the existing `inde
 
 In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
 
+### Adding yourself to `.owners`
+
+Each app has a `.owners` file in its root directory. This file is a list of Github usernames that will be assigned as reviewers on any PR that involves changes to that app. Add your Github username to the bottom of this file, replacing the comment `# Insert your Github username here`.
+
 ### Versioning and `CHANGELOG.md`
 
 Every Quick Deploy app has a version field in its `package.json` that follows [semantic versioning](https://semver.org/), and a `CHANGELOG.md` file that uses the [keep a changelog](https://keepachangelog.com/en/1.0.0/) format. Initially your app will be at version 1.0.0. If you are updating an app that has already been published to Code Exchange, please increment its version number according to the semantic versioning specification, and update its changelog with the changes you have made to the app since its last version. Versioning your app before it gets deployed by users will help isolate issues in a particular version of the app, and will also enable your app to take advantage of a future update mechanism for deployed apps.

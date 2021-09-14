@@ -1,0 +1,26 @@
+name: Assign Reviewers
+
+on:
+  pull_request_review:
+  pull_request_target:
+    types: [
+      opened,
+      ready_for_review,
+      reopened,
+      synchronize,
+      labeled,
+      unlabeled
+    ]
+
+jobs:
+  reviewers:
+    name: Assign Reviewers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: zattoo/reviewers@v2
+        with:
+          token: ${{secrets.GITHUB_TOKEN}}
+          ignore: |
+            .DS_Store
+          source: '.owners'
