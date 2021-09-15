@@ -34,6 +34,7 @@
     "husky": "^6.0.0",
     "inquirer": "^7.0.4",
     "jest-cli": "^26.6.3",
+    "jsonwebtoken": "^8.5.1",
     "jszip": "^3.7.0",
     "listr": "^0.14.3",
     "log-symbols": "^3.0.0",
@@ -44,8 +45,7 @@
     "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
     "twilio": "^3.64.0",
-    "uuid": "^8.3.2",
-    "jsonwebtoken": "^8.5.1"
+    "uuid": "^8.3.2"
   },
   "jest": {
     "testEnvironment": "node",
@@ -60,6 +60,7 @@
     ]
   },
   "dependencies": {
-    "got": "^6.7.1"
+    "got": "^6.7.1",
+    "validator": "^13.6.0"
   }
 }
