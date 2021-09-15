@@ -23,7 +23,7 @@
  */
 const AWS = require('aws-sdk');
 const assert = require('assert');
-const validator = require("validator");
+const validator = require('validator');
 
 async function setParam(context, key, value) {
   const Twilio = require('twilio');
