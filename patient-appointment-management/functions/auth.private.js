@@ -30,18 +30,12 @@ function createAppToken(issuer, context) {
   });
 }
 
-function createMfaToken(issuer, mfaCode, context) {
+function createMfaToken(issuer, context) {
   if (checkDisableAuthForLocalhost(context)) {
     return createAppToken(issuer, context);
   }
 
-  // encrypt the mfaCode to avoid showing in the browser
-  mfaEncrypt = crypto
-    .createHmac('sha256', context.AUTH_TOKEN)
-    .update(Buffer.from(`${mfaCode}:${context.SALT}`, 'utf-8'))
-    .digest('base64');
-
-  return jwt.sign({ data: mfaEncrypt }, context.AUTH_TOKEN, {
+  return jwt.sign({}, context.AUTH_TOKEN, {
     expiresIn: MFA_TOKEN_DURATION,
     audience: 'mfa',
     issuer,

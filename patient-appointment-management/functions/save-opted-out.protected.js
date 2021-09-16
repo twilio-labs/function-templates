@@ -46,7 +46,7 @@ exports.handler = async function (context, event, callback) {
     const assert = require('assert');
     const AWS = require('aws-sdk');
     const { path } = Runtime.getFunctions().helpers;
-    const { getParam, setParam } = require(path);
+    const { getParam, setParam, validateAppointment } = require(path);
 
     // ---------- validate environment variables & input event
     const AWS_ACCESS_KEY_ID = await getParam(context, 'AWS_ACCESS_KEY_ID');
@@ -84,6 +84,7 @@ exports.handler = async function (context, event, callback) {
       appointment.hasOwnProperty('patient_id'),
       'missing appointment.patient_id'
     );
+    validateAppointment(context, appointment);
     appointment.event_type = 'OPTED-OUT'; // over-ride
 
     // initialize s3 client
