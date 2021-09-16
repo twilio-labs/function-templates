@@ -306,6 +306,14 @@ async function getParam(context, key) {
  * --------------------------------------------------------------------------------
  * validates appoointment data to guard against json injection
  *
+ * validation rules not intended to be restrictive,
+ * hence only implements rudiment basic check of the string value
+ * - for names and location, alphanumeric & alphabet variations plus some punctuation
+ *   characters are allowed. Full unicode character set is not supported
+ *   as this application can ONLY be used in US subject to HIPAA regulations on PHI
+ * - phone number validation is also permissive (i.e., not strict to E.164)
+ * - datetime validates ISO8601 format
+ *
  * param:
  * - appointment: json of appointment data
  *     event_type: 'BOOKED',
