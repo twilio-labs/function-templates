@@ -45,7 +45,8 @@
     "stripe": "^8.20.0",
     "twilio": "^3.64.0",
     "uuid": "^8.3.2",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "validator": "^13.6.0"
   },
   "jest": {
     "testEnvironment": "node",
