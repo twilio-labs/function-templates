@@ -274,6 +274,11 @@
       "id": "patient-appointment-management",
       "name": "Patient Appointment Management",
       "description": "Patient Appointment Management including notification and reminders sent via SMS"
+    },
+    {
+      "id": "sms-subscription",
+      "name": "SMS Subscriptions",
+      "description": "Allow people to subscribe for notifications and then notify everyone at once."
     }
   ]
 }

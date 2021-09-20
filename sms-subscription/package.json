@@ -1,0 +1,10 @@
+{
+  "name": "sms-subscription",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@twilio/runtime-handler": "1.2.0-rc.3",
+    "basic-auth": "^2.0.1",
+    "tsscmp": "^1.0.6"
+  }
+}
