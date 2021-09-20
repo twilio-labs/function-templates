@@ -1,7 +1,8 @@
-const { deleteAllPhoneNumbers } = require(Runtime.getAssets()['/data.js'].path);
-const { isAuthenticated } = require(Runtime.getAssets()['/auth.js'].path);
-
 exports.handler = async function (context, event, callback) {
+  const { deleteAllPhoneNumbers } = require(Runtime.getAssets()['/data.js']
+    .path);
+  const { isAuthenticated } = require(Runtime.getAssets()['/auth.js'].path);
+
   if (!isAuthenticated(context, event)) {
     const response = new Twilio.Response();
     response.setBody({ error: 'INVALID' });
@@ -9,7 +10,12 @@ exports.handler = async function (context, event, callback) {
     return callback(null, response);
   }
 
-  const result = await deleteAllPhoneNumbers();
+  try {
+    const result = await deleteAllPhoneNumbers();
 
-  return callback(null, { result });
+    return callback(null, { result });
+  } catch (err) {
+    console.error(err.message);
+    return callback(new Error('Server error. Please check logs.'));
+  }
 };

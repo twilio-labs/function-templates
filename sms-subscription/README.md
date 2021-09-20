@@ -12,17 +12,27 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
+| `TWILIO_PHONE_NUMBER` | The Twilio phone number to send broadcast SMS from | true |
+| `PASSCODE` | Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts or delete all subscriptions | true |
+| `SYNC_SERVICE_SID` | SID for the Sync Service that is used to store the subscriptions. Can be left empty for default service. | false |
 
 
 ### Function Parameters
 
-`/blank` expects the following parameters:
+`/subscribe` expects the following parameters:
+
+| Parameter | Description | Required |
+| :-------- | :---------- | :------- |
+| `phoneNumber` | The number to add to the subscription | true |
+
+
+`/notify` is requires to authenticate with basic auth using the configured `PASSCODE` as password and the username `admin`. It supports the following parameters:
 
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |
 
 
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
+`/delete-subscriptions` is requires to authenticate with basic auth using the configured `PASSCODE` as password and the username `admin`. It supports the following parameters:
 
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |
