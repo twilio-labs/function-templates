@@ -7,60 +7,46 @@
  *    "error": string // not present if success is true
  *  }
  */
-exports.handler = (context, event, callback) => {
+exports.handler = async (context, event, callback) => {
+  const { isAuthenticated } = require(Runtime.getAssets()['/auth.js'].path);
+  const { setupResourcesIfRequired } = require(Runtime.getAssets()['/setup.js']
+    .path);
+
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
+  if (!isAuthenticated(context, event)) {
+    response.setBody({ success: false, error: 'INVALID CREDENTIALS' });
+    response.setStatusCode(401);
+    return callback(null, response);
+  }
 
-  client.verify
-    .services(service)
-    .verificationChecks.create({
-      to: context.BROADCAST_ADMIN_NUMBER,
-      code: event.code,
-    })
-    // eslint-disable-next-line
-    .then((check) => {
-      if (check.status === 'approved') {
-        client.notify
-          .services(context.BROADCAST_NOTIFY_SERVICE_SID)
-          .notifications.create({
-            tag: event.tag || 'all',
-            body: event.body,
-          })
-          .then(() => {
-            response.setStatusCode(200);
-            response.setBody({
-              success: true,
-            });
-            return callback(null, response);
-          })
-          .catch((error) => {
-            console.error(error);
-            response.setStatusCode(error.status);
-            response.setBody({
-              success: false,
-              error: error.message,
-            });
-            return callback(null, response);
-          });
-      } else {
-        response.setStatusCode(401);
-        response.setBody({
-          success: false,
-          error: 'Incorrect token.',
-        });
-        return callback(null, response);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      response.setStatusCode(error.status);
-      response.setBody({
-        success: false,
-        error: error.message,
+  try {
+    if (!(await setupResourcesIfRequired(context))) {
+      response.setBody({ success: false, error: 'Failed to setup services' });
+      response.setStatusCode(500);
+      return callback(null, response);
+    }
+
+    const client = context.getTwilioClient();
+    await client.notify
+      .services(context.BROADCAST_NOTIFY_SERVICE_SID)
+      .notifications.create({
+        tag: event.tag || 'all',
+        body: event.body,
       });
-      callback(null, response);
+    response.setStatusCode(200);
+    response.setBody({
+      success: true,
     });
+    return callback(null, response);
+  } catch (err) {
+    console.error(error);
+    response.setStatusCode(error.status);
+    response.setBody({
+      success: false,
+      error: error.message,
+    });
+    return callback(null, response);
+  }
 };
