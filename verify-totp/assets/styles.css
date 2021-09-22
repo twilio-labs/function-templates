@@ -1,0 +1,49 @@
+main {
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-start;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.content {
+  max-width: 100%;
+}
+
+input[type='submit'] {
+  font: inherit;
+  border: 1px solid rgb(136, 145, 170);
+  border-radius: 4px;
+}
+
+.explainer {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+  padding: 0.75rem 1.25rem;
+  margin-top: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.reset,
+#start-backup {
+  margin-top: 1rem;
+}
+
+.dynamic-render,
+.otp-form {
+  display: none;
+}
+
+#secret {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+#backup-codes {
+  font-family: monospace;
+}
