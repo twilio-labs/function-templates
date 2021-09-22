@@ -211,6 +211,11 @@
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
     },
     {
+      "id": "verify-totp",
+      "name": "Authenticator app (TOTP) authentication",
+      "description": "Use authenticator apps like Authy or Google Authenticator that support Time-based One-Time Passwords (TOTP) with the Verify API."
+    },
+    {
       "id": "verify-retry",
       "name": "Verification with Retry Logic",
       "description": "Best practices UI for resending SMS verification codes and voice channel fallback."
