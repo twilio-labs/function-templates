@@ -12,6 +12,7 @@
  *  - identity - required
  *  - factor SID - required
  *  - message - required
+ *  - hidden_details - optional
  *  - details like IP, Location, etc. - optional
  *
  *  Returns JSON
@@ -64,7 +65,7 @@ exports.handler = function (context, event, callback) {
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
 
-  const { identity, message, factor, ...details } = event;
+  const { identity, message, factor, hidden_details, ...details } = event;
   const fields = [];
   for (const [key, value] of Object.entries(details)) {
     fields.push({ label: key, value });
@@ -77,6 +78,7 @@ exports.handler = function (context, event, callback) {
       factorSid: event.factor,
       'details.message': message,
       'details.fields': fields,
+      hiddenDetails: hidden_details,
     })
     .then((challenge) => {
       response.setStatusCode(200);

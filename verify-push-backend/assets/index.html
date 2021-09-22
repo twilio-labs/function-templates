@@ -105,6 +105,20 @@
             >
           </div>
           <div class="form-group">
+            <a class="btn-link show-hidden-details" href="#" role="button"
+              >Add hidden details</a
+            >
+          </div>
+          <div class="form-group hidden-details" style="display:none">
+            <label>Hidden Details</label>
+            <p>Arbitrary key-value pairs to include in the verification. Not intended to be shown to the end user</p>
+          </div>
+          <div class="form-group hidden-details-add" style="display:none">
+            <a class="btn-link add-hidden-details" href="#" role="button"
+              >Add more hidden details</a
+            >
+          </div>
+          <div class="form-group">
             <input
               type="submit"
               class="btn btn-primary"
@@ -142,7 +156,10 @@
       content.addClass(`text-${alertType}`).append(message);
     }
 
-    function checkStatus(sid, identity) {
+    const waitInterval = 5000;
+    const defaultExpirationTime = 5 * 60 * 1000;
+    const maxAttempts = defaultExpirationTime / waitInterval;
+    function checkStatus(sid, identity, attempt = 1) {
       fetch("./challenge-status?" + new URLSearchParams({ sid, identity }))
         .then((resp) => resp.json())
         .then(({ status }) => {
@@ -152,8 +169,11 @@
           } else if (status == "denied") {
             $("#loading").removeClass("spinner");
             showMessage("danger", "Login request denied!");
+          } else if (attempt < maxAttempts) {
+            setTimeout(checkStatus, waitInterval, sid, identity, attempt + 1);
           } else {
-            setTimeout(checkStatus(sid, identity), 5000);
+            $("#loading").removeClass("spinner");
+            showMessage("danger", "Login request expired!");
           }
         });
     }
@@ -191,6 +211,34 @@
 
       registerCloseStatus();
     }
+    
+    function addHiddenDetailRow(k, v) {
+      let labelValue = k != undefined ? `value="${k}"` : "";
+      let valueValue = v != undefined ? `value="${v}"` : "";
+      $(".hidden-details").append(
+        `<div class="row form-group">
+          <div class="col-xs-5 col-lg-4">
+            <input
+              type="text"
+              class="form-control hidden-detail"
+              placeholder="label"
+              ${labelValue}
+            />
+          </div>
+          <div class="col-xs-6 col-lg-4">
+            <input
+              type="text"
+              class="form-control hidden-detail"
+              placeholder="value"
+              ${valueValue}
+            />
+          </div>
+          <button class="close">&times;</button>
+        </div>`
+      );
+
+      registerCloseStatus();
+    }
 
     // seed details
     fetch("https://ipapi.co/json/")
@@ -204,8 +252,22 @@
         addDetailRow();
       });
 
-    $(".add-details").click(function () {
+    $(".add-details").click(function (event) {
+      event.preventDefault();
       addDetailRow();
+    });
+    
+    $(".add-hidden-details").click(function (event) {
+      event.preventDefault();
+      addHiddenDetailRow();
+    });
+    
+    $(".show-hidden-details").click(function (event) {
+      event.preventDefault();
+      $(".hidden-details").show()
+      $(".hidden-details-add").show()
+      addHiddenDetailRow();
+      $(".show-hidden-details").hide()
     });
 
     async function digestMessage(identity) {
@@ -233,6 +295,7 @@
         })
         .then((resp) => resp.json())
         .then((respJson) => {
+          $("#factor-list").empty();
           respJson.forEach(({ friendlyName, identity, sid }) => {
             $("#factor-list").append(
               `<div>
@@ -262,6 +325,19 @@
           data.append("message", $("#message").val());
           data.append("factor", $("#factor").val());
 
+          var hiddenDetails = $(".hidden-detail")
+            .toArray()
+            .map((hiddenDetail) => hiddenDetail.value)
+            .reduce(function (result, value, index, array) {
+              if (index % 2 === 0) {
+                let key = array[index];
+                if (key !== "") result[key] = array[index + 1];
+              }
+              return result;
+            }, {});
+          
+          data.append("hidden_details", JSON.stringify(hiddenDetails));
+          
           var details = $(".detail")
             .toArray()
             .map((detail) => detail.value)
