@@ -270,29 +270,17 @@
       $(".show-hidden-details").hide()
     });
 
-    async function digestMessage(identity) {
-      const identityUint8 = new TextEncoder().encode(identity);
-      const hashBuffer = await crypto.subtle.digest("SHA-256", identityUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-      return hashHex;
-    }
-
     $("#list-factors").submit(function (event) {
       event.preventDefault();
 
-      digestMessage($("#factor-identity").val())
-        .then((identity) => {
-          const data = new URLSearchParams();
-          data.append("identity", identity);
+      const identity = $("#factor-identity").val()
+      const data = new URLSearchParams();
+      data.append("identity", identity);
 
-          return fetch("./list-factors", {
-            method: "POST",
-            body: data,
-          });
-        })
+      fetch("./list-factors", {
+        method: "POST",
+        body: data,
+      })
         .then((resp) => resp.json())
         .then((respJson) => {
           $("#factor-list").empty();
@@ -318,43 +306,41 @@
         identity: $("#identity").val(),
       });
 
-      digestMessage($("#identity").val())
-        .then((identity) => {
-          const data = new URLSearchParams();
-          data.append("identity", identity);
-          data.append("message", $("#message").val());
-          data.append("factor", $("#factor").val());
+      const identity = $("#identity").val()
+      const data = new URLSearchParams();
+      data.append("identity", identity);
+      data.append("message", $("#message").val());
+      data.append("factor", $("#factor").val());
 
-          var hiddenDetails = $(".hidden-detail")
-            .toArray()
-            .map((hiddenDetail) => hiddenDetail.value)
-            .reduce(function (result, value, index, array) {
-              if (index % 2 === 0) {
-                let key = array[index];
-                if (key !== "") result[key] = array[index + 1];
-              }
-              return result;
-            }, {});
+      var hiddenDetails = $(".hidden-detail")
+        .toArray()
+        .map((hiddenDetail) => hiddenDetail.value)
+        .reduce(function (result, value, index, array) {
+          if (index % 2 === 0) {
+            let key = array[index];
+            if (key !== "") result[key] = array[index + 1];
+          }
+          return result;
+        }, {});
           
-          data.append("hidden_details", JSON.stringify(hiddenDetails));
+      data.append("hidden_details", JSON.stringify(hiddenDetails));
           
-          var details = $(".detail")
-            .toArray()
-            .map((detail) => detail.value)
-            .reduce(function (result, value, index, array) {
-              if (index % 2 === 0) result.push(array.slice(index, index + 2));
-              return result;
-            }, []);
+      var details = $(".detail")
+        .toArray()
+        .map((detail) => detail.value)
+        .reduce(function (result, value, index, array) {
+          if (index % 2 === 0) result.push(array.slice(index, index + 2));
+          return result;
+        }, []);
 
-          details.forEach((pair) => {
-            if (pair[0] !== "") data.append(pair[0], pair[1]);
-          });
+      details.forEach((pair) => {
+        if (pair[0] !== "") data.append(pair[0], pair[1]);
+      });
 
-          return fetch("./create-challenge", {
-            method: "POST",
-            body: data,
-          });
-        })
+      fetch("./create-challenge", {
+        method: "POST",
+        body: data,
+      })
         .then((resp) => resp.json())
         .then(({ status, sid, identity, error }) => {
           if (status === "pending") {

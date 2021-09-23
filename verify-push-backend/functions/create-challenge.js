@@ -31,6 +31,7 @@
 
 const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/missing-params.js'].path);
+const { digestMessage } = require(assets['/digest-message.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
@@ -64,8 +65,10 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
+  const hashIdentity = context.IDENTITY_PROCESSING === "raw" ? false : true;
+  const identity = hashIdentity ? digestMessage(event.identity) : event.identity;
 
-  const { identity, message, factor, hidden_details, ...details } = event;
+  const { message, factor, hidden_details, ...details } = event;
   const fields = [];
   for (const [key, value] of Object.entries(details)) {
     fields.push({ label: key, value });
