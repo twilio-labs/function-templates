@@ -14,7 +14,9 @@ async function updateEnvironmentVariable(twilioClient, context, key, value) {
     const [variableToUpdate] = existingVariables.filter(
       (variable) => variable.key === key
     );
-    variableToUpdate.update({ value });
+    if (variableToUpdate) {
+      variableToUpdate.update({ value });
+    }
     context[key] = value;
     process.env[key] = value;
   } else {
@@ -137,14 +139,20 @@ async function setupResourcesIfRequired(context) {
       return false;
     }
 
-    if (!context.BROADCAST_NOTIFY_SERVICE_SID && !context.TWILIO_PHONE_NUMBER) {
+    if (
+      !context.BROADCAST_NOTIFY_SERVICE_SID &&
+      !context.MESSAGING_SERVICE_SID &&
+      !context.TWILIO_PHONE_NUMBER
+    ) {
       console.error('Missing Twilio Phone Number');
       return false;
     }
 
     const twilioClient = context.getTwilioClient();
     if (!context.BROADCAST_NOTIFY_SERVICE_SID) {
-      await setupMessagingService(twilioClient, context);
+      if (!context.MESSAGING_SERVICE_SID) {
+        await setupMessagingService(twilioClient, context);
+      }
       await setupNotifyService(twilioClient, context);
     }
     if (!context.VERIFY_SERVICE_SID) {

@@ -4,6 +4,14 @@ const compare = require('tsscmp');
 const isAuthenticated = (context, event) => {
   const { PASSCODE } = context;
 
+  if (
+    !event.request ||
+    !event.request.headers ||
+    !event.request.headers.authorization
+  ) {
+    return false;
+  }
+
   const parsedCredentials = auth.parse(event.request.headers.authorization);
   if (!parsedCredentials) {
     return false;
