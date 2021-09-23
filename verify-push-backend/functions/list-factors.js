@@ -56,8 +56,10 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
-  const hashIdentity = context.IDENTITY_PROCESSING === "raw" ? false : true;
-  const identity = hashIdentity ? digestMessage(event.identity) : event.identity;
+  const hashIdentity = context.IDENTITY_PROCESSING === 'raw' ? false : true;
+  const identity = hashIdentity
+    ? digestMessage(event.identity)
+    : event.identity;
 
   client.verify
     .services(serviceSid)
