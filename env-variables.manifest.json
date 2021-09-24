@@ -1058,30 +1058,50 @@
     ],
     "verified-broadcast": [
       {
-        "key": "BROADCAST_NOTIFY_SERVICE_SID",
-        "required": true,
-        "format": "sid",
-        "description": "SID of your Twilio Notify Service",
-        "link": "https://www.twilio.com/console/notify/services",
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "BROADCAST_ADMIN_NUMBER",
+        "key": "TWILIO_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
-        "description": "The number allowed to trigger a broadcast, used for verification",
+        "description": "The Twilio phone number to send broadcast SMS from",
         "link": null,
         "default": null,
         "configurable": true,
         "contentKey": null
       },
       {
-        "key": "VERIFY_SERVICE_SID",
+        "key": "PASSCODE",
         "required": true,
+        "format": "text",
+        "description": "Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts or delete all subscriptions",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "MESSAGING_SERVICE_SID",
+        "required": false,
         "format": "sid",
-        "description": "SID of your Twilio Verify Service",
+        "description": "SID of a Twilio Messaging Service. Otherwise one will automatically be provisioned for you.",
+        "link": "https://console.twilio.com/us1/develop/sms/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "BROADCAST_NOTIFY_SERVICE_SID",
+        "required": false,
+        "format": "sid",
+        "description": "SID of your Twilio Notify Service. Otherwise one will automatically be provisioned for you.",
+        "link": "https://www.twilio.com/console/notify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": false,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service. Otherwise one will automatically be provisioned for you.",
         "link": "https://www.twilio.com/console/verify/services",
         "default": null,
         "configurable": true,
