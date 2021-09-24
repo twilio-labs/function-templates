@@ -15,6 +15,8 @@ describe('verify-push-backend/private/digest-message', () => {
     const value = '1234567890';
     const hashedValue = digestMessage(value);
 
-    expect(hashedValue).toEqual('c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646');
+    expect(hashedValue).toEqual(
+      'c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646'
+    );
   });
 });
