@@ -1,5 +1,7 @@
 const helpers = require('../../../../test/test-helper');
 
+/* eslint-disable sonarjs/no-identical-functions, sonarjs/no-duplicate-string*/
+
 const statusFunctions = {};
 let environmentFunction;
 let mockGetCurrentEnvironment;
@@ -51,17 +53,12 @@ let backupEnv;
 describe('voice-javascript-sdk/admin/private/statuses', () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset(
-      '/admin/shared.js',
-      '../../../assets/admin/shared.private.js'
-    );
+    runtime._addAsset('/admin/shared.js', '../../../assets/admin/shared.private.js');
     helpers.setup(CONTEXT, runtime);
     // Mock out shared
     mockGetCurrentEnvironment = jest.fn();
     const mockShared = jest.mock('../../../assets/admin/shared.private', () => {
-      const actualShared = jest.requireActual(
-        '../../../assets/admin/shared.private'
-      );
+      const actualShared = jest.requireActual('../../../assets/admin/shared.private');
       return {
         urlForSiblingPage: actualShared.urlForSiblingPage,
         getCurrentEnvironment: mockGetCurrentEnvironment,
@@ -96,9 +93,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
 
   test('checkEnvironmentInitialization prompts to initialize if not yet initialized', async () => {
     // Arrange
-    mockGetCurrentEnvironment.mockReturnValueOnce(
-      Promise.resolve({ uniqueName: 'devtown' })
-    );
+    mockGetCurrentEnvironment.mockReturnValueOnce(Promise.resolve({ uniqueName: 'devtown' }));
 
     // Act
     const status = await environmentFunction(CONTEXT);
@@ -113,9 +108,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
   test('checkEnvironmentInitialization is valid when initialized and deployed', async () => {
     // Arrange
     process.env.INITIALIZED = 'voice-javascript-sdk-quickstart';
-    mockGetCurrentEnvironment.mockReturnValueOnce(
-      Promise.resolve({ uniqueName: 'devtown' })
-    );
+    mockGetCurrentEnvironment.mockReturnValueOnce(Promise.resolve({ uniqueName: 'devtown' }));
 
     // Act
     const status = await environmentFunction(CONTEXT);
@@ -146,7 +139,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
           friendlyName: process.env.APP_NAME,
           sid: 'FOUND_APP_SID',
         },
-      ])
+      ]),
     );
 
     // Act
@@ -207,9 +200,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
     process.env.APP_NAME = 'My Amazing App';
 
     // Act
-    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(
-      CONTEXT
-    );
+    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(CONTEXT);
 
     // Assert
     expect(result).toBeDefined();
@@ -229,9 +220,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
     });
 
     // Act
-    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(
-      CONTEXT
-    );
+    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(CONTEXT);
 
     // Assert
     expect(mockKeys.fetch).toHaveBeenCalled();
@@ -251,13 +240,11 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
       Promise.resolve({
         sid: process.env.API_KEY,
         friendlyName: process.env.APP_NAME,
-      })
+      }),
     );
 
     // Act
-    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(
-      CONTEXT
-    );
+    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(CONTEXT);
 
     // Assert
     expect(mockKeys.fetch).toHaveBeenCalled();
@@ -345,7 +332,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
       Promise.resolve({
         sid: process.env.TWIML_APPLICATION_SID,
         voiceUrl: intentionallyWrongUrl,
-      })
+      }),
     );
 
     // Act
@@ -358,9 +345,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
     expect(status.description).toContain(intentionallyWrongUrl);
     expect(status.description).toContain(expectedUrl);
     expect(status.actions[0].name).toBe('updateTwimlAppVoiceUrl');
-    expect(status.actions[0].params.twimlApplicationSid).toBe(
-      process.env.TWIML_APPLICATION_SID
-    );
+    expect(status.actions[0].params.twimlApplicationSid).toBe(process.env.TWIML_APPLICATION_SID);
     expect(status.actions[0].params.voiceUrl).toBe(expectedUrl);
   });
 
@@ -372,7 +357,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
       Promise.resolve({
         sid: process.env.TWIML_APPLICATION_SID,
         voiceUrl: expectedUrl,
-      })
+      }),
     );
 
     // Act

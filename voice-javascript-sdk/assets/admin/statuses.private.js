@@ -2,9 +2,7 @@
 const { stripIndents } = require('common-tags');
 
 const assets = Runtime.getAssets();
-const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
-  '/admin/shared.js'
-].path);
+const { getCurrentEnvironment, urlForSiblingPage } = require(assets['/admin/shared.js'].path);
 
 async function checkEnvironmentInitialization(context) {
   const environment = await getCurrentEnvironment(context);
@@ -59,9 +57,7 @@ async function getTwiMLApplicationStatus(context) {
   };
   if (process.env.TWIML_APPLICATION_SID) {
     try {
-      const app = await client
-        .applications(process.env.TWIML_APPLICATION_SID)
-        .fetch();
+      const app = await client.applications(process.env.TWIML_APPLICATION_SID).fetch();
       status.valid = true;
       status.description = `TwiML Application: [${app.friendlyName}](https://www.twilio.com/console/voice/twiml/apps/${app.sid})`;
     } catch (err) {
@@ -161,7 +157,7 @@ async function getCallerIdStatus(context) {
         params: {
           number: num.phoneNumber,
         },
-      }))
+      })),
     );
   }
   return status;
@@ -172,7 +168,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
   const expectedFn = `https://${context.DOMAIN_NAME}${urlForSiblingPage(
     'voice-javascript-sdk-twiml-app',
     context.PATH,
-    '..'
+    '..',
   )}`;
   twimlApplicationSid = process.env.TWIML_APPLICATION_SID;
   const status = {
@@ -180,8 +176,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
     valid: false,
   };
   if (!twimlApplicationSid) {
-    status.description =
-      'After you update your environment, you can wire up your TwiML Application safely.';
+    status.description = 'After you update your environment, you can wire up your TwiML Application safely.';
   } else {
     try {
       const app = await client.applications(twimlApplicationSid).fetch();
@@ -217,8 +212,7 @@ async function getTwiMLApplicationIsWiredUp(context) {
 async function getAPIKeyAndSecretFromEnvStatus(context) {
   const client = context.getTwilioClient();
   const status = {
-    title:
-      'The API Key and Secret for minting Access Tokens is accessible from the current environment',
+    title: 'The API Key and Secret for minting Access Tokens is accessible from the current environment',
     valid: false,
   };
 
@@ -284,8 +278,7 @@ async function getDefaultPasswordChanged(context) {
     `;
   } else {
     status.valid = true;
-    status.description =
-      "You're all set. You can change this value in your `.env` file at anytime.";
+    status.description = "You're all set. You can change this value in your `.env` file at anytime.";
   }
   return status;
 }

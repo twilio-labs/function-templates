@@ -1,5 +1,4 @@
-const twimlAppFunction =
-  require('../functions/voice-javascript-sdk-twiml-app').handler;
+const twimlAppFunction = require('../functions/voice-javascript-sdk-twiml-app').handler;
 const helpers = require('../../test/test-helper');
 
 const baseContext = {};

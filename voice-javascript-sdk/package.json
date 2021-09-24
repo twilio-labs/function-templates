@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "common-tags": "^1.8.0",
+    "jsonwebtoken": "^8.5.1",
     "twilio": "^3.61.0"
   }
 }

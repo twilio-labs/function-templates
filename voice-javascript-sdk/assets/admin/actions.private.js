@@ -15,11 +15,9 @@ class Actions {
     const voiceUrl = `https://${this.options.DOMAIN_NAME}${urlForSiblingPage(
       'voice-javascript-sdk-twiml-app',
       this.options.PATH,
-      '..'
+      '..',
     )}`;
-    console.log(
-      `Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`
-    );
+    console.log(`Wiring up TwiML Application ${env.TWIML_APPLICATION_SID} to the function: ${voiceUrl}`);
     await this.updateTwimlAppVoiceUrl({
       twimlApplicationSid: env.TWIML_APPLICATION_SID,
       voiceUrl,
@@ -43,9 +41,7 @@ class Actions {
   }
 
   async updateTwimlAppVoiceUrl({ twimlApplicationSid, voiceUrl }) {
-    const app = await this.client
-      .applications(twimlApplicationSid)
-      .update({ voiceUrl });
+    const app = await this.client.applications(twimlApplicationSid).update({ voiceUrl });
   }
 
   async generateNewKey({ friendlyName }) {

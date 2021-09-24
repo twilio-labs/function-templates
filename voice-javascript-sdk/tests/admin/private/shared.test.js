@@ -24,9 +24,7 @@ const mockEnvironment = {
 };
 const mockServicesList = jest.fn(() => Promise.resolve([]));
 const mockEnvironmentList = jest.fn(() => Promise.resolve([]));
-const mockEnvironmentVariablesList = jest.fn(() =>
-  Promise.resolve(mockVariables)
-);
+const mockEnvironmentVariablesList = jest.fn(() => Promise.resolve(mockVariables));
 const mockEnvironmentVariablesCreate = jest.fn(() => Promise.resolve([]));
 
 const mockEnvironments = jest.fn(() => {
@@ -153,7 +151,7 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
         {
           sid: 'SERVICE_SID',
         },
-      ])
+      ]),
     );
 
     // Act
@@ -163,9 +161,7 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
     expect(env).not.toBeDefined();
     expect(CONTEXT.getTwilioClient).toHaveBeenCalled();
     expect(mockServicesList).toHaveBeenCalled();
-    expect(mockTwilioClient.serverless.services).toHaveBeenCalledWith(
-      'SERVICE_SID'
-    );
+    expect(mockTwilioClient.serverless.services).toHaveBeenCalledWith('SERVICE_SID');
     expect(mockEnvironmentList).toHaveBeenCalled();
   });
 
@@ -176,7 +172,7 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
         {
           sid: 'SERVICE_SID',
         },
-      ])
+      ]),
     );
 
     mockEnvironmentList.mockReturnValue(
@@ -189,7 +185,7 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
           sid: 'HIT',
           domainName: CONTEXT.DOMAIN_NAME,
         },
-      ])
+      ]),
     );
 
     // Act
@@ -200,9 +196,7 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
     expect(env.sid).toBe('HIT');
     expect(CONTEXT.getTwilioClient).toHaveBeenCalled();
     expect(mockServicesList).toHaveBeenCalled();
-    expect(mockTwilioClient.serverless.services).toHaveBeenCalledWith(
-      'SERVICE_SID'
-    );
+    expect(mockTwilioClient.serverless.services).toHaveBeenCalledWith('SERVICE_SID');
     expect(mockEnvironmentList).toHaveBeenCalled();
   });
 
@@ -218,19 +212,13 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
 
     // Assert
     expect(result).toBeDefined();
-    expect(mockTwilioClient.serverless.services).toHaveBeenCalledWith(
-      'SERVICE_SID'
-    );
+    expect(mockTwilioClient.serverless.services).toHaveBeenCalledWith('SERVICE_SID');
     expect(mockEnvironments).toHaveBeenCalledWith('ENVIRONMENT_SID');
   });
 
   test('getEnvironmentVariable finds existing variables', async () => {
     // Act
-    const variable = await shared.getEnvironmentVariable(
-      CONTEXT,
-      mockEnvironment,
-      'FIRST_NAME'
-    );
+    const variable = await shared.getEnvironmentVariable(CONTEXT, mockEnvironment, 'FIRST_NAME');
 
     // Assert
     expect(variable).toBeDefined();
@@ -242,50 +230,28 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
     mockEnvironmentVariablesList.mockReturnValueOnce(Promise.resolve([]));
 
     // Act
-    const variable = await shared.getEnvironmentVariable(
-      CONTEXT,
-      mockEnvironment,
-      'FIRST_NAME'
-    );
+    const variable = await shared.getEnvironmentVariable(CONTEXT, mockEnvironment, 'FIRST_NAME');
 
     // Assert
     expect(variable).not.toBeDefined();
   });
 
   test('setEnvironmentVariable will not override existing values if specified on update', async () => {
-    const result = await shared.setEnvironmentVariable(
-      CONTEXT,
-      mockEnvironment,
-      'FIRST_NAME',
-      'Grace',
-      false
-    );
+    const result = await shared.setEnvironmentVariable(CONTEXT, mockEnvironment, 'FIRST_NAME', 'Grace', false);
 
     expect(result).toBeFalsy();
     expect(mockVariables[1].update).not.toHaveBeenCalled();
   });
 
   test('setEnvironmentVariable will update existing values', async () => {
-    const result = await shared.setEnvironmentVariable(
-      CONTEXT,
-      mockEnvironment,
-      'FIRST_NAME',
-      'Grace',
-      true
-    );
+    const result = await shared.setEnvironmentVariable(CONTEXT, mockEnvironment, 'FIRST_NAME', 'Grace', true);
 
     expect(result).toBeTruthy();
     expect(mockVariables[1].update).toHaveBeenCalledWith({ value: 'Grace' });
   });
 
   test('setEnvironmentVariable will not update existing value if it is the same', async () => {
-    const result = await shared.setEnvironmentVariable(
-      CONTEXT,
-      mockEnvironment,
-      'FIRST_NAME',
-      'Ada',
-      true
-    );
+    const result = await shared.setEnvironmentVariable(CONTEXT, mockEnvironment, 'FIRST_NAME', 'Ada', true);
 
     expect(result).toBeFalsy();
     expect(mockVariables[1].update).not.toHaveBeenCalled();
@@ -293,13 +259,7 @@ describe('voice-javascript-sdk/admin/private/shared', () => {
 
   test('setEnvironmentVariable will create a new variable', async () => {
     // Act
-    const result = await shared.setEnvironmentVariable(
-      CONTEXT,
-      mockEnvironment,
-      'MIDDLE_NAME',
-      'Augusta',
-      true
-    );
+    const result = await shared.setEnvironmentVariable(CONTEXT, mockEnvironment, 'MIDDLE_NAME', 'Augusta', true);
 
     expect(result).toBeTruthy();
     expect(mockEnvironmentVariablesCreate).toHaveBeenCalledWith({

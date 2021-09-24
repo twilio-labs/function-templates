@@ -1,5 +1,7 @@
 const helpers = require('../../../test/test-helper');
 
+/* eslint-disable sonarjs/no-identical-functions, sonarjs/no-duplicate-string*/
+
 // Defined after Runtime is available
 let loginFunction;
 let createToken;
@@ -8,10 +10,7 @@ describe('voice-javascript-sdk/admin/login', () => {
   beforeAll(() => {
     process.env.ADMIN_PASSWORD = 'supersekret';
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset(
-      '/admin/shared.js',
-      '../../assets/admin/shared.private.js'
-    );
+    runtime._addAsset('/admin/shared.js', '../../assets/admin/shared.private.js');
     helpers.setup({}, runtime);
     loginFunction = require('../../functions/admin/login').handler;
     shared = require(Runtime.getAssets()['/admin/shared.js'].path);
@@ -52,18 +51,11 @@ describe('voice-javascript-sdk/admin/login', () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result.token).toBeDefined();
-      const expectedToken = createToken(
-        baseContext,
-        process.env.ADMIN_PASSWORD
-      );
+      const expectedToken = createToken(baseContext, process.env.ADMIN_PASSWORD);
       expect(result.token).toBe(expectedToken);
       done();
     };
     // process.env.ADMIN_PASSWORD defined in setup
-    loginFunction(
-      baseContext,
-      { password: process.env.ADMIN_PASSWORD },
-      callback
-    );
+    loginFunction(baseContext, { password: process.env.ADMIN_PASSWORD }, callback);
   });
 });
