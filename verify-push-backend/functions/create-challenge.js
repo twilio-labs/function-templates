@@ -12,7 +12,7 @@
  *  - identity - required
  *  - factor SID - required
  *  - message - required
- *  - hidden_details - optional
+ *  - hiddenDetails - optional
  *  - details like IP, Location, etc. - optional
  *
  *  Returns JSON
@@ -70,7 +70,7 @@ exports.handler = function (context, event, callback) {
     ? digestMessage(event.identity)
     : event.identity;
 
-  const { message, factor, hidden_details, ...details } = event;
+  const { message, factor, hiddenDetails, ...details } = event;
   const fields = [];
   for (const [key, value] of Object.entries(details)) {
     fields.push({ label: key, value });
@@ -83,7 +83,7 @@ exports.handler = function (context, event, callback) {
       factorSid: event.factor,
       'details.message': message,
       'details.fields': fields,
-      hiddenDetails: hidden_details,
+      hiddenDetails: hiddenDetails,
     })
     .then((challenge) => {
       response.setStatusCode(200);
