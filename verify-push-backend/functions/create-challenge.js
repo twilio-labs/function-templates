@@ -83,7 +83,7 @@ exports.handler = function (context, event, callback) {
       factorSid: event.factor,
       'details.message': message,
       'details.fields': fields,
-      hiddenDetails: hiddenDetails,
+      hiddenDetails,
     })
     .then((challenge) => {
       response.setStatusCode(200);
