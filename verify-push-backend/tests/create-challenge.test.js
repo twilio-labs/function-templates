@@ -23,6 +23,7 @@ const mockClient = {
 
 const testContext = {
   VERIFY_SERVICE_SID: 'default',
+  IDENTITY_PROCESSING: 'hash',
   getTwilioClient: () => mockClient,
 };
 
@@ -33,11 +34,21 @@ describe('verify-push-backend/create-challenge', () => {
       '/missing-params.js',
       '../assets/missing-params.private.js'
     );
+    runtime._addAsset(
+      '/digest-message.js',
+      '../assets/digest-message.private.js'
+    );
     helpers.setup(testContext, runtime);
     jest.mock('../assets/missing-params.private.js', () => {
       const missing = jest.requireActual('../assets/missing-params.private.js');
       return {
         detectMissingParams: missing.detectMissingParams,
+      };
+    });
+    jest.mock('../assets/digest-message.private.js', () => {
+      const missing = jest.requireActual('../assets/digest-message.private.js');
+      return {
+        digestMessage: missing.digestMessage,
       };
     });
     createChallengeFunction = require('../functions/create-challenge').handler;
