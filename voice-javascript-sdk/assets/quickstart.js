@@ -5,15 +5,23 @@ $(function () {
   const inputVolumeBar = document.getElementById('input-volume');
   const volumeIndicators = document.getElementById('volume-indicators');
   const callButton = document.getElementById('button-call');
-  const outgoingCallHangupButton = document.getElementById('button-hangup-outgoing');
+  const outgoingCallHangupButton = document.getElementById(
+    'button-hangup-outgoing'
+  );
   const callControlsDiv = document.getElementById('call-controls');
   const audioSelectionDiv = document.getElementById('output-selection');
   const getAudioDevicesButton = document.getElementById('get-devices');
   const logDiv = document.getElementById('log');
   const incomingCallDiv = document.getElementById('incoming-call');
-  const incomingCallHangupButton = document.getElementById('button-hangup-incoming');
-  const incomingCallAcceptButton = document.getElementById('button-accept-incoming');
-  const incomingCallRejectButton = document.getElementById('button-reject-incoming');
+  const incomingCallHangupButton = document.getElementById(
+    'button-hangup-incoming'
+  );
+  const incomingCallAcceptButton = document.getElementById(
+    'button-accept-incoming'
+  );
+  const incomingCallRejectButton = document.getElementById(
+    'button-reject-incoming'
+  );
   const phoneNumberInput = document.getElementById('phone-number');
   const incomingPhoneNumberEl = document.getElementById('incoming-number');
   const startupButton = document.getElementById('startup-button');

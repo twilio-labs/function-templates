@@ -10,7 +10,9 @@ const baseContext = {
   getTwilioClient: jest.fn(),
 };
 
-const mockSetEnvironmentVariable = jest.fn().mockReturnValue(Promise.resolve(true));
+const mockSetEnvironmentVariable = jest
+  .fn()
+  .mockReturnValue(Promise.resolve(true));
 const mockEnvironment = { serviceSid: 'SERVICE_SID' };
 class MockActions {
   helloWorld({ firstName }) {
@@ -32,8 +34,14 @@ describe('voice-javascript-sdk/admin/perform-action', () => {
   beforeAll(() => {
     process.env.ADMIN_PASSWORD = 'supersekret';
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/admin/shared.js', '../../assets/admin/shared.private.js');
-    runtime._addAsset('/admin/actions.js', '../../assets/admin/actions.private.js');
+    runtime._addAsset(
+      '/admin/shared.js',
+      '../../assets/admin/shared.private.js'
+    );
+    runtime._addAsset(
+      '/admin/actions.js',
+      '../../assets/admin/actions.private.js'
+    );
     helpers.setup(baseContext, runtime);
     jest.mock('../../assets/admin/actions.private.js', () => MockActions);
     const { createToken } = require('../../assets/admin/shared.private');
@@ -41,13 +49,16 @@ describe('voice-javascript-sdk/admin/perform-action', () => {
     jest.mock('../../assets/admin/shared.private.js', () => {
       const shared = jest.requireActual('../../assets/admin/shared.private.js');
       return {
-        getCurrentEnvironment: jest.fn().mockReturnValue(Promise.resolve(mockEnvironment)),
+        getCurrentEnvironment: jest
+          .fn()
+          .mockReturnValue(Promise.resolve(mockEnvironment)),
         setEnvironmentVariable: mockSetEnvironmentVariable,
         checkAuthorization: shared.checkAuthorization,
         createToken: shared.createToken,
       };
     });
-    performActionFunction = require('../../functions/admin/perform-action').handler;
+    performActionFunction =
+      require('../../functions/admin/perform-action').handler;
   });
   afterAll(() => {
     helpers.teardown();
@@ -73,7 +84,7 @@ describe('voice-javascript-sdk/admin/perform-action', () => {
         mockEnvironment,
         'GREETING',
         'Hello Ada',
-        true,
+        true
       );
       expect(result.logs).toContain(`Successfully set "GREETING"`);
       done();
@@ -109,7 +120,7 @@ describe('voice-javascript-sdk/admin/perform-action', () => {
         'A_KEY',
         'a value',
         // False is the sign that it will not override existing values
-        false,
+        false
       );
       done();
     };

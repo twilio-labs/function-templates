@@ -9,7 +9,9 @@ const mockApplicationsUpdate = jest.fn();
 mockTwilioClient.applications = jest.fn(() => {
   return { update: mockApplicationsUpdate };
 });
-mockTwilioClient.applications.create = jest.fn(() => Promise.resolve({ sid: 'AP123' }));
+mockTwilioClient.applications.create = jest.fn(() =>
+  Promise.resolve({ sid: 'AP123' })
+);
 mockTwilioClient.newKeys = {
   create: jest.fn(() => {
     return {
@@ -28,7 +30,10 @@ mockTwilioClient.outgoingCallerIds = {
 describe('voice-javascript-sdk/admin/private/actions', () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/admin/shared.js', '../../../assets/admin/shared.private.js');
+    runtime._addAsset(
+      '/admin/shared.js',
+      '../../../assets/admin/shared.private.js'
+    );
     helpers.setup({}, runtime);
     const Actions = require('../../../assets/admin/actions.private');
     options = {
@@ -97,7 +102,9 @@ describe('voice-javascript-sdk/admin/private/actions', () => {
 
   test('chooseLogicalCallerId chooses incoming the first incoming number that exists', async () => {
     // Arrange
-    mockTwilioClient.incomingPhoneNumbers.list.mockReturnValue([{ phoneNumber: '+15557654321' }]);
+    mockTwilioClient.incomingPhoneNumbers.list.mockReturnValue([
+      { phoneNumber: '+15557654321' },
+    ]);
 
     // Act
     const result = await actions.chooseLogicalCallerId();
@@ -109,7 +116,9 @@ describe('voice-javascript-sdk/admin/private/actions', () => {
   test('chooseLogicalCallerId chooses verified number if there are no incoming phone numbers', async () => {
     // Arrange
     mockTwilioClient.incomingPhoneNumbers.list.mockReturnValue([]);
-    mockTwilioClient.outgoingCallerIds.list.mockReturnValue([{ phoneNumber: '+15553336666' }]);
+    mockTwilioClient.outgoingCallerIds.list.mockReturnValue([
+      { phoneNumber: '+15553336666' },
+    ]);
 
     // Act
     const result = await actions.chooseLogicalCallerId();
@@ -122,7 +131,9 @@ describe('voice-javascript-sdk/admin/private/actions', () => {
 
   test('initialize will setup all the things from options', async () => {
     // Arrange
-    mockTwilioClient.incomingPhoneNumbers.list.mockReturnValue([{ phoneNumber: '+15551213434' }]);
+    mockTwilioClient.incomingPhoneNumbers.list.mockReturnValue([
+      { phoneNumber: '+15551213434' },
+    ]);
 
     /*
      * Act

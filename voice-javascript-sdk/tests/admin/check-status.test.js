@@ -28,8 +28,14 @@ describe('voice-javascript-sdk/admin/check-status', () => {
   beforeAll(() => {
     process.env.ADMIN_PASSWORD = 'supersekret';
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/admin/shared.js', '../../assets/admin/shared.private.js');
-    runtime._addAsset('/admin/statuses.js', '../../assets/admin/statuses.private.js');
+    runtime._addAsset(
+      '/admin/shared.js',
+      '../../assets/admin/shared.private.js'
+    );
+    runtime._addAsset(
+      '/admin/statuses.js',
+      '../../assets/admin/statuses.private.js'
+    );
     helpers.setup(baseContext, runtime);
     jest.mock('../../assets/admin/statuses.private.js', () => mockStatuses);
     const { createToken } = require('../../assets/admin/shared.private');

@@ -52,7 +52,9 @@ class AdminClient {
   }
 
   async fetchState() {
-    const response = await fetch(`./check-status?token=${encodeURIComponent(this.token)}`);
+    const response = await fetch(
+      `./check-status?token=${encodeURIComponent(this.token)}`
+    );
     await this._handleResponse(response);
     return response.json();
   }
