@@ -21,8 +21,10 @@
   "devDependencies": {
     "@google-cloud/dialogflow": "^4.1.0",
     "@twilio-labs/serverless-api": "^1.1.0",
+    "@twilio/runtime-handler": "1.2.0-rc.3",
     "airtable": "^0.11.0",
     "aws-sdk": "^2.925.0",
+    "basic-auth": "^2.0.1",
     "common-tags": "^1.8.0",
     "configure-env": "^2.0.0-1",
     "copy-template-dir": "^1.4.0",
@@ -34,6 +36,7 @@
     "husky": "^6.0.0",
     "inquirer": "^7.0.4",
     "jest-cli": "^26.6.3",
+    "jsonwebtoken": "^8.5.1",
     "jszip": "^3.7.0",
     "listr": "^0.14.3",
     "log-symbols": "^3.0.0",
@@ -43,9 +46,9 @@
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
+    "tsscmp": "^1.0.6",
     "twilio": "^3.64.0",
     "uuid": "^8.3.2",
-    "jsonwebtoken": "^8.5.1",
     "validator": "^13.6.0"
   },
   "jest": {

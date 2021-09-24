@@ -12,9 +12,11 @@ In your `.env` file, set the following values:
 
 | Variable                     | Description                                                                                                                                                       | Required |
 | :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
-| BROADCAST_NOTIFY_SERVICE_SID | A [Notify Service Sid](https://www.twilio.com/console/notify/services) which is connected to a Messaging Service. See below for setup instructions      
-| VERIFY_SERVICE_SID           | Create one [here](https://www.twilio.com/console/verify/services)                                                                | Yes      |
-| BROADCAST_ADMIN_NUMBER       | A phone number (in [e.164 format](https://www.twilio.com/docs/glossary/what-e164)) that is allowed to broadcast messages to subscribers. Will be used for broadcast verification. | Yes      |
+| TWILIO_PHONE_NUMBER | The Twilio phone number to send broadcast SMS from | Yes |
+| PASSCODE | Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts or delete all subscriptions | Yes |
+| BROADCAST_NOTIFY_SERVICE_SID       | SID of your Twilio Notify Service. Otherwise one will automatically be provisioned for you. | No      |
+| MESSAGING_SERVICE_SID | SID of a Twilio Messaging Service. Otherwise one will automatically be provisioned for you. | No |
+| VERIFY_SERVICE_SID           | SID of your Twilio Verify Service. Create one [here](https://www.twilio.com/console/verify/services). Otherwise one will automatically be provisioned for you. | No      |
 
 ### Function Parameters
 
@@ -22,14 +24,13 @@ In your `.env` file, set the following values:
 
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
-| `to`       | Subscriber phone number. Defaults to admin phone number from config. | No  |
+| `to`       | Subscriber phone number. | Yes  |
 
-`broadcast.js` expects the following parameters:
+`broadcast.js` has to be authenticated using HTTP Basic Auth using `admin` as username an the configured `PASSCODE` as password. It expects the following parameters:
 
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
 | `body`     | Message body to send to subscribers             | Yes |
-| `code`     | One-time passcode sent via SMS.                 | Yes |
 | `tag`      | Notify [tag](https://www.twilio.com/docs/notify/api/notification-resource#create-a-notification-resource) to filter broadcast. | No |
 
 `subscribe.js` expects the following parameters:
@@ -83,7 +84,7 @@ You will need the generated SID for this service to configure your environment i
 
 ### Deploy the Function template
 
-Add the Notify Service SID to the `.env` file as `BROADCAST_NOTIFY_SERVICE_SID` and the Verify Service SID as `VERIFY_SERVICE_SID`. Add the phone number of the admin that is permitted to send broadcast messages to the `.env` file as `BROADCAST_ADMIN_NUMBER`.
+Add the Notify Service SID to the `.env` file as `BROADCAST_NOTIFY_SERVICE_SID` and the Verify Service SID as `VERIFY_SERVICE_SID`. Add any passcode for the admin that is permitted to send broadcast messages to the `.env` file as `PASSCODE`.
 
 Deploy your functions and assets with the following command. Note: you must run this command from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
 

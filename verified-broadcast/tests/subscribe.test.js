@@ -27,16 +27,28 @@ const mockClient = {
   },
 };
 
+const mockSetupResources = jest.fn(async () => true);
+jest.mock('../assets/setup.private.js', () => {
+  return {
+    setupResourcesIfRequired: mockSetupResources,
+  };
+});
+
 const VERIFY_SERVICE_SID = 'default';
 
 const testContext = {
   VERIFY_SERVICE_SID,
+  PASSCODE: 'test-code',
+  BROADCAST_NOTIFY_SERVICE_SID: 'placeholder',
+  TWILIO_PHONE_NUMBER: '+12223334444',
   getTwilioClient: () => mockClient,
 };
 
 describe('verified-broadcast/subscribe', () => {
   beforeAll(() => {
-    helpers.setup({});
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset('/setup.js', '../assets/setup.private.js');
+    helpers.setup(testContext, runtime);
   });
   afterAll(() => {
     helpers.teardown();
