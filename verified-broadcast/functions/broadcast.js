@@ -40,7 +40,7 @@ exports.handler = async (context, event, callback) => {
       success: true,
     });
     return callback(null, response);
-  } catch (err) {
+  } catch (error) {
     console.error(error);
     response.setStatusCode(error.status);
     response.setBody({

@@ -65,7 +65,7 @@ exports.handler = async (context, event, callback) => {
       error: 'Incorrect token.',
     });
     return callback(null, response);
-  } catch (err) {
+  } catch (error) {
     console.error(error);
     response.setStatusCode(error.status);
     response.setBody({
