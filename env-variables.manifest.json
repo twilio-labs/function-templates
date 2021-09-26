@@ -1070,7 +1070,7 @@
       {
         "key": "PASSCODE",
         "required": true,
-        "format": "text",
+        "format": "secret",
         "description": "Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts or delete all subscriptions",
         "link": null,
         "default": null,
