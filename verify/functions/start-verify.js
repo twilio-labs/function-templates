@@ -12,15 +12,10 @@
  *  Returns JSON
  *  {
  *    "success": boolean,
- *    "error": {                // not present if success is true
- *      "message": string,
- *      "moreInfo": url string
- *    }
+ *    "error":   string   // not present if success is true
  *  }
  */
-
-// eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -31,67 +26,50 @@ exports.handler = function (context, event, callback) {
    * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
    */
 
-  if (typeof event.to === 'undefined') {
+  try {
+    if (typeof event.to === 'undefined') {
+      throw new Error(
+        "Missing 'to' parameter; please provide a phone number or email."
+      );
+    }
+
+    /*
+     * DELETE THIS BLOCK IF YOU WANT TO ENABLE THE VOICE CHANNEL
+     * Learn more about toll fraud
+     * https://www.twilio.com/docs/verify/preventing-toll-fraud
+     */
+    if (event.channel === 'call') {
+      throw new Error(
+        'Calls disabled by default. Update the code in <code>start-verify.js</code> to enable.'
+      );
+    }
+
+    const client = context.getTwilioClient();
+    const service = context.VERIFY_SERVICE_SID;
+    const { to } = event;
+    const channel =
+      typeof event.channel === 'undefined' ? 'sms' : event.channel;
+    const locale = typeof event.locale === 'undefined' ? 'en' : event.locale;
+
+    const verification = await client.verify
+      .services(service)
+      .verifications.create({
+        to,
+        channel,
+        locale,
+      });
+
+    console.log(`Sent verification: '${verification.sid}'`);
+    response.setStatusCode(200);
+    response.setBody({ success: true });
+    return callback(null, response);
+  } catch (error) {
+    const statusCode = error.status || 400;
+    response.setStatusCode(statusCode);
     response.setBody({
       success: false,
-      error: {
-        message: 'Missing parameter; please provide a phone number or email.',
-        moreInfo: 'https://www.twilio.com/docs/verify/api/verification',
-      },
+      error: error.message,
     });
-    response.setStatusCode(400);
     return callback(null, response);
   }
-
-  /*
-   * DELETE THIS BLOCK IF YOU WANT TO ENABLE THE VOICE CHANNEL
-   * Learn more about toll fraud
-   * https://www.twilio.com/docs/verify/preventing-toll-fraud
-   */
-  if (event.channel === 'call') {
-    response.setBody({
-      success: false,
-      error: {
-        message:
-          'Calls disabled by default. Update the code in <code>start-verify.js</code> to enable.',
-        moreInfo: 'https://www.twilio.com/docs/verify/preventing-toll-fraud',
-      },
-    });
-    response.setStatusCode(400);
-    return callback(null, response);
-  }
-
-  const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
-  const { to } = event;
-  const channel = typeof event.channel === 'undefined' ? 'sms' : event.channel;
-  const locale = typeof event.locale === 'undefined' ? 'en' : event.locale;
-
-  client.verify
-    .services(service)
-    .verifications.create({
-      to,
-      channel,
-      locale,
-    })
-    .then((verification) => {
-      console.log(`Sent verification: '${verification.sid}'`);
-      response.setStatusCode(200);
-      response.setBody({
-        success: true,
-      });
-      return callback(null, response);
-    })
-    .catch((error) => {
-      console.log(error);
-      response.setStatusCode(error.status);
-      response.setBody({
-        success: false,
-        error: {
-          message: error.message,
-          moreInfo: error.moreInfo,
-        },
-      });
-      return callback(null, response);
-    });
 };

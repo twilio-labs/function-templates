@@ -15,9 +15,7 @@
  *    "message": string
  *  }
  */
-
-// eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -28,51 +26,36 @@ exports.handler = function (context, event, callback) {
    * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
    */
 
-  if (
-    typeof event.to === 'undefined' ||
-    typeof event.verification_code === 'undefined'
-  ) {
+  try {
+    if (typeof event.to === 'undefined' || typeof event.code === 'undefined') {
+      throw new Error('Missing parameter.');
+    }
+
+    const client = context.getTwilioClient();
+    const service = context.VERIFY_SERVICE_SID;
+    const { to, code } = event;
+
+    const check = await client.verify
+      .services(service)
+      .verificationChecks.create({ to, code });
+
+    if (check.status === 'approved') {
+      response.setStatusCode(200);
+      response.setBody({
+        success: true,
+        message: 'Verification success.',
+      });
+      return callback(null, response);
+      // eslint-disable-next-line no-else-return
+    } else {
+      throw new Error('Incorrect token.');
+    }
+  } catch (error) {
+    console.error(error.message);
     response.setBody({
       success: false,
-      message: 'Missing parameter.',
+      message: error.message,
     });
-    response.setStatusCode(400);
     return callback(null, response);
   }
-
-  const client = context.getTwilioClient();
-  const service = context.VERIFY_SERVICE_SID;
-  const { to, verification_code: code } = event;
-
-  client.verify
-    .services(service)
-    .verificationChecks.create({
-      to,
-      code,
-    })
-    .then((check) => {
-      if (check.status === 'approved') {
-        response.setStatusCode(200);
-        response.setBody({
-          success: true,
-          message: 'Verification success.',
-        });
-        return callback(null, response);
-      }
-      response.setStatusCode(401);
-      response.setBody({
-        success: false,
-        message: 'Incorrect token.',
-      });
-      return callback(null, response);
-    })
-    .catch((error) => {
-      console.log(error);
-      response.setStatusCode(error.status);
-      response.setBody({
-        success: false,
-        message: error.message,
-      });
-      return callback(null, response);
-    });
 };

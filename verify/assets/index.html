@@ -1,113 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Login with Twilio Verify</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>One Time Passcodes with Twilio Verify</title>
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-      crossorigin="anonymous"
+      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
     />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/css/intlTelInput.css"
-    />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/intlTelInput.min.js"></script>
-    <script
-      src="https://code.jquery.com/jquery-3.4.1.min.js"
-      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css"
+      integrity="sha256-xpVuhxDPR39wFEQDha4W7kuMx+z9Av3dTS8MbH/RWEU="
       crossorigin="anonymous"
-    ></script>
+    />
     <script
-      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"
+      integrity="sha256-uPbemOnf3P4eaeLHebLwPC71YRbu3WNBvO4ibYeBnGs="
       crossorigin="anonymous"
     ></script>
   </head>
   <body>
-    <div class="container">
-      <h2>Twilio Verify</h2>
-      <p>
-        This example shows how to deploy 
-        <a href="https://twilio.com/docs/verify/api">Twilio Verify</a> 
-        and Twilio functions for serverless user verification.
-      </p>
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg
+              class="logo"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 60 60"
+            >
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <a href="/index.html" style="text-decoration: none; color: white"
+            ><span>Your Twilio Verify Application</span>
+            <aside>
+              <svg
+                class="icon"
+                role="img"
+                aria-hidden="true"
+                width="100%"
+                height="100%"
+                viewBox="0 0 20 20"
+                aria-labelledby="NewIcon-1577"
+              >
+                <path
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                  d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+                ></path>
+              </svg>
+              Live
+            </aside>
+          </a>
+        </nav>
+      </header>
+    </div>
+    <main>
       <div class="content">
-        <form id="login">
-          <div class="form-group" id="channel-select">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="channel" id="channel-sms" value="sms" checked>
-              <label class="form-check-label" for="channel-sms">SMS</label>
+        <section>
+          <p>
+            This example shows how to deploy
+            <a href="https://twilio.com/docs/verify/api">Twilio Verify</a>
+            and Twilio functions for serverless one-time passcode (OTP) user
+            verification.
+          </p>
+          <hr />
+          <form id="send-code">
+            <p>Select your channel:</p>
+            <div>
+              <input
+                type="radio"
+                name="channel"
+                id="channel-sms"
+                value="sms"
+                checked
+              />
+              <label for="channel-sms">SMS</label>
             </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="channel" id="channel-call" value="call">
-              <label class="form-check-label" for="channel-call">Call</label>
+            <div>
+              <input
+                type="radio"
+                name="channel"
+                id="channel-call"
+                value="call"
+              />
+              <label for="channel-call">Call</label>
             </div>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="channel" id="channel-email" value="email">
-              <label class="form-check-label" for="channel-email">Email</label>
+            <div>
+              <input
+                type="radio"
+                name="channel"
+                id="channel-email"
+                value="email"
+              />
+              <label for="channel-email">Email</label>
             </div>
-          </div>
-          <div class="form-group phone-input">
-            <p>Enter your phone number:</p>
-            <input
-              type="tel"
-              id="phone_number"
-              class="form-control" />
-          </div>
-          <div class="form-group email-input" style="display:none;">
-            <p>Enter your email:</p>
-            <input
-              type="email"
-              id="email"
-              class="form-control" />
-          </div>
-          <div class="form-group locale-input">
+            <div id="phone-input">
+              <p>Enter your phone number:</p>
+              <input type="tel" id="phone_number" />
+            </div>
+            <div id="email-input" style="display: none">
+              <p>Enter your email:</p>
+              <input type="email" id="email" />
+            </div>
             <p>Select your preferred language:</p>
-            <select class="form-control" id="select-locale">
-            </select>
-          </div>
-          <div class="form-group">
-            <input
-              type="submit"
-              class="btn btn-primary"
-              value="Verify"/>
-          </div>
-        </form>
-        <span id="form-error" class="text-danger"></span>
-      </div>
-      <div class="modal" id="verification_modal">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="result-message"></div>
-                  <div>
-                    <form id="verification" class="input-group input-group-lg">
-                      <input
-                        type="text"
-                        class="form-control input-lg"
-                        id="verification_code"
-                        placeholder="Enter the token sent to your device"
-                        required/>
-                      <span class="input-group-btn">
-                        <button 
-                          class="btn btn-primary btn-lg" 
-                          type="submit">Verify
-                        </button>
-                      </span>
-                    </form>
-                  </div>
+            <select id="select-language"></select>
+            <input type="submit" value="Get a one-time passcode" />
+            <span id="status" class="status"></span>
+          </form>
+        </section>
+        <section>
+          <div id="otp-modal">
+            <div class="modal-content">
+              <span id="close">&times;</span>
+              <form id="check-code">
+                <div>
+                  <p>Enter the code:</p>
+                  <input type="text" id="code" placeholder="123456" required />
                 </div>
-              </div>
+                <div>
+                  <input type="submit" value="Verify code" />
+                </div>
+                <span id="modal-status" class="status"></span>
+              </form>
             </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-    </div><!-- /.container -->
-    <!-- EDIT_CODE -->
+          </div>
+        </section>
+      </div>
+      <!-- EDIT_CODE_V2 -->
+    </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
   </body>
   <script>
     // Handle international prefixes, format phone input field
@@ -116,153 +155,161 @@
     const phoneInput = window.intlTelInput(phoneInputField, {
       // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
       preferredCountries: ["us", "co", "in", "de"],
-      separateDialCode: true,
       utilsScript:
-        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.11/js/utils.js"
+        "https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js",
     });
 
-    $("#channel-select").change(function() {
-      const channel = $("input[name='channel']:checked").val();
-      if (channel === "email") {
-        $(".phone-input").hide();
-        $(".email-input").show();
-      } else if (channel === "sms" || channel === "call") {
-        $(".phone-input").show();
-        $(".email-input").hide();
-      }
-    });
-
-    function showVerificationStatus(alertType, message) {
-      var content = $(".result-message");
-      content.empty();
-      content.append($("<div>")
-        .addClass(`alert alert-${alertType}`)
-        .attr("role", "alert")
-        .text(message))
+    function selectedChannel() {
+      const checked = "input[name='channel']:checked";
+      return document.querySelector(checked).value;
     }
 
-    function showVerificationStartError(error) {
-      var content = $("#form-error");
-      content.empty();
-      content.append(`Error: ${error}`);
+    function showEmailInput() {
+      document.getElementById("phone-input").style.display = "none";
+      document.getElementById("email-input").style.display = "block";
     }
 
+    function showPhoneNumberInput() {
+      document.getElementById("phone-input").style.display = "block";
+      document.getElementById("email-input").style.display = "none";
+    }
+
+    function showModalStatus(message, color = "gray") {
+      let status = document.getElementById("modal-status");
+      status.style.color = color;
+      status.textContent = message;
+    }
+
+    function showError(error) {
+      console.error(error);
+      showStatus(error, (color = "#a94442"));
+    }
+
+    function showStatus(message, color = "gray") {
+      let status = document.getElementById("status");
+      status.style.color = color;
+      status.textContent = message;
+    }
+
+    function clearStatus() {
+      document.getElementById("status").textContent = "";
+      document.getElementById("modal-status").textContent = "";
+    }
+
+    const modal = document.getElementById("otp-modal");
     var to;
 
-    $("#login").submit(function(event) {
+    async function sendOtp(event) {
       event.preventDefault();
 
-      const channel = $("input[name='channel']:checked").val();
-      const locale = $("#select-locale").val();
-      to = (channel === "email") ? $("#email").val() : phoneInput.getNumber();
+      const locale = document.getElementById("select-language").value;
+      const channel = selectedChannel();
 
-      // Twilio functions do not accept multipart/form-data
+      let statusMessage =
+        channel == "call" ? "☎️ calling..." : "Sending verification code...";
+      showStatus(statusMessage);
+
+      to = phoneInput.getNumber();
+
       const data = new URLSearchParams();
-      data.append("to", to);
       data.append("channel", channel);
       data.append("locale", locale);
+      data.append("to", to);
 
-      fetch("./start-verify", {
+      try {
+        const response = await fetch("./start-verify", {
           method: "POST",
-          body: data
-        })
-        .then(response => {
-          const content = $(".result-message");
-          content.empty();
-          return response.json()
-        })
-        .then(json => {
-          if (json.success) {
-            $("#form-error").empty();
-            $(".modal").modal("show");
-            console.log("Successfully sent token.");
-          } else {
-            console.log(json.error);
-            showVerificationStartError(
-              `${json.error.message} <a href="${json.error.moreInfo}">[more info]</a>`);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          showVerificationStartError("Error starting verification.");
+          body: data,
         });
-    });
 
-    $("#verification").submit(function(event) {
+        const json = await response.json();
+
+        console.log(response.status)
+
+        if (response.status == 429) {
+          clearStatus();
+          modal.style.display = "block";
+          showModalStatus(
+            `You have attempted to verify '${to}' too many times. If you received a code, enter it in the form. Otherwise, please wait 10 minutes and try again.`,
+            (color = "#a94442")
+          );
+        } else if (response.status >= 400) {
+          clearStatus();
+          showError(json.error);
+        } else {
+          modal.style.display = "block";
+          if (json.success) {
+            showStatus(`Sent verification code to ${to}`);
+          } else {
+            showError(json.error);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        showError(`Something went wrong while sending code to ${to}.`);
+      }
+    }
+
+    document
+      .getElementById("send-code")
+      .addEventListener("submit", (event) => sendOtp(event));
+
+    async function checkOtp(event) {
       event.preventDefault();
-      const code = $("#verification_code").val();
+      const code = document.getElementById("code").value;
+      showModalStatus(`Checking code ${code}...`);
 
-      // Twilio functions do not accept multipart/form-data
       const data = new URLSearchParams();
       data.append("to", to);
-      data.append("verification_code", code);
+      data.append("code", code);
 
-      fetch("./check-verify", {
-          method: 'POST',
-          body: data
-        })
-        .then(response => response.json())
-        .then(json => {
-          if (json.success) {
-            showVerificationStatus("success", json.message);
-            $("#verification_code").val("");
-          } else {
-            showVerificationStatus("danger", json.message);
-            $("#verification_code").val("");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-          showVerificationStatus("danger", "Something went wrong!");
-          $("#verification_code").val("");
+      try {
+        const response = await fetch("./check-verify", {
+          method: "POST",
+          body: data,
         });
+
+        const json = await response.json();
+
+        if (json.success) {
+          showModalStatus("Verification success!", (color = "green"));
+          document.getElementById("code").value = "";
+        } else {
+          showModalStatus("Incorrect token!", (color = "#a94442"));
+          document.getElementById("code").value = "";
+        }
+      } catch (error) {
+        console.error(error);
+        showModalStatus("Something went wrong!");
+        document.getElementById("code").value = "";
+      }
+    }
+
+    document
+      .getElementById("check-code")
+      .addEventListener("submit", (event) => checkOtp(event));
+
+    document.getElementById("close").addEventListener("click", () => {
+      modal.style.display = "none";
     });
 
-    const locales = [
-      { text: "English", value: "en" },
-      { text: "Afrikaans", value: "af" },
-      { text: "Arabic", value: "ar" },
-      { text: "Catalan", value: "ca" },
-      { text: "Chinese", value: "zh" },
-      { text: "Chinese (Mandarin)", value: "zh-CN" },
-      { text: "Chinese (Cantonese)", value: "zh-HK" },
-      { text: "Croatian", value: "hr" },
-      { text: "Czech", value: "cs" },
-      { text: "Danish", value: "da" },
-      { text: "Dutch", value: "nl" },
-      { text: "English (British)", value: "en-GB" },
-      { text: "Finnish", value: "fi" },
-      { text: "French", value: "fr" },
-      { text: "German", value: "de" },
-      { text: "Greek", value: "el" },
-      { text: "Hebrew", value: "he" },
-      { text: "Hindi", value: "hi" },
-      { text: "Hungarian", value: "hu" },
-      { text: "Indonesian", value: "id" },
-      { text: "Italian", value: "it" },
-      { text: "Japanese", value: "ja" },
-      { text: "Korean", value: "ko" },
-      { text: "Malay", value: "ms" },
-      { text: "Norwegian", value: "nb" },
-      { text: "Polish", value: "pl" },
-      { text: "Portuguese - Brazil", value: "pt-BR" },
-      { text: "Portuguese", value: "pt" },
-      { text: "Romanian", value: "ro" },
-      { text: "Russian", value: "ru" },
-      { text: "Spanish", value: "es" },
-      { text: "Swedish", value: "sv" },
-      { text: "Tagalog", value: "tl" },
-      { text: "Thai", value: "th" },
-      { text: "Turkish", value: "tr" },
-      { text: "Vietnamese", value: "vi" }
-    ];
-
-    const selectLocale = $("#select-locale");
-
-    locales.forEach(l => {
-      selectLocale.append($("<option>")
-        .val(l.value)
-        .text(l.text))
-    });
+    window.onclick = function (event) {
+      switch (event.target.id) {
+        case "otp-modal":
+          modal.style.display = "none";
+          clearStatus();
+          break;
+        case "channel-email":
+          showEmailInput();
+          break;
+        case "channel-sms":
+          showPhoneNumberInput();
+          break;
+        case "channel-call":
+          showPhoneNumberInput();
+          break;
+      }
+    };
   </script>
+  <script src="locales.js"></script>
 </html>

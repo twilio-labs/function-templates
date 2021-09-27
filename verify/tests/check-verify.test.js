@@ -40,13 +40,12 @@ describe('verify/check-verification', () => {
       done();
     };
     const event = {
-      // eslint-disable-next-line camelcase
-      verification_code: '123456',
+      code: '123456',
     };
     checkVerifyFunction(testContext, event, callback);
   });
 
-  test('returns an error response when required verification_code parameter is missing', (done) => {
+  test('returns an error response when required code parameter is missing', (done) => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
@@ -92,9 +91,52 @@ describe('verify/check-verification', () => {
     };
     const event = {
       to: '+17341234567',
-      // eslint-disable-next-line camelcase
-      verification_code: '123456',
+      code: '123456',
     };
     checkVerifyFunction(testContext, event, callback);
+  });
+
+  test('returns incorrect token when status is not approved', (done) => {
+    const mockIncorrectTokenService = {
+      verificationChecks: {
+        create: jest.fn(() =>
+          Promise.resolve({
+            status: 'pending',
+          })
+        ),
+      },
+    };
+
+    const mockIncorrectTokenClient = {
+      verify: {
+        services: jest.fn(() => mockIncorrectTokenService),
+      },
+    };
+
+    const testIncorrectTokenClient = {
+      VERIFY_SERVICE_SID: 'default',
+      getTwilioClient: () => mockIncorrectTokenClient,
+    };
+
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(result._body.success).toEqual(false);
+      expect(mockIncorrectTokenClient.verify.services).toHaveBeenCalledWith(
+        testIncorrectTokenClient.VERIFY_SERVICE_SID
+      );
+      const expectedParameters = {
+        code: '6543321',
+        to: '+17341234567',
+      };
+      expect(
+        mockIncorrectTokenService.verificationChecks.create
+      ).toHaveBeenCalledWith(expectedParameters);
+      done();
+    };
+    const event = {
+      to: '+17341234567',
+      code: '6543321',
+    };
+    checkVerifyFunction(testIncorrectTokenClient, event, callback);
   });
 });
