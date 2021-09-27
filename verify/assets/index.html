@@ -96,6 +96,15 @@
               <input
                 type="radio"
                 name="channel"
+                id="channel-whatsapp"
+                value="whatsapp"
+              />
+              <label for="channel-whatsapp">WhatsApp</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                name="channel"
                 id="channel-call"
                 value="call"
               />
@@ -309,6 +318,9 @@
           showEmailInput();
           break;
         case "channel-sms":
+          showPhoneNumberInput();
+          break;
+        case "channel-whatsapp":
           showPhoneNumberInput();
           break;
         case "channel-call":
