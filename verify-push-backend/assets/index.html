@@ -304,6 +304,13 @@
         });
     });
 
+    function getItems(source, reducer, initialValue) {
+      return source
+        .toArray()
+        .map((item) => item.value)
+        .reduce(reducer, initialValue);
+    }
+
     $("#login").submit(function (event) {
       event.preventDefault();
 
@@ -317,10 +324,8 @@
       data.append("message", $("#message").val());
       data.append("factor", $("#factor").val());
 
-      var hiddenDetails = $(".hidden-detail")
-        .toArray()
-        .map((hiddenDetail) => hiddenDetail.value)
-        .reduce(function (result, value, index, array) {
+      var hiddenDetails = getItems($(".hidden-detail"),
+        function (result, value, index, array) {
           if (index % 2 === 0) {
             let key = array[index];
             if (key !== "") result[key] = array[index + 1];
@@ -330,10 +335,8 @@
           
       data.append("hiddenDetails", JSON.stringify(hiddenDetails));
           
-      var details = $(".detail")
-        .toArray()
-        .map((detail) => detail.value)
-        .reduce(function (result, value, index, array) {
+      var details = getItems($(".detail"),
+        function (result, value, index, array) {
           if (index % 2 === 0) result.push(array.slice(index, index + 2));
           return result;
         }, []);
