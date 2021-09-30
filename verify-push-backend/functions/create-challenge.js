@@ -66,11 +66,10 @@ exports.handler = function (context, event, callback) {
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
   const hashIdentity = context.IDENTITY_PROCESSING !== 'raw';
-  const identity = hashIdentity
-    ? digestMessage(event.identity)
-    : event.identity;
 
-  const { message, factor, hiddenDetails, ...details } = event;
+  const { identity, message, factor, hiddenDetails, ...details } = event;
+  const identityValue = hashIdentity ? digestMessage(identity) : identity;
+
   const fields = [];
   for (const [key, value] of Object.entries(details)) {
     fields.push({ label: key, value });
@@ -78,7 +77,7 @@ exports.handler = function (context, event, callback) {
 
   client.verify
     .services(serviceSid)
-    .entities(identity)
+    .entities(identityValue)
     .challenges.create({
       factorSid: event.factor,
       'details.message': message,

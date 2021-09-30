@@ -88,4 +88,92 @@ describe('verify-push-backend/create-challenge', () => {
     };
     createChallengeFunction(testContext, event, callback);
   });
+
+  test('returns success with valid request including hidden details', (done) => {
+    const event = {
+      identity: 'super-unique-id',
+      message: 'login request',
+      factor: 'YFXXX',
+      hiddenDetails: '{"ip":"172.168.1.234","transactionId":"TX123456"}',
+    };
+    const expectedHiddenDetails =
+      '{"ip":"172.168.1.234","transactionId":"TX123456"}';
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(mockChallenges.challenges.create).toHaveBeenCalledWith({
+        factorSid: event.factor,
+        'details.message': event.message,
+        'details.fields': [],
+        hiddenDetails: expectedHiddenDetails,
+      });
+      done();
+    };
+    createChallengeFunction(testContext, event, callback);
+  });
+
+  test('returns success with valid request not including hidden details', (done) => {
+    const event = {
+      identity: 'super-unique-id',
+      message: 'login request',
+      factor: 'YFXXX',
+      hiddenDetails: '{}',
+    };
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(mockChallenges.challenges.create).toHaveBeenCalledWith({
+        factorSid: event.factor,
+        'details.message': event.message,
+        'details.fields': [],
+        hiddenDetails: '{}',
+      });
+      done();
+    };
+    createChallengeFunction(testContext, event, callback);
+  });
+
+  test('returns success with valid request including details', (done) => {
+    const event = {
+      identity: 'super-unique-id',
+      message: 'login request',
+      factor: 'YFXXX',
+      hiddenDetails: '{}',
+      Action: 'Sign up in portal',
+      'User location': 'California',
+    };
+    const expectedDetails = [
+      { label: 'Action', value: 'Sign up in portal' },
+      { label: 'User location', value: 'California' },
+    ];
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(mockChallenges.challenges.create).toHaveBeenCalledWith({
+        factorSid: event.factor,
+        'details.message': event.message,
+        'details.fields': expectedDetails,
+        hiddenDetails: '{}',
+      });
+      done();
+    };
+    createChallengeFunction(testContext, event, callback);
+  });
+
+  test('returns success with valid request not including details', (done) => {
+    const event = {
+      identity: 'super-unique-id',
+      message: 'login request',
+      factor: 'YFXXX',
+      hiddenDetails: '{}',
+    };
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(mockChallenges.challenges.create).toHaveBeenCalledWith({
+        factorSid: event.factor,
+        'details.message': event.message,
+        'details.fields': [],
+        hiddenDetails: '{}',
+      });
+      done();
+    };
+    createChallengeFunction(testContext, event, callback);
+  });
 });
