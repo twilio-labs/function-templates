@@ -1054,6 +1054,16 @@
         "default": null,
         "configurable": true,
         "contentKey": null
+      },
+      {
+        "key": "IDENTITY_PROCESSING",
+        "required": false,
+        "format": "text",
+        "description": "Define if the identity field will be hashed or will be taken as it is, possible values hash or raw",
+        "link": null,
+        "default": "hash",
+        "configurable": true,
+        "contentKey": null
       }
     ],
     "verified-broadcast": [
