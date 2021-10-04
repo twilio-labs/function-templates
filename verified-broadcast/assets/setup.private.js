@@ -1,5 +1,21 @@
+function isEnvDefined(variable) {
+  if (typeof variable !== 'string') {
+    return false;
+  }
+
+  const sanitizedVariable = variable.trim();
+  if (sanitizedVariable === '""') {
+    return false;
+  }
+
+  return sanitizedVariable.length > 0;
+}
+
 async function updateEnvironmentVariable(twilioClient, context, key, value) {
-  if (!context.SERVICE_SID && context.ENVIRONMENT_SID) {
+  if (
+    !isEnvDefined(context.SERVICE_SID) &&
+    !isEnvDefined(context.ENVIRONMENT_SID)
+  ) {
     context[key] = value;
     process.env[key] = value;
     return;
@@ -42,7 +58,9 @@ async function getMessagingServiceFromPhoneNumber(
 
   const phoneNumberMap = new Map();
   const requests = messagingServices.map(async (service) => {
-    const numbers = await service.phoneNumbers.list({ limit: 2000 });
+    const numbers = await twilioClient.messaging
+      .services(service.sid)
+      .phoneNumbers.list({ limit: 2000 });
     numbers.forEach(({ phoneNumber }) => {
       phoneNumberMap.set(phoneNumber, service.sid);
     });
@@ -57,7 +75,7 @@ async function getMessagingServiceFromPhoneNumber(
 }
 
 async function setupMessagingService(twilioClient, context) {
-  if (!context.TWILIO_PHONE_NUMBER) {
+  if (!isEnvDefined(context.TWILIO_PHONE_NUMBER)) {
     throw new Error(
       'Cannot create a Messaging Service without a TWILIO_PHONE_NUMBER'
     );
@@ -129,9 +147,12 @@ async function setupVerifyService(twilioClient, context) {
 
 async function setupResourcesIfRequired(context) {
   try {
-    const isLocalDevelopment = !context.SERVICE_SID && !context.ENVIRONMENT_SID;
+    const isLocalDevelopment =
+      !isEnvDefined(context.SERVICE_SID) &&
+      !isEnvDefined(context.ENVIRONMENT_SID);
     const hasOneServiceUndefined =
-      !context.BROADCAST_NOTIFY_SERVICE_SID || !context.VERIFY_SERVICE_SID;
+      !isEnvDefined(context.BROADCAST_NOTIFY_SERVICE_SID) ||
+      !isEnvDefined(context.VERIFY_SERVICE_SID);
     if (isLocalDevelopment && hasOneServiceUndefined) {
       console.error(
         'You are running this code outside of a deployed Twilio Functions environment. Please set VERIFY_SERVICE_SID and BROADCAST_NOTIFY_SERVICE_SID manually in your .env file.'
@@ -140,22 +161,22 @@ async function setupResourcesIfRequired(context) {
     }
 
     if (
-      !context.BROADCAST_NOTIFY_SERVICE_SID &&
-      !context.MESSAGING_SERVICE_SID &&
-      !context.TWILIO_PHONE_NUMBER
+      !isEnvDefined(context.BROADCAST_NOTIFY_SERVICE_SID) &&
+      !isEnvDefined(context.MESSAGING_SERVICE_SID) &&
+      !isEnvDefined(context.TWILIO_PHONE_NUMBER)
     ) {
       console.error('Missing Twilio Phone Number');
       return false;
     }
 
     const twilioClient = context.getTwilioClient();
-    if (!context.BROADCAST_NOTIFY_SERVICE_SID) {
-      if (!context.MESSAGING_SERVICE_SID) {
+    if (!isEnvDefined(context.BROADCAST_NOTIFY_SERVICE_SID)) {
+      if (!isEnvDefined(context.MESSAGING_SERVICE_SID)) {
         await setupMessagingService(twilioClient, context);
       }
       await setupNotifyService(twilioClient, context);
     }
-    if (!context.VERIFY_SERVICE_SID) {
+    if (!isEnvDefined(context.VERIFY_SERVICE_SID)) {
       await setupVerifyService(twilioClient, context);
     }
     return true;
