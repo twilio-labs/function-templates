@@ -20,10 +20,6 @@ In your `.env` file, set the following values:
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)             | Yes      |
 | `VERIFY_SERVICE_SID` | Create one [here](https://www.twilio.com/console/verify/services) | Yes      |
 
-### Additional dependencies
-
-This project uses the [npm package `qrcode`](https://www.npmjs.com/package/qrcode#browser) for rendering the TOTP URI in a QR Code. The precompiled bundle for `qrcode` is included in the assets folder.
-
 ### Function Parameters
 
 `create-factor.js` expects the following parameters:
