@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <title>Phone number lookup</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+    <link
+      rel="stylesheet"
+      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
+    />
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="stylesheet"
@@ -17,59 +27,116 @@
     ></script>
   </head>
   <body>
-    <div class="container">
-      <h1>Phone number lookup</h1>
-      <p>
-        This example shows how to process and parse international phone numbers
-        with the
-        <a href="https://github.com/jackocnr/intl-tel-input">
-          <code>intl-tel-input</code>
-        </a>
-        library and detect invalid phone numbers, carrier information, and
-        caller name with the
-        <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>. New
-        data coming soon in V2.
-        <a href="https://www.twilio.com/docs/lookup/v2-api">
-          Learn more and sign up for early access.
-        </a>
-      </p>
-      <p>
-        New data coming soon in V2.
-        <a href="https://www.twilio.com/docs/lookup/v2-api">
-          Learn more and sign up for early access.
-        </a>
-      </p>
-      <div>
-        <form id="lookup">
-          <p>Enter your phone number:</p>
-          <input id="phone" type="tel" name="phone" />
-          <p>Request type:</p>
-          <div>
-            <input type="checkbox" checked disabled />
-            <label>Formatting [free]</label><br />
-          </div>
-          <div>
-            <input type="checkbox" id="carrier" name="types" value="carrier" />
-            <label for="carrier">Carrier [$0.005 / request]</label><br />
-          </div>
-          <div>
-            <input
-              type="checkbox"
-              id="caller-name"
-              name="types"
-              value="caller-name"
-            />
-            <label for="caller-name">
-              Caller name [USA Only; $0.01 / request]
-            </label>
-            <br />
-          </div>
-          <input type="submit" class="btn" value="Lookup" />
-        </form>
-        <div class="alert alert-info" style="display: none"></div>
-        <div class="alert alert-error" style="display: none"></div>
-      </div>
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg
+              class="logo"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 60 60"
+            >
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <span>Your Twilio application</span>
+          <aside>
+            <svg
+              class="icon"
+              role="img"
+              aria-hidden="true"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="NewIcon-1577"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+              ></path>
+            </svg>
+            Live
+          </aside>
+        </nav>
+      </header>
     </div>
+    <main>
+      <div class="content">
+        <h1>
+          <img
+            src="https://twilio-labs.github.io/function-templates/static/v1/success.svg"
+          />
+          <div>
+            <p>Welcome!</p>
+            <p>Your live application with Twilio is ready to use!</p>
+          </div>
+        </h1>
+        <h2>Phone number lookup</h2>
+        <p>
+          This example shows how to process and parse international phone
+          numbers with the
+          <a href="https://github.com/jackocnr/intl-tel-input">
+            <code>intl-tel-input</code>
+          </a>
+          library and detect invalid phone numbers, carrier information, and
+          caller name with the
+          <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>.
+        </p>
+        <p>
+          New data coming soon in V2.
+          <a href="https://www.twilio.com/docs/lookup/v2-api">
+            Learn more and sign up for early access.
+          </a>
+        </p>
+        <div>
+          <form id="lookup">
+            <p>Enter your phone number:</p>
+            <input id="phone" type="tel" name="phone" />
+            <p>Request type:</p>
+            <div>
+              <input type="checkbox" checked disabled />
+              <label>Formatting [free]</label><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="carrier"
+                name="types"
+                value="carrier"
+              />
+              <label for="carrier">Carrier [$0.005 / request]</label><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="caller-name"
+                name="types"
+                value="caller-name"
+              />
+              <label for="caller-name">
+                Caller name [USA Only; $0.01 / request]
+              </label>
+              <br />
+            </div>
+            <input type="submit" class="btn" value="Lookup" />
+          </form>
+          <div class="alert alert-info" style="display: none"></div>
+          <div class="alert alert-error" style="display: none"></div>
+          <!-- EDIT_CODE_V2 -->
+        </div>
+      </div>
+    </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
     <script>
       // Handle international prefixes, format phone input field
       // Uses intl-tel-input plugin
