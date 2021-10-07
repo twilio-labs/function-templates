@@ -274,6 +274,11 @@
       "id": "patient-appointment-management",
       "name": "Patient Appointment Management",
       "description": "Patient Appointment Management including notification and reminders sent via SMS"
+    },
+    {
+      "id": "lookup",
+      "name": "Phone Number Lookup",
+      "description": "Detect invalid phone numbers and get carrier and caller name information with this interface to Twilio's Lookup API."
     }
   ]
 }

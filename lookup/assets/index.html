@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Phone number lookup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css"
+      integrity="sha256-xpVuhxDPR39wFEQDha4W7kuMx+z9Av3dTS8MbH/RWEU="
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"
+      integrity="sha256-uPbemOnf3P4eaeLHebLwPC71YRbu3WNBvO4ibYeBnGs="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Phone number lookup</h1>
+      <p>
+        This example shows how to process and parse international phone numbers
+        with the
+        <a href="https://github.com/jackocnr/intl-tel-input">
+          <code>intl-tel-input</code>
+        </a>
+        library and detect invalid phone numbers, carrier information, and
+        caller name with the
+        <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>. New
+        data coming soon in V2.
+        <a href="https://www.twilio.com/docs/lookup/v2-api">
+          Learn more and sign up for early access.
+        </a>
+      </p>
+      <p>
+        New data coming soon in V2.
+        <a href="https://www.twilio.com/docs/lookup/v2-api">
+          Learn more and sign up for early access.
+        </a>
+      </p>
+      <div>
+        <form id="lookup">
+          <p>Enter your phone number:</p>
+          <input id="phone" type="tel" name="phone" />
+          <p>Request type:</p>
+          <div>
+            <input type="checkbox" checked disabled />
+            <label>Formatting [free]</label><br />
+          </div>
+          <div>
+            <input type="checkbox" id="carrier" name="types" value="carrier" />
+            <label for="carrier">Carrier [$0.005 / request]</label><br />
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              id="caller-name"
+              name="types"
+              value="caller-name"
+            />
+            <label for="caller-name">
+              Caller name [USA Only; $0.01 / request]
+            </label>
+            <br />
+          </div>
+          <input type="submit" class="btn" value="Lookup" />
+        </form>
+        <div class="alert alert-info" style="display: none"></div>
+        <div class="alert alert-error" style="display: none"></div>
+      </div>
+    </div>
+    <script>
+      // Handle international prefixes, format phone input field
+      // Uses intl-tel-input plugin
+      const phoneInputField = document.querySelector('#phone');
+      const phoneInput = window.intlTelInput(phoneInputField, {
+        // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+        preferredCountries: ['us', 'co', 'in', 'de'],
+        utilsScript:
+          'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js',
+      });
+
+      const info = document.querySelector('.alert-info');
+      const error = document.querySelector('.alert-error');
+
+      async function lookup(event) {
+        event.preventDefault();
+
+        try {
+          const phoneNumber = phoneInput.getNumber();
+
+          info.style.display = 'none';
+          error.style.display = 'none';
+
+          const data = {
+            phone: phoneNumber,
+            types: Array.from(
+              document.querySelectorAll('input[name=types]:checked')
+            ).map((t) => t.value),
+          };
+
+          const response = await fetch('./lookup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          });
+
+          const json = await response.json();
+          if (response.status === 200) {
+            info.style.display = '';
+            info.innerHTML = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
+          } else {
+            console.error(json.error);
+            error.style.display = '';
+            error.innerHTML = `Invalid phone number.`;
+          }
+        } catch (err) {
+          error.style.display = '';
+          error.innerHTML = `Something went wrong: ${err}`;
+        }
+      }
+
+      const form = document.getElementById('lookup');
+      form.addEventListener('submit', (event) => lookup(event));
+    </script>
+  </body>
+</html>
