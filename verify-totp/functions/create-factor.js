@@ -12,9 +12,7 @@ const { v4: uuidv4 } = require('uuid');
  *  }
  */
 const assets = Runtime.getAssets();
-const { detectMissingParams, VerificationException } = require(assets[
-  '/utils.js'
-].path);
+const { detectMissingParams } = require(assets['/utils.js'].path);
 
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
@@ -30,8 +28,7 @@ exports.handler = async function (context, event, callback) {
   try {
     const missingParams = detectMissingParams(['name'], event);
     if (missingParams.length > 0) {
-      throw new VerificationException(
-        400,
+      throw new Error(
         `Missing parameter; please provide: '${missingParams.join(', ')}'.`
       );
     }
@@ -60,7 +57,7 @@ exports.handler = async function (context, event, callback) {
     });
     return callback(null, response);
   } catch (error) {
-    response.setStatusCode(error.status);
+    response.setStatusCode(error.status || 400);
     response.setBody({
       ok: false,
       message: error.message,

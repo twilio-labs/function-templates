@@ -63,8 +63,8 @@ describe('verify-totp/verify-new-factor', () => {
     const callback = (err, result) => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
-      expect(result._body.ok).toEqual(true);
       expect(result._body.message).toEqual('Factor verified.');
+      expect(result._body.ok).toEqual(true);
       expect(mockClient.verify.services).toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
@@ -87,8 +87,8 @@ describe('verify-totp/verify-new-factor', () => {
 
   test('throws an error for an incorrect token', (done) => {
     const mockUnverifiedFactor = {
-      update: jest.fn().mockResolvedValue({
-        status: 'pending',
+      update: jest.fn().mockImplementation(() => {
+        throw new Error('Factor not verified');
       }),
     };
 
@@ -115,9 +115,7 @@ describe('verify-totp/verify-new-factor', () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result._body.ok).toEqual(false);
-      expect(result._body.message).toEqual(
-        'Incorrect token. Check your authenticator app (or wait for the token to refresh) and try again.'
-      );
+      expect(result._body.message).toEqual('Factor not verified');
       expect(mockUnverifiedClient.verify.services).toHaveBeenCalledWith(
         unverifiedContext.VERIFY_SERVICE_SID
       );

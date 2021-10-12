@@ -6,9 +6,16 @@
  *  }
  */
 const assets = Runtime.getAssets();
-const { detectMissingParams, VerificationException } = require(assets[
-  '/utils.js'
-].path);
+const { detectMissingParams } = require(assets['/utils.js'].path);
+
+class VerificationException extends Error {
+  constructor(status, message) {
+    super(`Error ${status}: ${message}`);
+
+    this.status = status;
+    this.message = message;
+  }
+}
 
 async function checkToken(entity, factorSid, code) {
   const challenge = await entity.challenges.create({
