@@ -18,6 +18,7 @@ const trackUnsubscribed = (track) => {
 const participantConnected = (participant) => {
   console.log(`Participant ${participant.identity} connected'`);
 
+  const participantsDiv = document.getElementById('participants');
   const div = document.createElement('div'); // create div for new participant
   div.id = participant.sid;
 
@@ -29,7 +30,7 @@ const participantConnected = (participant) => {
       trackSubscribed(div, publication.track);
     }
   });
-  document.body.appendChild(div);
+  participantsDiv.appendChild(div);
 };
 
 const participantDisconnected = (participant) => {
@@ -52,10 +53,15 @@ const participantDisconnected = (participant) => {
       localStream = vid;
     });
 
-  // buttons
   const joinRoomButton = document.getElementById('button-join');
   const leaveRoomButton = document.getElementById('button-leave');
-  joinRoomButton.onclick = () => {
+  const roomControlsForm = document.getElementById('room-controls-form');
+  const preConnectControls = document.getElementById('pre-connect-controls');
+  const postConnectControls = document.getElementById('post-connect-controls');
+  const participantsDiv = document.getElementById('participants');
+
+  const joinRoom = (event) => {
+    event.preventDefault();
     // get access token
     fetch(`video-token?passcode=${getPasscode()}`)
       .then((resp) => {
@@ -86,19 +92,26 @@ const participantDisconnected = (participant) => {
         room.once('disconnected', (error) =>
           room.participants.forEach(participantDisconnected)
         );
-        joinRoomButton.disabled = true;
-        leaveRoomButton.disabled = false;
+        preConnectControls.style.display = 'none';
+        postConnectControls.style.display = 'inline-block';
+        participantsDiv.style.display = 'flex';
       })
       .catch((err) => {
         // eslint-disable-next-line no-alert
         alert(err.message);
       });
   };
+
+  roomControlsForm.onsubmit = joinRoom;
+  joinRoomButton.onclick = joinRoom;
+
   // leave room
-  leaveRoomButton.onclick = () => {
+  leaveRoomButton.onclick = (event) => {
     videoRoom.disconnect();
     console.log(`Disconnected from Room ${videoRoom.name}`);
-    joinRoomButton.disabled = false;
-    leaveRoomButton.disabled = true;
+    preConnectControls.style.display = 'inline-block';
+    postConnectControls.style.display = 'none';
+    participantsDiv.style.display = 'none';
+    event.preventDefault();
   };
 })();

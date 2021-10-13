@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Twilio Video Serverless Demo</title>
+
+    <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
+    <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
+    <link rel="stylesheet" href="conference.css">
+    <script src="//media.twiliocdn.com/sdk/js/video/releases/2.3.0/twilio-video.min.js" defer></script>
+    <script src="conference.js" defer></script>
+  </head>
+  <body>
+      <main>
+          <div class="content">
+              <section>
+                  <h2>Sample Twilio Video Conference</h2>
+                  <div id="room-controls">
+                      <h4>Self View</h4>
+                      <video id="video" autoplay="autoplay" muted="true" width="320" height="240"></video>
+                      <form id="room-controls-form">
+                          <div id="pre-connect-controls">
+                              <label for="passcode">Enter the meeting passcode to join</label>
+                              <div>
+                                  <input class="conference-passcode"
+                                         id="passcode"
+                                         type="password"
+                                         autocomplete="off"/>
+                                  <button class="button-primary" id="button-join">Join Meeting</button>
+                              </div>
+                          </div>
+                          <div id="post-connect-controls" style="display: none;">
+                              <span class="conference-connected">You have joined the meeting</span>
+                              <button class="button-destructive"
+                                      id="button-leave">Leave Meeting</button>
+                          </div>
+                      </form>
+                  </div>
+              </section>
+              <section id="participants" style="display: none;">
+                  <h4>Conference Room</h4>
+              </section>
+              <!-- EDIT_CODE_V2 -->
+          </div>
+      </main>
+      <footer class="conference">
+          <div>
+              <p>
+                  This basic video conference app was created with Twilio CodeExchange.
+                  <a href="https://www.twilio.com/code-exchange/basic-video-chat">
+                      Create your own!
+                  </a>
+              </p>
+              <p>
+                  To learn more about Twilio Video,
+                  <a href="https://www.twilio.com/docs/video">explore our docs</a>
+                  and check out
+                  <a href="https://www.twilio.com/video/pricing">video pricing</a>.
+              </p>
+          </div> 
+      </footer>
+  </body>
+</html>
