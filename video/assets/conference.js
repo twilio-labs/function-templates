@@ -59,6 +59,7 @@ const participantDisconnected = (participant) => {
   const preConnectControls = document.getElementById('pre-connect-controls');
   const postConnectControls = document.getElementById('post-connect-controls');
   const participantsDiv = document.getElementById('participants');
+  const permissionsHelp = document.getElementById('permissions-help');
 
   const joinRoom = (event) => {
     event.preventDefault();
@@ -93,6 +94,7 @@ const participantDisconnected = (participant) => {
           room.participants.forEach(participantDisconnected)
         );
         preConnectControls.style.display = 'none';
+        permissionsHelp.style.display = 'none';
         postConnectControls.style.display = 'inline-block';
         participantsDiv.style.display = 'flex';
       })
@@ -110,6 +112,7 @@ const participantDisconnected = (participant) => {
     videoRoom.disconnect();
     console.log(`Disconnected from Room ${videoRoom.name}`);
     preConnectControls.style.display = 'inline-block';
+    permissionsHelp.style.display = 'block';
     postConnectControls.style.display = 'none';
     participantsDiv.style.display = 'none';
     event.preventDefault();
