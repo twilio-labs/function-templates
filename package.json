@@ -21,7 +21,7 @@
   "devDependencies": {
     "@google-cloud/dialogflow": "^4.1.0",
     "@twilio-labs/serverless-api": "^1.1.0",
-    "@twilio/runtime-handler": "1.2.0-rc.3",
+    "@twilio/runtime-handler": "1.2.0",
     "airtable": "^0.11.0",
     "aws-sdk": "^2.925.0",
     "basic-auth": "^2.0.1",
