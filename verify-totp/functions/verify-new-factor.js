@@ -35,9 +35,13 @@ exports.handler = async function (context, event, callback) {
     const { identity, factorSid, code } = event;
 
     const entity = client.verify.services(service).entities(identity);
+    const checkedFactor = await entity
+      .factors(factorSid)
+      .update({ authPayload: code });
 
-    // will throw error if code is incorrect
-    await entity.factors(factorSid).update({ authPayload: code });
+    if (checkedFactor.status !== 'verified') {
+      throw new Error('Incorrect code.');
+    }
 
     response.setStatusCode(200);
     response.setBody({

@@ -87,8 +87,8 @@ describe('verify-totp/verify-new-factor', () => {
 
   test('throws an error for an incorrect token', (done) => {
     const mockUnverifiedFactor = {
-      update: jest.fn().mockImplementation(() => {
-        throw new Error('Factor not verified');
+      update: jest.fn().mockResolvedValue({
+        status: 'unverified',
       }),
     };
 
@@ -115,7 +115,7 @@ describe('verify-totp/verify-new-factor', () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result._body.ok).toEqual(false);
-      expect(result._body.message).toEqual('Factor not verified');
+      expect(result._body.message).toEqual('Incorrect code.');
       expect(mockUnverifiedClient.verify.services).toHaveBeenCalledWith(
         unverifiedContext.VERIFY_SERVICE_SID
       );
