@@ -1,4 +1,4 @@
-const funlet = require('../functions/funlet-echo');
+const funlet = require('../functions/funlet-echo.protected');
 const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 

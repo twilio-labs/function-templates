@@ -1,6 +1,6 @@
 const helpers = require('../../test/test-helper');
 const forwardMessageMultiple =
-  require('../functions/forward-message-multiple').handler;
+  require('../functions/forward-message-multiple.protected').handler;
 const Twilio = require('twilio');
 
 const context = {

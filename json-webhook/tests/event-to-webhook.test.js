@@ -1,5 +1,6 @@
 const helpers = require('../../test/test-helper');
-const eventToWebhook = require('../functions/event-to-webhook').handler;
+const eventToWebhook =
+  require('../functions/event-to-webhook.protected').handler;
 const fetch = require('node-fetch');
 
 const context = {
