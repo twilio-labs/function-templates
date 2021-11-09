@@ -1,15 +1,12 @@
 name: Assign Reviewers
 
 on:
-  pull_request_target:
-    types: [
-      opened,
-      ready_for_review,
-      reopened,
-      synchronize,
-      labeled,
-      unlabeled
-    ]
+  pull_request:
+    branches:
+      - main
+    types:
+      - ready_for_review
+      - synchronize
 
 jobs:
   reviewers:
@@ -20,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: zattoo/reviewers@v2
         with:
-          token: ${{secrets.GITHUB_TOKEN}}
+          token: ${{secrets.ACCESS_TOKEN}}
           ignore: |
             .DS_Store
           source: '.owners'
