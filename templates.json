@@ -161,6 +161,11 @@
       "description": "Set up a sample client-side Twilio web application"
     },
     {
+      "id": "voice-javascript-sdk",
+      "name": "Voice JavaScript SDK Sample Application",
+      "description": "Set up a sample client-side Twilio web application with Twilio Voice JS SDK v2"
+    },
+    {
       "id": "conversations",
       "name": "conversations",
       "description": "These Functions generate a Conversations-scoped webhook so that you can integrate Twilio Studio with Twilio Conversations."
