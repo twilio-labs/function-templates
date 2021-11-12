@@ -782,6 +782,28 @@
         "contentKey": null
       }
     ],
+    "voice-javascript-sdk": [
+      {
+        "key": "APP_NAME",
+        "required": true,
+        "format": "text",
+        "description": "Choose a name for your application",
+        "link": null,
+        "default": "voice-javascript-sdk",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ADMIN_PASSWORD",
+        "required": true,
+        "format": "text",
+        "description": "Set a password for your app. Users who want to use the admin interface will have to use this password to access it",
+        "link": null,
+        "default": "default",
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
     "conversations": [
       {
         "key": "STUDIO_FLOW_SID",
