@@ -2,8 +2,6 @@
 
 This demo of the [Twilio Verify API](https://www.twilio.com/docs/verify/api) includes the TOTP factor type for supporting authenticator apps like Authy or Google Authenticator.
 
-**Verify TOTP is in Pilot, which means that you'll need to [contact sales to request access to the API](https://www.twilio.com/help/sales). We expect to have Verify TOTP in Public Beta (at which point the API will be availble for self service) by the end of 2021.**
-
 ## Pre-requisites
 
 * A Verify Service. [Create one in the Twilio Console](https://www.twilio.com/console/verify/services)
