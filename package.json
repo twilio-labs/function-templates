@@ -20,6 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "@google-cloud/dialogflow": "^4.1.0",
+    "@twilio-labs/runtime-helpers": "^0.1.2",
     "@twilio-labs/serverless-api": "^1.1.0",
     "@twilio/runtime-handler": "1.2.0",
     "airtable": "^0.11.0",
