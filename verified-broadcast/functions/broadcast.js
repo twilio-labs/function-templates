@@ -1,3 +1,5 @@
+const { isAuthenticated } = require('@twilio-labs/runtime-helpers').auth;
+
 /**
  *  Broadcast a message
  *
@@ -8,15 +10,23 @@
  *  }
  */
 exports.handler = async (context, event, callback) => {
-  const { isAuthenticated } = require(Runtime.getAssets()['/auth.js'].path);
   const { setupResourcesIfRequired } = require(Runtime.getAssets()['/setup.js']
     .path);
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  if (!isAuthenticated(context, event)) {
-    response.setBody({ success: false, error: 'INVALID CREDENTIALS' });
+  try {
+    if (!isAuthenticated(context, event)) {
+      response.setBody({ success: false, error: 'INVALID CREDENTIALS' });
+      response.setStatusCode(401);
+      return callback(null, response);
+    }
+  } catch (error) {
+    response.setBody({
+      success: false,
+      error: `Authentication error: ${error.message}`,
+    });
     response.setStatusCode(401);
     return callback(null, response);
   }

@@ -1,5 +1,6 @@
 const broadcastFunction = require('../functions/broadcast').handler;
 const helpers = require('../../test/test-helper');
+const { isAuthenticated } = require('@twilio-labs/runtime-helpers').auth;
 
 const mockVerificationCheck = {
   verificationChecks: {
@@ -24,10 +25,11 @@ const mockClient = {
   },
 };
 
-const mockIsAuthenticated = jest.fn(() => true);
-jest.mock('../assets/auth.private.js', () => {
+jest.mock('@twilio-labs/runtime-helpers', () => {
   return {
-    isAuthenticated: mockIsAuthenticated,
+    auth: {
+      isAuthenticated: jest.fn(() => true),
+    },
   };
 });
 
@@ -60,7 +62,7 @@ describe('verified-broadcast/broadcast', () => {
   });
 
   test('does not allow broadcasting without valid code', (done) => {
-    mockIsAuthenticated.mockReturnValueOnce(false);
+    isAuthenticated.mockReturnValueOnce(false);
 
     const callback = (err, result) => {
       expect(err).toEqual(null);
