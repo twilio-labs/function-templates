@@ -6,6 +6,8 @@
  *  the identity when minting the Token.
  */
 
+const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
+
 exports.handler = function (context, event, callback) {
   // REMINDER: This identity is only for prototyping purposes
   const IDENTITY = 'the_user_id';
@@ -26,14 +28,12 @@ exports.handler = function (context, event, callback) {
   });
   accessToken.addGrant(grant);
 
-  const response = new Twilio.Response();
-
-  /*
-   * Uncomment these lines for CORS support
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'GET');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
+  // set to true to support CORS
+  const supportCors = false;
+  /* istanbul ignore next */
+  const response = supportCors
+    ? createCORSResponse('*')
+    : new Twilio.Response();
 
   response.appendHeader('Content-Type', 'application/json');
   response.setBody({

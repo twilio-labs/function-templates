@@ -2,6 +2,7 @@ const assets = Runtime.getAssets();
 const Actions = require(assets['/admin/actions.js'].path);
 const { getCurrentEnvironment, setEnvironmentVariable } =
   require('@twilio-labs/runtime-helpers').environment;
+
 const { checkAuthorization } = require(assets['/admin/shared.js'].path);
 
 exports.handler = async function (context, event, callback) {

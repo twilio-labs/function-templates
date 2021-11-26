@@ -9,18 +9,17 @@
  *  - Add STRIPE_SECRET_KEY to your environment variables (https://www.twilio.com/console/functions/configure)
  *  - Add stripe to your NPM package dependencies (https://www.twilio.com/console/functions/configure)
  */
+const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
 const Stripe = require('stripe');
 
 exports.handler = async function (context, event, callback) {
-  const response = new Twilio.Response();
+  // set to true to support CORS
+  const supportCors = false;
+  /* istanbul ignore next */
+  const response = supportCors
+    ? createCORSResponse('*')
+    : new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-
-  /*
-   * Uncomment to support CORS.
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
 
   // Only action charge.succeeded events
   if (event.type === 'charge.succeeded') {
