@@ -15,6 +15,14 @@ In your `.env` file, set the following values:
 | `TWILIO_PHONE_NUMBER` | The Twilio phone number to broadcast your messages from. | Yes      |
 | `PASSCODE`            | A passcode to avoid anyone sending text messages         | Yes      |
 
+Additional Testing environment variables are required for Testing and use of [Magic Number](https://www.twilio.com/blog/2018/04/twilio-test-credentials-magic-numbers.html)
+
+| Variable              | Description                                              | Required |
+| :-------------------- | :------------------------------------------------------- | :------- |
+| `TESTMODE`            | Is this application running in Test Mode                 | Yes      |
+| `TEST_ACCOUNT_SID`    | Test Credential SID from [here](https://www.twilio.com/console/project/settings) | Yes if in Testmode |
+| `TEST_AUTH_TOKEN`     | Test Credential Auth Token from [here](https://www.twilio.com/console/project/settings) | Yes if in Testmode |
+
 ### Function Parameters
 
 `/send-messages` gets invoked by the `index.html` page and expects three post parameters:
@@ -59,3 +67,7 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](license.md) file for details

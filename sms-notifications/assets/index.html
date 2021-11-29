@@ -29,6 +29,11 @@
         flex: 1;
       }
 
+      div[role='results'] {
+        max-width: 100%;
+        flex: 1;
+      }
+
       footer {
         text-align: center;
       }
@@ -41,6 +46,83 @@
         width: 50px;
         height: 50px;
       }
+
+      span.result {
+        padding: 5px;
+        border-radius: 3px;
+        margin-left: 10px;
+      }
+
+      li.success span.result {
+        background-color: green;
+        color: white;
+      }
+
+      li.failed span.result {
+        background-color: red;
+        color: white;
+      }
+
+      .hide {
+        display: none;
+      }
+
+      label {
+        display: inline;
+        margin-right: 20px;
+      }
+
+
+      /* Tooltip container */
+.tooltip {
+  position: relative;
+  /* display: inline-block; */
+  /* border-bottom: 1px dotted black;  */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  /* width: 120px; */
+  background-color: #555;
+  color: #fff;
+  text-align: left;
+  padding: 5px;
+  padding-left: 30px;
+  border-radius: 3px;
+
+  /* Position the tooltip text */
+  /* position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;  */
+  margin-left: 20px;
+  margin-top: 10px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* .tooltip .tooltiptext:after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid #555;
+  left: 30px;
+  top: 7px;
+} */
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  display: block;
+  opacity: 1;
+}
     </style>
   </head>
   <body>
@@ -48,6 +130,25 @@
       <h1>Welcome to your new Twilio App</h1>
     </header>
     <div role="main">
+
+      <section>
+        <h3>Send your notification</h3>
+        <form id="sendNotificationForm">
+          <fieldset>
+            <label for="passcodeInput" required>Application Passcode</label>
+            <input type="password" name="passcode" id="passcodeInput" />
+            <label for="messageInput">Write your message:</label>
+            <textarea name="message" id="messageInput" required></textarea>
+            <input class="button-primary" type="submit" value="Send" />
+          </fieldset>
+        </form>
+        <p id="segmentCountMessage"></p>
+      </section>
+      <section>
+        <h3>Result</h3>
+        <p id="resultSection"></p>
+        <p id="totalSuccess"></p>
+      </section>
       <section>
         <h3>Add Recipients</h3>
         <p>
@@ -66,26 +167,25 @@
             <input class="button-primary"
                    type="submit"
                    value="Add" />
+
+            <label for="csvFile" class="button file-label">Upload A CSV</label>
+            <input type="file" style="visibility:hidden" id="csvFile" accept=".csv"/>
           </fieldset>
         </form>
+      </section>
+    </div>
+    <div role="results">
+      <section>
         <p><strong>Current list of recipients:</strong></p>
-        <ul id="recipients"></ul>
-      </section>
-      <section>
-        <h3>Send your notification</h3>
-        <form id="sendNotificationForm">
-          <fieldset>
-            <label for="passcodeInput" required>Application Passcode</label>
-            <input name="passcode" id="passcodeInput" />
-            <label for="messageInput">Write your message:</label>
-            <textarea name="message" id="messageInput" required></textarea>
-            <input class="button-primary" type="submit" value="Send" />
-          </fieldset>
+        <form name="viewResultFilter">
+          <input type="radio" id="all" name="viewFilters" value="all" checked/>
+          <label for="all">Show All</label>
+          <input type="radio" id="success" name="viewFilters" value="success"/>
+          <label for="success">Show Success</label> 
+          <input type="radio" id="failure" name="viewFilters" value="failure"/>
+          <label for="failure">Show Failures</label>
         </form>
-      </section>
-      <section>
-        <h3>Result</h3>
-        <p id="resultSection"></p>
+        <ul id="recipients"></ul>
       </section>
       <!-- EDIT_CODE -->
     </div>
