@@ -44,11 +44,10 @@ exports.handler = function (context, event, callback) {
         return { success: true, sid: msg.sid, to: msg.to, body: msg.body };
       })
       .catch((err) => {
-        //const toNumber = (err.code === 21211) ? err.message.split(' ')[3] : 'unknown'
         const numberList = err.message.match(/\+[0-9]+/g) || [];
         const toNumber = numberList.length > 0 ? numberList[0] : 'unknown'
         console.log(`Message failed for ${toNumber} or ${recipient.number} [${err.code} ${err.message}]`);
-        return { success: false, error: err.message, to };
+        return { success: false, error: err.message, to: toNumber };
       });
   });
 
