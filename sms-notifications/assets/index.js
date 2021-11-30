@@ -1,3 +1,5 @@
+/* eslint-disable no-loop-func */
+/* eslint-disable sonarjs/cognitive-complexity */
 const recipientForm = document.getElementById('recipientForm');
 const sendNotificationForm = document.getElementById('sendNotificationForm');
 const newRecipientInput = document.getElementById('newRecipientInput');
@@ -41,6 +43,18 @@ recipientForm.addEventListener('submit', (evt) => {
   }
 });
 
+function parseCSV(file) {
+  const reader = new FileReader();
+  reader.addEventListener('load', (event) => {
+    const numberlist = event.target.result.split('\n');
+    numberlist.forEach((row) => {
+      const values = row.split(',');
+      addRecipient(values[0], values);
+    });
+  });
+  reader.readAsText(file);
+}
+
 const fileSelector = document.getElementById('csvFile');
 fileSelector.addEventListener('change', (event) => {
   const fileList = event.target.files;
@@ -60,23 +74,11 @@ messageBox.addEventListener('input', (evt) => {
       segmentCount = Math.ceil(messageBox.value.length / maxCharInSegment);
     }
     segmentCountMessage.innerText = `${messageBox.value.length} characters in message, this is ${segmentCount} segements`;
-    segmentCountMessage.innerText += (maxCharInMessage == 70 ) ? ' and Unicode Detected' : '';
+    segmentCountMessage.innerText += (maxCharInMessage === 70 ) ? ' and Unicode Detected' : '';
   } else {
     segmentCountMessage.innerText = '';
   }
 });
-
-function parseCSV(file) {
-  const reader = new FileReader();
-  reader.addEventListener('load', (event) => {
-    const numberlist = event.target.result.split('\n');
-    numberlist.forEach((row) => {
-      const values = row.split(',');
-      addRecipient(values[0], values);
-    });
-  });
-  reader.readAsText(file);
-}
 
 const viewFilter = document.viewResultFilter.viewFilters;
 viewFilter.forEach((selection) => {
@@ -89,6 +91,8 @@ viewFilter.forEach((selection) => {
       case 'success':
         document.querySelectorAll('ul#recipients li.failed').forEach(item => item.classList.add('hide'));
         break;
+      default:
+        console.log(`unknown target ${evt.target.value}`);
     }
   })
 });
@@ -146,15 +150,15 @@ async function sendMessages(form) {
       totalSuccessOutput.innerText = `${totalSuccess} Successfully Sent`;
 
       body.result.map( item => {
-        const to = item.to;
-        const elem = document.getElementById('id_' + to.replace('+', ''));
+        const {to} = item;
+        const elem = document.getElementById(`id_${to.replace('+', '')}`);
         if (elem) {
           elem.classList.add((item.success) ? 'success' : 'failed');
           let message = '';
           if( item.success ) {
-            message = ' Message SID: ' + item.sid;
+            message = ` Message SID: ${item.sid}`;
           } else {
-            message = ' Error: ' + item.error;
+            message = ` Error: ${item.error}`;
           }
           const newItem = document.createElement("span");
           newItem.classList.add('result');
@@ -166,13 +170,14 @@ async function sendMessages(form) {
         } else {
           console.error(`${body.requestId} Could not find element for ${to} Error Message: ${item.error}`);
         }
+        return item;
       });
 
-      //resultSection.innerText = `Sent ${successCount} of ${body.result.length} messages. Check logs for details`;
+      // resultSection.innerText = `Sent ${successCount} of ${body.result.length} messages. Check logs for details`;
     })
     .catch((err) => {
       console.error(err);
-      //resultSection.innerText = err.message;
+      // resultSection.innerText = err.message;
     });    
 
     if( (sent.length % 100) < MAXSEND) {
@@ -183,7 +188,7 @@ async function sendMessages(form) {
 
   }
   clearForm(form);
-  console.log('Sending to ' + sent.length + ' recipients');
+  console.log(`Sending to ${  sent.length  } recipients`);
   resultSection.innerText = `Sent ${sent.length} messages. Completed`;
   
 }
