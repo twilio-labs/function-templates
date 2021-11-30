@@ -8,7 +8,7 @@ const mockTwilioClient = {
     create: jest.fn((request) => {
       let response = Promise.resolve({
         sid: 'my-new-sid',
-        to: request.to, 
+        to: request.to,
         body: request.body,
       });
       if (invocationCount === failOnCount) {
@@ -73,8 +73,15 @@ test('sends one successful message', (done) => {
       body: 'Hello from the tests test 3',
     });
     expect(result).toEqual({
-      result: [{ success: true, sid: 'my-new-sid', body: 'Hello from the tests test 3', to: '+13334445555'}],
-      requestId: undefined
+      result: [
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests test 3',
+          to: '+13334445555',
+        },
+      ],
+      requestId: undefined,
     });
     done();
   };
@@ -82,7 +89,9 @@ test('sends one successful message', (done) => {
   const event = {
     passcode: '123456',
     message: 'Hello from the tests {1} {2}',
-    recipients: [{number: '+13334445555', parameters: ['+13334445555', 'test', '3']}],
+    recipients: [
+      { number: '+13334445555', parameters: ['+13334445555', 'test', '3'] },
+    ],
   };
 
   sendMessages(context, event, callback);
@@ -99,11 +108,26 @@ test('sends multiple successful messages', (done) => {
     });
     expect(result).toEqual({
       result: [
-        { success: true, sid: 'my-new-sid', body: 'Hello from the tests', to: '+13334445555'  },
-        { success: true, sid: 'my-new-sid', body: 'Hello from the tests', to: '+7778889999'  },
-        { success: true, sid: 'my-new-sid', body: 'Hello from the tests', to: '+12345678901'  },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+13334445555',
+        },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+7778889999',
+        },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+12345678901',
+        },
       ],
-      requestId: undefined
+      requestId: undefined,
     });
     done();
   };
@@ -112,9 +136,9 @@ test('sends multiple successful messages', (done) => {
     passcode: '123456',
     message: 'Hello from the tests',
     recipients: [
-      {number: '+13334445555', parameters: ['test', '1']},
-      {number: '+7778889999', parameters: ['test', '2']},
-      {number: '+12345678901', parameters: ['test', '3']},
+      { number: '+13334445555', parameters: ['test', '1'] },
+      { number: '+7778889999', parameters: ['test', '2'] },
+      { number: '+12345678901', parameters: ['test', '3'] },
     ],
   };
 
@@ -133,11 +157,21 @@ test('handles message requests failing', (done) => {
     });
     expect(result).toEqual({
       result: [
-        { success: true, sid: 'my-new-sid', body: 'Hello from the tests', to: '+13334445555' },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+13334445555',
+        },
         { success: false, error: 'Expected test error', to: 'unknown' },
-        { success: true, sid: 'my-new-sid', body: 'Hello from the tests', to: '+12345678901' },
-      ], 
-      requestId: undefined
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+12345678901',
+        },
+      ],
+      requestId: undefined,
     });
     done();
   };
@@ -145,10 +179,10 @@ test('handles message requests failing', (done) => {
   const event = {
     passcode: '123456',
     message: 'Hello from the tests',
-    recipients:  [
-      {number: '+13334445555', parameters: ['test', '1']},
-      {number: '+7778889999', parameters: ['test', '2']},
-      {number: '+12345678901', parameters: ['test', '3']},
+    recipients: [
+      { number: '+13334445555', parameters: ['test', '1'] },
+      { number: '+7778889999', parameters: ['test', '2'] },
+      { number: '+12345678901', parameters: ['test', '3'] },
     ],
   };
 
