@@ -20,8 +20,17 @@ const mockTwilioClient = {
   },
 };
 
+const getAuthedRequest = (username, password) => ({
+  headers: {
+    authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
+      'base64'
+    )}`,
+  },
+});
+
 const context = {
-  PASSCODE: '123456',
+  AUTH_USERNAME: 'admin',
+  AUTH_PASSCODE: '123456',
   TWILIO_PHONE_NUMBER: '+12223334444',
   TESTMODE: 'false',
   TEST_ACCOUNT_SID: 'ACxxxxxxxxxxxxxxxxxxxxx',
@@ -52,12 +61,12 @@ test('returns 401 if the request was invalid', (done) => {
   };
 
   const event = {
-    passcode: '111111',
     message: 'Hello from the tests',
     recipients: [
       { number: '+13334445555', parameters: ['test', '1'] },
       { number: '+12345678901', parameters: ['test', '2'] },
     ],
+    request: getAuthedRequest('admin', '111111'),
   };
 
   sendMessages(context, event, callback);
@@ -70,14 +79,14 @@ test('sends one successful message', (done) => {
     expect(mockTwilioClient.messages.create).toHaveBeenCalledWith({
       from: '+12223334444',
       to: '+13334445555',
-      body: 'Hello from the tests test 3',
+      body: 'Hello from the tests param1 param2',
     });
     expect(result).toEqual({
       result: [
         {
           success: true,
           sid: 'my-new-sid',
-          body: 'Hello from the tests test 3',
+          body: 'Hello from the tests param1 param2',
           to: '+13334445555',
         },
       ],
@@ -87,11 +96,11 @@ test('sends one successful message', (done) => {
   };
 
   const event = {
-    passcode: '123456',
     message: 'Hello from the tests {1} {2}',
     recipients: [
-      { number: '+13334445555', parameters: ['+13334445555', 'test', '3'] },
+      { number: '+13334445555', parameters: ['+13334445555', 'param1', 'param2'] },
     ],
+    request: getAuthedRequest('admin', '123456'),
   };
 
   sendMessages(context, event, callback);
@@ -133,13 +142,13 @@ test('sends multiple successful messages', (done) => {
   };
 
   const event = {
-    passcode: '123456',
     message: 'Hello from the tests',
     recipients: [
       { number: '+13334445555', parameters: ['test', '1'] },
       { number: '+7778889999', parameters: ['test', '2'] },
       { number: '+12345678901', parameters: ['test', '3'] },
     ],
+    request: getAuthedRequest('admin', '123456'),
   };
 
   sendMessages(context, event, callback);
@@ -177,13 +186,13 @@ test('handles message requests failing', (done) => {
   };
 
   const event = {
-    passcode: '123456',
     message: 'Hello from the tests',
     recipients: [
       { number: '+13334445555', parameters: ['test', '1'] },
       { number: '+7778889999', parameters: ['test', '2'] },
       { number: '+12345678901', parameters: ['test', '3'] },
     ],
+    request: getAuthedRequest('admin', '123456'),
   };
 
   sendMessages(context, event, callback);

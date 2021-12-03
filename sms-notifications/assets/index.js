@@ -5,6 +5,7 @@ const sendNotificationForm = document.getElementById('sendNotificationForm');
 const newRecipientInput = document.getElementById('newRecipientInput');
 const recipientList = document.getElementById('recipients');
 const resultSection = document.getElementById('resultSection');
+const errorSection = document.getElementById('errorSection');
 const totalSuccessOutput = document.getElementById('totalSuccess');
 const uploadButton = document.getElementById('uploadCSV');
 
@@ -119,7 +120,6 @@ async function sendMessages(form) {
   while (recipients.length > 0 && sent.length < recipients.length) {
     const batch = recipients.slice(sent.length, sent.length + MAXSEND);
     const data = {
-      passcode: form.passcode.value,
       message: form.message.value,
       recipients: batch,
       requestId: sent.length,
@@ -132,6 +132,7 @@ async function sendMessages(form) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Basic ${btoa(`admin:${form.passcode.value}`)}`
       },
       body: JSON.stringify(data),
     })
@@ -188,7 +189,7 @@ async function sendMessages(form) {
       })
       .catch((err) => {
         console.error(err);
-        // resultSection.innerText = err.message;
+        errorSection.innerText = err.message;
       });
 
     if (sent.length % 100 < MAXSEND) {
@@ -214,6 +215,7 @@ sendNotificationForm.addEventListener('submit', (evt) => {
     resultSection.innerText = 'Please enter at least one phone number';
   } else {
     resultSection.innerText = 'Sending messages. One moment';
+    errorSection.innerText = '';
     sendMessages(evt.target);
   }
 });

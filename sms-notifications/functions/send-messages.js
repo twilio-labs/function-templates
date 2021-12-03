@@ -1,18 +1,17 @@
 /* eslint-disable no-negated-condition */
 // eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
-  const { recipients } = event;
-  const { message, passcode } = event;
+  const { message, recipients } = event;
+  const { auth } = require('@twilio-labs/runtime-helpers');
 
-  if (passcode !== context.PASSCODE) {
+  if (!auth.isAuthenticated(context, event)) {
     const response = new Twilio.Response();
+    response.setBody({ success: false, error: 'INVALID CREDENTIALS' });
     response.setStatusCode(401);
-    response.setBody('Invalid passcode');
     return callback(null, response);
   }
 
-  const isTesting =
-    context.TESTMODE !== undefined ? context.TESTMODE === 'true' : true;
+  const isTesting = context.TESTMODE !== undefined ? context.TESTMODE === 'true' : true;
   console.log(`Is test Mode ${context.TESTMODE} ${isTesting}`);
 
   let client = context.getTwilioClient();
