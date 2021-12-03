@@ -98,7 +98,10 @@ test('sends one successful message', (done) => {
   const event = {
     message: 'Hello from the tests {1} {2}',
     recipients: [
-      { number: '+13334445555', parameters: ['+13334445555', 'param1', 'param2'] },
+      {
+        number: '+13334445555',
+        parameters: ['+13334445555', 'param1', 'param2'],
+      },
     ],
     request: getAuthedRequest('admin', '123456'),
   };

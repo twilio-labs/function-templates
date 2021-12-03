@@ -11,7 +11,8 @@ exports.handler = function (context, event, callback) {
     return callback(null, response);
   }
 
-  const isTesting = context.TESTMODE !== undefined ? context.TESTMODE === 'true' : true;
+  const isTesting =
+    context.TESTMODE !== undefined ? context.TESTMODE === 'true' : true;
   console.log(`Is test Mode ${context.TESTMODE} ${isTesting}`);
 
   let client = context.getTwilioClient();

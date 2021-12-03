@@ -132,7 +132,7 @@ async function sendMessages(form) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Basic ${btoa(`admin:${form.passcode.value}`)}`
+        Authorization: `Basic ${btoa(`admin:${form.passcode.value}`)}`,
       },
       body: JSON.stringify(data),
     })
