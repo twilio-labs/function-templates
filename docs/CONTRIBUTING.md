@@ -57,6 +57,10 @@ This script will prompt you for a couple of questions and set up a basic templat
 
 It will create a directory with the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be accessible without a [valid `X-Twilio-Signature` header](https://www.twilio.com/docs/usage/webhooks/webhooks-security#validating-signatures-from-twilio). Protected Functions are best used to respond to Twilio webhooks.
 
+### Using the runtime-helpers library
+
+One of the default dependencies for new function templates is the `runtime-helpers` library, which is a Twilio project that provides easy-to-use, tested implementations of various common Function building blocks and utlities. We recommend using the shared `runtime-helpers` version of a feature whenever it exists. Full documentation for the `runtime-helpers` API and feature set is available in [this reference](https://twilio-labs.github.io/runtime-helpers/).
+
 ### Adding external dependencies (npm)
 
 If you want to use external dependencies in your template, add them to the `package.json` inside your template's directory. You'll also have to install the same dependency as a `devDependency` in the root of the project. For example if we want to add the `twilio-video` library in the `video-token` template we would run:
