@@ -13,7 +13,16 @@ In your `.env` file, set the following values:
 | Variable              | Description                                              | Required |
 | :-------------------- | :------------------------------------------------------- | :------- |
 | `TWILIO_PHONE_NUMBER` | The Twilio phone number to broadcast your messages from. | Yes      |
-| `PASSCODE`            | A passcode to avoid anyone sending text messages         | Yes      |
+| `AUTH_USERNAME`       | Username for Authentication. Defaults to 'admin'         | Yes      |
+| `AUTH_PASSCODE`       | A passcode to avoid anyone sending text messages         | Yes      |
+
+Additional Testing environment variables are required for Testing and use of [Magic Number](https://www.twilio.com/blog/2018/04/twilio-test-credentials-magic-numbers.html)
+
+| Variable              | Description                                              | Required |
+| :-------------------- | :------------------------------------------------------- | :------- |
+| `TESTMODE`            | Is this application running in Test Mode                 | Yes      |
+| `TEST_ACCOUNT_SID`    | Test Credential SID from [here](https://www.twilio.com/console/project/settings) | Yes if in Testmode |
+| `TEST_AUTH_TOKEN`     | Test Credential Auth Token from [here](https://www.twilio.com/console/project/settings) | Yes if in Testmode |
 
 ### Function Parameters
 
@@ -21,9 +30,23 @@ In your `.env` file, set the following values:
 
 | Parameter    | Description                                                                   | Required |
 | :----------- | :---------------------------------------------------------------------------- | :------- |
-| `passcode`   | The passcode to compare against the stored passcode                           | Yes      |
 | `message`    | The message you want to broadcast                                             | Yes      |
-| `recipients` | A comma seprated list of E.164 formatted phone numbers to send the message to | Yes      |
+| `recipients` | An array of E.164 formatted phone numbers and parameters to send the message  | Yes      |
+
+`recipients` is an array of JSON object in the following format
+```
+[ 
+  {number: '+61412345678', parameters: ['param1', 'param2']},
+  {number: '+61499999999', parameters: ['param1', 'param2']},
+  {number: '+61455555555', parameters: ['param1', 'param2']},
+]
+```
+
+| Header          | Description                                                                | Required |
+| :-------------- | :------------------------------------------------------------------------- | :------- |
+| `Authorization` | Basic Auth using `AUTH_USERNAME` and `AUTH_PASSCODE`                       | Yes      |
+
+
 
 ## Create a new project with the template
 
@@ -59,3 +82,7 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](license.md) file for details

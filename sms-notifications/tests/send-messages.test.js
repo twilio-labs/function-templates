@@ -5,9 +5,11 @@ let failOnCount = undefined;
 let invocationCount = 0;
 const mockTwilioClient = {
   messages: {
-    create: jest.fn(() => {
+    create: jest.fn((request) => {
       let response = Promise.resolve({
         sid: 'my-new-sid',
+        to: request.to,
+        body: request.body,
       });
       if (invocationCount === failOnCount) {
         response = Promise.reject(new Error('Expected test error'));
@@ -18,9 +20,21 @@ const mockTwilioClient = {
   },
 };
 
+const getAuthedRequest = (username, password) => ({
+  headers: {
+    authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
+      'base64'
+    )}`,
+  },
+});
+
 const context = {
-  PASSCODE: '123456',
+  AUTH_USERNAME: 'admin',
+  AUTH_PASSCODE: '123456',
   TWILIO_PHONE_NUMBER: '+12223334444',
+  TESTMODE: 'false',
+  TEST_ACCOUNT_SID: 'ACxxxxxxxxxxxxxxxxxxxxx',
+  TEST_AUTH_TOKEN: 'xxxxxxxxxxxxxxxxxxxxxx',
   getTwilioClient: () => mockTwilioClient,
 };
 
@@ -47,9 +61,12 @@ test('returns 401 if the request was invalid', (done) => {
   };
 
   const event = {
-    passcode: '111111',
     message: 'Hello from the tests',
-    recipients: '+13334445555,+12345678901',
+    recipients: [
+      { number: '+13334445555', parameters: ['test', '1'] },
+      { number: '+12345678901', parameters: ['test', '2'] },
+    ],
+    request: getAuthedRequest('admin', '111111'),
   };
 
   sendMessages(context, event, callback);
@@ -62,18 +79,31 @@ test('sends one successful message', (done) => {
     expect(mockTwilioClient.messages.create).toHaveBeenCalledWith({
       from: '+12223334444',
       to: '+13334445555',
-      body: 'Hello from the tests',
+      body: 'Hello from the tests param1 param2',
     });
     expect(result).toEqual({
-      result: [{ success: true, sid: 'my-new-sid' }],
+      result: [
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests param1 param2',
+          to: '+13334445555',
+        },
+      ],
+      requestId: undefined,
     });
     done();
   };
 
   const event = {
-    passcode: '123456',
-    message: 'Hello from the tests',
-    recipients: '+13334445555',
+    message: 'Hello from the tests {1} {2}',
+    recipients: [
+      {
+        number: '+13334445555',
+        parameters: ['+13334445555', 'param1', 'param2'],
+      },
+    ],
+    request: getAuthedRequest('admin', '123456'),
   };
 
   sendMessages(context, event, callback);
@@ -90,18 +120,38 @@ test('sends multiple successful messages', (done) => {
     });
     expect(result).toEqual({
       result: [
-        { success: true, sid: 'my-new-sid' },
-        { success: true, sid: 'my-new-sid' },
-        { success: true, sid: 'my-new-sid' },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+13334445555',
+        },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+7778889999',
+        },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+12345678901',
+        },
       ],
+      requestId: undefined,
     });
     done();
   };
 
   const event = {
-    passcode: '123456',
     message: 'Hello from the tests',
-    recipients: '+13334445555,+7778889999,+12345678901',
+    recipients: [
+      { number: '+13334445555', parameters: ['test', '1'] },
+      { number: '+7778889999', parameters: ['test', '2'] },
+      { number: '+12345678901', parameters: ['test', '3'] },
+    ],
+    request: getAuthedRequest('admin', '123456'),
   };
 
   sendMessages(context, event, callback);
@@ -119,18 +169,33 @@ test('handles message requests failing', (done) => {
     });
     expect(result).toEqual({
       result: [
-        { success: true, sid: 'my-new-sid' },
-        { success: false, error: 'Expected test error' },
-        { success: true, sid: 'my-new-sid' },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+13334445555',
+        },
+        { success: false, error: 'Expected test error', to: 'unknown' },
+        {
+          success: true,
+          sid: 'my-new-sid',
+          body: 'Hello from the tests',
+          to: '+12345678901',
+        },
       ],
+      requestId: undefined,
     });
     done();
   };
 
   const event = {
-    passcode: '123456',
     message: 'Hello from the tests',
-    recipients: '+13334445555,+7778889999,+12345678901',
+    recipients: [
+      { number: '+13334445555', parameters: ['test', '1'] },
+      { number: '+7778889999', parameters: ['test', '2'] },
+      { number: '+12345678901', parameters: ['test', '3'] },
+    ],
+    request: getAuthedRequest('admin', '123456'),
   };
 
   sendMessages(context, event, callback);
