@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "stripe": "^8.20.0"
+    "stripe": "^8.20.0",
+    "@twilio-labs/runtime-helpers": "^0.1.2"
   }
 }
