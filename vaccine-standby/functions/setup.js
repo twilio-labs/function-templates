@@ -2,8 +2,8 @@
 exports.handler = async function (context, event, callback) {
   const assets = Runtime.getAssets();
   const flowDefinition = require(assets['/studio_flow.js'].path);
-  const { path } = Runtime.getFunctions().auth;
-  const { getCurrentEnvironment, setEnvironmentVariable } = require(path);
+  const { getCurrentEnvironment, setEnvironmentVariable } =
+    require('@twilio-labs/runtime-helpers').environment;
 
   const client = context.getTwilioClient();
 
