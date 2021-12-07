@@ -22,17 +22,17 @@
  *  }
  */
 
+const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
+
 // eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
-  const response = new Twilio.Response();
+  // set to true to support CORS
+  const supportCors = false;
+  /* istanbul ignore next */
+  const response = supportCors
+    ? createCORSResponse('*')
+    : new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
 
   if (typeof event.to === 'undefined') {
     response.setBody({
