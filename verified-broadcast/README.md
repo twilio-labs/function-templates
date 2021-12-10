@@ -27,7 +27,7 @@ In your `.env` file, set the following values:
 | :-------- | :----------------------- | :------- |
 | `to`      | Subscriber phone number. | Yes      |
 
-`broadcast.js` has to be authenticated using HTTP Basic Auth using `admin` as username an the configured `PASSCODE` as password. It expects the following parameters:
+`broadcast.js` has to be authenticated using HTTP Basic Auth using the configured `AUTH_USERNAME` as the username and the configured `AUTH_PASSCODE` as the password. It expects the following parameters:
 
 | Parameter | Description                                                                                                                    | Required |
 | :-------- | :----------------------------------------------------------------------------------------------------------------------------- | :------- |
@@ -85,7 +85,7 @@ You will need the generated SID for this service to configure your environment i
 
 ### Deploy the Function template
 
-Add the Notify Service SID to the `.env` file as `BROADCAST_NOTIFY_SERVICE_SID` and the Verify Service SID as `VERIFY_SERVICE_SID`. Add any passcode for the admin that is permitted to send broadcast messages to the `.env` file as `PASSCODE`.
+Add the Notify Service SID to the `.env` file as `BROADCAST_NOTIFY_SERVICE_SID` and the Verify Service SID as `VERIFY_SERVICE_SID`. Add any username and passcode for the admin that is permitted to send broadcast messages to the `.env` file as `AUTH_USERNAME` and `AUTH_PASSCODE`, respectively.
 
 Deploy your functions and assets with the following command. Note: you must run this command from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
 
