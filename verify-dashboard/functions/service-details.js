@@ -13,16 +13,16 @@
  *
  */
 
-exports.handler = function (context, event, callback) {
-  const response = new Twilio.Response();
-  response.appendHeader('Content-Type', 'application/json');
+const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
 
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
+exports.handler = function (context, event, callback) {
+  // set to true to support CORS
+  const supportCors = false;
+  /* istanbul ignore next */
+  const response = supportCors
+    ? createCORSResponse('*')
+    : new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
 
   const client = context.getTwilioClient();
   const service = context.VERIFY_SERVICE_SID;
