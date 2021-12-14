@@ -1,4 +1,6 @@
 const helpers = require('../../../test/test-helper');
+const { getCurrentEnvironment, setEnvironmentVariable } =
+  require('@twilio-labs/runtime-helpers').environment;
 
 let performActionFunction;
 let token;
@@ -8,9 +10,17 @@ const baseContext = {
   getTwilioClient: jest.fn(),
 };
 
-const mockSetEnvironmentVariable = jest
-  .fn()
-  .mockReturnValue(Promise.resolve(true));
+jest.mock('@twilio-labs/runtime-helpers', () => {
+  return {
+    environment: {
+      getCurrentEnvironment: jest
+        .fn()
+        .mockReturnValue(Promise.resolve({ serviceSid: 'SERVICE_SID' })),
+      setEnvironmentVariable: jest.fn().mockReturnValue(Promise.resolve(true)),
+    },
+  };
+});
+
 const mockEnvironment = { serviceSid: 'SERVICE_SID' };
 class MockActions {
   helloWorld({ firstName }) {
@@ -47,10 +57,6 @@ describe('voice-client-javascript/admin/perform-action', () => {
     jest.mock('../../assets/admin/shared.private.js', () => {
       const shared = jest.requireActual('../../assets/admin/shared.private.js');
       return {
-        getCurrentEnvironment: jest
-          .fn()
-          .mockReturnValue(Promise.resolve(mockEnvironment)),
-        setEnvironmentVariable: mockSetEnvironmentVariable,
         checkAuthorization: shared.checkAuthorization,
         createToken: shared.createToken,
       };
@@ -77,7 +83,7 @@ describe('voice-client-javascript/admin/perform-action', () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result.success).toBeTruthy();
-      expect(mockSetEnvironmentVariable).toHaveBeenCalledWith(
+      expect(setEnvironmentVariable).toHaveBeenCalledWith(
         baseContext,
         mockEnvironment,
         'GREETING',
@@ -112,7 +118,7 @@ describe('voice-client-javascript/admin/perform-action', () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
       expect(result.success).toBeTruthy();
-      expect(mockSetEnvironmentVariable).toHaveBeenCalledWith(
+      expect(setEnvironmentVariable).toHaveBeenCalledWith(
         baseContext,
         mockEnvironment,
         'A_KEY',
@@ -144,7 +150,7 @@ describe('voice-client-javascript/admin/perform-action', () => {
       expect(result.logs).toContain(`Did not set "GREETING"`);
       done();
     };
-    mockSetEnvironmentVariable.mockReturnValue(Promise.resolve(false));
+    setEnvironmentVariable.mockReturnValue(Promise.resolve(false));
     const action = {
       name: 'helloWorld',
       params: {

@@ -1,10 +1,11 @@
 const helpers = require('../../../../test/test-helper');
+const { getCurrentEnvironment } =
+  require('@twilio-labs/runtime-helpers').environment;
 
 /* eslint-disable sonarjs/no-identical-functions, sonarjs/no-duplicate-string*/
 
 const statusFunctions = {};
 let environmentFunction;
-let mockGetCurrentEnvironment;
 
 const mockApplications = {
   fetch: jest.fn(),
@@ -13,6 +14,14 @@ const mockApplications = {
 const mockKeys = {
   fetch: jest.fn(),
 };
+
+jest.mock('@twilio-labs/runtime-helpers', () => {
+  return {
+    environment: {
+      getCurrentEnvironment: jest.fn(),
+    },
+  };
+});
 
 // eslint-disable-next-line sonarjs/prefer-object-literal
 const mockTwilioClient = {};
@@ -59,14 +68,12 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
     );
     helpers.setup(CONTEXT, runtime);
     // Mock out shared
-    mockGetCurrentEnvironment = jest.fn();
     const mockShared = jest.mock('../../../assets/admin/shared.private', () => {
       const actualShared = jest.requireActual(
         '../../../assets/admin/shared.private'
       );
       return {
         urlForSiblingPage: actualShared.urlForSiblingPage,
-        getCurrentEnvironment: mockGetCurrentEnvironment,
       };
     });
     const mod = require('../../../assets/admin/statuses.private');
@@ -85,7 +92,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
 
   test('checkEnvironmentInitialization is required to be deployed', async () => {
     // Arrange
-    mockGetCurrentEnvironment.mockReturnValueOnce(Promise.resolve(undefined));
+    getCurrentEnvironment.mockReturnValueOnce(Promise.resolve(undefined));
 
     // Act
     const status = await environmentFunction(CONTEXT);
@@ -98,7 +105,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
 
   test('checkEnvironmentInitialization prompts to initialize if not yet initialized', async () => {
     // Arrange
-    mockGetCurrentEnvironment.mockReturnValueOnce(
+    getCurrentEnvironment.mockReturnValueOnce(
       Promise.resolve({ uniqueName: 'devtown' })
     );
 
@@ -115,7 +122,7 @@ describe('voice-javascript-sdk/admin/private/statuses', () => {
   test('checkEnvironmentInitialization is valid when initialized and deployed', async () => {
     // Arrange
     process.env.INITIALIZED = 'voice-javascript-sdk-quickstart';
-    mockGetCurrentEnvironment.mockReturnValueOnce(
+    getCurrentEnvironment.mockReturnValueOnce(
       Promise.resolve({ uniqueName: 'devtown' })
     );
 
