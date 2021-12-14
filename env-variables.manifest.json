@@ -1112,10 +1112,20 @@
         "contentKey": null
       },
       {
-        "key": "PASSCODE",
+        "key": "AUTH_USERNAME",
+        "required": true,
+        "format": "text",
+        "description": "Choose a username for your app. Users have to use this username and passcode to send SMS broadcasts or delete all subscriptions",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "AUTH_PASSCODE",
         "required": true,
         "format": "secret",
-        "description": "Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts or delete all subscriptions",
+        "description": "Choose a passcode for your app. Users have to use this username and passcode to send SMS broadcasts or delete all subscriptions",
         "link": null,
         "default": null,
         "configurable": true,
