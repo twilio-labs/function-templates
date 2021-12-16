@@ -1,5 +1,6 @@
 exports.handler = function (context, event, callback) {
   const VALID_PASSCODE = context.PASSCODE;
+  const { ROOM_NAME } = context;
   const TWILIO_ACCOUNT_SID = context.ACCOUNT_SID;
   const TWILIO_API_KEY = context.API_KEY;
   const TWILIO_API_SECRET = context.API_SECRET;
@@ -14,7 +15,6 @@ exports.handler = function (context, event, callback) {
     return callback(null, response);
   }
 
-  const ROOM_NAME = 'demo'; // fixed room name
   const { AccessToken } = Twilio.jwt;
   const { VideoGrant } = AccessToken;
   /*
@@ -34,5 +34,6 @@ exports.handler = function (context, event, callback) {
   accessToken.identity = ACCESS_TOKEN_IDENTITY;
   return callback(null, {
     token: accessToken.toJwt(), // Serialize the token to a JWT string
+    room: ROOM_NAME,
   });
 };

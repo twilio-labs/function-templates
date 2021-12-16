@@ -6,6 +6,7 @@ const baseContext = {
   ACCOUNT_SID: 'ACxxx',
   API_KEY: 'api-key',
   API_SECRET: 'api-secret',
+  ROOM_NAME: 'test',
 };
 
 describe('video-token/token', () => {
@@ -20,12 +21,13 @@ describe('video-token/token', () => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(typeof result.token).toBe('string');
+      expect(result.room).toEqual(baseContext.ROOM_NAME);
       jwt.verify(result.token, baseContext.API_SECRET, (err, decoded) => {
         expect(err).toBeNull();
         expect(decoded.iss).toBe(baseContext.API_KEY);
         expect(decoded.sub).toBe(baseContext.ACCOUNT_SID);
         expect(decoded.grants.video).toEqual({
-          room: 'demo',
+          room: baseContext.ROOM_NAME,
         });
         expect(typeof decoded.grants.identity).toEqual('string');
         done();
