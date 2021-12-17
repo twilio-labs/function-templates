@@ -39,7 +39,6 @@ const participantDisconnected = (participant) => {
 };
 
 (() => {
-  const ROOM_NAME = 'demo';
   const { Video } = Twilio;
   let videoRoom;
   let localStream;
@@ -77,10 +76,10 @@ const participantDisconnected = (participant) => {
         }
       })
       .then((body) => {
-        const { token } = body;
+        const { token, room } = body;
         console.log(token);
         // connect to room
-        return Video.connect(token, { name: ROOM_NAME });
+        return Video.connect(token, { name: room });
       })
       .then((room) => {
         console.log(`Connected to Room ${room.name}`);
