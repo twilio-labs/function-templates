@@ -966,6 +966,16 @@
         "contentKey": null
       },
       {
+        "key": "ROOM_NAME",
+        "required": true,
+        "format": "text",
+        "description": "Choose a room name for your video call",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
         "key": "PASSCODE",
         "required": true,
         "format": "text",
