@@ -1,6 +1,10 @@
 {
   "version": "1.0.0",
   "private": true,
+  "name": "verify",
+  "scripts": {
+    "e2e": "pm2 start cypress/server.js && cypress run && pm2 kill"
+  },
   "dependencies": {
     "twilio": "^3.61.0"
   }
