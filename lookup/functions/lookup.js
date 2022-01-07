@@ -7,17 +7,17 @@
  *  "phone" - string - phone number in E.164 format (https://www.twilio.com/docs/glossary/what-e164)
  */
 
-const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
-
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
-  // set to true to support CORS
-  const supportCors = false;
-  /* istanbul ignore next */
-  const response = supportCors
-    ? createCORSResponse('*')
-    : new Twilio.Response();
+  const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   try {
     if (event.phone === '' || typeof event.phone === 'undefined') {

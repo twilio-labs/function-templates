@@ -1,18 +1,9 @@
 const helpers = require('../../../../test/test-helper');
 const extensions = require('../../../assets/extensions.private');
-const { getCurrentEnvironment } =
-  require('@twilio-labs/runtime-helpers').environment;
 
 const statusFunctions = {};
 let environmentFunction;
-
-jest.mock('@twilio-labs/runtime-helpers', () => {
-  return {
-    environment: {
-      getCurrentEnvironment: jest.fn(),
-    },
-  };
-});
+let mockGetCurrentEnvironment;
 
 const mockDomains = {
   fetch: jest.fn(),
@@ -81,12 +72,14 @@ describe('sip-quickstart/admin/private/statuses', () => {
     );
     helpers.setup(CONTEXT, runtime);
     // Mock out shared
+    mockGetCurrentEnvironment = jest.fn();
     const mockShared = jest.mock('../../../assets/admin/shared.private', () => {
       const actualShared = jest.requireActual(
         '../../../assets/admin/shared.private'
       );
       return {
         urlForSiblingPage: actualShared.urlForSiblingPage,
+        getCurrentEnvironment: mockGetCurrentEnvironment,
       };
     });
     const mod = require('../../../assets/admin/statuses.private');
@@ -105,7 +98,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
 
   test('checkEnvironmentInitialization is required to be deployed', async () => {
     // Arrange
-    getCurrentEnvironment.mockReturnValueOnce(Promise.resolve(undefined));
+    mockGetCurrentEnvironment.mockReturnValueOnce(Promise.resolve(undefined));
 
     // Act
     const status = await environmentFunction(CONTEXT);
@@ -118,7 +111,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
 
   test('checkEnvironmentInitialization prompts to initialize if not yet initialized', async () => {
     // Arrange
-    getCurrentEnvironment.mockReturnValueOnce(
+    mockGetCurrentEnvironment.mockReturnValueOnce(
       Promise.resolve({ uniqueName: 'devtown' })
     );
 
@@ -135,7 +128,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
   test('checkEnvironmentInitialization is valid when initialized and deployed', async () => {
     // Arrange
     process.env.INITIALIZED = 'sip-quickstart';
-    getCurrentEnvironment.mockReturnValueOnce(
+    mockGetCurrentEnvironment.mockReturnValueOnce(
       Promise.resolve({ uniqueName: 'devtown' })
     );
 
