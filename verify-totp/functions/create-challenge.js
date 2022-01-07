@@ -5,8 +5,6 @@
  *    "message": string
  *  }
  */
-const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
-
 const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/utils.js'].path);
 
@@ -36,13 +34,15 @@ async function checkToken(entity, factorSid, code) {
 }
 
 exports.handler = async function (context, event, callback) {
-  // set to true to support CORS
-  const supportCors = false;
-  /* istanbul ignore next */
-  const response = supportCors
-    ? createCORSResponse('*')
-    : new Twilio.Response();
+  const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+
+  /*
+   * uncomment to support CORS
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   try {
     const missingParams = detectMissingParams(

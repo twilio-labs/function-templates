@@ -3,7 +3,6 @@
   "private": true,
   "dependencies": {
     "twilio": "^3.67.2",
-    "@twilio-labs/runtime-helpers": "^0.1.2",
     "uuid": "^8.3.2"
   }
 }
