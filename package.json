@@ -14,7 +14,8 @@
     "format": "prettier --write .",
     "format:changed": "pretty-quick --branch main",
     "format:check": "prettier --check .",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "e2e": "turbo run e2e --parallel"
   },
   "author": "Twilio <open-source@twilio.com>",
   "license": "MIT",
@@ -30,8 +31,10 @@
     "configure-env": "^2.0.0-1",
     "copy-template-dir": "^1.4.0",
     "crypto": "^1.0.1",
+    "cypress": "^9.2.0",
     "eslint": "^5.16.0",
     "eslint-config-twilio": "^1.34.2",
+    "get-port": "^6.0.0",
     "googleapis": "^65.0.0",
     "got": "^6.7.1",
     "husky": "^6.0.0",
@@ -48,6 +51,7 @@
     "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
     "tsscmp": "^1.0.6",
+    "turbo": "^1.0.24",
     "twilio": "^3.64.0",
     "uuid": "^8.3.2",
     "validator": "^13.6.0"
@@ -69,10 +73,22 @@
     ],
     "testPathIgnorePatterns": [
       "/_helpers/",
-      "/node_modules/"
+      "/node_modules/",
+      "cypress/"
     ]
   },
   "dependencies": {
     "got": "^6.7.1"
-  }
+  },
+  "turbo": {
+    "baseBranch": "origin/main",
+    "pipeline": {
+      "e2e": {
+        "dependsOn": []
+      }
+    }
+  },
+  "workspaces": [
+    "hello-world"
+  ]
 }
