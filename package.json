@@ -73,7 +73,8 @@
     ],
     "testPathIgnorePatterns": [
       "/_helpers/",
-      "/node_modules/"
+      "/node_modules/",
+      "cypress/"
     ]
   },
   "dependencies": {
