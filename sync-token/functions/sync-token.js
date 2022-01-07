@@ -10,8 +10,6 @@
  *   - Create an API Key (https://www.twilio.com/console/runtime/api-keys)
  */
 
-const { createCORSResponse } = require('@twilio-labs/runtime-helpers').response;
-
 exports.handler = function (context, event, callback) {
   /*
    * Change these values for your use case
@@ -37,12 +35,14 @@ exports.handler = function (context, event, callback) {
   accessToken.addGrant(syncGrant);
   accessToken.identity = IDENTITY;
 
-  // set to true to support CORS
-  const supportCors = false;
-  /* istanbul ignore next */
-  const response = supportCors
-    ? createCORSResponse('*')
-    : new Twilio.Response();
+  const response = new Twilio.Response();
+
+  /*
+   * Uncomment these lines for CORS support
+   * response.appendHeader('Access-Control-Allow-Origin', '*');
+   * response.appendHeader('Access-Control-Allow-Methods', 'GET');
+   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+   */
 
   response.appendHeader('Content-Type', 'application/json');
   response.setBody({ token: accessToken.toJwt() });

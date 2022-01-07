@@ -1,10 +1,9 @@
 const { stripIndents } = require('common-tags');
 
 const assets = Runtime.getAssets();
-const { getCurrentEnvironment } =
-  require('@twilio-labs/runtime-helpers').environment;
-
-const { urlForSiblingPage } = require(assets['/admin/shared.js'].path);
+const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
+  '/admin/shared.js'
+].path);
 const extensions = require(assets['/extensions.js'].path);
 
 async function checkEnvironmentInitialization(context) {

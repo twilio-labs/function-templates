@@ -2,7 +2,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "twilio": "^3.61.0",
-    "@twilio-labs/runtime-helpers": "^0.1.2"
+    "twilio": "^3.61.0"
   }
 }
