@@ -10,37 +10,36 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable                     | Description                                                                                                                                                    | Required |
-| :--------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
-| TWILIO_PHONE_NUMBER          | The Twilio phone number to send broadcast SMS from                                                                                                             | Yes      |
-| AUTH_USERNAME                | Choose a passcode for your app. Users have to use this username and passcode to send SMS broadcasts or delete all subscriptions                                | Yes      |
-| AUTH_PASSCODE                | Choose a passcode for your app. Users have to use this username and passcode to send SMS broadcasts or delete all subscriptions                                | Yes      |
-| BROADCAST_NOTIFY_SERVICE_SID | SID of your Twilio Notify Service. Otherwise one will automatically be provisioned for you.                                                                    | No       |
-| MESSAGING_SERVICE_SID        | SID of a Twilio Messaging Service. Otherwise one will automatically be provisioned for you.                                                                    | No       |
-| VERIFY_SERVICE_SID           | SID of your Twilio Verify Service. Create one [here](https://www.twilio.com/console/verify/services). Otherwise one will automatically be provisioned for you. | No       |
+| Variable                     | Description                                                                                                                                                       | Required |
+| :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
+| TWILIO_PHONE_NUMBER | The Twilio phone number to send broadcast SMS from | Yes |
+| PASSCODE | Choose a passcode for your app. Users have to use this passcode to send SMS broadcasts or delete all subscriptions | Yes |
+| BROADCAST_NOTIFY_SERVICE_SID       | SID of your Twilio Notify Service. Otherwise one will automatically be provisioned for you. | No      |
+| MESSAGING_SERVICE_SID | SID of a Twilio Messaging Service. Otherwise one will automatically be provisioned for you. | No |
+| VERIFY_SERVICE_SID           | SID of your Twilio Verify Service. Create one [here](https://www.twilio.com/console/verify/services). Otherwise one will automatically be provisioned for you. | No      |
 
 ### Function Parameters
 
 `start-verify.js` expects the following parameters:
 
-| Parameter | Description              | Required |
-| :-------- | :----------------------- | :------- |
-| `to`      | Subscriber phone number. | Yes      |
+| Parameter      | Description                                 | Required |
+| :------------- | :------------------------------------------ | :------- |
+| `to`       | Subscriber phone number. | Yes  |
 
-`broadcast.js` has to be authenticated using HTTP Basic Auth using the configured `AUTH_USERNAME` as the username and the configured `AUTH_PASSCODE` as the password. It expects the following parameters:
+`broadcast.js` has to be authenticated using HTTP Basic Auth using `admin` as username an the configured `PASSCODE` as password. It expects the following parameters:
 
-| Parameter | Description                                                                                                                    | Required |
-| :-------- | :----------------------------------------------------------------------------------------------------------------------------- | :------- |
-| `body`    | Message body to send to subscribers                                                                                            | Yes      |
-| `tag`     | Notify [tag](https://www.twilio.com/docs/notify/api/notification-resource#create-a-notification-resource) to filter broadcast. | No       |
+| Parameter      | Description                                 | Required |
+| :------------- | :------------------------------------------ | :------- |
+| `body`     | Message body to send to subscribers             | Yes |
+| `tag`      | Notify [tag](https://www.twilio.com/docs/notify/api/notification-resource#create-a-notification-resource) to filter broadcast. | No |
 
 `subscribe.js` expects the following parameters:
 
-| Parameter | Description                                                                                                                                        | Required |
-| :-------- | :------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
-| `to`      | Subscriber phone number. Used for identity.                                                                                                        | Yes      |
-| `code`    | One-time passcode sent via SMS.                                                                                                                    | Yes      |
-| `tags`    | Notify [tags](https://www.twilio.com/docs/notify/api/notification-resource#create-a-notification-resource) to filter broadcast. Defaults to 'all'. | No       |
+| Parameter      | Description                                 | Required |
+| :------------- | :------------------------------------------ | :------- |
+| `to`       | Subscriber phone number. Used for identity.     | Yes |
+| `code`     | One-time passcode sent via SMS.                 | Yes |
+| `tags`     | Notify [tags](https://www.twilio.com/docs/notify/api/notification-resource#create-a-notification-resource) to filter broadcast. Defaults to 'all'. | No |
 
 ## Setup
 
@@ -85,7 +84,7 @@ You will need the generated SID for this service to configure your environment i
 
 ### Deploy the Function template
 
-Add the Notify Service SID to the `.env` file as `BROADCAST_NOTIFY_SERVICE_SID` and the Verify Service SID as `VERIFY_SERVICE_SID`. Add any username and passcode for the admin that is permitted to send broadcast messages to the `.env` file as `AUTH_USERNAME` and `AUTH_PASSCODE`, respectively.
+Add the Notify Service SID to the `.env` file as `BROADCAST_NOTIFY_SERVICE_SID` and the Verify Service SID as `VERIFY_SERVICE_SID`. Add any passcode for the admin that is permitted to send broadcast messages to the `.env` file as `PASSCODE`.
 
 Deploy your functions and assets with the following command. Note: you must run this command from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
 
@@ -101,4 +100,4 @@ In a few moments your Function should be deployed! Grab its URL from the results
 
 Once the Function is deployed, people can subscribe via the form on `/subscribe.html`. Users can respond `stop/start` to use Twilio's built-in stop handling to opt a user out from, or back in to, receiving messages (check out this article for [further details on Twilio's built-in features for handling opt-out/in keywords](https://support.twilio.com/hc/en-us/articles/223134027-Twilio-support-for-opt-out-keywords-SMS-STOP-filtering-)).
 
-Administrators can use the form on `/broadcast.html` to send a message out to all subscribed users. This will send an OTP to the administrator for verification before broadcasting a message.
+Administrators can use the form on `/broadcast.html` to send a message out to all subscribed users. This will send an OTP to the administrator for verification before broadcasting a message.  

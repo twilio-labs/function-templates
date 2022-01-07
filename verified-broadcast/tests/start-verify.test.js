@@ -22,8 +22,7 @@ jest.mock('../assets/setup.private.js', () => {
 
 const testContext = {
   VERIFY_SERVICE_SID: 'default',
-  AUTH_USERNAME: 'admin',
-  AUTH_PASSCODE: 'test-code',
+  PASSCODE: 'test-code',
   BROADCAST_NOTIFY_SERVICE_SID: 'placeholder',
   TWILIO_PHONE_NUMBER: '+12223334444',
   getTwilioClient: () => mockClient,
