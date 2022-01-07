@@ -106,7 +106,7 @@ Every Quick Deploy app has a version field in its `package.json` that follows [s
 
 ## Testing
 
-### Testing the functionality of your new template locally
+### Manually testing the functionality of your new template locally
 
 1. Make sure you have the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart) installed.
 
@@ -128,7 +128,7 @@ twilio serverless:start
 twilio serverless:start --load-local-env
 ```
 
-### Running automated tests
+### Running automated unit tests
 
 The tests are written using [Jest](https://jestjs.io/). You can run the test suite by running:
 
@@ -147,6 +147,56 @@ or alternatively:
 ```bash
 npx jest --watch
 ```
+
+### E2E tests using Cypress
+
+#### Creating your first tests
+
+1. Add an `e2e.js` file to your template with the following content:
+
+```js
+const { runE2eTestSuite } = require("../_helpers/test-suite");
+
+runE2eTestSuite({
+  env: {
+    // put any environment variables for Twilio Functions here
+  }
+})
+```
+
+You can use the object to also define custom Cypress configuration options.
+
+2. Create a directory `cypress/integration` inside your template directory and add your Cypress test files there.
+
+3. In the `package.json` of your template add the following:
+
+```diff
+{
+  "version": "1.0.0",
+  "private": true,
+- "dependencies": {}
++ "dependencies": {},
++ "scripts": {
++   "e2e": "node e2e.js"
++ }
+}
+```
+
+4. In the project root `package.json` add your template name to the `workspaces` array. For example:
+
+```diff
+  "workspaces": [
+    "hello-world",
++   "my-template"
+  ]
+}
+```
+
+#### Running your E2E test suite
+
+If you only want to run your own template, in the template directory run `npm run e2e`.
+
+To run all E2E test suites, run in the root `npm run e2e`. This might take a while.
 
 #### Fix any repository verification test failures
 
