@@ -3,7 +3,6 @@
   "private": true,
   "dependencies": {
     "@twilio/runtime-handler": "1.2.0",
-    "@twilio-labs/runtime-helpers": "^0.1.2",
     "basic-auth": "^2.0.1",
     "tsscmp": "^1.0.6",
     "twilio": "^3.67.2"
