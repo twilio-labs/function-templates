@@ -46,7 +46,7 @@
     "log-symbols": "^3.0.0",
     "mailgun.js": "^3.3.0",
     "moment": "^2.24.0",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.1.1",
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
     "stripe": "^8.20.0",
