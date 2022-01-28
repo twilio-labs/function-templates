@@ -27,7 +27,7 @@ exports.handler = async function (context, event, callback) {
    */
 
   try {
-    if (typeof event.to === 'undefined') {
+    if (typeof event.to === 'undefined' || event.to.trim() === '') {
       throw new Error(
         "Missing 'to' parameter; please provide a phone number or email."
       );

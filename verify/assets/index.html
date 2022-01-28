@@ -165,13 +165,19 @@
     }
 
     function showEmailInput() {
-      document.getElementById("phone-input").style.display = "none";
-      document.getElementById("email-input").style.display = "block";
+      let phoneInput = document.getElementById("phone-input");
+      let emailInput = document.getElementById("email-input");
+
+      phoneInput.style.display = "none";
+      emailInput.style.display = "block";
     }
 
     function showPhoneNumberInput() {
-      document.getElementById("phone-input").style.display = "block";
-      document.getElementById("email-input").style.display = "none";
+      let phoneInput = document.getElementById("phone-input");
+      let emailInput = document.getElementById("email-input");
+
+      phoneInput.style.display = "block";
+      emailInput.style.display = "none";
     }
 
     function showModalStatus(message, color = "gray") {
@@ -182,18 +188,21 @@
 
     function showError(error) {
       console.error(error);
-      showStatus(error, (color = "#a94442"));
+      showStatus(error, { color: "#a94442" });
     }
 
-    function showStatus(message, color = "gray") {
+    function showStatus(message, options = { color: "gray" }) {
       let status = document.getElementById("status");
-      status.style.color = color;
+      status.style.color = options.color;
       status.textContent = message;
     }
 
     function clearStatus() {
-      document.getElementById("status").textContent = "";
-      document.getElementById("modal-status").textContent = "";
+      let status = document.getElementById("status");
+      let modalStatus = document.getElementById("modal-status");
+
+      status.textContent = "";
+      modalStatus.textContent = "";
     }
 
     const modal = document.getElementById("otp-modal");
@@ -223,8 +232,6 @@
         });
 
         const json = await response.json();
-
-        console.log(response.status)
 
         if (response.status == 429) {
           clearStatus();
@@ -256,12 +263,12 @@
 
     async function checkOtp(event) {
       event.preventDefault();
-      const code = document.getElementById("code").value;
-      showModalStatus(`Checking code ${code}...`);
+      let code = document.getElementById("code");
+      showModalStatus(`Checking code ${code.value}...`);
 
       const data = new URLSearchParams();
       data.append("to", to);
-      data.append("code", code);
+      data.append("code", code.value);
 
       try {
         const response = await fetch("./check-verify", {
@@ -273,23 +280,24 @@
 
         if (json.success) {
           showModalStatus("Verification success!", (color = "green"));
-          document.getElementById("code").value = "";
+          code.value = "";
         } else {
           showModalStatus("Incorrect token!", (color = "#a94442"));
-          document.getElementById("code").value = "";
+          code.value = "";
         }
       } catch (error) {
         console.error(error);
         showModalStatus("Something went wrong!");
-        document.getElementById("code").value = "";
+        code.value = "";
       }
     }
 
-    document
-      .getElementById("check-code")
-      .addEventListener("submit", (event) => checkOtp(event));
+    let checkCode = document.getElementById("check-code");
+    checkCode.addEventListener("submit", (event) => checkOtp(event));
 
-    document.getElementById("close").addEventListener("click", () => {
+    let closeButton = document.getElementById("close");
+    closeButton.addEventListener("click", () => {
+      clearStatus();
       modal.style.display = "none";
     });
 
