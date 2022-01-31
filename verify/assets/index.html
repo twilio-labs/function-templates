@@ -164,26 +164,25 @@
       return document.querySelector(checked).value;
     }
 
-    function showEmailInput() {
-      let phoneInput = document.getElementById("phone-input");
-      let emailInput = document.getElementById("email-input");
+    const phoneInputDiv = document.getElementById("phone-input");
+    const emailInputDiv = document.getElementById("email-input");
 
-      phoneInput.style.display = "none";
-      emailInput.style.display = "block";
+    function showEmailInput() {
+      phoneInputDiv.style.display = "none";
+      emailInputDiv.style.display = "block";
     }
 
     function showPhoneNumberInput() {
-      let phoneInput = document.getElementById("phone-input");
-      let emailInput = document.getElementById("email-input");
-
-      phoneInput.style.display = "block";
-      emailInput.style.display = "none";
+      phoneInputDiv.style.display = "block";
+      emailInputDiv.style.display = "none";
     }
 
-    function showModalStatus(message, color = "gray") {
-      let status = document.getElementById("modal-status");
-      status.style.color = color;
-      status.textContent = message;
+    const statusSpan = document.getElementById("status");
+    const modalStatusSpan = document.getElementById("modal-status");
+
+    function showModalStatus(message, options = {color: "gray"}) {
+      modalStatusSpan.style.color = options.color;
+      modalStatusSpan.textContent = message;
     }
 
     function showError(error) {
@@ -192,17 +191,13 @@
     }
 
     function showStatus(message, options = { color: "gray" }) {
-      let status = document.getElementById("status");
-      status.style.color = options.color;
-      status.textContent = message;
+      statusSpan.style.color = options.color;
+      statusSpan.textContent = message;
     }
 
     function clearStatus() {
-      let status = document.getElementById("status");
-      let modalStatus = document.getElementById("modal-status");
-
-      status.textContent = "";
-      modalStatus.textContent = "";
+      statusSpan.textContent = "";
+      modalStatusSpan.textContent = "";
     }
 
     const modal = document.getElementById("otp-modal");
@@ -238,7 +233,7 @@
           modal.style.display = "block";
           showModalStatus(
             `You have attempted to verify '${to}' too many times. If you received a code, enter it in the form. Otherwise, please wait 10 minutes and try again.`,
-            (color = "#a94442")
+            {color: "#a94442"}
           );
         } else if (response.status >= 400) {
           clearStatus();
@@ -279,10 +274,10 @@
         const json = await response.json();
 
         if (json.success) {
-          showModalStatus("Verification success!", (color = "green"));
+          showModalStatus("Verification success!", {color: "green"});
           code.value = "";
         } else {
-          showModalStatus("Incorrect token!", (color = "#a94442"));
+          showModalStatus("Incorrect token!", {color: "#a94442"});
           code.value = "";
         }
       } catch (error) {
