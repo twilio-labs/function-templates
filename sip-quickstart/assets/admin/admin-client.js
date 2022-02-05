@@ -14,7 +14,7 @@ class AdminClient {
       throw {
         statusCode: response.status,
         message: await response.text(),
-      };;
+      };
     }
   }
 
@@ -59,7 +59,7 @@ class AdminClient {
       );
       await this._handleResponse(response);
       return response.json();
-    } 
+    }
     return false;
   }
 
