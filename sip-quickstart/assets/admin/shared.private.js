@@ -21,14 +21,14 @@ function isAllowed(context, token) {
 }
 
 function checkAdminPassword(context, event, callback) {
-  const regex = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
+  const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
   if (!regex.test(process.env.ADMIN_PASSWORD)) {
     const response = new Twilio.Response();
     response.setStatusCode(500);
-    response.setBody('You must update your admin password.')
+    response.setBody('You must update your admin password.');
     callback(null, response);
     return false;
-  }; 
+  }
   return true;
 }
 

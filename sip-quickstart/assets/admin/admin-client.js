@@ -5,49 +5,42 @@ class AdminClient {
 
   async _handleResponse(response) {
     if (!response.ok) {
-      let formattedError = {
-        statusCode: response.status,
-        message: await response.text()
-      }
       if (response.status === 403) {
-        // formattedError.message ='Invalid token, resetting client';
         this.token = null;
         this.isReady = false;
       }
       // Throw an error
       // eslint-disable-next-line no-throw-literal
-      throw formattedError;
+      throw {
+        statusCode: response.status,
+        message: await response.text(),
+      };;
     }
   }
 
   async _post(url, obj) {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(obj),
-      });
-      await this._handleResponse(response);
-      return response.json();
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    });
+    await this._handleResponse(response);
+    return response.json();
   }
 
   async checkAdminPassword() {
-      const response = await fetch('./check-adminPassword');
-      await this._handleResponse(response);
-      return response.json();
+    const response = await fetch('./check-adminPassword');
+    await this._handleResponse(response);
+    return response.json();
   }
 
   async login(password) {
-    try { 
-      const result = await this._post('./login', { password });
-        this.token = result.token;
-        this.isReady = true;
-    } catch (err) {
-      throw err;
-    }
-
+    const result = await this._post('./login', { password });
+    this.token = result.token;
+    this.isReady = true;
     return this.token !== null;
   }
 
@@ -66,9 +59,8 @@ class AdminClient {
       );
       await this._handleResponse(response);
       return response.json();
-    } else {
-      return false;
-    }
+    } 
+    return false;
   }
 
   get token() {
