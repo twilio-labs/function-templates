@@ -5,7 +5,25 @@
   </head>
   <body>
     <div id="app">
-      <div class="login" v-if="!adminClient.isReady">
+
+      <div v-if="!defaultAdminPasswordChanged">
+        <h1>Change your admin password</h1>
+        <p>
+          Please take a moment to change your admin password.
+          <br><br>
+          You can do this by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.
+          <br><br>
+          The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
+          <br><br>
+          After you have edited and saved your <code>.env</code> file, please redeploy with the following command: 
+          <br><br>
+          <code>
+            twilio serverless:deploy
+          </code>
+        </p>
+      </div>
+
+      <div class="login" v-if="!adminClient.isReady && defaultAdminPasswordChanged">
         <h1>Password required</h1>
         <p>
           A password is required to update your environment. This can be found in your environment variables.
@@ -16,7 +34,8 @@
             <input type="password" name="password" v-model="password">
           </label>
           </div>
-          <button>Let me in</button>
+          <button :disabled="!password || !defaultAdminPasswordChanged">Let me in</button>
+          <p>{{ errorMessage }}</p>
         </form>
       </div>
       <div class="quickstart" v-if="adminClient.isReady">
@@ -33,17 +52,16 @@
           </ul>
         </div>
         <!-- Initialized environment -->
-        <div class="checklist" v-else>
+        <div class="checklist" v-if="environment.valid && environment.description">
           <h2>{{ environment.title }}</h2>
           <div v-html="md.render(environment.description)"></div>
           <h2>Configuration Checklist</h2>
-          <ul>
+          <ul v-if="statuses.length">
             <li v-for="status in statuses">
               <div 
                 v-bind:class="status.valid ? 'valid': 'invalid'" 
                 v-html="md.render(status.title)" class="title"></div>
               <p v-if="status.description" 
-    
                 v-html="md.render(status.description)" ></p>
               <ul v-if="status.actions" class="actions">
                 <li v-for="action in status.actions">
@@ -66,13 +84,17 @@
           adminClient: new AdminClient(),
           statuses: [],
           environment: {},
-          password: null
+          password: null, 
+          errorMessage: null, 
+          defaultAdminPasswordChanged: false
         },
         methods: {
           async refreshStatus() {
             const result = await this.adminClient.fetchState();
-            this.environment = result.environment;
-            this.statuses = result.statuses;
+            if (result) {
+              this.environment = result.environment;
+              this.statuses = result.statuses;
+            }
           },
           async performAction(action) {
             const message = await this.adminClient.postAction(action);
@@ -82,13 +104,26 @@
             this.refreshStatus();
           },
           async login() {
-            await this.adminClient.login(this.password);
-            await this.refreshStatus();
-            this.$forceUpdate();
-          }
+            this.errorMessage = null;
+              try { 
+                await this.adminClient.login(this.password);
+                await this.refreshStatus();
+                this.$forceUpdate();
+              } catch (err) {
+                this.errorMessage = `${err.statusCode}: ${err.message}`
+              }
+          }, 
         },
-        created() {
+        async created() {
           this.md = window.markdownit();
+
+          try {
+            await this.adminClient.checkAdminPassword();
+            this.defaultAdminPasswordChanged = true;
+          } catch (err) {
+            this.errorMessage = `${err.statusCode}: ${err.message}`
+          }
+
           this.refreshStatus();
         }
       });

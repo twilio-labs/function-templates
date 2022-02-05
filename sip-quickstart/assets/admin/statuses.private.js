@@ -394,8 +394,10 @@ async function getDefaultPasswordChanged(context) {
     Please take a moment to change your admin password from the provided default password. 
     
     You can do this by editing the \`ADMIN_PASSWORD\` value in the \`.env\` in the root of this project.
+
+    The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
     
-    After you have saved that file, please redeploy.
+    After you have edited and saved your \`.env\` file, please redeploy.
 
     \`\`\`bash
     twilio serverless:deploy

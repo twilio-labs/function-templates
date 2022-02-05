@@ -5,41 +5,49 @@ class AdminClient {
 
   async _handleResponse(response) {
     if (!response.ok) {
+      let formattedError = {
+        statusCode: response.status,
+        message: await response.text()
+      }
       if (response.status === 403) {
-        console.warn('Invalid token, resetting client');
+        // formattedError.message ='Invalid token, resetting client';
         this.token = null;
         this.isReady = false;
       }
       // Throw an error
       // eslint-disable-next-line no-throw-literal
-      throw {
-        statusCode: response.status,
-        message: await response.text(),
-      };
+      throw formattedError;
     }
   }
 
   async _post(url, obj) {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(obj),
-    });
-    await this._handleResponse(response);
-    return response.json();
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(obj),
+      });
+      await this._handleResponse(response);
+      return response.json();
+  }
+
+  async checkAdminPassword() {
+      const response = await fetch('./check-adminPassword');
+      await this._handleResponse(response);
+      return response.json();
   }
 
   async login(password) {
-    try {
+    try { 
       const result = await this._post('./login', { password });
-      this.token = result.token;
-      this.isReady = true;
+        this.token = result.token;
+        this.isReady = true;
     } catch (err) {
-      console.error(`${err.statusCode}: ${err.message}`);
+      throw err;
     }
+
     return this.token !== null;
   }
 
@@ -52,11 +60,15 @@ class AdminClient {
   }
 
   async fetchState() {
-    const response = await fetch(
-      `./check-status?token=${encodeURIComponent(this.token)}`
-    );
-    await this._handleResponse(response);
-    return response.json();
+    if (this.token) {
+      const response = await fetch(
+        `./check-status?token=${encodeURIComponent(this.token)}`
+      );
+      await this._handleResponse(response);
+      return response.json();
+    } else {
+      return false;
+    }
   }
 
   get token() {

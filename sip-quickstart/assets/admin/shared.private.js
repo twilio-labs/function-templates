@@ -20,6 +20,18 @@ function isAllowed(context, token) {
   return masterToken === token;
 }
 
+function checkAdminPassword(context, event, callback) {
+  const regex = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
+  if (!regex.test(process.env.ADMIN_PASSWORD)) {
+    const response = new Twilio.Response();
+    response.setStatusCode(500);
+    response.setBody('You must update your admin password.')
+    callback(null, response);
+    return false;
+  }; 
+  return true;
+}
+
 // Shortcuts by calling the callback with an error
 function checkAuthorization(context, event, callback) {
   if (!isAllowed(context, event.token)) {
@@ -126,6 +138,7 @@ function urlForSiblingPage(newPage, ...paths) {
 
 module.exports = {
   checkAuthorization,
+  checkAdminPassword,
   createToken,
   getCurrentEnvironment,
   getEnvironmentVariables,
