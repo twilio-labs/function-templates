@@ -1,21 +1,8 @@
 {
   "name": "contact-form",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "twilio-run",
-    "deploy": "twilio-run deploy"
-  },
   "dependencies": {
-    "@sendgrid/mail": "^7.6.0",
-    "@twilio/runtime-handler": "1.2.2",
-    "twilio": "^3.56"
-  },
-  "devDependencies": {
-    "twilio-run": "^3.4.1"
-  },
-  "engines": {
-    "node": "12"
+    "@sendgrid/mail": "^7.6.0"
   }
 }
