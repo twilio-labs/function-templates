@@ -38,6 +38,7 @@ This is the list of Functions available in this repo:
 - [Email Verification Magic Links](magic-links) - Send one-click email verification using Verify and SendGrid
 - [Verify Testing Dashboard](verify-dashboard) - Helpful dashboard for testing and debugging during your development with Twilio Verify.
 - [SMS verification retry best practices](verify-retry) - Best practices UI for resending SMS verification codes and voice channel fallback.
+- [Email contact form](contact-form) - an example contact form showing how to use the SendGrid email API to implement a contact form for your own site.
 
 ## Github Pages
 
