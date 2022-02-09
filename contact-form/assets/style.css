@@ -31,7 +31,7 @@ textarea {
 
 @media screen and (max-width: 640px) {
   input,
-  input[type="text"],
+  input[type='text'],
   textarea {
     width: 100%;
   }
