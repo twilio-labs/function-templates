@@ -27,10 +27,9 @@
  *    }
  *  }
  */
-const crypto = require('crypto');
-
 const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/missing-params.js'].path);
+const { digestMessage } = require(assets['/digest-message.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {
@@ -61,10 +60,10 @@ exports.handler = function (context, event, callback) {
 
   const client = context.getTwilioClient();
   const serviceSid = context.VERIFY_SERVICE_SID;
-  const identity = crypto
-    .createHash('sha256')
-    .update(event.identity)
-    .digest('hex');
+  const hashIdentity = context.IDENTITY_PROCESSING !== 'raw';
+  const identity = hashIdentity
+    ? digestMessage(event.identity)
+    : event.identity;
   const factorType = 'push';
 
   client.verify

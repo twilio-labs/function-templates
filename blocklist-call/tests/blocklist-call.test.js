@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const blocklistCall = require('../functions/blocklist-call').handler;
+const blocklistCall = require('../functions/blocklist-call.protected').handler;
 
 describe('blocklist in the context', () => {
   const context = {

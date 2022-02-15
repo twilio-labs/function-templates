@@ -65,8 +65,7 @@
           <h2>Broadcast a message</h2>
           <p>
             The application admin can send a message to subscribers using this
-            form. The admin will receive an SMS passcode to confirm before
-            messages are sent.
+            form.
           </p>
         </section>
         <section>
@@ -86,14 +85,11 @@
               <input type="radio" id="option2" name="tags" value="option2" />
               <label for="option2">Team Cake</label><br />
             </div>
-            <input type="submit" value="Send message" />
+            <label for="passcode">Admin Passcode</label>
+            <input type="password" id="passcode" required name="passcode"/>
+            <input class="button-primary" type="submit" value="Send message" />
           </form>
           <span id="status"></span>
-          <form id="otp" style="display: none">
-            <label for="code">Code</label>
-            <input type="text" id="code" />
-            <input type="submit" value="Confirm" />
-          </form>
         </section>
       </div>
     </main>
@@ -107,39 +103,14 @@
       document.getElementById("status").textContent = error;
     }
 
-    function sendVerificationToken(event) {
-      event.preventDefault();
-
-      fetch("./start-verify")
-        .then((response) => response.json())
-        .then((json) => {
-          if (json.success) {
-            document.getElementById("intro").style.display = "none";
-            document.getElementById("broadcast").style.display = "none";
-
-            document.getElementById("status").textContent =
-              "Successfully sent token. Enter token sent to Admin to broadcast message.";
-
-            // show OTP form
-            document.getElementById("otp").style.display = "flex";
-          } else {
-            logError(json.error);
-          }
-        })
-        .catch((error) => {
-          logError(error);
-        });
-    }
-
-    function verify(event) {
+    function broadcast(event) {
       event.preventDefault();
 
       const body = document.getElementById("message-body").value;
-      const code = document.getElementById("code").value;
+      const passcode = document.getElementById("passcode").value;
 
       const data = new URLSearchParams();
       data.append("body", body);
-      data.append("code", code);
 
       var tag = document.querySelector('input[name="tags"]:checked').value;
       data.append("tag", tag);
@@ -147,16 +118,17 @@
       fetch("./broadcast", {
         method: "POST",
         body: data,
+        headers: {
+          Authorization: `Basic ${btoa(`admin:${passcode}`)}`
+        }
       })
         .then((response) => response.json())
         .then((json) => {
           if (json.success) {
-            document.getElementById("otp").style.display = "none";
             document.getElementById("status").innerHTML =
               `<p>Successfully sent message to subscribers. <a href="/broadcast.html">Send another message.</a></p>`
           } else {
             logError(json.error);
-            // allow another OTP attempt
           }
         })
         .catch((error) => {
@@ -166,8 +138,6 @@
 
     document
       .getElementById("broadcast")
-      .addEventListener("submit", sendVerificationToken);
-
-    document.getElementById("otp").addEventListener("submit", verify);
+      .addEventListener("submit", broadcast);
   </script>
 </html>
