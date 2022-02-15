@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const helloVoice = require('../functions/hello-messaging').handler;
+const helloVoice = require('../functions/hello-messaging.protected').handler;
 const Twilio = require('twilio');
 
 const context = {};

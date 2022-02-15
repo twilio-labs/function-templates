@@ -13,35 +13,38 @@ const mockClient = {
   },
 };
 
+const mockSetupResources = jest.fn(async () => true);
+jest.mock('../assets/setup.private.js', () => {
+  return {
+    setupResourcesIfRequired: mockSetupResources,
+  };
+});
+
 const testContext = {
   VERIFY_SERVICE_SID: 'default',
-  BROADCAST_ADMIN_NUMBER: '+12223334444',
+  PASSCODE: 'test-code',
+  BROADCAST_NOTIFY_SERVICE_SID: 'placeholder',
+  TWILIO_PHONE_NUMBER: '+12223334444',
   getTwilioClient: () => mockClient,
 };
 
 describe('verified-broadcast/start-verify', () => {
   beforeAll(() => {
-    helpers.setup({});
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset('/setup.js', '../assets/setup.private.js');
+    helpers.setup(testContext, runtime);
   });
   afterAll(() => {
     helpers.teardown();
   });
 
-  test("uses admin number if 'to' parameter isn't provided", (done) => {
+  test("fails if 'to' parameter isn't provided", (done) => {
     const callback = (err, result) => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
-      expect(result._body.success).toEqual(true);
-      expect(mockClient.verify.services).toHaveBeenCalledWith(
-        testContext.VERIFY_SERVICE_SID
-      );
-      const expectedContext = {
-        channel: 'sms',
-        to: testContext.BROADCAST_ADMIN_NUMBER,
-      };
-      expect(mockService.verifications.create).toHaveBeenCalledWith(
-        expectedContext
-      );
+      expect(result._statusCode).toBe(400);
+      expect(result._body.success).toEqual(false);
+      expect(result._body.error).toEqual('Missing "to" parameter');
       done();
     };
     const event = {};

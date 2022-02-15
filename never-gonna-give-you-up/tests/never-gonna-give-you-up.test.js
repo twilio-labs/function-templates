@@ -1,5 +1,5 @@
 const neverGonnaGiveYouUp =
-  require('../functions/never-gonna-give-you-up').handler;
+  require('../functions/never-gonna-give-you-up.protected').handler;
 const helpers = require('../../test/test-helper');
 
 describe('', () => {

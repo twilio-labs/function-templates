@@ -57,6 +57,10 @@ This script will prompt you for a couple of questions and set up a basic templat
 
 It will create a directory with the name you specified. In there you'll find a `functions/` directory with two functions. A `blank.js` file with the basic structure of a Twilio Function and a `hello-messaging.protected.js` that acts as a "protected" Function. Meaning once it's deployed it will not be accessible without a [valid `X-Twilio-Signature` header](https://www.twilio.com/docs/usage/webhooks/webhooks-security#validating-signatures-from-twilio). Protected Functions are best used to respond to Twilio webhooks.
 
+### Using the runtime-helpers library
+
+One of the default dependencies for new function templates is the `runtime-helpers` library, which is a Twilio project that provides easy-to-use, tested implementations of various common Function building blocks and utlities. We recommend using the shared `runtime-helpers` version of a feature whenever it exists. Full documentation for the `runtime-helpers` API and feature set is available in [this reference](https://twilio-labs.github.io/runtime-helpers/).
+
 ### Adding external dependencies (npm)
 
 If you want to use external dependencies in your template, add them to the `package.json` inside your template's directory. You'll also have to install the same dependency as a `devDependency` in the root of the project. For example if we want to add the `twilio-video` library in the `video-token` template we would run:
@@ -92,13 +96,17 @@ If your app has a front-end component to it, you can override the existing `inde
 
 In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
 
+### Adding yourself to `.owners`
+
+Each app has a `.owners` file in its root directory. This file is a list of Github usernames that will be assigned as reviewers on any PR that involves changes to that app. Add your Github username to the bottom of this file, replacing the comment `# Insert your Github username here`.
+
 ### Versioning and `CHANGELOG.md`
 
 Every Quick Deploy app has a version field in its `package.json` that follows [semantic versioning](https://semver.org/), and a `CHANGELOG.md` file that uses the [keep a changelog](https://keepachangelog.com/en/1.0.0/) format. Initially your app will be at version 1.0.0. If you are updating an app that has already been published to Code Exchange, please increment its version number according to the semantic versioning specification, and update its changelog with the changes you have made to the app since its last version. Versioning your app before it gets deployed by users will help isolate issues in a particular version of the app, and will also enable your app to take advantage of a future update mechanism for deployed apps.
 
 ## Testing
 
-### Testing the functionality of your new template locally
+### Manually testing the functionality of your new template locally
 
 1. Make sure you have the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart) installed.
 
@@ -120,7 +128,7 @@ twilio serverless:start
 twilio serverless:start --load-local-env
 ```
 
-### Running automated tests
+### Running automated unit tests
 
 The tests are written using [Jest](https://jestjs.io/). You can run the test suite by running:
 
@@ -139,6 +147,56 @@ or alternatively:
 ```bash
 npx jest --watch
 ```
+
+### E2E tests using Cypress
+
+#### Creating your first tests
+
+1. Add an `e2e.js` file to your template with the following content:
+
+```js
+const { runE2eTestSuite } = require("../_helpers/test-suite");
+
+runE2eTestSuite({
+  env: {
+    // put any environment variables for Twilio Functions here
+  }
+})
+```
+
+You can use the object to also define custom Cypress configuration options.
+
+2. Create a directory `cypress/integration` inside your template directory and add your Cypress test files there.
+
+3. In the `package.json` of your template add the following:
+
+```diff
+{
+  "version": "1.0.0",
+  "private": true,
+- "dependencies": {}
++ "dependencies": {},
++ "scripts": {
++   "e2e": "node e2e.js"
++ }
+}
+```
+
+4. In the project root `package.json` add your template name to the `workspaces` array. For example:
+
+```diff
+  "workspaces": [
+    "hello-world",
++   "my-template"
+  ]
+}
+```
+
+#### Running your E2E test suite
+
+If you only want to run your own template, in the template directory run `npm run e2e`.
+
+To run all E2E test suites, run in the root `npm run e2e`. This might take a while.
 
 #### Fix any repository verification test failures
 
