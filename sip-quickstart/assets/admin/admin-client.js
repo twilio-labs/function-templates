@@ -15,13 +15,12 @@ class AdminClient {
         this.token = null;
         this.isReady = false;
 
-        const adminPasswordError = {
+        // eslint-disable-next-line no-throw-literal
+        throw  {
           statusCode: response.status,
           message: responseBody.message,
           consoleUrl: responseBody.consoleUrl,
         };
-
-        throw adminPasswordError;
       }
       // Throw an error
       // eslint-disable-next-line no-throw-literal
