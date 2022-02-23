@@ -5,24 +5,28 @@
   </head>
   <body>
     <div id="app">
-
-      <div v-if="!defaultAdminPasswordChanged">
+      <div v-if="!defaultAdminPasswordChanged && errorMessage">
         <h1>Change your admin password</h1>
         <p>
           Please take a moment to change your admin password.
           <br><br>
-          You can do this by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.
-          <br><br>
-          The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
-          <br><br>
-          After you have edited and saved your <code>.env</code> file, please redeploy with the following command: 
-          <br><br>
-          <code>
-            twilio serverless:deploy
-          </code>
+            The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
+          <div v-if="consoleUrl">
+            You can do this by editing the <code>ADMIN_PASSWORD</code> value on the <a :href="consoleUrl" target="_blank">Environment tab of your Functions editor</a>.
+            <br><br>
+            After updating environment variables, you must redepoy your application by pressing the <strong>Deploy All</strong> button in your Functions editor.
+          </div>
+          <div v-if="consoleUrl === null">
+            You can do this by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.
+            <br><br>
+            After you have edited and saved your <code>.env</code> file, please redeploy with the following command: 
+            <br><br>
+            <code>
+              twilio serverless:deploy
+            </code>
+          </div>
         </p>
       </div>
-
       <div class="login" v-if="!adminClient.isReady && defaultAdminPasswordChanged">
         <h1>Password required</h1>
         <p>
@@ -86,7 +90,8 @@
           environment: {},
           password: null, 
           errorMessage: null, 
-          defaultAdminPasswordChanged: false
+          defaultAdminPasswordChanged: false,
+          consoleUrl: null
         },
         methods: {
           async refreshStatus() {
@@ -120,10 +125,13 @@
           try {
             await this.adminClient.checkAdminPassword();
             this.defaultAdminPasswordChanged = true;
+
           } catch (err) {
             this.errorMessage = `${err.statusCode}: ${err.message}`
+            if (err.consoleUrl) {
+              this.consoleUrl = err.consoleUrl
+            }
           }
-
           this.refreshStatus();
         }
       });

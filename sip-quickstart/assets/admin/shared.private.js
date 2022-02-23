@@ -20,17 +20,33 @@ function isAllowed(context, token) {
   return masterToken === token;
 }
 
-function checkAdminPassword(context, event, callback) {
+async function checkAdminPassword(context, event, callback) {
   const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
+
   if (!regex.test(process.env.ADMIN_PASSWORD)) {
+    const env = await getCurrentEnvironment(context);
+    let consoleUrl = null;  
+    if (env) {
+      const client = context.getTwilioClient();
+      const service = await client.serverless.services(env.serviceSid).fetch();
+      if (service.uiEditable) {
+        consoleUrl = `https://console.twilio.com/service/functions/${env.serviceSid}/runtime-functions-editor?currentFrameUrl=%2Fconsole%2Ffunctions%2Feditor%2F${env.serviceSid}%2Fenvironment%2F${env.sid}%2Fconfig%2Fvariables`
+      }
+    }
+
     const response = new Twilio.Response();
     response.setStatusCode(500);
-    response.setBody('You must update your admin password.');
+    response.setBody(JSON.stringify({ 
+        message: 'You must update your admin password.', 
+        consoleUrl
+    }));
     callback(null, response);
     return false;
   }
   return true;
 }
+
+
 
 // Shortcuts by calling the callback with an error
 function checkAuthorization(context, event, callback) {
