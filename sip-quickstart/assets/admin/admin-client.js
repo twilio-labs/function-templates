@@ -11,7 +11,6 @@ class AdminClient {
       }
 
       if (response.status === 500) {
-
         const responseBody = response.json();
         this.token = null;
         this.isReady = false;
@@ -19,10 +18,10 @@ class AdminClient {
         const adminPasswordError = {
           statusCode: response.status,
           message: responseBody.message,
-          consoleUrl: responseBody.consoleUrl
-        }
+          consoleUrl: responseBody.consoleUrl,
+        };
 
-        throw adminPasswordError
+        throw adminPasswordError;
       }
       // Throw an error
       // eslint-disable-next-line no-throw-literal
