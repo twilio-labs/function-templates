@@ -141,8 +141,8 @@
             </div>
           </div>
         </section>
+        <!-- EDIT_CODE_V2 -->
       </div>
-      <!-- EDIT_CODE_V2 -->
     </main>
     <footer>
       <span>We can't wait to see what you build.</span>
@@ -213,7 +213,10 @@
         channel == "call" ? "☎️ calling..." : "Sending verification code...";
       showStatus(statusMessage);
 
-      to = phoneInput.getNumber();
+      to =
+        channel == "email"
+          ? document.getElementById("email").value
+          : phoneInput.getNumber();
 
       const data = new URLSearchParams();
       data.append("channel", channel);
