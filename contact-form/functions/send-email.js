@@ -32,7 +32,7 @@ exports.handler = async function (context, event, callback) {
     to: context.TO_EMAIL_ADDRESS,
     from: { email: context.FROM_EMAIL_ADDRESS, name: 'Your contact form' },
     replyTo: event.from,
-    subject: `[contactform] ${event.subject}`,
+    subject: `[contactform] ${event.subject || ''}`.trim(),
     text: `New email from ${event.from}.\n\n${event.content}`,
   };
 

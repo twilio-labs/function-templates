@@ -29,20 +29,55 @@ afterAll(() => {
 
 describe('send email', () => {
   it('returns 200 response when it successfully sends an email', (done) => {
+    const event = {
+      from: 'from2@example.com',
+      content: 'Hello',
+      subject: 'This is a subject',
+    };
+
     const callback = (_err, result) => {
       expect(result).toBeInstanceOf(Twilio.Response);
       expect(result._statusCode).toEqual(200);
       expect(result._body.success).toBe(true);
       expect(setApiKeyMock).toHaveBeenCalled();
+      expect(sendMock).toHaveBeenCalledWith({
+        to: context.TO_EMAIL_ADDRESS,
+        from: { email: context.FROM_EMAIL_ADDRESS, name: 'Your contact form' },
+        replyTo: event.from,
+        subject: `[contactform] ${event.subject}`,
+        text: `New email from ${event.from}.\n\n${event.content}`,
+      });
       done();
     };
 
     sendMock.mockResolvedValue(() => ({}));
 
+    sendEmail(context, event, callback);
+  });
+
+  it('returns 200 response when it successfully sends an email without a subject', (done) => {
     const event = {
       from: 'from2@example.com',
       content: 'Hello',
     };
+
+    const callback = (_err, result) => {
+      expect(result).toBeInstanceOf(Twilio.Response);
+      expect(result._statusCode).toEqual(200);
+      expect(result._body.success).toBe(true);
+      expect(setApiKeyMock).toHaveBeenCalled();
+      expect(sendMock).toHaveBeenCalledWith({
+        to: context.TO_EMAIL_ADDRESS,
+        from: { email: context.FROM_EMAIL_ADDRESS, name: 'Your contact form' },
+        replyTo: event.from,
+        subject: `[contactform]`,
+        text: `New email from ${event.from}.\n\n${event.content}`,
+      });
+      done();
+    };
+
+    sendMock.mockResolvedValue(() => ({}));
+
     sendEmail(context, event, callback);
   });
 
