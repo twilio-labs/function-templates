@@ -289,6 +289,11 @@
       "id": "lookup",
       "name": "Phone Number Lookup",
       "description": "Detect invalid phone numbers and get carrier and caller name information with this interface to Twilio's Lookup API."
+    },
+    {
+      "id": "contact-form",
+      "name": "Email contact form",
+      "description": "A contact form that uses SendGrid to send emails"
     }
   ]
 }
