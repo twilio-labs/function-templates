@@ -55,7 +55,7 @@
     "turbo": "^1.0.24",
     "twilio": "^3.64.0",
     "uuid": "^8.3.2",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "jest": {
     "testEnvironment": "node",
