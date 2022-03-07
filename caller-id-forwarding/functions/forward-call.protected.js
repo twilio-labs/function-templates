@@ -18,8 +18,6 @@ Carrier: ${carrierName} (${lookup.carrier.type})`;
       from: context.TWILIO_PHONE_NUMBER,
       to: context.MY_PHONE_NUMBER,
     });
-
-    return callback(null, twiml);
   } catch (error) {
     console.error(error);
   } finally {
