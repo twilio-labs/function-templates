@@ -294,6 +294,11 @@
       "id": "contact-form",
       "name": "Email contact form",
       "description": "A contact form that uses SendGrid to send emails"
+    },
+    {
+      "id": "caller-id-forwarding",
+      "name": "Caller ID with call forwarding",
+      "description": "Set up a Twilio number to forward calls and receive an SMS with caller ID information when a call comes in."
     }
   ]
 }
