@@ -16,7 +16,6 @@ jobs:
       - name: generate doc
         run: |
           node ./templateDocs.js
-          git add ./docs/templates.md
       - name: check for changes
         id: changes
         run: |
