@@ -1,0 +1,32 @@
+name: Generate template doc
+
+on:
+  push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: generate doc
+        run: |
+          node ./templateDocs.js
+          git add ./docs/templates.md
+      - name: check for changes
+        id: changes
+        run: |
+          git diff --name-only | xargs
+          echo "::set-output name=files::$(git diff --name-only | xargs)"
+      - name: commit changes
+        if: ${{ contains(steps.changes.outputs.files, 'docs/templates.md') }}
+        run: |
+          git config user.name twilio-labs-ci
+          git config user.email 65686990+twilio-labs-ci@users.noreply.github.com
+          git add docs/templates.md
+          git commit -m "chore(docs): update templates doc"
+          git push
