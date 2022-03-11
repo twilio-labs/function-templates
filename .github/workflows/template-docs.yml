@@ -1,7 +1,9 @@
 name: Generate template doc
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   build:
