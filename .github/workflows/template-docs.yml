@@ -17,7 +17,7 @@ jobs:
           node-version: 12
       - name: generate doc
         run: |
-          node ./templateDocs.js
+          node ./_helpers/template-docs.js
       - name: check for changes
         id: changes
         run: |

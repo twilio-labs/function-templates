@@ -14,7 +14,7 @@ Each Function lives in its own directory within this repo. The easiest way to us
 
 ## Available Functions
 
-[Complete list of available functions](./docs/templates.md)
+[Complete list of available functions](docs/templates.md)
 
 ## Github Pages
 
