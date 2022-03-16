@@ -44,7 +44,7 @@
   </head>
   <body>
     <div class="container">
-      <h2>Twilio Verify Push</h2>
+      <h2>Twilio Verify Push for the Authy app</h2>
       <div>
         <p>Welcome! Your live application with Twilio is ready to use!</p>
         <p>This application has multiple uses:</p>
@@ -66,8 +66,8 @@
         </p>
         <form id="get-qr-code">
           <div class="form-group">
-            <label for="factor-identity">Identity</label>
-            <input type="text" id="factor-identity" class="form-control" />
+            <label for="access-token-identity">Identity</label>
+            <input type="text" id="access-token-identity" class="form-control" />
           </div>
           <div class="form-group">
             <label for="factor-friendly-name">Factor friendly name</label>
@@ -311,7 +311,7 @@
     $("#get-qr-code").submit(function (event) {
       event.preventDefault();
 
-      const identity = $("#factor-identity").val()
+      const identity = $("#access-token-identity").val()
       const factorFriendlyName = $("#factor-friendly-name").val()
       const data = new URLSearchParams();
       data.append("identity", identity);
