@@ -38,7 +38,6 @@ exports.handler = async function (context, event, callback) {
 
   try {
     await sg.send(msg);
-    const response = new Twilio.Response();
     response.setStatusCode(200);
     response.setBody({ success: true });
     return callback(null, response);
