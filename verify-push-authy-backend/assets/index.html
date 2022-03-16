@@ -324,6 +324,7 @@
       })
         .then((resp) => resp.json())
         .then((respJson) => {
+          $("#qr-code").empty();
           $("#qr-code").append(respJson.uri);
           var elem = document.createElement("img");
           elem.setAttribute("src",respJson.qr);
