@@ -157,13 +157,14 @@
             console.log(data);
             setStatus(data.error, "error");
           }
-          sendButton.removeAttribute("disabled");
         } catch (error) {
           setStatus(
             "There was an error and the message could not be sent. Sorry.",
             "error"
           );
           console.log(error);
+        } finally {
+          sendButton.removeAttribute("disabled");
         }
       });
     </script>
