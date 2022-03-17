@@ -134,7 +134,7 @@ describe('CI template verification', () => {
       });
     });
 
-    describe('its .env.example (or .env) file', () => {
+    describe('its .env.example (or .env) file and webhooks', () => {
       const envFile = () =>
         new Promise((resolve, reject) => {
           const envExamplePath = path.join(
@@ -188,6 +188,42 @@ describe('CI template verification', () => {
             if (v.configurable) {
               throw new Error(`${v.key} should not be configurable`);
             }
+          });
+      });
+
+      it('should have webhooks that exist with the correct visibility', async () => {
+        const result = await parser.parseFile(await envFile());
+        const varRegex = /^TWILIO_.*_WEBHOOK_URL$/;
+        const excludedTemplates = ['hunt'];
+
+        if (excludedTemplates.includes(template)) {
+          return;
+        }
+
+        result.variables
+          .filter((v) => varRegex.test(v.key))
+          .forEach(async (v) => {
+            const webhookFile = path.join(
+              projectRoot,
+              template,
+              'functions',
+              `${v.default}.protected.js`
+            );
+            const findProtected = new Promise((resolve, reject) => {
+              fs.access(webhookFile, fs.constants.F_OK, (err) => {
+                if (err) {
+                  reject(
+                    new Error(
+                      `Expected the webhook ${v.default} for the template ${template} to exist with protected visibility`
+                    )
+                  );
+                } else {
+                  resolve();
+                }
+              });
+            });
+
+            await findProtected;
           });
       });
     });

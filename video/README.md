@@ -10,11 +10,13 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable     | Description                                                                       | Required |
-| :----------- | :-------------------------------------------------------------------------------- | :------- |
-| `API_KEY`    | Twilio API Key. Create one here (https://www.twilio.com/console/runtime/api-keys) | Yes      |
-| `API_SECRET` | Twilio API Secret corresponding to your API Key                                   | Yes      |
-| `PASSCODE`   | A passcode to gate your video call                                                | Yes      |
+| Variable      | Description                                                                       | Required |
+| :------------ | :-------------------------------------------------------------------------------- | :------- |
+| `ACCOUNT_SID` | Find in the [console](https://www.twilio.com/console)                             | Yes      |
+| `API_KEY`     | Twilio API Key. Create one here (https://www.twilio.com/console/runtime/api-keys) | Yes      |
+| `API_SECRET`  | Twilio API Secret corresponding to your API Key                                   | Yes      |
+| `ROOM_NAME`   | A room name to identify your video call                                           | Yes      |
+| `PASSCODE`    | A passcode to gate your video call                                                | Yes      |
 
 ### Function Parameters
 

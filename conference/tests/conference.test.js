@@ -1,4 +1,4 @@
-const conference = require('../functions/conference').handler;
+const conference = require('../functions/conference.protected').handler;
 const helpers = require('../../test/test-helper');
 
 describe('simple conference', () => {

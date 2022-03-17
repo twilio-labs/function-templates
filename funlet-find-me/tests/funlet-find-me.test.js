@@ -1,4 +1,4 @@
-const funlet = require('../functions/funlet-find-me');
+const funlet = require('../functions/funlet-find-me.protected');
 const runtime = require('../../test/test-helper');
 const Twilio = require('twilio');
 

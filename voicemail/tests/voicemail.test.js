@@ -7,7 +7,7 @@ jest.mock('moment', () => {
 });
 
 const helpers = require('../../test/test-helper');
-const voicemailFunction = require('../functions/voicemail').handler;
+const voicemailFunction = require('../functions/voicemail.protected').handler;
 const Twilio = require('twilio');
 
 let context = {};

@@ -67,7 +67,7 @@ If for some reason you are constraint to not using the Twilio CLI, you can use t
 
 ### Step 1: Pick your template
 
-You can find a list of templates by visiting the [`function-templates` GitHub repository](https://github.com/twilio-labs/function-templates). Most of the top level directories except `docs`, `test` or anything prefixed with `_` or `.` are templates. You can also find a full list with descriptions in the [`templates.json` file](./templates.json).
+You can find a list of templates by visiting the [`function-templates` GitHub repository](https://github.com/twilio-labs/function-templates). Most of the top level directories except `docs`, `test` or anything prefixed with `_` or `.` are templates. You can also find a full list with descriptions in the [`templates.json` file](../templates.json).
 
 Open the respective template directory for your template. For example [`verify/`](verify/).
 

@@ -1,0 +1,8 @@
+{
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "twilio": "^3.67.2",
+    "uuid": "^8.3.2"
+  }
+}

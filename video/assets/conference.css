@@ -1,0 +1,93 @@
+div.page-top {
+  border-bottom: 1px solid gray;
+}
+
+div.self-view {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+div#permissions-help {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 2em;
+  max-width: 300px;
+}
+
+div#permissions-help > img {
+  margin-bottom: 0.5em;
+}
+
+input.conference-passcode {
+  width: 320px;
+  margin-right: 1em;
+}
+
+span.conference-connected {
+  font-weight: bold;
+  width: 320px;
+  margin-right: 1em;
+}
+
+section#participants {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  width: 100%;
+  align-items: flex-start;
+}
+
+section#participants > h4 {
+  align-self: stretch;
+  width: 100%;
+}
+
+section#participants > div > video {
+  width: 320px;
+  margin: 0.25em;
+}
+
+div.conference-banner-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-left: -25%;
+}
+
+div.conference-banner {
+  display: flex;
+  flex-direction: row;
+  max-width: 75%;
+}
+
+div.conference-banner > img {
+  align-self: center;
+}
+
+div.conference-banner > div {
+  flex-direction: column;
+  margin-left: 2em;
+}
+
+div.conference-banner > div > svg {
+  margin-top: 1em;
+}
+
+div.conference-banner > div > h1 {
+  font-weight: normal;
+  font-size: 28px;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+div.conference-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: #121c2d;
+  padding: 50px 0;
+  margin-top: 2rem;
+}

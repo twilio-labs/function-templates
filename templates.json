@@ -161,6 +161,11 @@
       "description": "Set up a sample client-side Twilio web application"
     },
     {
+      "id": "voice-javascript-sdk",
+      "name": "Voice JavaScript SDK Sample Application",
+      "description": "Set up a sample client-side Twilio web application with Twilio Voice JS SDK v2"
+    },
+    {
       "id": "conversations",
       "name": "conversations",
       "description": "These Functions generate a Conversations-scoped webhook so that you can integrate Twilio Studio with Twilio Conversations."
@@ -209,6 +214,11 @@
       "id": "verify-dashboard",
       "name": "Verify Testing Dashboard",
       "description": "Helpful dashboard for testing and debugging during your development with Twilio Verify."
+    },
+    {
+      "id": "verify-totp",
+      "name": "Authenticator app (TOTP) authentication",
+      "description": "Use authenticator apps like Authy or Google Authenticator that support Time-based One-Time Passwords (TOTP) with the Verify API."
     },
     {
       "id": "verify-retry",
@@ -274,6 +284,21 @@
       "id": "patient-appointment-management",
       "name": "Patient Appointment Management",
       "description": "Patient Appointment Management including notification and reminders sent via SMS"
+    },
+    {
+      "id": "lookup",
+      "name": "Phone Number Lookup",
+      "description": "Detect invalid phone numbers and get carrier and caller name information with this interface to Twilio's Lookup API."
+    },
+    {
+      "id": "contact-form",
+      "name": "Email contact form",
+      "description": "A contact form that uses SendGrid to send emails"
+    },
+    {
+      "id": "caller-id-forwarding",
+      "name": "Caller ID with call forwarding",
+      "description": "Set up a Twilio number to forward calls and receive an SMS with caller ID information when a call comes in."
     }
   ]
 }
