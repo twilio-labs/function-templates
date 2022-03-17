@@ -1,0 +1,56 @@
+main {
+  padding-top: 40px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-start;
+  width: 75%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+div.content {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
+}
+
+label {
+  display: block;
+}
+
+input,
+textarea {
+  box-sizing: border-box;
+  font: inherit;
+  border: 1px solid rgb(136, 145, 170);
+  border-radius: 4px;
+  padding: 0.6rem;
+  width: 50%;
+}
+
+@media screen and (max-width: 640px) {
+  input,
+  input[type='text'],
+  textarea {
+    width: 100%;
+  }
+}
+
+.form-field {
+  padding: 1rem 0;
+}
+
+.status {
+  color: #fff;
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+
+.status.success {
+  background-color: rgb(20, 176, 83);
+}
+
+.status.error {
+  background-color: rgb(214, 31, 31);
+}

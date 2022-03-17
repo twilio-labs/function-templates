@@ -1591,6 +1591,60 @@
         "contentKey": null
       }
     ],
-    "lookup": []
+    "lookup": [],
+    "contact-form": [
+      {
+        "key": "SENDGRID_API_KEY",
+        "required": true,
+        "format": "secret",
+        "description": "Your SendGrid API key",
+        "link": "https://sendgrid.com/docs/ui/account-and-settings/api-keys/",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TO_EMAIL_ADDRESS",
+        "required": true,
+        "format": "email",
+        "description": "Messages submitted through the contact form will be sent to this email address",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FROM_EMAIL_ADDRESS",
+        "required": true,
+        "format": "email",
+        "description": "Messages submitted through the contact form will be sent from this email address",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "caller-id-forwarding": [
+      {
+        "key": "MY_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Calls made to your Twilio number will get forwarded to this e164-formatted phone number",
+        "link": "https://www.twilio.com/docs/glossary/what-e164",
+        "default": "+12223334444",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_VOICE_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/forward-call",
+        "configurable": false,
+        "contentKey": null
+      }
+    ]
   }
 }

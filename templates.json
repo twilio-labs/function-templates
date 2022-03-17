@@ -289,6 +289,16 @@
       "id": "lookup",
       "name": "Phone Number Lookup",
       "description": "Detect invalid phone numbers and get carrier and caller name information with this interface to Twilio's Lookup API."
+    },
+    {
+      "id": "contact-form",
+      "name": "Email contact form",
+      "description": "A contact form that uses SendGrid to send emails"
+    },
+    {
+      "id": "caller-id-forwarding",
+      "name": "Caller ID with call forwarding",
+      "description": "Set up a Twilio number to forward calls and receive an SMS with caller ID information when a call comes in."
     }
   ]
 }
