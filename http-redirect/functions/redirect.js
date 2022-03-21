@@ -6,6 +6,7 @@
  */
 exports.handler = function (context, event, callback) {
   const response = new Twilio.Response();
+  response.setStatusCode(302);
   response.appendHeader('Location', context.HTTP_REDIRECT_URL);
   callback(null, response);
 };
