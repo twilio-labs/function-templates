@@ -27,6 +27,7 @@
     "@twilio/runtime-handler": "1.2.0",
     "airtable": "^0.11.0",
     "aws-sdk": "^2.925.0",
+    "axios": "0.26.1",
     "basic-auth": "^2.0.1",
     "common-tags": "^1.8.0",
     "configure-env": "^2.0.0-1",
@@ -53,7 +54,7 @@
     "stripe": "^8.20.0",
     "tsscmp": "^1.0.6",
     "turbo": "^1.0.24",
-    "twilio": "^3.64.0",
+    "twilio": "3.75.1",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"
   },
