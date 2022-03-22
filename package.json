@@ -27,7 +27,6 @@
     "@twilio/runtime-handler": "1.2.0",
     "airtable": "^0.11.0",
     "aws-sdk": "^2.925.0",
-    "axios": "0.26.1",
     "basic-auth": "^2.0.1",
     "common-tags": "^1.8.0",
     "configure-env": "^2.0.0-1",
