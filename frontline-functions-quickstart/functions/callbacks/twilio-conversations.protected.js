@@ -35,13 +35,9 @@ const setCustomerParticipantProperties = async (
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   console.log('((( Conversations Callback )))) ');
-  console.log('CONTEXT: ', JSON.stringify(context));
-  console.log('EVENT: ', JSON.stringify(event));
-  console.log('CALLBACK: ', callback);
 
   const client = context.getTwilioClient();
 
-  console.log('context.getTwilioClient(): ', client);
   const eventType = event.EventType;
 
   switch (eventType) {
@@ -62,7 +58,6 @@ exports.handler = async function (context, event, callback) {
        */
       const customerNumber = event['MessagingBinding.Address'];
       const isIncomingConversation = Boolean(customerNumber);
-      console.log('new incoming conversation ', isIncomingConversation);
 
       if (isIncomingConversation) {
         try {

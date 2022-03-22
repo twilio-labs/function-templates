@@ -46,7 +46,6 @@ exports.handler = async function (context, event, callback) {
   const twilioClient = context.getTwilioClient();
 
   console.log('Frontline Routing Callback');
-  console.log(JSON.stringify(event));
 
   try {
     const conversationSid = event.ConversationSid;
