@@ -1,6 +1,8 @@
-# frontline-functions-quickstart
+# Frontline Functions Quickstart
 
-Creates 1 function for each callback needed to setup Frontline features. This is intended to be used as the Integration Service of a Frontline instance.
+Creates 1 function for each callback needed to setup Frontline features. 
+
+This is intended to be used as the Integration Service of a Frontline instance.
 
 ## Pre-requisites
 
@@ -12,20 +14,12 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-
-
-### Function Parameters
-
-`/blank` expects the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
+| AGENT_USERNAME | SSO username of agent to be assigned to Example Customer | Yes |
+| PHONE_NUMBER_FOR_CUSTOMER_1 | Phone number to be used on the Example Customer #1 | Yes |
+| NAME_FOR_CUSTOMER_1 | Display name for Example Customer #1 | Yes |
+| PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer #2 | No |
+| NAME_FOR_CUSTOMER_2 | Display name for Example Customer #2 | No |
+| TWILIO_PHONE_NUMBER | A Twilio phone number to be used as the Sender | Yes |
 
 
 ## Create a new project with the template
