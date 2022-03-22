@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 const assets = Runtime.getAssets();
-const { getCustomerByNumber } = require(assets['/providers/customers.js']);
+
+const { getCustomerByNumber } = require(assets['/providers/customers.js'].path);
 
 const setCustomerParticipantProperties = async (
   customerParticipant,

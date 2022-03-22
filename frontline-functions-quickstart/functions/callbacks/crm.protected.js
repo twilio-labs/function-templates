@@ -2,7 +2,7 @@
 const assets = Runtime.getAssets();
 const { getCustomerById, getCustomersList } = require(assets[
   '/providers/customers.js'
-]);
+].path);
 
 const handleGetCustomersListCallback = async (context, event) => {
   console.log('Getting Customers list');

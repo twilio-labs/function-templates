@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const assets = Runtime.getAssets();
-const { getCustomerById } = require(assets['/providers/customers.js']);
+const { getCustomerById } = require(assets['/providers/customers.js'].path);
 
 const compileTemplate = (template, customer) => {
   let compiledTemplate = template.replace(/{{Name}}/, customer.display_name);
