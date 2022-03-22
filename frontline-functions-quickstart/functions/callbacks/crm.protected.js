@@ -1,5 +1,8 @@
-const customersPath = Runtime.getAssets()['/providers/customers.js'].path;
-const { getCustomerById, getCustomersList } = require(customersPath);
+/* eslint-disable camelcase */
+const assets = Runtime.getAssets();
+const { getCustomerById, getCustomersList } = require(assets[
+  '/providers/customers.js'
+]);
 
 const handleGetCustomersListCallback = async (context, event) => {
   console.log('Getting Customers list');

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /**
  * Generates a static list of customers based on the information provided through env vars
  */
@@ -57,10 +58,12 @@ const generateCustomersList = (context) => {
 
 const findWorkerForCustomer = async (context, customerNumber) => {
   const customers = generateCustomersList(context);
+
   const workerForCustomer = customers.filter((customer) => {
     if (customerNumber.includes(customer.address)) {
       return customer;
     }
+    return null;
   });
 
   if (workerForCustomer.length > 0) {

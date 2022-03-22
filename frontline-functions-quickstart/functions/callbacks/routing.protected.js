@@ -1,5 +1,7 @@
-const path = Runtime.getAssets()['/providers/customers.js'].path;
-const { findWorkerForCustomer, findRandomWorker } = require(path);
+const assets = Runtime.getAssets();
+const { findWorkerForCustomer, findRandomWorker } = require(assets[
+  '/providers/customers.js'
+]);
 
 const routeConversation = async (context, conversationSid, customerNumber) => {
   let workerIdentity = await findWorkerForCustomer(context, customerNumber);

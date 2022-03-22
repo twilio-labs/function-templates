@@ -1,5 +1,6 @@
-const path = Runtime.getAssets()['/providers/customers.js'].path;
-const { getCustomerByNumber } = require(path);
+/* eslint-disable camelcase */
+const assets = Runtime.getAssets();
+const { getCustomerByNumber } = require(assets['/providers/customers.js']);
 
 const setCustomerParticipantProperties = async (
   customerParticipant,
@@ -30,6 +31,7 @@ const setCustomerParticipantProperties = async (
   }
 };
 
+// eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   console.log('((( Conversations Callback )))) ');
   console.log('CONTEXT: ', JSON.stringify(context));

@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const getCustomerProxyAddress = (context, channelName) => {
   if (channelName === 'whatsapp') {
     return context.TWILIO_WHATSAPP_NUMBER;
@@ -19,7 +20,7 @@ const handleGetProxyAddress = (context, event, callback) => {
     return callback(null, resp);
   }
 
-  callback(403, 'Proxy address not found');
+  return callback(403, 'Proxy address not found');
 };
 
 exports.handler = async function (context, event, callback) {
