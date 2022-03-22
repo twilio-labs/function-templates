@@ -15,10 +15,10 @@ In your `.env` file, set the following values:
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
 | AGENT_USERNAME | SSO username of agent to be assigned to Example Customer | Yes |
-| PHONE_NUMBER_FOR_CUSTOMER_1 | Phone number to be used on the Example Customer #1 | Yes |
-| NAME_FOR_CUSTOMER_1 | Display name for Example Customer #1 | Yes |
-| PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer #2 | No |
-| NAME_FOR_CUSTOMER_2 | Display name for Example Customer #2 | No |
+| PHONE_NUMBER_FOR_CUSTOMER_1 | Phone number to be used on the Example Customer 1 | Yes |
+| NAME_FOR_CUSTOMER_1 | Display name for Example Customer 1 | Yes |
+| PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer 2 | No |
+| NAME_FOR_CUSTOMER_2 | Display name for Example Customer 2 | No |
 | TWILIO_PHONE_NUMBER | A Twilio phone number to be used as the Sender | Yes |
 
 
