@@ -11,12 +11,12 @@ const generateCustomersList = (context) => {
     context.AGENT_USERNAME
   ) {
     customers.push({
-      customer_id: customers.length,
+      customer_id: 1,
       display_name: context.NAME_FOR_CUSTOMER_1,
       channels: [
         { type: 'email', value: 'customer_test_1@example.com' },
         { type: 'sms', value: context.PHONE_NUMBER_FOR_CUSTOMER_1 },
-        // { type: 'whatsapp', value: 'whatsapp:+12068664904' }, // TODO: figure out Whatsapp
+        // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, // TODO: figure out Whatsapp
       ],
       links: [
         {
@@ -35,12 +35,12 @@ const generateCustomersList = (context) => {
     context.AGENT_USERNAME
   ) {
     customers.push({
-      customer_id: customers.length,
+      customer_id: 2,
       display_name: context.NAME_FOR_CUSTOMER_2,
       channels: [
         { type: 'email', value: 'customer_test_2@example.com' },
         { type: 'sms', value: context.PHONE_NUMBER_FOR_CUSTOMER_2 },
-        // { type: 'whatsapp', value: 'whatsapp:+12068664904' }, TODO
+        // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, TODO
       ],
       links: [
         {
