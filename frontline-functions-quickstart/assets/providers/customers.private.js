@@ -8,7 +8,7 @@ const generateCustomersList = (context) => {
   if (
     context.PHONE_NUMBER_FOR_CUSTOMER_1 &&
     context.NAME_FOR_CUSTOMER_1 &&
-    context.AGENT_USERNAME
+    context.WORKER_USERNAME
   ) {
     customers.push({
       customer_id: 1,
@@ -25,14 +25,14 @@ const generateCustomersList = (context) => {
           display_name: 'Social Media Profile',
         },
       ],
-      worker: context.AGENT_USERNAME,
+      worker: context.WORKER_USERNAME,
     });
   }
 
   if (
     context.PHONE_NUMBER_FOR_CUSTOMER_2 &&
     context.NAME_FOR_CUSTOMER_2 &&
-    context.AGENT_USERNAME
+    context.WORKER_USERNAME
   ) {
     customers.push({
       customer_id: 2,
@@ -49,7 +49,7 @@ const generateCustomersList = (context) => {
           display_name: 'Social Media Profile',
         },
       ],
-      worker: context.AGENT_USERNAME,
+      worker: context.WORKER_USERNAME,
     });
   }
 
