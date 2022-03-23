@@ -93,7 +93,7 @@ exports.handler = async function (context, event, callback) {
       }
     }
 
-    return callback(422, `Unknown location: location`);
+    return callback(422, `Unknown location: ${location}`);
   } catch (err) {
     console.log(err);
     return callback(err);

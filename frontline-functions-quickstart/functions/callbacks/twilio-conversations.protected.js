@@ -116,11 +116,11 @@ exports.handler = async function (context, event, callback) {
           return callback(err);
         }
       }
-      return callback(404, `Something went wront`);
+      return callback(404, `Something went wrong`);
     }
 
     default: {
-      return callback(422, `Unknown location: location`);
+      return callback(422, `Unhandled webhook event`);
     }
   }
 };
