@@ -35,7 +35,7 @@ const generateCustomersList = (context) => {
     context.AGENT_USERNAME
   ) {
     customers.push({
-      customer_id: Math.floor(Math.random() * 1000),
+      customer_id: customers.length,
       display_name: context.NAME_FOR_CUSTOMER_2,
       channels: [
         { type: 'email', value: 'customer_test_2@example.com' },
