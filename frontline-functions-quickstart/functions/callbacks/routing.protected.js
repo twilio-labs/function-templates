@@ -4,7 +4,6 @@ const routeConversation = async (context, conversationSid, customerNumber) => {
     '/providers/customers.js'
   ].path);
   let workerIdentity = await findWorkerForCustomer(context, customerNumber);
-
   if (!workerIdentity) {
     // Customer doesn't have a worker
 
@@ -18,7 +17,7 @@ const routeConversation = async (context, conversationSid, customerNumber) => {
      */
     if (!workerIdentity) {
       throw new Error(
-        `Routing failed, please add workers to customersToWorkersMap or define a default worker. Conversation SID: ${conversationSid}`
+        `Routing failed, please make sure that all customers have a "worker" property assigned. Conversation SID: ${conversationSid}`
       );
     }
   }
@@ -47,7 +46,7 @@ const routeConversationToWorker = async (
         throw Error(message);
       });
   } catch (err) {
-    throw Error(message);
+    throw Error(err);
   }
 };
 
@@ -77,3 +76,6 @@ exports.handler = async function (context, event, callback) {
     return callback(err);
   }
 };
+
+exports.routeConversationToWorker = routeConversationToWorker;
+exports.routeConversation = routeConversation;

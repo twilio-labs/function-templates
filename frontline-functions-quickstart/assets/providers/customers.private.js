@@ -115,8 +115,6 @@ const getCustomersList = async (context, worker, pageSize, anchor) => {
     avatar: customer.avatar,
   }));
 
-  console.log('list', list);
-
   if (!pageSize) {
     return list;
   }
