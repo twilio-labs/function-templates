@@ -5,7 +5,7 @@ const {
   getCustomersList,
   getCustomerByNumber,
   generateCustomersList,
-} = require('../assets/providers/customers.private');
+} = require('../../../assets/providers/customers.private');
 
 const TEST_WORKER_USERNAME = 'testworker';
 const CUSTOMER_1_NUMBER = '+1222333444';

@@ -269,15 +269,34 @@ describe('CI template verification', () => {
           return;
         }
 
-        fs.readdir(functionsDir, (err, functions) => {
+        const functions = [];
+        fs.readdir(functionsDir, (err, files) => {
           expect(err).toBeFalsy();
           fs.readdir(testsDir, (err, tests) => {
             expect(err).toBeFalsy();
             expect(testsDir.length).toBeGreaterThan(0);
             testsMap = {};
             for (const t of tests) {
-              const testName = path.basename(t).split('.')[0];
-              testsMap[testName] = true;
+              const testPathValue = path.basename(t);
+
+              // it's a file
+              if (testPathValue.includes('.')) {
+                const testName = testPathValue.split('.')[0];
+                functions.push(testName);
+
+                testsMap[testName] = true;
+              } else {
+                // it's a sub-directory
+                const testsSubDir = `${testsDir}/${testPathValue}`;
+                const subDirTests = fs.readdirSync(testsSubDir);
+
+                functions.push(...subDirTests);
+                // eslint-disable-next-line no-loop-func
+                subDirTests.forEach((test) => {
+                  const testName = test.split('.')[0];
+                  testsMap[testName] = true;
+                });
+              }
             }
 
             for (const f of functions) {

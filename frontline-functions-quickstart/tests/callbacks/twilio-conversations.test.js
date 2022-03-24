@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-const helpers = require('../../test/test-helper');
+const helpers = require('../../../test/test-helper');
 const ConversationsAPIWebhooks =
-  require('../functions/callbacks/twilio-conversations.protected').handler;
+  require('../../functions/callbacks/twilio-conversations.protected').handler;
 
 const ConversationSid = 'CH12345';
 const ParticipantSid = 'MB12345';
@@ -41,7 +41,7 @@ beforeAll(() => {
   const runtime = new helpers.MockRuntime();
   runtime._addAsset(
     '/providers/customers.js',
-    '../assets/providers/customers.private.js'
+    '../../assets/providers/customers.private.js'
   );
   helpers.setup({}, runtime);
 });

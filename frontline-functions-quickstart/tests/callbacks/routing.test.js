@@ -1,9 +1,9 @@
-const helpers = require('../../test/test-helper');
+const helpers = require('../../../test/test-helper');
 const {
   handler,
   routeConversationToWorker,
   routeConversation,
-} = require('../functions/callbacks/routing.protected');
+} = require('../../functions/callbacks/routing.protected');
 
 const mockConversations = {
   conversations: jest.fn(() => ({
@@ -35,7 +35,7 @@ beforeAll(() => {
   const runtime = new helpers.MockRuntime();
   runtime._addAsset(
     '/providers/customers.js',
-    '../assets/providers/customers.private.js'
+    '../../assets/providers/customers.private.js'
   );
   helpers.setup({}, runtime);
 });

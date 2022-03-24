@@ -1,6 +1,6 @@
-const helpers = require('../../test/test-helper');
+const helpers = require('../../../test/test-helper');
 const templatesCallback =
-  require('../functions/callbacks/templates.protected').handler;
+  require('../../functions/callbacks/templates.protected').handler;
 
 const mockClient = {
   conversations: {},
@@ -22,7 +22,7 @@ beforeAll(() => {
   const runtime = new helpers.MockRuntime();
   runtime._addAsset(
     '/providers/customers.js',
-    '../assets/providers/customers.private.js'
+    '../../assets/providers/customers.private.js'
   );
   helpers.setup({}, runtime);
 });

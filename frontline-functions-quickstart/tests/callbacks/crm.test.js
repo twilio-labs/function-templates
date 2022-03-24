@@ -1,5 +1,5 @@
-const helpers = require('../../test/test-helper');
-const CRMCallback = require('../functions/callbacks/crm.protected').handler;
+const helpers = require('../../../test/test-helper');
+const CRMCallback = require('../../functions/callbacks/crm.protected').handler;
 
 const TEST_WORKER_USERNAME = 'testworker';
 const context = {
@@ -16,7 +16,7 @@ beforeAll(() => {
   const runtime = new helpers.MockRuntime();
   runtime._addAsset(
     '/providers/customers.js',
-    '../assets/providers/customers.private.js'
+    '../../assets/providers/customers.private.js'
   );
   helpers.setup({}, runtime);
 });

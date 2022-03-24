@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 const outgoingConversation =
-  require('../functions/callbacks/outgoing-conversation.protected').handler;
+  require('../../functions/callbacks/outgoing-conversation.protected').handler;
 
 const TEST_WORKER_USERNAME = 'testworker';
 const CUSTOMER_1_NUMBER = '+1222333444';
