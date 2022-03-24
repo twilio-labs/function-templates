@@ -1,17 +1,16 @@
-const assets = Runtime.getAssets();
-const { findWorkerForCustomer, findRandomWorker } = require(assets[
-  '/providers/customers.js'
-].path);
-
 const routeConversation = async (context, conversationSid, customerNumber) => {
+  const assets = Runtime.getAssets();
+  const { findWorkerForCustomer, findRandomWorker } = require(assets[
+    '/providers/customers.js'
+  ].path);
   let workerIdentity = await findWorkerForCustomer(context, customerNumber);
 
   if (!workerIdentity) {
     // Customer doesn't have a worker
 
     // Select a random worker
-    console.log('no worker identity...');
-    workerIdentity = await findRandomWorker();
+    console.log('no worker identity... assigning random worker');
+    workerIdentity = await findRandomWorker(context);
 
     /**
      * Or you can define default worker for unknown customers.
@@ -33,13 +32,23 @@ const routeConversationToWorker = async (
   workerIdentity
 ) => {
   // Add worker to the conversation along with the customer
-  await client.conversations
-    .conversations(conversationSid)
-    .participants.create({ identity: workerIdentity })
-    .then((participant) =>
-      console.log('Create agent participant: ', participant.sid)
-    )
-    .catch((e) => console.log('Create agent participant: ', e));
+  try {
+    return await client.conversations
+      .conversations(conversationSid)
+      .participants.create({ identity: workerIdentity })
+      .then((participant) => {
+        const message = `Created agent participant: ${participant.sid}`;
+        console.log(message);
+        return message;
+      })
+      .catch((err) => {
+        const message = `Error creating participant ${err}`;
+        console.log(message);
+        throw Error(message);
+      });
+  } catch (err) {
+    throw Error(message);
+  }
 };
 
 exports.handler = async function (context, event, callback) {

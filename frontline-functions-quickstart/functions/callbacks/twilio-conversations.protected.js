@@ -1,16 +1,9 @@
 /* eslint-disable camelcase */
-const assets = Runtime.getAssets();
-
-const { getCustomerByNumber } = require(assets['/providers/customers.js'].path);
-
 const setCustomerParticipantProperties = async (
   customerParticipant,
   customerDetails
 ) => {
-  console.log('[setCustomerParticipantProperties] ', {
-    customerParticipant,
-    customerDetails,
-  });
+  console.log('[setCustomerParticipantProperties] ');
   const participantAttributes = JSON.parse(customerParticipant.attributes);
   const customerProperties = {
     attributes: JSON.stringify({
@@ -34,7 +27,11 @@ const setCustomerParticipantProperties = async (
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
-  console.log('((( Conversations Callback )))) ');
+  const assets = Runtime.getAssets();
+  const { getCustomerByNumber } = require(assets['/providers/customers.js']
+    .path);
+
+  console.log('((( Conversations API Callback )))) ');
 
   const client = context.getTwilioClient();
 
@@ -62,7 +59,7 @@ exports.handler = async function (context, event, callback) {
       if (isIncomingConversation) {
         try {
           const customerDetails =
-            (await getCustomerByNumber(context, customerNumber)) || {};
+            getCustomerByNumber(context, customerNumber) || {};
 
           const conversationProperties = {
             friendly_name: customerDetails.display_name || customerNumber,
@@ -95,6 +92,7 @@ exports.handler = async function (context, event, callback) {
        */
       const conversationSid = event.ConversationSid;
       const participantSid = event.ParticipantSid;
+
       const customerNumber = event['MessagingBinding.Address'];
       const isCustomer = customerNumber && !event.Identity;
 
@@ -104,19 +102,18 @@ exports.handler = async function (context, event, callback) {
             .conversations(conversationSid)
             .participants.get(participantSid)
             .fetch();
-
           const customerDetails =
-            (await getCustomerByNumber(context, customerNumber)) || {};
+            getCustomerByNumber(context, customerNumber) || {};
           await setCustomerParticipantProperties(
             customerParticipant,
             customerDetails
           );
           return callback(null, 'success');
         } catch (err) {
-          return callback(err);
+          return callback(err, `Something went wrong`);
         }
       }
-      return callback(404, `Something went wrong`);
+      return callback(null);
     }
 
     default: {

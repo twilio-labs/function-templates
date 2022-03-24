@@ -25,7 +25,13 @@ const generateCustomersList = (context) => {
           display_name: 'Social Media Profile',
         },
       ],
+      details: {
+        title: 'More information',
+        content:
+          'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
+      },
       worker: context.WORKER_USERNAME,
+      address: context.PHONE_NUMBER_FOR_CUSTOMER_1,
     });
   }
 
@@ -49,7 +55,13 @@ const generateCustomersList = (context) => {
           display_name: 'Social Media Profile',
         },
       ],
+      details: {
+        title: 'More information',
+        content:
+          'This is a static example customer. When your app is connected to a CRM, it will pull data from the system.',
+      },
       worker: context.WORKER_USERNAME,
+      address: context.PHONE_NUMBER_FOR_CUSTOMER_2,
     });
   }
 
@@ -57,6 +69,10 @@ const generateCustomersList = (context) => {
 };
 
 const findWorkerForCustomer = async (context, customerNumber) => {
+  if (!customerNumber) {
+    return null;
+  }
+
   const customers = generateCustomersList(context);
 
   const workerForCustomer = customers.filter((customer) => {
@@ -73,9 +89,9 @@ const findWorkerForCustomer = async (context, customerNumber) => {
   return null;
 };
 
-const findRandomWorker = async () => {
+const findRandomWorker = async (context) => {
   const uniqueWorkers = [];
-
+  const customers = generateCustomersList(context);
   for (const customer of customers) {
     console.log(customer.worker);
     if (!uniqueWorkers.includes(customer.worker)) {
@@ -115,7 +131,7 @@ const getCustomersList = async (context, worker, pageSize, anchor) => {
   return list.slice(0, pageSize);
 };
 
-const getCustomerByNumber = async (context, customerNumber) => {
+const getCustomerByNumber = (context, customerNumber) => {
   const customers = generateCustomersList(context);
 
   return customers.find((customer) =>
@@ -125,7 +141,7 @@ const getCustomerByNumber = async (context, customerNumber) => {
   );
 };
 
-const getCustomerById = async (context, customerId) => {
+const getCustomerById = (context, customerId) => {
   const customers = generateCustomersList(context);
 
   return customers.find(
@@ -139,4 +155,5 @@ module.exports = {
   getCustomerById,
   getCustomersList,
   getCustomerByNumber,
+  generateCustomersList,
 };

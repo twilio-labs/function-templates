@@ -1,6 +1,4 @@
 /* eslint-disable camelcase */
-const assets = Runtime.getAssets();
-const { getCustomerById } = require(assets['/providers/customers.js'].path);
 
 const compileTemplate = (template, customer) => {
   let compiledTemplate = template.replace(/{{Name}}/, customer.display_name);
@@ -28,9 +26,12 @@ const CLOSING_ASK_REVIEW =
   'Happy to help, {{Name}}. If you have a moment could you leave a review about our interaction at this link: https://example.com. {{Author}}.';
 
 const handleGetTemplatesByCustomerIdCallback = async (context, event) => {
-  console.log('Getting templates: ', event.CustomerId);
+  const assets = Runtime.getAssets();
+  const { getCustomerById } = require(assets['/providers/customers.js'].path);
 
-  const customerDetails = await getCustomerById(context, event.CustomerId);
+  console.log('Getting templates for customer: ', event.CustomerId);
+
+  const customerDetails = getCustomerById(context, event.CustomerId);
 
   if (!customerDetails) {
     throw new Error('Customer not found');
@@ -72,7 +73,6 @@ const handleGetTemplatesByCustomerIdCallback = async (context, event) => {
 exports.handler = async function (context, event, callback) {
   console.log('[[ Templates handler ]]');
   try {
-    console.log(event);
     const location = event.Location;
 
     /**

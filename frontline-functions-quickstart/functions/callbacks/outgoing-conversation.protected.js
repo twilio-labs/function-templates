@@ -3,7 +3,10 @@ const getCustomerProxyAddress = (context, channelName) => {
   if (channelName === 'whatsapp') {
     return context.TWILIO_WHATSAPP_NUMBER;
   }
-  return context.TWILIO_PHONE_NUMBER;
+  if (channelName === 'sms') {
+    return context.TWILIO_PHONE_NUMBER;
+  }
+  return null;
 };
 
 const handleGetProxyAddress = (context, event, callback) => {
@@ -30,5 +33,5 @@ exports.handler = async function (context, event, callback) {
   if (location === 'GetProxyAddress') {
     return handleGetProxyAddress(context, event, callback);
   }
-  return callback(422, err);
+  return callback(422, `Unknown location: ${location}`);
 };

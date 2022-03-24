@@ -1,10 +1,8 @@
 /* eslint-disable camelcase */
-const assets = Runtime.getAssets();
-const { getCustomerById, getCustomersList } = require(assets[
-  '/providers/customers.js'
-].path);
-
 const handleGetCustomersListCallback = async (context, event) => {
+  const customersFile = Runtime.getAssets()['/providers/customers.js'].path;
+  const { getCustomersList } = require(customersFile);
+
   console.log('Getting Customers list');
 
   const workerIdentity = event.Worker;
@@ -30,6 +28,8 @@ const handleGetCustomersListCallback = async (context, event) => {
 };
 
 const handleGetCustomerDetailsByCustomerIdCallback = async (event, context) => {
+  const customersFile = Runtime.getAssets()['/providers/customers.js'].path;
+  const { getCustomerById } = require(customersFile);
   console.log('Getting Customer details: ', event.CustomerId);
 
   const customerId = event.CustomerId;
@@ -38,7 +38,7 @@ const handleGetCustomerDetailsByCustomerIdCallback = async (event, context) => {
    *  Fetch Customer Details based on their ID
    * and information about a worker, that requested that information
    */
-  const customerDetails = await getCustomerById(context, customerId);
+  const customerDetails = getCustomerById(context, customerId);
 
   // Respond with Contact object
   return {
