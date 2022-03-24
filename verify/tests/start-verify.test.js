@@ -82,4 +82,22 @@ describe('verify/start-verification', () => {
     const event = { to: '+17341234567' };
     startVerifyFunction(testContext, event, callback);
   });
+
+  test('returns success with valid request', (done) => {
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(result._body.success).toEqual(true);
+      expect(mockClient.verify.services).toHaveBeenCalledWith(
+        testContext.VERIFY_SERVICE_SID
+      );
+      expect(mockService.verifications.create).toHaveBeenCalledWith({
+        to: '+17341234567',
+        channel: 'whatsapp',
+        locale: 'pt-BR',
+      });
+      done();
+    };
+    const event = { to: '+17341234567', channel: 'whatsapp', locale: 'pt-BR' };
+    startVerifyFunction(testContext, event, callback);
+  });
 });
