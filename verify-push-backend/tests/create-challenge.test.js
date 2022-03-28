@@ -95,6 +95,7 @@ describe('verify-push-backend/create-challenge', () => {
       message: 'login request',
       factor: 'YFXXX',
       hiddenDetails: '{"ip":"172.168.1.234","transactionId":"TX123456"}',
+      details: '[]',
     };
     const expectedHiddenDetails =
       '{"ip":"172.168.1.234","transactionId":"TX123456"}';
@@ -117,6 +118,7 @@ describe('verify-push-backend/create-challenge', () => {
       message: 'login request',
       factor: 'YFXXX',
       hiddenDetails: '{}',
+      details: '[]',
     };
     const callback = (_err, result) => {
       expect(result).toBeDefined();
@@ -132,18 +134,17 @@ describe('verify-push-backend/create-challenge', () => {
   });
 
   test('returns success with valid request including details', (done) => {
+    const expectedDetails = [
+      { label: 'Action', value: 'Sign up in portal' },
+      { label: 'User location', value: 'California' },
+    ];
     const event = {
       identity: 'super-unique-id',
       message: 'login request',
       factor: 'YFXXX',
       hiddenDetails: '{}',
-      Action: 'Sign up in portal',
-      'User location': 'California',
+      details: JSON.stringify(expectedDetails),
     };
-    const expectedDetails = [
-      { label: 'Action', value: 'Sign up in portal' },
-      { label: 'User location', value: 'California' },
-    ];
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(mockChallenges.challenges.create).toHaveBeenCalledWith({
@@ -163,6 +164,7 @@ describe('verify-push-backend/create-challenge', () => {
       message: 'login request',
       factor: 'YFXXX',
       hiddenDetails: '{}',
+      details: '[]',
     };
     const callback = (_err, result) => {
       expect(result).toBeDefined();
