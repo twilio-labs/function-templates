@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: zattoo/reviewers@v2
         with:
-          token: ${{secrets.ACCESS_TOKEN}}
+          token: ${{ secrets.ACCESS_TOKEN }}
           ignore: |
             .DS_Store
           source: '.owners'
