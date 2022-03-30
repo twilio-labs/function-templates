@@ -67,14 +67,10 @@ exports.handler = function (context, event, callback) {
   const serviceSid = context.VERIFY_SERVICE_SID;
   const hashIdentity = context.IDENTITY_PROCESSING !== 'raw';
 
-  const { identity, message, factor, hiddenDetails, request, ...details } =
-    event;
+  const { identity, message, factor, hiddenDetails, details } = event;
   const identityValue = hashIdentity ? digestMessage(identity) : identity;
 
-  const fields = [];
-  for (const [key, value] of Object.entries(details)) {
-    fields.push({ label: key, value });
-  }
+  const fields = details ? JSON.parse(details) : null;
 
   client.verify
     .services(serviceSid)

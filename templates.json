@@ -226,6 +226,11 @@
       "description": "Best practices UI for resending SMS verification codes and voice channel fallback."
     },
     {
+      "id": "verify-push-authy-backend",
+      "name": "Verify Push Backend for Authy",
+      "description": "Issue QR codes with access tokens and create push challenges from this helpful app and dashboard."
+    },
+    {
       "id": "verify-push-backend",
       "name": "Verify Push Backend",
       "description": "Issue access tokens and create push challenges from this helpful app and dashboard."

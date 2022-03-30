@@ -293,12 +293,14 @@
         .then((resp) => resp.json())
         .then((respJson) => {
           $("#factor-list").empty();
-          respJson.forEach(({ friendlyName, identity, sid }) => {
+          respJson.forEach(({ friendlyName, identity, sid, dateCreated }) => {
             $("#factor-list").append(
               `<div>
                 <p><strong>${friendlyName}</strong></p>
                 <p><strong>Hashed Identity: </strong>${identity}</p>
                 <p><strong>Factor SID: </strong>${sid}</p>
+                <p><strong>Factor creation date: </strong>${dateCreated}</p>
+                <hr class="solid">
               </div>`
             );
           });
@@ -365,16 +367,20 @@
         }, {});
           
       data.append("hiddenDetails", JSON.stringify(hiddenDetails));
-          
-      var details = getItems($(".detail"),
+        
+      const details = [];
+      getItems($(".detail"),
         function (result, value, index, array) {
-          if (index % 2 === 0) result.push(array.slice(index, index + 2));
+          if (index % 2 === 0) {
+            let label = array[index];
+            if (label !== "") {
+              details.push({ label, value: array[index + 1] });
+            }
+          }
           return result;
         }, []);
 
-      details.forEach((pair) => {
-        if (pair[0] !== "") data.append(pair[0], pair[1]);
-      });
+      data.append("details", JSON.stringify(details));
 
       fetch("./create-challenge", {
         method: "POST",
