@@ -1,4 +1,4 @@
-# Twilio Verify Push Sample Backend
+# Twilio Verify Push Sample Backend for the Authy app (Pilot)
 
 This project can be used as a sample backend for [Verify Push](https://www.twilio.com/docs/verify/push) and to issue push authentication challenges in combination with the [Authy Android App](https://play.google.com/store/apps/details?id=com.authy.authy), [Authy iOS App](https://apps.apple.com/us/app/twilio-authy/id494168017) or [Authy Desktop app](https://authy.com/download/)
 
@@ -67,7 +67,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 3. Initiate a new project
 
 ```
-twilio serverless:init verify-sample-backend --template=verify-push-backend && cd verify-sample-backend
+twilio serverless:init verify-push-authy-backend --template=verify-push-authy-backend && cd verify-push-authy-backend
 ```
 
 4. Add your environment variables to `.env`:
