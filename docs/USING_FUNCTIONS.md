@@ -63,34 +63,36 @@ twilio serverless:deploy
 
 You'll have the best experience of using any of these templates with the Twilio CLI.
 
-If for some reason you are constraint to not using the Twilio CLI, you can use the [web UI in the Twilio Console](https://www.twilio.com/console/functions/manage). It will require some manual work. This guide will help you walk through it.
+If for some reason you are constraint to not using the Twilio CLI, you can use the [web UI in the Twilio Console](https://console.twilio.com/us1/develop/functions/services?frameUrl=%2Fconsole%2Ffunctions%2Foverview%2Fservices). It will require some manual work. This guide will help you walk through it.
 
 ### Step 1: Pick your template
 
-You can find a list of templates by visiting the [`function-templates` GitHub repository](https://github.com/twilio-labs/function-templates). Most of the top level directories except `docs`, `test` or anything prefixed with `_` or `.` are templates. You can also find a full list with descriptions in the [`templates.json` file](../templates.json).
+You can find a list of templates by visiting the [`function-templates` GitHub repository](https://github.com/twilio-labs/function-templates). Most of the top level directories except `docs`, `test` or anything prefixed with `_` or `.` are templates. You can also find a full list with descriptions in the [`templates.md` file](./templates.md).
 
 Open the respective template directory for your template. For example [`verify/`](verify/).
+
+### Step 2: Create a service
+
+Create a new [Functions service from the console](https://console.twilio.com/us1/develop/functions/services?frameUrl=%2Fconsole%2Ffunctions%2Foverview%2Fservices).
 
 ### Step 2: Configure your environment variables
 
 Environment variables are configuration values that often contain information such as API tokens or values such as phone numbers. Every template might need different environment variables. The ones required by your template can be found in the `.env` file.
 
-Navigate to the [_Configuration_ section of the Twilio Console](https://www.twilio.com/console/functions/configure) and create under _Environment Variables_ a key/value pair for each entry in the `.env` file.
+Click on `Environment Variables` in the _Settings_ section of your Functions service and create under _Environment Variables_ a key/value pair for each entry in the `.env` file.
 
 For example if the `.env` file looks like this:
 
 ```bash
 # Your Twilio phone number
-TWILIO_PHONE_NUMBER=
+VERIFY_SERVICE_SID=
 ```
 
-You'll want to create a new environment variable with the key `TWILIO_PHONE_NUMBER` and the value of a valid Twilio phone number.
+You'll want to create a new environment variable with the key `VERIFY_SERVICE_SID` and the value of a [Verify Service SID](https://www.twilio.com/console/verify/settings).
 
-Make sure to hit _Save_ afterwards.
+![Screenshot of adding environment variables](images/create-env-variables-v2.png)
 
-![Screenshot of adding environment variables](images/create_environment_variables.png)
-
-> If you find a template that uses `ACCOUNT_SID` and `AUTH_TOKEN` make sure to check the checkbox at the top of the Configuration section.
+> If you find a template that uses `ACCOUNT_SID` and `AUTH_TOKEN` make sure to check the "Add my Twilio checkbox at the top of the Configuration section.
 
 ### Step 3: Install dependencies
 
@@ -109,7 +111,7 @@ For example if the `package.json` looks like this:
 
 You'll want to create a dependency entry with the name `stripe` and the version `^8.20.0`.
 
-![Screenshot of adding dependencies](images/add_dependencies.png)
+![Screenshot of adding dependencies](images/add-dependencies-v2.png)
 
 ### Step 4: Create Functions
 
@@ -120,24 +122,21 @@ For example the [`verify` template](https://github.com/twilio-labs/function-temp
 The name of the Function gives away two pieces of information:
 
 1. If the name contains `.protected.` you'll want to make sure that the checkbox of _Check for valid Twilio signature_ is checked when you create the Function.
-2. Anything before the `.` is the path of the Function. For example for the `verify` template those are two Function paths we want: `/check-verify` and `/start-verify`. **Note**: Some Functions might be in nested directories. The Console UI doesn't support nested paths, so you'll have to pick a different path and update all references in the code.
+1. Anything before the `.` is the path of the Function. For example for the `verify` template those are two Function paths we want: `/check-verify` and `/start-verify`. **Note**: Some Functions might be in nested directories. The Console UI doesn't support nested paths, so you'll have to pick a different path and update all references in the code.
 
-Head over to the [Functions section of the Twilio Console](https://www.twilio.com/console/functions/manage)
+Head over to the Functions service you created. For each Function in the template:
 
-For each Function in the template:
+1. Create a new Function (click Add + and selecte "Add Function")
+1. Specify the path of the Function based on the filename
+1. Copy the code from the JavaScript file
+1. Functions are _protected_ by default. Change this to _public_ if you need to access the function from an application outside of Twilio
+1. Click _Save_
 
-1. create a new "Blank" Function
-2. Give the Function a recognizable name (for example the filename of the Function)
-3. Specify the path of the Function based on the filename
-4. Check the checkbox of _Check for valid Twilio signature_ if necessary
-5. Copy the code from the JavaScript file
-6. Click _Save_ to deploy your Function
+![Screenshot of adding a new Twilio Function](images/add-function.png)
 
 Repeat for each necessary Function.
 
-![Screenshot of picking a Blank Twilio Function](images/create_blank_function.png)
-
-![Screenshot of entering a new Function](images/enter_function_info.png)
+**Click _Deploy All_ to deploy saved Functions**
 
 ### [Optional] Step 5: Download assets
 
@@ -147,9 +146,7 @@ Some templates might contain an `assets` folder. In that case you'll have to upl
 
 ### [Optional] Step 6: Upload assets to Twilio Runtime
 
-After you've downloaded all required assets, head over to the [Assets section of the Twilio Console](https://www.twilio.com/console/assets/public). Upload all files here that you've downloaded. If a file contains `.private.` in the original filename, remove it before uploading and instead upload the file as a `private` asset.
-
-![Screenshot of uploading Assets](images/upload_assets.png)
+After you've downloaded all required assets, upload all files that you downloaded using the same method of creating a new function, but select "Add Asset (Static text file)" instead. If a file contains `.private.` in the original filename, set the visibility to `private`.
 
 ## Using Function Templates without hosting it on Twilio
 
@@ -165,4 +162,4 @@ The templates in this project are designed to work with Twilio Functions. Howeve
    ```js
    exports.handler = function(context, event, callback) {...}
    ```
-6. Anything that contains `.protected.` in the filename should ideally be access protected by [verifying the Twilio signature](https://www.twilio.com/docs/usage/webhooks/webhooks-security). Anything with `.private.` in the filename should not be publicly accessible.
+6. Anything that contains `.protected.` in the filename should be access protected by [verifying the Twilio signature](https://www.twilio.com/docs/usage/webhooks/webhooks-security). Anything with `.private.` in the filename should not be publicly accessible.
