@@ -75,7 +75,7 @@ Open the respective template directory for your template. For example [`verify/`
 
 Create a new [Functions service from the console](https://console.twilio.com/us1/develop/functions/services?frameUrl=%2Fconsole%2Ffunctions%2Foverview%2Fservices).
 
-### Step 2: Configure your environment variables
+### Step 3: Configure your environment variables
 
 Environment variables are configuration values that often contain information such as API tokens or values such as phone numbers. Every template might need different environment variables. The ones required by your template can be found in the `.env` file.
 
@@ -94,7 +94,7 @@ You'll want to create a new environment variable with the key `VERIFY_SERVICE_SI
 
 > If you find a template that uses `ACCOUNT_SID` and `AUTH_TOKEN` make sure to check the "Add my Twilio checkbox at the top of the Configuration section.
 
-### Step 3: Install dependencies
+### Step 4: Install dependencies
 
 Some templates require additional dependencies. You can find the list of required dependencies inside the `package.json` of the respective template directory under the `dependencies` object.
 
@@ -102,18 +102,19 @@ For example if the `package.json` looks like this:
 
 ```json
 {
-  "name": "stripe-sms-receipt",
+  "name": "example",
   "dependencies": {
-    "stripe": "^8.20.0"
-  }
+    "lodash": "^4.17.11",
+    "twilio": "^3.76.0"
+  },
 }
 ```
 
-You'll want to create a dependency entry with the name `stripe` and the version `^8.20.0`.
+You'll want to create a dependency entry with the name `lodash` and the version `4.17.11`.
 
 ![Screenshot of adding dependencies](images/add-dependencies-v2.png)
 
-### Step 4: Create Functions
+### Step 5: Create Functions
 
 A template might have multiple Functions. You'll have to create a new Function for each JavaScript file that you'll find inside the `functions/` directory of a template.
 
@@ -121,7 +122,7 @@ For example the [`verify` template](https://github.com/twilio-labs/function-temp
 
 The name of the Function gives away two pieces of information:
 
-1. If the name contains `.protected.` you'll want to make sure that the checkbox of _Check for valid Twilio signature_ is checked when you create the Function.
+1. If the name contains `.protected.` you'll want to make sure that the function visibility is set to _protected_ when you create the Function. This is the default setting.
 1. Anything before the `.` is the path of the Function. For example for the `verify` template those are two Function paths we want: `/check-verify` and `/start-verify`. **Note**: Some Functions might be in nested directories. The Console UI doesn't support nested paths, so you'll have to pick a different path and update all references in the code.
 
 Head over to the Functions service you created. For each Function in the template:
@@ -138,13 +139,13 @@ Repeat for each necessary Function.
 
 **Click _Deploy All_ to deploy saved Functions**
 
-### [Optional] Step 5: Download assets
+### [Optional] Step 6: Download assets
 
 Some templates might contain an `assets` folder. In that case you'll have to upload those assets. But before you can upload them, you'll have to download them to your computer. You can do this by opening each asset in your template and right click on the `Raw` button and click on _Save As_. Store the file somewhere on your computer.
 
 ![Screenshot of downloading an asset](images/download_asset.png)
 
-### [Optional] Step 6: Upload assets to Twilio Runtime
+### [Optional] Step 7: Upload assets to Twilio Runtime
 
 After you've downloaded all required assets, upload all files that you downloaded using the same method of creating a new function, but select "Add Asset (Static text file)" instead. If a file contains `.private.` in the original filename, set the visibility to `private`.
 
