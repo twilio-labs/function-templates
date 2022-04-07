@@ -26,7 +26,7 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable             | Meaning                                                           | Required |
+| Variable             | Description                                                           | Required |
 | :------------------- | :---------------------------------------------------------------- | :------- |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console)             | Yes      |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)             | Yes      |
@@ -36,8 +36,8 @@ In your `.env` file, set the following values:
 
 `generate-qr-code.js` expects the following parameters:
 
-| Parameter      | Description                                   | Required |
-| :------------- | :-------------------------------------------- | :------- |
+| Parameter                  | Description                                   | Required |
+| :------------------------- | :-------------------------------------------- | :------- |
 | `identity`                 | Unique user ID, avoid PII         | Yes |
 | `factor friendly name`     | Factor friendly name              | No |
 
