@@ -70,7 +70,12 @@ exports.handler = function (context, event, callback) {
 
   client.verify
     .services(serviceSid)
-    .accessTokens.create({ identity, factorType, factorFriendlyName })
+    .accessTokens.create({
+      identity,
+      factorType,
+      factorFriendlyName,
+      ttl: 5 * 60,
+    })
     .then((resp) => {
       response.setStatusCode(200);
       const uri = `authy://factor?accessTokenSid=${resp.sid}&serviceSid=${resp.serviceSid}&accountSid=${resp.accountSid}`;

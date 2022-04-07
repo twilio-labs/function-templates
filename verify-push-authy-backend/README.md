@@ -1,6 +1,15 @@
 # Twilio Verify Push Sample Backend for the Authy app (Pilot)
 
-This project can be used as a sample backend for [Verify Push](https://www.twilio.com/docs/verify/push) and to issue push authentication challenges in combination with the [Authy Android App](https://play.google.com/store/apps/details?id=com.authy.authy), [Authy iOS App](https://apps.apple.com/us/app/twilio-authy/id494168017) or [Authy Desktop app](https://authy.com/download/)
+This project can be used as a sample backend for [Verify Push](https://www.twilio.com/docs/verify/push) and to issue push authentication challenges in combination with the Authy Android App, Authy iOS App or Authy Desktop app.
+
+For businesses who don't have their own client app, the Verify Push integration with Authy app turns the Authy apps into a secure key for Verify Push, so that they can verify their end-users by telling them to install Authy apps and without requiring PII from those users.
+
+---
+**NOTE**
+
+This pilot showcases the new integration between the Verify Push SDK and the Authy app. The pilot will be supplied to you in the form of a private Android app assigned to the specific email addresses you provide to Twilio. Please contact your Twilio account executive for participation or [email us](mailto:verifypush@twilio.com) 
+
+---
 
 ## How to use the template
 
@@ -9,7 +18,7 @@ The best way to use the Function templates is through the Twilio CLI as describe
 ## Pre-requisites
 
 - [Create a Verify Service](https://www.twilio.com/console/verify/services)
-- Install the pilot version
+- Install the private Android app
 
 ### Environment variables
 
