@@ -16,7 +16,7 @@ class AdminClient {
         this.isReady = false;
 
         // eslint-disable-next-line no-throw-literal
-        throw  {
+        throw {
           statusCode: response.status,
           message: responseBody.message,
           consoleUrl: responseBody.consoleUrl,

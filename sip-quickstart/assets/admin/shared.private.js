@@ -53,33 +53,42 @@ async function getCurrentEnvironment(context) {
   }
 }
 
+async function usesFunctionUi(context) {
+  const environment = getCurrentEnvironment(context);
+  if (environment === undefined) {
+    return false;
+  }
+  const service = await client.serverless.services(environment.serviceSid).fetch();
+  return service.uiEditable;
+}
+
 async function checkAdminPassword(context, event, callback) {
   const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
 
+  let response = {
+    changedFromDefault: false,
+    meetsRequirements: false,
+    consoleUrl: null
+  };
+
   if (!regex.test(process.env.ADMIN_PASSWORD)) {
+    response.changedFromDefault = process.env.ADMIN_PASSWORD !== "default";
     const env = await getCurrentEnvironment(context);
-    let consoleUrl = null;
+
     if (env) {
       const client = context.getTwilioClient();
       const service = await client.serverless.services(env.serviceSid).fetch();
       if (service.uiEditable) {
-        consoleUrl = `https://console.twilio.com/service/functions/${env.serviceSid}/runtime-functions-editor?currentFrameUrl=%2Fconsole%2Ffunctions%2Feditor%2F${env.serviceSid}%2Fenvironment%2F${env.sid}%2Fconfig%2Fvariables`;
-      }
-    }
-
-    const response = new Twilio.Response();
-    response.setStatusCode(500);
-    response.setBody(
-      JSON.stringify({
-        message: 'You must update your admin password.',
-        consoleUrl,
-      })
-    );
-    callback(null, response);
-    return false;
+        response.consoleUrl = `https://console.twilio.com/service/functions/${env.serviceSid}/runtime-functions-editor?currentFrameUrl=%2Fconsole%2Ffunctions%2Feditor%2F${env.serviceSid}%2Fenvironment%2F${env.sid}%2Fconfig%2Fvariables`;
+      };
+    };
+  } else {
+    response.changedFromDefault = true;
+    response.meetsRequirements = true;
   }
-  return true;
-}
+    
+    callback(null, response);
+};
 
 async function getEnvironmentVariables(context, environment) {
   const client = context.getTwilioClient();
@@ -161,4 +170,5 @@ module.exports = {
   getEnvironmentVariable,
   setEnvironmentVariable,
   urlForSiblingPage,
+  usesFunctionUi
 };

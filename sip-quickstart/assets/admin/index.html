@@ -5,12 +5,12 @@
   </head>
   <body>
     <div id="app">
-      <div v-if="!defaultAdminPasswordChanged && errorMessage">
+      <div v-if="!passwordChangedSuccessfully && errorMessage">
         <h1>Change your admin password</h1>
         <p>
           Please take a moment to change your admin password.
           <br><br>
-            The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
+            {{ this.errorMessage }} The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
           <div v-if="consoleUrl">
             You can do this by editing the <code>ADMIN_PASSWORD</code> value on the <a :href="consoleUrl" target="_blank">Environment tab of your Functions editor</a>.
             <br><br>
@@ -27,7 +27,7 @@
           </div>
         </p>
       </div>
-      <div class="login" v-if="!adminClient.isReady && defaultAdminPasswordChanged">
+      <div class="login" v-if="!adminClient.isReady && passwordChangedSuccessfully">
         <h1>Password required</h1>
         <p>
           A password is required to update your environment. This can be found in your environment variables.
@@ -38,7 +38,7 @@
             <input type="password" name="password" v-model="password">
           </label>
           </div>
-          <button :disabled="!password || !defaultAdminPasswordChanged">Let me in</button>
+          <button :disabled="!password || !passwordChangedSuccessfully">Let me in</button>
           <p>{{ errorMessage }}</p>
         </form>
       </div>
@@ -90,7 +90,7 @@
           environment: {},
           password: null, 
           errorMessage: null, 
-          defaultAdminPasswordChanged: false,
+          passwordChangedSuccessfully: false,
           consoleUrl: null
         },
         methods: {
@@ -123,14 +123,18 @@
           this.md = window.markdownit();
 
           try {
-            await this.adminClient.checkAdminPassword();
-            this.defaultAdminPasswordChanged = true;
+            
+            let result = await this.adminClient.checkAdminPassword();
 
+            if (result.changedFromDefault && result.meetsRequirements) {
+              this.passwordChangedSuccessfully = true;
+            } else if (result.changedFromDefault && !result.meetsRequirements) {
+              this.errorMessage = `Your admin password doesn't meet the requirements.`;
+            } else if (!result.changedFromDefault) {
+              this.errorMessage = `You must change your admin password from the default password.`;
+            }            
           } catch (err) {
-            this.errorMessage = `${err.statusCode}: ${err.message}`
-            if (err.consoleUrl) {
-              this.consoleUrl = err.consoleUrl
-            }
+            console.error(err);
           }
           this.refreshStatus();
         }
