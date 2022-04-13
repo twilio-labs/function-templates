@@ -53,42 +53,56 @@ async function getCurrentEnvironment(context) {
   }
 }
 
-async function usesFunctionUi(context) {
-  const environment = getCurrentEnvironment(context);
-  if (environment === undefined) {
-    return false;
+function adminPasswordChangedFromDefault() {
+  return process.env.ADMIN_PASSWORD === 'default' ? false : true;
+}
+
+function adminPasswordMeetsComplexityRequirements() {
+  const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
+  return !regex.test(process.env.ADMIN_PASSWORD) ? false : true;
+}
+
+async function generateEnvVariableInstructions(context) {
+  const env = await getCurrentEnvironment(context);
+
+  if (env) {
+    const client = context.getTwilioClient();
+    const service = await client.serverless.services(env.serviceSid).fetch();
+    if (service.uiEditable) {
+      let consoleUrl = `https://console.twilio.com/service/functions/${env.serviceSid}/runtime-functions-editor?currentFrameUrl=%2Fconsole%2Ffunctions%2Feditor%2F${env.serviceSid}%2Fenvironment%2F${env.sid}%2Fconfig%2Fvariables`;
+
+      return `<p>You can change the admin password by editing the <code>ADMIN_PASSWORD</code> value on the <a href=${consoleUrl} target="_blank">Environment tab of your Functions editor</a>.</p>
+        <p>After updating environment variables, you must redeploy your application by pressing the <strong>Deploy All</strong> button in your Functions editor.</p>`;
+    }
   }
-  const service = await client.serverless.services(environment.serviceSid).fetch();
-  return service.uiEditable;
+
+  return `<p>You can change the admin password by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.</p>
+    <p>After you have edited and saved your <code>.env</code> file, please redeploy with the following command:</p>
+    <code>twilio serverless:deploy</code>`;
 }
 
 async function checkAdminPassword(context, event, callback) {
-  const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
+  let response = new Twilio.Response();
+  let responseBody;
 
-  let response = {
-    changedFromDefault: false,
-    meetsRequirements: false,
-    consoleUrl: null
-  };
+  if (!adminPasswordChangedFromDefault()) {
+    response.setStatusCode(403);
 
-  if (!regex.test(process.env.ADMIN_PASSWORD)) {
-    response.changedFromDefault = process.env.ADMIN_PASSWORD !== "default";
-    const env = await getCurrentEnvironment(context);
+    responseBody = `<p>You must change your admin password.</p>`;
+  } else if (!adminPasswordMeetsComplexityRequirements()) {
+    response.setStatusCode(403);
 
-    if (env) {
-      const client = context.getTwilioClient();
-      const service = await client.serverless.services(env.serviceSid).fetch();
-      if (service.uiEditable) {
-        response.consoleUrl = `https://console.twilio.com/service/functions/${env.serviceSid}/runtime-functions-editor?currentFrameUrl=%2Fconsole%2Ffunctions%2Feditor%2F${env.serviceSid}%2Fenvironment%2F${env.sid}%2Fconfig%2Fvariables`;
-      };
-    };
+    responseBody = `<p>Your admin password does not meet the complexity requirements.</p>`;
   } else {
-    response.changedFromDefault = true;
-    response.meetsRequirements = true;
-  }
-    
+    response.setStatusCode(200);
     callback(null, response);
-};
+  }
+
+  responseBody += await generateEnvVariableInstructions(context);
+
+  response.setBody(responseBody);
+  callback(null, response);
+}
 
 async function getEnvironmentVariables(context, environment) {
   const client = context.getTwilioClient();
@@ -170,5 +184,4 @@ module.exports = {
   getEnvironmentVariable,
   setEnvironmentVariable,
   urlForSiblingPage,
-  usesFunctionUi
 };

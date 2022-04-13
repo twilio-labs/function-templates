@@ -5,7 +5,7 @@ const {
   getCurrentEnvironment,
   urlForSiblingPage,
   usesFunctionUi,
-} = require(assets["/admin/shared.js"].path);
+} = require(assets['/admin/shared.js'].path);
 const extensions = require(assets['/extensions.js'].path);
 
 async function checkEnvironmentInitialization(context) {

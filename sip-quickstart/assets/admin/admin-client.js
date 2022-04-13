@@ -5,29 +5,16 @@ class AdminClient {
 
   async _handleResponse(response) {
     if (!response.ok) {
-      if (response.status === 403) {
-        this.token = null;
-        this.isReady = false;
-      }
-
-      if (response.status === 500) {
-        const responseBody = response.json();
-        this.token = null;
-        this.isReady = false;
-
-        // eslint-disable-next-line no-throw-literal
-        throw {
-          statusCode: response.status,
-          message: responseBody.message,
-          consoleUrl: responseBody.consoleUrl,
-        };
-      }
+      this.token = null;
+      this.isRead = false;
       // Throw an error
       // eslint-disable-next-line no-throw-literal
       throw {
         statusCode: response.status,
         message: await response.text(),
       };
+    } else {
+      return response;
     }
   }
 
@@ -47,7 +34,7 @@ class AdminClient {
   async checkAdminPassword() {
     const response = await fetch('./check-adminPassword');
     await this._handleResponse(response);
-    return response.json();
+    return true;
   }
 
   async login(password) {

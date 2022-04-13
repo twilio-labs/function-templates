@@ -7,25 +7,10 @@
     <div id="app">
       <div v-if="!passwordChangedSuccessfully && errorMessage">
         <h1>Change your admin password</h1>
-        <p>
-          Please take a moment to change your admin password.
-          <br><br>
-            {{ this.errorMessage }} The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
-          <div v-if="consoleUrl">
-            You can do this by editing the <code>ADMIN_PASSWORD</code> value on the <a :href="consoleUrl" target="_blank">Environment tab of your Functions editor</a>.
-            <br><br>
-            After updating environment variables, you must redepoy your application by pressing the <strong>Deploy All</strong> button in your Functions editor.
-          </div>
-          <div v-if="consoleUrl === null">
-            You can do this by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.
-            <br><br>
-            After you have edited and saved your <code>.env</code> file, please redeploy with the following command: 
-            <br><br>
-            <code>
-              twilio serverless:deploy
-            </code>
-          </div>
-        </p>
+          <div v-html="errorMessage"></div>
+          <p>
+            The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
+          </p>
       </div>
       <div class="login" v-if="!adminClient.isReady && passwordChangedSuccessfully">
         <h1>Password required</h1>
@@ -123,18 +108,10 @@
           this.md = window.markdownit();
 
           try {
-            
-            let result = await this.adminClient.checkAdminPassword();
-
-            if (result.changedFromDefault && result.meetsRequirements) {
-              this.passwordChangedSuccessfully = true;
-            } else if (result.changedFromDefault && !result.meetsRequirements) {
-              this.errorMessage = `Your admin password doesn't meet the requirements.`;
-            } else if (!result.changedFromDefault) {
-              this.errorMessage = `You must change your admin password from the default password.`;
-            }            
+            await this.adminClient.checkAdminPassword();
+            this.passwordChangedSuccessfully = true;
           } catch (err) {
-            console.error(err);
+            this.errorMessage = err.message;
           }
           this.refreshStatus();
         }
