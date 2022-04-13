@@ -54,18 +54,18 @@ async function getCurrentEnvironment(context) {
 }
 
 function adminPasswordChangedFromDefault() {
-  if (process.env.process.env.ADMIN_PASSWORD === "default") {
-    return false
+  if (process.env.process.env.ADMIN_PASSWORD === 'default') {
+    return false;
   }
-  return true
+  return true;
 }
 
 function adminPasswordMeetsComplexityRequirements() {
   const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
   if (regex.test(process.env.ADMIN_PASSWORD)) {
-    return true
+    return true;
   }
-  return false
+  return false;
 }
 
 async function generateEnvVariableInstructions(context) {

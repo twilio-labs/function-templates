@@ -4,9 +4,7 @@ class AdminClient {
   }
 
   async _handleResponse(response) {
-    if (response.ok) {
-      return
-    } else {
+    if (response.ok === false) {
       this.token = null;
       this.isRead = false;
       // Throw an error
@@ -16,6 +14,7 @@ class AdminClient {
         message: await response.text(),
       };
     }
+    return;
   }
 
   async _post(url, obj) {
