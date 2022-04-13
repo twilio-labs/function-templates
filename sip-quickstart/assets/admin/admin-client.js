@@ -14,7 +14,6 @@ class AdminClient {
         message: await response.text(),
       };
     }
-    return;
   }
 
   async _post(url, obj) {
