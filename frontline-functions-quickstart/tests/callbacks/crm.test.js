@@ -59,8 +59,8 @@ test('returns 422 for unknown location', async (done) => {
   const event = {};
 
   const callback = (_err, result) => {
-    expect(_err).toEqual(422);
     expect(result).toBeDefined();
+    expect(result._statusCode).toEqual(422);
 
     done();
   };
