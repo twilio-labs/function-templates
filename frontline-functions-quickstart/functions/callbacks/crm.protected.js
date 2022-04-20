@@ -77,7 +77,11 @@ exports.handler = async function (context, event, callback) {
 
     default: {
       console.log('Unknown location: ', location);
-      return callback(422, `Unknown location:  ${location}`);
+      const response = new Twilio.Response({
+        statusCode: 422,
+        body: `Unknown location: ${location}`
+      });
+      return callback(null, response);
     }
   }
 };
