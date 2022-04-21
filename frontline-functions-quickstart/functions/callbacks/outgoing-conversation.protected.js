@@ -22,8 +22,11 @@ const handleGetProxyAddress = (context, event, callback) => {
     const resp = { proxy_address: proxyAddress };
     return callback(null, resp);
   }
+  const response = new Twilio.Response();
+  response.setStatusCode(403);
+  response.setBody('Proxy address not found');
 
-  return callback(403, 'Proxy address not found');
+  return callback(null, response);
 };
 
 exports.handler = async function (context, event, callback) {
@@ -33,5 +36,10 @@ exports.handler = async function (context, event, callback) {
   if (location === 'GetProxyAddress') {
     return handleGetProxyAddress(context, event, callback);
   }
-  return callback(422, `Unknown location: ${location}`);
+
+  const response = new Twilio.Response();
+  response.setStatusCode(422);
+  response.setBody(`Unknown location: ${location}`);
+
+  return callback(null, response);
 };

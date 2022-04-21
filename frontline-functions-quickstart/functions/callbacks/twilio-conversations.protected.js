@@ -110,14 +110,18 @@ exports.handler = async function (context, event, callback) {
           );
           return callback(null, 'success');
         } catch (err) {
-          return callback(err, `Something went wrong`);
+          return callback(err, 'Something went wrong');
         }
       }
       return callback(null);
     }
 
     default: {
-      return callback(422, `Unhandled webhook event`);
+      const response = new Twilio.Response();
+      response.setStatusCode(422);
+      response.setBody('Unhandled webhook event');
+
+      return callback(null, response);
     }
   }
 };

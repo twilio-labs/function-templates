@@ -92,8 +92,11 @@ exports.handler = async function (context, event, callback) {
         return callback(err);
       }
     }
+    const response = new Twilio.Response();
+    response.setStatusCode(422);
+    response.setBody(`Unknown location: ${location}`);
 
-    return callback(422, `Unknown location: ${location}`);
+    return callback(null, response);
   } catch (err) {
     console.log(err);
     return callback(err);
