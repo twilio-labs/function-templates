@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+const helpers = require('../../../test/test-helper');
 const outgoingConversation =
   require('../../functions/callbacks/outgoing-conversation.protected').handler;
 
@@ -14,6 +15,14 @@ const context = {
   PHONE_NUMBER_FOR_CUSTOMER_2: CUSTOMER_2_NUMBER,
   NAME_FOR_CUSTOMER_2: 'Test Customer 2',
 };
+
+beforeAll(() => {
+  helpers.setup(context);
+});
+
+afterAll(() => {
+  helpers.teardown();
+});
 
 test('Outgoing conversation: resolves', async (done) => {
   const event = {
@@ -38,8 +47,9 @@ test('Outgoing conversation: fails on missing Location', async (done) => {
 
   const callback = (_err, result) => {
     console.log(result);
-    expect(_err).toBeTruthy();
+    expect(_err).toBeFalsy();
     expect(result).toBeDefined();
+    expect(result._statusCode).toEqual(422);
     done();
   };
 
@@ -86,8 +96,10 @@ test('Outgoing conversation: fails on unknown channelType', async (done) => {
 
   const callback = (_err, result) => {
     console.log(result);
-    expect(_err).toEqual(403);
+    expect(_err).toBeFalsy();
     expect(result).toBeDefined();
+    expect(result._statusCode).toEqual(403);
+
     done();
   };
 
@@ -101,8 +113,10 @@ test('Outgoing conversation: fails on missing channelType', async (done) => {
 
   const callback = (_err, result) => {
     console.log(result);
-    expect(_err).toEqual(403);
+
+    expect(_err).toBeFalsy();
     expect(result).toBeDefined();
+    expect(result._statusCode).toEqual(403);
     done();
   };
 

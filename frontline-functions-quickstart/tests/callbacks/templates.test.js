@@ -53,8 +53,9 @@ test('GetTemplatesByCustomerId: fails on unknown location', async (done) => {
   };
 
   const callback = (_err, result) => {
-    expect(_err).toBeTruthy();
+    expect(_err).toBeFalsy();
     expect(result).toBeDefined();
+    expect(result._statusCode).toEqual(422);
     done();
   };
 
