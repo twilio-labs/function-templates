@@ -1646,7 +1646,7 @@
         "contentKey": null
       }
     ],
-    "frontline-functions-quickstart": [
+    "frontline-quickstart": [
       {
         "key": "TWILIO_PHONE_NUMBER",
         "required": true,
