@@ -33,7 +33,7 @@
     "copy-template-dir": "^1.4.0",
     "crypto": "^1.0.1",
     "cypress": "^9.2.0",
-    "eslint": "^5.16.0",
+    "eslint": "^6.6.0",
     "eslint-config-twilio": "^1.34.2",
     "get-port": "^6.0.0",
     "googleapis": "^65.0.0",
