@@ -12,7 +12,7 @@
             The password must be a minimum of 12 characters, contain at least 1 digit, and have mixed case.
           </p>
       </div>
-      <div class="login" v-if="!adminClient.isReady && passwordChangedSuccessfully">
+      <div class="login" v-if="passwordChangedSuccessfully">
         <h1>Password required</h1>
         <p>
           A password is required to update your environment. This can be found in your environment variables.
@@ -27,7 +27,7 @@
           <p>{{ errorMessage }}</p>
         </form>
       </div>
-      <div class="quickstart" v-if="adminClient.isReady">
+      <div class="quickstart" v-if="adminClient.token">
         <h1>Quickstart</h1>
         <div class="initialization" v-if="!environment.valid">
           <h2>{{ environment.title }}</h2>

@@ -1,8 +1,4 @@
 class AdminClient {
-  constructor() {
-    this.isReady = this.token !== null;
-  }
-
   async _handleResponse(response) {
     if (response.ok === false) {
       this.token = null;
@@ -38,7 +34,6 @@ class AdminClient {
   async login(password) {
     const result = await this._post('./login', { password });
     this.token = result.token;
-    this.isReady = true;
     return this.token !== null;
   }
 
