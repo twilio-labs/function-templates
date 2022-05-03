@@ -30,7 +30,7 @@ class AdminClient {
   }
 
   async checkAdminPassword() {
-    const response = await fetch('./check-adminPassword');
+    const response = await fetch('./check-admin-password');
     await this._handleResponse(response);
     return true;
   }
