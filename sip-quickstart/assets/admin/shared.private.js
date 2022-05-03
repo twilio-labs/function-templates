@@ -62,10 +62,7 @@ function adminPasswordChangedFromDefault() {
 
 function adminPasswordMeetsComplexityRequirements() {
   const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
-  if (regex.test(process.env.ADMIN_PASSWORD)) {
-    return true;
-  }
-  return false;
+  return regex.test(process.env.ADMIN_PASSWORD);
 }
 
 async function generateEnvVariableInstructions(context) {
