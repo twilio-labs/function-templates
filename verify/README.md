@@ -2,7 +2,7 @@
 
 These function show you how to send and check verification tokens for [Twilio Verify](https://www.twilio.com/docs/verify/api). More details about how to work with Verify and Twilio functions can be found in [this blog post](https://www.twilio.com/blog/serverless-phone-verification).
 
-![phone-verification-gif](./phone-verification-v2.gif?raw=true)
+![phone-verification-gif](./phone-verification-v3.gif?raw=true)
 
 ## How to use the template
 

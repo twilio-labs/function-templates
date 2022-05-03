@@ -14,30 +14,7 @@ Each Function lives in its own directory within this repo. The easiest way to us
 
 ## Available Functions
 
-This is the list of Functions available in this repo:
-
-- [Blank Template](blank) - Barebones template to get started
-- [Hello World](hello-world) - A very basic Function to get this repo started
-- [Hello Voice](hello-voice) - Function to get you started with Twilio Prog. Voice
-- [Hello Messaging](hello-messaging) - Function to get you started with Twilio Prog. Messaging
-- [Forward Call](forward-call) - Forwards an incoming call to another number
-- [Forward Message](forward-message) - Forward incoming SMS messages to another number
-- [Forward Message to Multiple Numbers](forward-message-multiple) - Forwards incoming messages to a set of numbers
-- [Forward Message to Email via SendGrid](forward-message-sendgrid) - Uses SendGrid to forward incoming messages via email
-- [Forward Message to Email via Sparkpost](forward-message-sparkpost) - Uses Sparkpost to forward incoming messages via email
-- [Hunt/Find me](hunt) - Call a list of numbers in order until one answers
-- [Generate Video access token](video-token) - Generates a Video Access Token for client-side applications
-- [Stripe SMS Receipt](stripe-sms-receipt) - Send an SMS receipt to your Stripe customers based on webhook events.
-- [Generate Sync access token](sync-token) - Generates a Sync Access Token for client-side applications
-- [Generate Chat access token](chat-token) - Generates a Chat Access Token for client-side applications
-- [Conference line](conference) - Simple TwiML to drop callers into a conference call called "Snowy Owl"
-- [Simple play](never-gonna-give-you-up) - TwiML to `<Play>` an mp3
-- [HTTP Redirect](http-redirect) - Redirects a request from Twilio Functions to another URL by setting the Location header to the respective URL
-- [Temp Storage](temp-storage) - Function that shows you where files created in a Twilio Function go and how to manage them for one-off activities
-- [Verify](verify) - Functions to send and check one-time passwords via SMS or Voice for phone verification
-- [Email Verification Magic Links](magic-links) - Send one-click email verification using Verify and SendGrid
-- [Verify Testing Dashboard](verify-dashboard) - Helpful dashboard for testing and debugging during your development with Twilio Verify.
-- [SMS verification retry best practices](verify-retry) - Best practices UI for resending SMS verification codes and voice channel fallback.
+[Complete list of available functions](docs/templates.md)
 
 ## Github Pages
 

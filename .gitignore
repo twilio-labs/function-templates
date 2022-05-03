@@ -9,3 +9,4 @@ cypress/screenshots/
 cypress/videos/
 **/cypress/screenshots/
 **/cypress/videos/
+**/.twiliodeployinfo
