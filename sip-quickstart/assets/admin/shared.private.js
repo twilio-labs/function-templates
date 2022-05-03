@@ -54,10 +54,7 @@ async function getCurrentEnvironment(context) {
 }
 
 function adminPasswordChangedFromDefault() {
-  if (process.env.ADMIN_PASSWORD === 'default') {
-    return false;
-  }
-  return true;
+  return process.env.ADMIN_PASSWORD !== 'default';
 }
 
 function adminPasswordMeetsComplexityRequirements() {
