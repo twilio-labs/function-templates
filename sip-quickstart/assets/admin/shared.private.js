@@ -37,6 +37,7 @@ async function getCurrentEnvironment(context) {
     return;
   }
   const client = context.getTwilioClient();
+
   const services = await client.serverless.services.list();
   for (const service of services) {
     const environments = await client.serverless
@@ -58,7 +59,7 @@ function adminPasswordChangedFromDefault() {
 }
 
 function adminPasswordMeetsComplexityRequirements() {
-  const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}$');
+  const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}.*[0-9].*$');
   return regex.test(process.env.ADMIN_PASSWORD);
 }
 
@@ -178,9 +179,12 @@ function urlForSiblingPage(newPage, ...paths) {
 }
 
 module.exports = {
+  adminPasswordChangedFromDefault,
+  adminPasswordMeetsComplexityRequirements,
   checkAuthorization,
   checkAdminPassword,
   createToken,
+  generateEnvVariableInstructions,
   getCurrentEnvironment,
   getEnvironmentVariables,
   getEnvironmentVariable,
