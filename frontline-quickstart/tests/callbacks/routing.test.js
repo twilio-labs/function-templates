@@ -26,7 +26,7 @@ const context = {
   USERNAME: TEST_USERNAME,
   CUSTOMER_1_PHONE_NUMBER: '+12223334444',
   CUSTOMER_1_NAME: 'Test Customer 1',
-  PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334445',
+  CUSTOMER_2_PHONE_NUMBER: '+12223334445',
   CUSTOMER_2_NAME: 'Test Customer 2',
 };
 
@@ -76,7 +76,7 @@ test('routeConversation: finds worker', async (done) => {
 
 test('routeConversation: finds worker for customer 2', async (done) => {
   const conversationSid = 'CH12345';
-  const customerNumber = context.PHONE_NUMBER_FOR_CUSTOMER_2;
+  const customerNumber = context.CUSTOMER_2_PHONE_NUMBER;
 
   const workerIdentity = await routeConversation(
     context,
@@ -110,7 +110,7 @@ test('routeConversation: fails when not worker is assigned', async (done) => {
     TWILIO_PHONE_NUMBER: '+1234567890',
     CUSTOMER_1_PHONE_NUMBER: '+12223334444',
     CUSTOMER_1_NAME: 'Test Customer 1',
-    PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334445',
+    CUSTOMER_2_PHONE_NUMBER: '+12223334445',
     CUSTOMER_2_NAME: 'Test Customer 2',
   };
 
