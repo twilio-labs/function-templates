@@ -25,11 +25,11 @@ const mockConversations = {
 
 const mockClient = { conversations: mockConversations };
 
-const TEST_WORKER_USERNAME = 'testworker';
+const TEST_USERNAME = 'testworker';
 const context = {
   getTwilioClient: () => mockClient,
   TWILIO_PHONE_NUMBER: '+1234567890',
-  WORKER_USERNAME: TEST_WORKER_USERNAME,
+  USERNAME: TEST_USERNAME,
   PHONE_NUMBER_FOR_CUSTOMER_1: '+12223334444',
   NAME_FOR_CUSTOMER_1: 'Test Customer 1',
   PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334445',

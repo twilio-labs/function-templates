@@ -8,7 +8,7 @@ const generateCustomersList = (context) => {
   if (
     context.PHONE_NUMBER_FOR_CUSTOMER_1 &&
     context.NAME_FOR_CUSTOMER_1 &&
-    context.WORKER_USERNAME
+    context.USERNAME
   ) {
     customers.push({
       customer_id: 1,
@@ -30,7 +30,7 @@ const generateCustomersList = (context) => {
         content:
           'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.WORKER_USERNAME,
+      worker: context.USERNAME,
       address: context.PHONE_NUMBER_FOR_CUSTOMER_1,
     });
   }
@@ -38,7 +38,7 @@ const generateCustomersList = (context) => {
   if (
     context.PHONE_NUMBER_FOR_CUSTOMER_2 &&
     context.NAME_FOR_CUSTOMER_2 &&
-    context.WORKER_USERNAME
+    context.USERNAME
   ) {
     customers.push({
       customer_id: 2,
@@ -60,7 +60,7 @@ const generateCustomersList = (context) => {
         content:
           'This is a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.WORKER_USERNAME,
+      worker: context.USERNAME,
       address: context.PHONE_NUMBER_FOR_CUSTOMER_2,
     });
   }

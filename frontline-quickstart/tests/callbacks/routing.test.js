@@ -19,11 +19,11 @@ const mockConversations = {
 
 const mockClient = { conversations: mockConversations };
 
-const TEST_WORKER_USERNAME = 'testworker';
+const TEST_USERNAME = 'testworker';
 const context = {
   getTwilioClient: () => mockClient,
   TWILIO_PHONE_NUMBER: '+1234567890',
-  WORKER_USERNAME: TEST_WORKER_USERNAME,
+  USERNAME: TEST_USERNAME,
   PHONE_NUMBER_FOR_CUSTOMER_1: '+12223334444',
   NAME_FOR_CUSTOMER_1: 'Test Customer 1',
   PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334445',
@@ -69,7 +69,7 @@ test('routeConversation: finds worker', async (done) => {
     customerNumber
   );
   expect(workerIdentity).toBeDefined();
-  expect(workerIdentity).toEqual(TEST_WORKER_USERNAME);
+  expect(workerIdentity).toEqual(TEST_USERNAME);
 
   done();
 });
@@ -84,7 +84,7 @@ test('routeConversation: finds worker for customer 2', async (done) => {
     customerNumber
   );
   expect(workerIdentity).toBeDefined();
-  expect(workerIdentity).toEqual(TEST_WORKER_USERNAME);
+  expect(workerIdentity).toEqual(TEST_USERNAME);
   done();
 });
 
@@ -98,7 +98,7 @@ test('routeConversation: no assigned worker, assigns a random', async (done) => 
     customerNumber
   );
   expect(workerIdentity).toBeDefined();
-  expect(workerIdentity).toEqual(TEST_WORKER_USERNAME);
+  expect(workerIdentity).toEqual(TEST_USERNAME);
   done();
 });
 
@@ -122,7 +122,7 @@ test('routeConversation: fails when not worker is assigned', async (done) => {
 
 test('routeConversationToWorker', async (done) => {
   const conversationSid = 'CH12345';
-  const workerIdentity = TEST_WORKER_USERNAME;
+  const workerIdentity = TEST_USERNAME;
 
   const conversation = await routeConversationToWorker(
     context.getTwilioClient(),
@@ -135,7 +135,7 @@ test('routeConversationToWorker', async (done) => {
 
 test('routeConversationToWorker: fails if no Twilio client present', async (done) => {
   const conversationSid = 'CH12345';
-  const workerIdentity = TEST_WORKER_USERNAME;
+  const workerIdentity = TEST_USERNAME;
 
   await expect(
     routeConversationToWorker(

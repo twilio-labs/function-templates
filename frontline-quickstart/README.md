@@ -14,7 +14,7 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| WORKER_USERNAME | SSO username of agent to be assigned to Example Customer | Yes |
+| USERNAME | SSO username of agent to be assigned to Example Customers | Yes |
 | PHONE_NUMBER_FOR_CUSTOMER_1 | Phone number to be used on the Example Customer 1 | Yes |
 | NAME_FOR_CUSTOMER_1 | Display name for Example Customer 1 | Yes |
 | PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer 2 | No |
