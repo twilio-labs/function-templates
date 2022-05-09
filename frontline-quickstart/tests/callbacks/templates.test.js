@@ -14,7 +14,7 @@ const context = {
   CUSTOMER_1_PHONE_NUMBER: '+12223334444',
   CUSTOMER_1_NAME: 'Test Customer 1',
   PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334444',
-  NAME_FOR_CUSTOMER_2: 'Test Customer 2',
+  CUSTOMER_2_NAME: 'Test Customer 2',
 };
 
 beforeAll(() => {

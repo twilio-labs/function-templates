@@ -18,7 +18,7 @@ In your `.env` file, set the following values:
 | CUSTOMER_1_PHONE_NUMBER | Phone number to be used on the Example Customer 1 | Yes |
 | CUSTOMER_1_NAME | Display name for Example Customer 1 | Yes |
 | PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer 2 | No |
-| NAME_FOR_CUSTOMER_2 | Display name for Example Customer 2 | No |
+| CUSTOMER_2_NAME | Display name for Example Customer 2 | No |
 | TWILIO_PHONE_NUMBER | A Twilio phone number to be used as the Sender | Yes |
 
 

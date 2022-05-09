@@ -37,12 +37,12 @@ const generateCustomersList = (context) => {
 
   if (
     context.PHONE_NUMBER_FOR_CUSTOMER_2 &&
-    context.NAME_FOR_CUSTOMER_2 &&
+    context.CUSTOMER_2_NAME &&
     context.USERNAME
   ) {
     customers.push({
       customer_id: 2,
-      display_name: context.NAME_FOR_CUSTOMER_2,
+      display_name: context.CUSTOMER_2_NAME,
       channels: [
         { type: 'email', value: 'customer_test_2@example.com' },
         { type: 'sms', value: context.PHONE_NUMBER_FOR_CUSTOMER_2 },

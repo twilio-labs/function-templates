@@ -16,7 +16,7 @@ const context = {
   CUSTOMER_1_PHONE_NUMBER: CUSTOMER_1_NUMBER,
   CUSTOMER_1_NAME: 'Test Customer 1',
   PHONE_NUMBER_FOR_CUSTOMER_2: CUSTOMER_2_NUMBER,
-  NAME_FOR_CUSTOMER_2: 'Test Customer 2',
+  CUSTOMER_2_NAME: 'Test Customer 2',
 };
 
 test('generateCustomersList', () => {
