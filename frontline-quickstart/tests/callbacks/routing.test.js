@@ -25,7 +25,7 @@ const context = {
   TWILIO_PHONE_NUMBER: '+1234567890',
   USERNAME: TEST_USERNAME,
   PHONE_NUMBER_FOR_CUSTOMER_1: '+12223334444',
-  NAME_FOR_CUSTOMER_1: 'Test Customer 1',
+  CUSTOMER_1_NAME: 'Test Customer 1',
   PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334445',
   NAME_FOR_CUSTOMER_2: 'Test Customer 2',
 };
@@ -109,7 +109,7 @@ test('routeConversation: fails when not worker is assigned', async (done) => {
     getTwilioClient: () => mockClient,
     TWILIO_PHONE_NUMBER: '+1234567890',
     PHONE_NUMBER_FOR_CUSTOMER_1: '+12223334444',
-    NAME_FOR_CUSTOMER_1: 'Test Customer 1',
+    CUSTOMER_1_NAME: 'Test Customer 1',
     PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334445',
     NAME_FOR_CUSTOMER_2: 'Test Customer 2',
   };
