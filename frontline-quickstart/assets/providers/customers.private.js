@@ -6,7 +6,7 @@ const generateCustomersList = (context) => {
   const customers = [];
 
   if (
-    context.PHONE_NUMBER_FOR_CUSTOMER_1 &&
+    context.CUSTOMER_1_PHONE_NUMBER &&
     context.CUSTOMER_1_NAME &&
     context.USERNAME
   ) {
@@ -15,7 +15,7 @@ const generateCustomersList = (context) => {
       display_name: context.CUSTOMER_1_NAME,
       channels: [
         { type: 'email', value: 'customer_test_1@example.com' },
-        { type: 'sms', value: context.PHONE_NUMBER_FOR_CUSTOMER_1 },
+        { type: 'sms', value: context.CUSTOMER_1_PHONE_NUMBER },
         // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, // TODO: figure out Whatsapp
       ],
       links: [
@@ -31,7 +31,7 @@ const generateCustomersList = (context) => {
           'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
       worker: context.USERNAME,
-      address: context.PHONE_NUMBER_FOR_CUSTOMER_1,
+      address: context.CUSTOMER_1_PHONE_NUMBER,
     });
   }
 
