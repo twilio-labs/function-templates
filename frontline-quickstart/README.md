@@ -20,7 +20,6 @@ In your `.env` file, set the following values:
 | PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer 2 | No |
 | NAME_FOR_CUSTOMER_2 | Display name for Example Customer 2 | No |
 | TWILIO_PHONE_NUMBER | A Twilio phone number to be used as the Sender | Yes |
-| TWILIO_WHATSAPP_NUMBER | A Whatsapp enabled phone number | No |
 
 
 ## Create a new project with the template
