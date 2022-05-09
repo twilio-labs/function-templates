@@ -1645,6 +1645,78 @@
         "configurable": false,
         "contentKey": null
       }
+    ],
+    "frontline-quickstart": [
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Twilio phone number to send SMS from. Your patient will see this number.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_WHATSAPP_NUMBER",
+        "required": false,
+        "format": "phone_number",
+        "description": "(Optional) A Whatsapp enabled phone number we'll use as an example customer phone number to test the app end-to-end",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "WORKER_USERNAME",
+        "required": true,
+        "format": "text",
+        "description": "Worker username: this is the username of one of the users added to the Identity Provider (SSO). We'll use this to log into the app and each example customer we'll create will be assigned to this worker.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "PHONE_NUMBER_FOR_CUSTOMER_1",
+        "required": true,
+        "format": "phone_number",
+        "description": "We'll create an example customer to test the app, and we'll use this as the phone number. Ideally, this is your personal phone number.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "NAME_FOR_CUSTOMER_1",
+        "required": true,
+        "format": "text",
+        "description": "The contact name to be used for the example customer #1",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "PHONE_NUMBER_FOR_CUSTOMER_2",
+        "required": false,
+        "format": "phone_number",
+        "description": "(Optional) To create a second contact, provide another phone number to test the app end-to-end",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "NAME_FOR_CUSTOMER_2",
+        "required": false,
+        "format": "text",
+        "description": "(Optional) The contact name to be used for the example customer #2",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
     ]
   }
 }

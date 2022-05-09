@@ -46,7 +46,7 @@
     "listr": "^0.14.3",
     "log-symbols": "^3.0.0",
     "mailgun.js": "^3.3.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-fetch": "^2.6.7",
     "prettier": "^2.3.0",
     "pretty-quick": "^3.1.0",
@@ -54,7 +54,7 @@
     "stripe": "^8.20.0",
     "tsscmp": "^1.0.6",
     "turbo": "^1.0.24",
-    "twilio": "^3.73.1",
+    "twilio": "^3.75.1",
     "uuid": "^8.3.2",
     "validator": "^13.7.0"
   },

@@ -1,0 +1,37 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::selection {
+  background: #f22f46;
+  color: white;
+}
+
+a {
+  color: #008cff;
+}
+#success-header {
+  padding: 20px 0;
+  display: flex;
+  height: 180px;
+}
+#success-header h1 {
+  margin-bottom: 1em;
+}
+main ul li {
+  margin-bottom: 2.5em;
+}
+main ul li input[type='text'] {
+  display: block;
+  width: 100%;
+}
+
+div.content {
+  max-width: 650px;
+  padding: 0 20px;
+}
+section {
+  margin-bottom: 20px;
+}
