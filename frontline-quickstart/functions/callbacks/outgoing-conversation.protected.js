@@ -1,8 +1,12 @@
 /* eslint-disable camelcase */
 const getCustomerProxyAddress = (context, channelName) => {
-  if (channelName === 'whatsapp') {
-    return context.TWILIO_WHATSAPP_NUMBER;
-  }
+  /**
+   * if you are also using whatsapp, you can use the following code:
+   * if (channelName === 'whatsapp') {
+   *   return context.TWILIO_WHATSAPP_NUMBER;
+   * }
+   */
+
   if (channelName === 'sms') {
     return context.TWILIO_PHONE_NUMBER;
   }

@@ -14,13 +14,12 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| WORKER_USERNAME | SSO username of agent to be assigned to Example Customer | Yes |
-| PHONE_NUMBER_FOR_CUSTOMER_1 | Phone number to be used on the Example Customer 1 | Yes |
-| NAME_FOR_CUSTOMER_1 | Display name for Example Customer 1 | Yes |
-| PHONE_NUMBER_FOR_CUSTOMER_2 | Phone number to be used on the Example Customer 2 | No |
-| NAME_FOR_CUSTOMER_2 | Display name for Example Customer 2 | No |
+| USERNAME | SSO username of agent to be assigned to Example Customers | Yes |
+| CUSTOMER_1_PHONE_NUMBER | Phone number to be used on the Example Customer 1 | Yes |
+| CUSTOMER_1_NAME | Display name for Example Customer 1 | Yes |
+| CUSTOMER_2_PHONE_NUMBER | Phone number to be used on the Example Customer 2 | No |
+| CUSTOMER_2_NAME | Display name for Example Customer 2 | No |
 | TWILIO_PHONE_NUMBER | A Twilio phone number to be used as the Sender | Yes |
-| TWILIO_WHATSAPP_NUMBER | A Whatsapp enabled phone number | No |
 
 
 ## Create a new project with the template

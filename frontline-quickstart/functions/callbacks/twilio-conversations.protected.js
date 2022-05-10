@@ -73,7 +73,7 @@ exports.handler = async function (context, event, callback) {
           return callback(err);
         }
       }
-      break;
+      return callback(null);
     }
     case 'onParticipantAdded': {
       console.log('[[[onParticipantAdded]]]');

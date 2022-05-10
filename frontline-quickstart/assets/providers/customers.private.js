@@ -6,16 +6,16 @@ const generateCustomersList = (context) => {
   const customers = [];
 
   if (
-    context.PHONE_NUMBER_FOR_CUSTOMER_1 &&
-    context.NAME_FOR_CUSTOMER_1 &&
-    context.WORKER_USERNAME
+    context.CUSTOMER_1_PHONE_NUMBER &&
+    context.CUSTOMER_1_NAME &&
+    context.USERNAME
   ) {
     customers.push({
       customer_id: 1,
-      display_name: context.NAME_FOR_CUSTOMER_1,
+      display_name: context.CUSTOMER_1_NAME,
       channels: [
         { type: 'email', value: 'customer_test_1@example.com' },
-        { type: 'sms', value: context.PHONE_NUMBER_FOR_CUSTOMER_1 },
+        { type: 'sms', value: context.CUSTOMER_1_PHONE_NUMBER },
         // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, // TODO: figure out Whatsapp
       ],
       links: [
@@ -30,22 +30,22 @@ const generateCustomersList = (context) => {
         content:
           'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.WORKER_USERNAME,
-      address: context.PHONE_NUMBER_FOR_CUSTOMER_1,
+      worker: context.USERNAME,
+      address: context.CUSTOMER_1_PHONE_NUMBER,
     });
   }
 
   if (
-    context.PHONE_NUMBER_FOR_CUSTOMER_2 &&
-    context.NAME_FOR_CUSTOMER_2 &&
-    context.WORKER_USERNAME
+    context.CUSTOMER_2_PHONE_NUMBER &&
+    context.CUSTOMER_2_NAME &&
+    context.USERNAME
   ) {
     customers.push({
       customer_id: 2,
-      display_name: context.NAME_FOR_CUSTOMER_2,
+      display_name: context.CUSTOMER_2_NAME,
       channels: [
         { type: 'email', value: 'customer_test_2@example.com' },
-        { type: 'sms', value: context.PHONE_NUMBER_FOR_CUSTOMER_2 },
+        { type: 'sms', value: context.CUSTOMER_2_PHONE_NUMBER },
         // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, TODO
       ],
       links: [
@@ -60,8 +60,8 @@ const generateCustomersList = (context) => {
         content:
           'This is a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.WORKER_USERNAME,
-      address: context.PHONE_NUMBER_FOR_CUSTOMER_2,
+      worker: context.USERNAME,
+      address: context.CUSTOMER_2_PHONE_NUMBER,
     });
   }
 

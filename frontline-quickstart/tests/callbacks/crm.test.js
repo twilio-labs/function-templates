@@ -1,14 +1,14 @@
 const helpers = require('../../../test/test-helper');
 const CRMCallback = require('../../functions/callbacks/crm.protected').handler;
 
-const TEST_WORKER_USERNAME = 'testworker';
+const TEST_USERNAME = 'testworker';
 const context = {
   TWILIO_PHONE_NUMBER: '+1234567890',
-  WORKER_USERNAME: TEST_WORKER_USERNAME,
-  PHONE_NUMBER_FOR_CUSTOMER_1: '+12223334444',
-  NAME_FOR_CUSTOMER_1: 'Test Customer 1',
-  PHONE_NUMBER_FOR_CUSTOMER_2: '+12223334444',
-  NAME_FOR_CUSTOMER_2: 'Test Customer 2',
+  USERNAME: TEST_USERNAME,
+  CUSTOMER_1_PHONE_NUMBER: '+12223334444',
+  CUSTOMER_1_NAME: 'Test Customer 1',
+  CUSTOMER_2_PHONE_NUMBER: '+12223334444',
+  CUSTOMER_2_NAME: 'Test Customer 2',
 };
 
 beforeAll(() => {
@@ -42,7 +42,7 @@ test('get customer details by customer ID', async (done) => {
 
 test('get customers list for worker', async (done) => {
   const event = {
-    Worker: TEST_WORKER_USERNAME,
+    Worker: TEST_USERNAME,
     Location: 'GetCustomersList',
   };
 
