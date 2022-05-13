@@ -20,8 +20,11 @@ a {
 #success-header h1 {
   margin-bottom: 1em;
 }
+main ul {
+  margin-bottom: 3em;
+}
 main ul li {
-  margin-bottom: 2.5em;
+  margin-bottom: 1.5em;
 }
 main ul li input[type='text'] {
   display: block;
@@ -34,4 +37,8 @@ div.content {
 }
 section {
   margin-bottom: 20px;
+}
+
+p {
+  margin-bottom: 1.5em;
 }
