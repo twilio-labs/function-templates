@@ -37,7 +37,9 @@ const generateCustomersList = (context) => {
 
   if (
     context.CUSTOMER_2_PHONE_NUMBER &&
+    context.CUSTOMER_2_PHONE_NUMBER !== '""' && // when input is left empty, QuickDeploy sends '""'
     context.CUSTOMER_2_NAME &&
+    context.CUSTOMER_2_NAME !== '""' && // when input is left empty, QuickDeploy sends '""'
     context.USERNAME
   ) {
     customers.push({
