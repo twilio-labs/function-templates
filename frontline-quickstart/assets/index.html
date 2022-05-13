@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Get started with your Twilio Functions!</title>
+  <title>Your functions are ready!</title>
 
   <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
   <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
@@ -15,6 +15,8 @@
   <script>
     window.addEventListener('DOMContentLoaded', (_event) => {
       inputPrependBaseURL();
+      handleCopyToClipboard()
+
     });
   </script>
 </head>
@@ -49,9 +51,9 @@
     <div class="content">
       <div id="success-header">
         <img src="https://twilio-labs.github.io/function-templates/static/v1/success.svg" />
-        <div>  
+        <div>
           <h1>Great news!</h1>
-          <h2>This Frontline Intergration Service using functions has been deployed successully!</h2>
+          <h2>This Frontline Intergration Service using functions has been deployed successfully!</h2>
         </div>
       </div>
       <section>
@@ -60,44 +62,73 @@
           This service provides a back-end for your Twilio Frontline Instance.
         </p>
       </section>
-      <section>
-        <h2>Next steps:</h2>
-        <p>Configure the callbacks in <a href="https://www.twilio.com/console/frontline">your Frontline instance:</a></p>
-        <form>
-          <ul>
-            <li>
-              <label for="callbacks-crm">CRM Callback</label>
+
+      <h2>Next steps:</h2>
+      <p>Configure the callbacks to finish the serverless setup. There are 3 areas where we need to add these
+        callbacks.</p>
+
+      <form>
+        <p>First, add CRM Callbacks, Outgoing Conversations Callback, and Template Callback to the <a target="_blank"
+            href="https://console.twilio.com/?frameUrl=%2Fconsole%2Ffrontline%2Fconfigure">Frontline Callbacks
+            Configuration Page</a>. Don’t forget to save.</p>
+
+        <ul>
+          <li>
+            <label for="callbacks-crm">CRM Callback URL</label>
+            <div class="copy-input-wrapper">
               <input type="text" id="callbacks-crm" class="function-root" readonly=true value="/callbacks/crm">
-            </li>
-            <li>
-              <label for="callbacks-outgoing-conversation">Outgoing Conversations Proxy</label>
+            </div>
+          </li>
+          <li>
+            <label for="callbacks-outgoing-conversation">Outgoing Conversations Callback URL</label>
+            <div class="copy-input-wrapper">
               <input type="text" id="callbacks-outgoing-conversation" class="function-root" readonly=true
                 value="/callbacks/outgoing-conversation">
-            </li>
-            <li>
-              <label for="callbacks-templates">Templates</label>
+            </div>
+          </li>
+          <li>
+            <label for="callbacks-templates">Templates Callback URL</label>
+            <div class="copy-input-wrapper">
               <input type="text" id="callbacks-templates" class="function-root" readonly=true
                 value="/callbacks/templates">
-            </li>
-            <li>
-              <label for="callbacks-routing">Routing</label>
+            </div>
+          </li>
+        </ul>
+        <p>Next, add the Custom Routing Callback URL below to the <a target="_blank"
+            href="https://console.twilio.com/?frameUrl=%2Fconsole%2Ffrontline%2Frouting">Frontline Inbound Routing
+            page</a>. Remember to <strong>select the Custom Routing checkbox</strong>, and don’t forget to click on
+          Save.</p>
+
+        <ul>
+          <li>
+            <label for="callbacks-routing">Custom Routing Callback URL</label>
+            <div class="copy-input-wrapper">
               <input type="text" id="callbacks-routing" class="function-root" readonly=true value="/callbacks/routing">
-            </li>
-            <li>
-              <label for="callbacks-twilio-conversations">Converstations Webhooks</label>
+            </div>
+          </li>
+        </ul>
+
+        <p>Finally, add the Conversation webhooks to the <strong>Pre and Post-event Webhook URLs</strong> in the <a
+            target="_blank"
+            href="https://console.twilio.com/?frameUrl=%2Fconsole%2Fconversations%2Fconfiguration%2Fwebhooks">Conversations
+            API webhook configuration page</a>. Select the <strong>onConversationAdd</strong> and
+          <strong>onParticipantAdded</strong> options under <strong>Webhook Filtering</strong> and click on Save.
+        </p>
+        <ul>
+          <li>
+            <label for="callbacks-twilio-conversations">Converstations Webhooks</label>
+            <div class="copy-input-wrapper">
               <input type="text" id="callbacks-twilio-conversations" class="function-root" readonly=true
                 value="/callbacks/twilio-conversations">
-            </li>
-          </ul>
-        </form>
-
-        <br>
-          🔐 All functions exposed by this service are protected by Twilio Webhook authorization tokens, so you won't be
-          able to make requests to them from another app like Postman or CURL.
-        </p>
+            </div>
+          </li>
+        </ul>
+        <p>That's it! We have now configured all the callbacks needed. Now lets head back to the Quickstart Guide for
+          step 6.</p>
+      </form>
       </section>
       <section>
-      <!-- APP_INFO_V2 -->
+        <!-- EDIT_CODE_V2 -->
       </section>
     </div>
   </main>
