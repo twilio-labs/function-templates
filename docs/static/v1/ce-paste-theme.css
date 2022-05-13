@@ -364,3 +364,108 @@ explicitly, e.g.
   font-style: oblique 0deg 10deg;
   src: url("Inter.var.woff2?v=3.15") format("woff2");
 }
+
+
+/*
+* Input Copy to Clipboard feature
+*/
+.copy-input-wrapper {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  background-color: rgb(244, 244, 246);
+  -webkit-box-shadow: rgb(136, 145, 170) 0px 0px 0px 1px;
+  box-shadow: rgb(136, 145, 170) 0px 0px 0px 1px;
+  border-radius: 4px;
+  -webkit-transition: -webkit-box-shadow 100ms ease-in 0s;
+  transition: -webkit-box-shadow 100ms ease-in 0s;
+  -o-transition: box-shadow 100ms ease-in 0s;
+  transition: box-shadow 100ms ease-in 0s;
+  transition: box-shadow 100ms ease-in 0s, -webkit-box-shadow 100ms ease-in 0s;
+  cursor: text;
+}
+
+.copy-input-wrapper input {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px 0px 0px 4px;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin: 0px;
+  outline: none;
+  padding: 0.25rem 0.75rem;
+  resize: none;
+  width: 100%;
+  border-right: 1px solid rgb(225, 227, 234);
+}
+
+.copy-input-wrapper button {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: auto;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
+  border: none;
+  outline: currentcolor none medium;
+  margin: 0px;
+  cursor: pointer;
+  color: rgb(2, 99, 224);
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+
+.copy-input-wrapper button:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.copy-input-wrapper button:hover:before {
+  content: "Copy";
+  position: absolute;
+  top: -35px;
+  left: -5px;
+  padding: 6px 10px 7px;
+  color: white;
+  background-color: #141F2D;
+  border-radius: 4px;
+}
+
+.copy-input-wrapper button:hover:after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 15px;
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #141F2D transparent transparent
+}
+
+.copy-input-wrapper.copied button:hover:before {
+  content: "Copied!";
+}
+
+.copy-input-wrapper svg {
+  width: 22px;
+  height: 22px;
+}
