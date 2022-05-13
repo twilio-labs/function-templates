@@ -90,11 +90,31 @@ If you _do not_ want an environment variable to appear on the CodeExchange page,
 
 **Note**: All function templates are checked for the presence of a `.env.example` or a `.env` file by `npm test`. If a test named `should have a .env.example (or .env) file` fails, ensure that your function template's `.env` file exists and `git add` has been used to add it to your commit. If your function template lacks environment variables, commit an empty `.env` file. If the test is failing due to a directory that is not a function template, add that directory to the `excludedPaths` variable in `test/all-templates.test.js`.
 
-### Updating the `index.html`
+## The `index.html` file
 
-If your app has a front-end component to it, you can override the existing `index.html` file in your project.
+The Quick Deploy Functions in this repo contain an `index.html` asset that is displayed after a deployment succeeds. That `index.html` file is served by the Function itself. 
 
-In case your app does not contain a front-end component you should update the `index.html` file to reflect what steps a customer should perform to make the app work, once your template has been deployed.
+If your app has a front-end component to it, you can override the existing `index.html` file in your project, and if it doesn't you should update the `index.html` file to reflect what steps a customer should perform to make the app work once your template has been deployed.
+
+### Github Pages
+Several static assets shared by every `index.html` are served by Github Pages from the `/docs/static` directory of this repo. These files all follow [semver](https://semver.org/) versioning, and are located in a subdirectory of `/docs/static` named after their semver major version number. For example, a file of version `1.2.3` should have a comment header containing `Version: 1.2.3` (if possible), and be located in the `v1` subdirectory of `/docs/static`.
+
+### Helpers
+In the shared `/docs/static` folder there's JavaScript and CSS helpers to achieve things like:
+- Style buttons, inputs and general elements on the page based on the [Paste design system](https://paste.twilio.design/).
+- Prepend the Base URL of functions to inputs
+- Handle Copy to Clipboard on inputs
+
+### Server-rendered elements
+These comments will be replaced at build time and will result in the following:
+
+`<!-- APP_INFO_V2 -->`:
+
+![APP_INFO_V2](../docs/images/APP_INFO_V2_comment.png)
+
+`<!-- EDIT_CODE -->`:
+
+![EDIT_CODE](../docs/images/EDIT_CODE_comment.png)
 
 ### Adding yourself to `.owners`
 
