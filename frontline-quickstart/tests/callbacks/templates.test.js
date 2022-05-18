@@ -6,11 +6,11 @@ const mockClient = {
   conversations: {},
 };
 
-const TEST_USERNAME = 'testworker';
+const TEST_SSO_USERNAME = 'testworker';
 const context = {
   getTwilioClient: () => mockClient,
   TWILIO_PHONE_NUMBER: '+1234567890',
-  USERNAME: TEST_USERNAME,
+  SSO_USERNAME: TEST_SSO_USERNAME,
   EXAMPLE_CUSTOMER_1_PHONE_NUMBER: '+12223334444',
   EXAMPLE_CUSTOMER_2_PHONE_NUMBER: '+12223334444',
 };

@@ -7,7 +7,7 @@ const generateCustomersList = (context) => {
   const CUSTOMER_2_NAME = 'Example Customer 2';
   const customers = [];
 
-  if (context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER && context.USERNAME) {
+  if (context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER && context.SSO_USERNAME) {
     customers.push({
       customer_id: 1,
       display_name: CUSTOMER_1_NAME,
@@ -28,7 +28,7 @@ const generateCustomersList = (context) => {
         content:
           'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.USERNAME,
+      worker: context.SSO_USERNAME,
       address: context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER,
     });
   }
@@ -36,7 +36,7 @@ const generateCustomersList = (context) => {
   if (
     context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER &&
     context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER !== '""' && // when input is left empty, QuickDeploy sends '""'
-    context.USERNAME
+    context.SSO_USERNAME
   ) {
     customers.push({
       customer_id: 2,
@@ -58,7 +58,7 @@ const generateCustomersList = (context) => {
         content:
           'This is a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.USERNAME,
+      worker: context.SSO_USERNAME,
       address: context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER,
     });
   }

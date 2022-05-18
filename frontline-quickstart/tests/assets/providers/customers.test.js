@@ -7,12 +7,12 @@ const {
   generateCustomersList,
 } = require('../../../assets/providers/customers.private');
 
-const TEST_USERNAME = 'testworker';
+const TEST_SSO_USERNAME = 'testworker';
 const CUSTOMER_1_NUMBER = '+1222333444';
 const CUSTOMER_2_NUMBER = '+1222333445';
 const context = {
   TWILIO_PHONE_NUMBER: '+1234567890',
-  USERNAME: TEST_USERNAME,
+  SSO_USERNAME: TEST_SSO_USERNAME,
   EXAMPLE_CUSTOMER_1_PHONE_NUMBER: CUSTOMER_1_NUMBER,
   CUSTOMER_1_NAME: 'Test Customer 1',
   EXAMPLE_CUSTOMER_2_PHONE_NUMBER: CUSTOMER_2_NUMBER,
@@ -36,48 +36,48 @@ test('getCustomerByNumber', () => {
 });
 
 test('getCustomersList', async (done) => {
-  const customers = await getCustomersList(context, TEST_USERNAME);
+  const customers = await getCustomersList(context, TEST_SSO_USERNAME);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
   done();
 });
 
 test('getCustomersList: pageSize splits the list', async (done) => {
-  let customers = await getCustomersList(context, TEST_USERNAME, 1);
+  let customers = await getCustomersList(context, TEST_SSO_USERNAME, 1);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(1);
 
-  customers = await getCustomersList(context, TEST_USERNAME, 2);
+  customers = await getCustomersList(context, TEST_SSO_USERNAME, 2);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
 
-  customers = await getCustomersList(context, TEST_USERNAME);
+  customers = await getCustomersList(context, TEST_SSO_USERNAME);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
   done();
 });
 
 test('getCustomersList: pagination returns the right contacts', async (done) => {
-  let customers = await getCustomersList(context, TEST_USERNAME, 2, 0);
+  let customers = await getCustomersList(context, TEST_SSO_USERNAME, 2, 0);
   expect(customers).toBeDefined();
   expect(customers[0].customer_id).toEqual(1);
 
-  customers = await getCustomersList(context, TEST_USERNAME, 2, 1);
+  customers = await getCustomersList(context, TEST_SSO_USERNAME, 2, 1);
   expect(customers).toBeDefined();
   expect(customers[0].customer_id).toEqual(2);
 
   done();
 });
 test('getCustomersList: pageSize splits the list', async (done) => {
-  let customers = await getCustomersList(context, TEST_USERNAME, 1);
+  let customers = await getCustomersList(context, TEST_SSO_USERNAME, 1);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(1);
 
-  customers = await getCustomersList(context, TEST_USERNAME, 2);
+  customers = await getCustomersList(context, TEST_SSO_USERNAME, 2);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
 
-  customers = await getCustomersList(context, TEST_USERNAME);
+  customers = await getCustomersList(context, TEST_SSO_USERNAME);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
   done();

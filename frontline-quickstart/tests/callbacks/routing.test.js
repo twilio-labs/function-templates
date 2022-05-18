@@ -19,11 +19,11 @@ const mockConversations = {
 
 const mockClient = { conversations: mockConversations };
 
-const TEST_USERNAME = 'testworker';
+const TEST_SSO_USERNAME = 'testworker';
 const context = {
   getTwilioClient: () => mockClient,
   TWILIO_PHONE_NUMBER: '+1234567890',
-  USERNAME: TEST_USERNAME,
+  SSO_USERNAME: TEST_SSO_USERNAME,
   EXAMPLE_CUSTOMER_1_PHONE_NUMBER: '+12223334444',
   EXAMPLE_CUSTOMER_2_PHONE_NUMBER: '+12223334445',
 };
@@ -67,7 +67,7 @@ test('routeConversation: finds worker', async (done) => {
     customerNumber
   );
   expect(workerIdentity).toBeDefined();
-  expect(workerIdentity).toEqual(TEST_USERNAME);
+  expect(workerIdentity).toEqual(TEST_SSO_USERNAME);
 
   done();
 });
@@ -82,7 +82,7 @@ test('routeConversation: finds worker for customer 2', async (done) => {
     customerNumber
   );
   expect(workerIdentity).toBeDefined();
-  expect(workerIdentity).toEqual(TEST_USERNAME);
+  expect(workerIdentity).toEqual(TEST_SSO_USERNAME);
   done();
 });
 
@@ -96,7 +96,7 @@ test('routeConversation: no assigned worker, assigns a random', async (done) => 
     customerNumber
   );
   expect(workerIdentity).toBeDefined();
-  expect(workerIdentity).toEqual(TEST_USERNAME);
+  expect(workerIdentity).toEqual(TEST_SSO_USERNAME);
   done();
 });
 
@@ -120,7 +120,7 @@ test('routeConversation: fails when not worker is assigned', async (done) => {
 
 test('routeConversationToWorker', async (done) => {
   const conversationSid = 'CH12345';
-  const workerIdentity = TEST_USERNAME;
+  const workerIdentity = TEST_SSO_USERNAME;
 
   const conversation = await routeConversationToWorker(
     context.getTwilioClient(),
@@ -133,7 +133,7 @@ test('routeConversationToWorker', async (done) => {
 
 test('routeConversationToWorker: fails if no Twilio client present', async (done) => {
   const conversationSid = 'CH12345';
-  const workerIdentity = TEST_USERNAME;
+  const workerIdentity = TEST_SSO_USERNAME;
 
   await expect(
     routeConversationToWorker(
