@@ -3,16 +3,14 @@
  * Generates a static list of customers based on the information provided through env vars
  */
 const generateCustomersList = (context) => {
+  const CUSTOMER_1_NAME = 'Example Customer 1';
+  const CUSTOMER_2_NAME = 'Example Customer 2';
   const customers = [];
 
-  if (
-    context.CUSTOMER_1_PHONE_NUMBER &&
-    context.CUSTOMER_1_NAME &&
-    context.USERNAME
-  ) {
+  if (context.CUSTOMER_1_PHONE_NUMBER && context.USERNAME) {
     customers.push({
       customer_id: 1,
-      display_name: context.CUSTOMER_1_NAME,
+      display_name: CUSTOMER_1_NAME,
       channels: [
         { type: 'email', value: 'customer_test_1@example.com' },
         { type: 'sms', value: context.CUSTOMER_1_PHONE_NUMBER },
@@ -38,13 +36,11 @@ const generateCustomersList = (context) => {
   if (
     context.CUSTOMER_2_PHONE_NUMBER &&
     context.CUSTOMER_2_PHONE_NUMBER !== '""' && // when input is left empty, QuickDeploy sends '""'
-    context.CUSTOMER_2_NAME &&
-    context.CUSTOMER_2_NAME !== '""' && // when input is left empty, QuickDeploy sends '""'
     context.USERNAME
   ) {
     customers.push({
       customer_id: 2,
-      display_name: context.CUSTOMER_2_NAME,
+      display_name: CUSTOMER_2_NAME,
       channels: [
         { type: 'email', value: 'customer_test_2@example.com' },
         { type: 'sms', value: context.CUSTOMER_2_PHONE_NUMBER },
