@@ -7,13 +7,13 @@ const generateCustomersList = (context) => {
   const CUSTOMER_2_NAME = 'Example Customer 2';
   const customers = [];
 
-  if (context.CUSTOMER_1_PHONE_NUMBER && context.USERNAME) {
+  if (context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER && context.USERNAME) {
     customers.push({
       customer_id: 1,
       display_name: CUSTOMER_1_NAME,
       channels: [
         { type: 'email', value: 'customer_test_1@example.com' },
-        { type: 'sms', value: context.CUSTOMER_1_PHONE_NUMBER },
+        { type: 'sms', value: context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER },
         // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, // TODO: figure out Whatsapp
       ],
       links: [
@@ -29,13 +29,13 @@ const generateCustomersList = (context) => {
           'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
       worker: context.USERNAME,
-      address: context.CUSTOMER_1_PHONE_NUMBER,
+      address: context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER,
     });
   }
 
   if (
-    context.CUSTOMER_2_PHONE_NUMBER &&
-    context.CUSTOMER_2_PHONE_NUMBER !== '""' && // when input is left empty, QuickDeploy sends '""'
+    context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER &&
+    context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER !== '""' && // when input is left empty, QuickDeploy sends '""'
     context.USERNAME
   ) {
     customers.push({
@@ -43,7 +43,7 @@ const generateCustomersList = (context) => {
       display_name: CUSTOMER_2_NAME,
       channels: [
         { type: 'email', value: 'customer_test_2@example.com' },
-        { type: 'sms', value: context.CUSTOMER_2_PHONE_NUMBER },
+        { type: 'sms', value: context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER },
         // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, TODO
       ],
       links: [
@@ -59,7 +59,7 @@ const generateCustomersList = (context) => {
           'This is a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
       worker: context.USERNAME,
-      address: context.CUSTOMER_2_PHONE_NUMBER,
+      address: context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER,
     });
   }
 

@@ -24,8 +24,8 @@ const context = {
   getTwilioClient: () => mockClient,
   TWILIO_PHONE_NUMBER: '+1234567890',
   USERNAME: TEST_USERNAME,
-  CUSTOMER_1_PHONE_NUMBER: '+12223334444',
-  CUSTOMER_2_PHONE_NUMBER: '+12223334445',
+  EXAMPLE_CUSTOMER_1_PHONE_NUMBER: '+12223334444',
+  EXAMPLE_CUSTOMER_2_PHONE_NUMBER: '+12223334445',
 };
 
 beforeAll(() => {
@@ -45,7 +45,7 @@ afterAll(() => {
 test('routing callback', async (done) => {
   const event = {
     ConversationSid: 'CH12345',
-    'MessagingBinding.Address': context.CUSTOMER_1_PHONE_NUMBER,
+    'MessagingBinding.Address': context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER,
   };
 
   const callback = (_err, result) => {
@@ -59,7 +59,7 @@ test('routing callback', async (done) => {
 
 test('routeConversation: finds worker', async (done) => {
   const conversationSid = 'CH12345';
-  const customerNumber = context.CUSTOMER_1_PHONE_NUMBER;
+  const customerNumber = context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER;
 
   const workerIdentity = await routeConversation(
     context,
@@ -74,7 +74,7 @@ test('routeConversation: finds worker', async (done) => {
 
 test('routeConversation: finds worker for customer 2', async (done) => {
   const conversationSid = 'CH12345';
-  const customerNumber = context.CUSTOMER_2_PHONE_NUMBER;
+  const customerNumber = context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER;
 
   const workerIdentity = await routeConversation(
     context,
@@ -106,9 +106,9 @@ test('routeConversation: fails when not worker is assigned', async (done) => {
   const context = {
     getTwilioClient: () => mockClient,
     TWILIO_PHONE_NUMBER: '+1234567890',
-    CUSTOMER_1_PHONE_NUMBER: '+12223334444',
+    EXAMPLE_CUSTOMER_1_PHONE_NUMBER: '+12223334444',
     CUSTOMER_1_NAME: 'Test Customer 1',
-    CUSTOMER_2_PHONE_NUMBER: '+12223334445',
+    EXAMPLE_CUSTOMER_2_PHONE_NUMBER: '+12223334445',
     CUSTOMER_2_NAME: 'Test Customer 2',
   };
 
