@@ -14,7 +14,7 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| USERNAME | SSO username of agent to be assigned to Example Customers | Yes |
+| SSO_USERNAME | SSO SSO_USERNAME of agent to be assigned to Example Customers | Yes |
 | EXAMPLE_CUSTOMER_1_PHONE_NUMBER | Phone number to be used on the Example Customer 1 | Yes |
 | EXAMPLE_CUSTOMER_2_PHONE_NUMBER | Phone number to be used on the Example Customer 2 | No |
 | TWILIO_PHONE_NUMBER | A Twilio phone number to be used as the Sender | Yes |

@@ -3,12 +3,12 @@ const helpers = require('../../../test/test-helper');
 const outgoingConversation =
   require('../../functions/callbacks/outgoing-conversation.protected').handler;
 
-const TEST_USERNAME = 'testworker';
+const TEST_SSO_USERNAME = 'testworker';
 const CUSTOMER_1_NUMBER = '+1222333444';
 const CUSTOMER_2_NUMBER = '+1222333445';
 const context = {
   TWILIO_PHONE_NUMBER: '+1234567890',
-  USERNAME: TEST_USERNAME,
+  SSO_USERNAME: TEST_SSO_USERNAME,
   EXAMPLE_CUSTOMER_1_PHONE_NUMBER: CUSTOMER_1_NUMBER,
   EXAMPLE_CUSTOMER_2_PHONE_NUMBER: CUSTOMER_2_NUMBER,
 };
