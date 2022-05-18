@@ -30,8 +30,8 @@ const context = {
   getTwilioClient: () => mockClient,
   TWILIO_PHONE_NUMBER: '+1234567890',
   USERNAME: TEST_USERNAME,
-  CUSTOMER_1_PHONE_NUMBER: '+12223334444',
-  CUSTOMER_2_PHONE_NUMBER: '+12223334445',
+  EXAMPLE_CUSTOMER_1_PHONE_NUMBER: '+12223334444',
+  EXAMPLE_CUSTOMER_2_PHONE_NUMBER: '+12223334445',
 };
 
 beforeAll(() => {
@@ -74,7 +74,7 @@ test('Conversations API Webhooks: creates a new conversation with the message’
     EventType: 'onParticipantAdded',
     ConversationSid: 'CH12345',
     ParticipantSid: 'MB12345',
-    'MessagingBinding.Address': context.CUSTOMER_1_PHONE_NUMBER,
+    'MessagingBinding.Address': context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER,
   };
 
   callback = (_err, result) => {
