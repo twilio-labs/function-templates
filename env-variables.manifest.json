@@ -1680,47 +1680,27 @@
         "contentKey": null
       },
       {
-        "key": "CUSTOMER_1_NAME",
-        "required": true,
-        "format": "text",
-        "description": "This is the name of your test customer. This name will appear as a contact in your Frontline application.",
-        "link": null,
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "CUSTOMER_1_PHONE_NUMBER",
+        "key": "EXAMPLE_CUSTOMER_1_PHONE_NUMBER",
         "required": true,
         "format": "phone_number",
-        "description": "This is the phone number of your test customer. You can send and receive text messages to this number",
+        "description": "This is the phone number of your example customer. You can send and receive text messages to this number.",
         "link": null,
         "default": null,
         "configurable": true,
         "contentKey": null
       },
       {
-        "key": "CUSTOMER_2_NAME",
-        "required": false,
-        "format": "text",
-        "description": "(Optional) This is the name of your second test customer. This name will appear as a contact in your Frontline application.",
-        "link": null,
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "CUSTOMER_2_PHONE_NUMBER",
+        "key": "EXAMPLE_CUSTOMER_2_PHONE_NUMBER",
         "required": false,
         "format": "phone_number",
-        "description": "(Optional) This is the phone number of your second test customer. You can send and receive text messages to this number.",
+        "description": "(Optional) This is the phone number of your second example customer. You can send and receive text messages to this number.",
         "link": null,
         "default": null,
         "configurable": true,
         "contentKey": null
       },
       {
-        "key": "USERNAME",
+        "key": "SSO_USERNAME",
         "required": true,
         "format": "text",
         "description": "This is the username of the user that you’ve added to your Identity Provider (IdP) that you will use to login to Frontline.",
