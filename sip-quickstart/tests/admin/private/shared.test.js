@@ -40,9 +40,16 @@ const mockEnvironments = jest.fn(() => {
   };
 });
 
+let mockFetchServices = jest.fn(() => {
+  return {
+    uiEditable: true,
+  };
+});
+
 mockTwilioClient.serverless.services = jest.fn(() => {
   const inner = {
     environments: mockEnvironments,
+    fetch: mockFetchServices,
   };
   inner.environments.list = mockEnvironmentList;
   return inner;
@@ -322,5 +329,149 @@ describe('voice-client-javascript/admin/private/shared', () => {
 
     expect(result).toBeTruthy();
     expect(mockVariables[0].remove).toHaveBeenCalled();
+  });
+
+  test('adminPasswordChangedFromDefault will return true when password is changed', () => {
+    const changedPassword = 'anotherPassword';
+    process.env.ADMIN_PASSWORD = changedPassword;
+    const result = shared.adminPasswordChangedFromDefault();
+    expect(result).toEqual(true);
+  });
+
+  test('adminPasswordChangedFromDefault will return false when password is `default`', () => {
+    const defaultPassword = 'default';
+    process.env.ADMIN_PASSWORD = defaultPassword;
+    const result = shared.adminPasswordChangedFromDefault();
+    expect(result).toEqual(false);
+  });
+
+  test('adminPasswordMeetsComplexityRequirements returns false if password is too short', () => {
+    const passwordTooShort = 'password1';
+
+    process.env.ADMIN_PASSWORD = passwordTooShort;
+    const result = shared.adminPasswordMeetsComplexityRequirements();
+    expect(result).toEqual(false);
+  });
+
+  test('adminPasswordMeetsComplexityRequirements returns false if password is not mixed case', () => {
+    const passwordWithoutMixedCase = 'passwordpassword1';
+
+    process.env.ADMIN_PASSWORD = passwordWithoutMixedCase;
+    const result = shared.adminPasswordMeetsComplexityRequirements();
+    expect(result).toEqual(false);
+  });
+
+  test('adminPasswordMeetsComplexityRequirements returns false if password has no numbers', () => {
+    const passwordWithoutNumber = 'passwordpassworD';
+
+    process.env.ADMIN_PASSWORD = passwordWithoutNumber;
+    const result = shared.adminPasswordMeetsComplexityRequirements();
+    expect(result).toEqual(false);
+  });
+
+  test('adminPasswordMeetsComplexityRequirements returns false if password has no letters', () => {
+    const passwordNoLetters = '123456789101112';
+
+    process.env.ADMIN_PASSWORD = passwordNoLetters;
+    const result = shared.adminPasswordMeetsComplexityRequirements();
+    expect(result).toEqual(false);
+  });
+
+  test('adminPasswordMeetsComplexityRequirements returns true if password meets requirements', () => {
+    const complexPassword = 'ThisIsAnOkayPassword1';
+
+    process.env.ADMIN_PASSWORD = complexPassword;
+    const result = shared.adminPasswordMeetsComplexityRequirements();
+    expect(result).toEqual(true);
+  });
+
+  test('generateEnvVariableInstructions returns Console instructions when the service is uiEditable', async () => {
+    const result = await shared.generateEnvVariableInstructions(CONTEXT);
+    expect(result).toContain('in your Functions editor');
+  });
+
+  test('generateEnvVaribleInstructions returns CLI instructions when the service is not uiEditable', async () => {
+    mockFetchServices = jest.fn(() => {
+      return { uiEditable: false };
+    });
+
+    const result = await shared.generateEnvVariableInstructions(CONTEXT);
+    expect(result).toContain('twilio serverless:deploy');
+  });
+
+  test('generateEnvVaribleInstructions returns CLI instructions when getCurrentEnvironment returns no environment', async () => {
+    CONTEXT.DOMAIN_NAME = 'localhost:3000';
+
+    const result = await shared.generateEnvVariableInstructions(CONTEXT);
+    expect(result).toContain('twilio serverless:deploy');
+
+    CONTEXT.DOMAIN_NAME = 'testing-domain-123.com';
+  });
+
+  test('checkAdminPassword returns a 403 if admin password is `default`', async () => {
+    process.env.ADMIN_PASSWORD = 'default';
+
+    const callback = jest.fn();
+    const event = null;
+
+    const expectedBody = `<p>You must change your admin password.</p><p>You can change the admin password by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.</p>
+    <p>After you have edited and saved your <code>.env</code> file, please redeploy with the following command:</p>
+    <code>twilio serverless:deploy</code>`;
+
+    const expectedResult = new Twilio.Response();
+    expectedResult.setBody(expectedBody);
+    expectedResult.setStatusCode(403);
+
+    await shared.checkAdminPassword(CONTEXT, event, callback);
+
+    callbackResponseArgument = callback.mock.calls[0][1];
+    expect(callbackResponseArgument._body).toEqual(expectedResult._body);
+    expect(callbackResponseArgument._statusCode).toEqual(
+      expectedResult._statusCode
+    );
+  });
+
+  test('checkAdminPassword returns a 403 if admin password is not complex enough', async () => {
+    process.env.ADMIN_PASSWORD = 'password';
+
+    const callback = jest.fn();
+    const event = null;
+
+    const expectedBody = `<p>Your admin password does not meet the complexity requirements.</p><p>You can change the admin password by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.</p>
+    <p>After you have edited and saved your <code>.env</code> file, please redeploy with the following command:</p>
+    <code>twilio serverless:deploy</code>`;
+
+    const expectedResult = new Twilio.Response();
+    expectedResult.setBody(expectedBody);
+    expectedResult.setStatusCode(403);
+
+    await shared.checkAdminPassword(CONTEXT, event, callback);
+
+    callbackResponseArgument = callback.mock.calls[0][1];
+    expect(callbackResponseArgument._body).toEqual(expectedResult._body);
+    expect(callbackResponseArgument._statusCode).toEqual(
+      expectedResult._statusCode
+    );
+  });
+
+  test('checkAdminPassword returns a 200 if admin password is complex enough and not default', async () => {
+    process.env.ADMIN_PASSWORD = 'passwordHasChanged1';
+
+    const callback = jest.fn();
+    const event = null;
+
+    const expectedBody = {};
+
+    const expectedResult = new Twilio.Response();
+    expectedResult.setBody(expectedBody);
+    expectedResult.setStatusCode(200);
+
+    await shared.checkAdminPassword(CONTEXT, event, callback);
+
+    callbackResponseArgument = callback.mock.calls[0][1];
+    expect(callbackResponseArgument._body).toEqual(expectedResult._body);
+    expect(callbackResponseArgument._statusCode).toEqual(
+      expectedResult._statusCode
+    );
   });
 });

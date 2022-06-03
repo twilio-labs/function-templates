@@ -336,19 +336,6 @@ describe('sip-quickstart/admin/private/statuses', () => {
     expect(status.description).toContain(expectedUrl);
   });
 
-  test('getDefaultPasswordChanged is invalid if the default is used', async () => {
-    // Arrange
-    process.env.ADMIN_PASSWORD = 'default';
-
-    // Act
-    const status = await statusFunctions.getDefaultPasswordChanged(CONTEXT);
-
-    // Assert
-    expect(status).toBeDefined();
-    expect(status.valid).toBeFalsy();
-    expect(status.description).toContain('`.env`');
-  });
-
   /*
    * getIncomingNumberStatus,
    * getCallerIdStatus,
@@ -501,18 +488,5 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Allows for changing
     expect(status.actions[0].name).toBe('clearIncomingNumber');
     expect(status.actions[0].title).toContain('Choose a different');
-  });
-
-  test('getDefaultPasswordChanged is valid with different password', async () => {
-    // Arrange
-    process.env.ADMIN_PASSWORD = 'ch@ng3d';
-
-    // Act
-    const status = await statusFunctions.getDefaultPasswordChanged(CONTEXT);
-
-    // Assert
-    expect(status).toBeDefined();
-    expect(status.valid).toBeTruthy();
-    expect(status.description).toContain('all set');
   });
 });

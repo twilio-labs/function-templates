@@ -1,15 +1,8 @@
 class AdminClient {
-  constructor() {
-    this.isReady = this.token !== null;
-  }
-
   async _handleResponse(response) {
-    if (!response.ok) {
-      if (response.status === 403) {
-        console.warn('Invalid token, resetting client');
-        this.token = null;
-        this.isReady = false;
-      }
+    if (response.ok === false) {
+      this.token = null;
+      this.isRead = false;
       // Throw an error
       // eslint-disable-next-line no-throw-literal
       throw {
@@ -32,14 +25,15 @@ class AdminClient {
     return response.json();
   }
 
+  async checkAdminPassword() {
+    const response = await fetch('./check-admin-password');
+    await this._handleResponse(response);
+    return true;
+  }
+
   async login(password) {
-    try {
-      const result = await this._post('./login', { password });
-      this.token = result.token;
-      this.isReady = true;
-    } catch (err) {
-      console.error(`${err.statusCode}: ${err.message}`);
-    }
+    const result = await this._post('./login', { password });
+    this.token = result.token;
     return this.token !== null;
   }
 
@@ -52,11 +46,14 @@ class AdminClient {
   }
 
   async fetchState() {
-    const response = await fetch(
-      `./check-status?token=${encodeURIComponent(this.token)}`
-    );
-    await this._handleResponse(response);
-    return response.json();
+    if (this.token) {
+      const response = await fetch(
+        `./check-status?token=${encodeURIComponent(this.token)}`
+      );
+      await this._handleResponse(response);
+      return response.json();
+    }
+    return false;
   }
 
   get token() {

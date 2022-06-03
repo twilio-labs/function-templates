@@ -37,6 +37,7 @@ async function getCurrentEnvironment(context) {
     return;
   }
   const client = context.getTwilioClient();
+
   const services = await client.serverless.services.list();
   for (const service of services) {
     const environments = await client.serverless
@@ -51,6 +52,59 @@ async function getCurrentEnvironment(context) {
       return environment;
     }
   }
+}
+
+function adminPasswordChangedFromDefault() {
+  return process.env.ADMIN_PASSWORD !== 'default';
+}
+
+function adminPasswordMeetsComplexityRequirements() {
+  const regex = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z]).{12,}.*[0-9].*$');
+  return regex.test(process.env.ADMIN_PASSWORD);
+}
+
+async function generateEnvVariableInstructions(context) {
+  const env = await getCurrentEnvironment(context);
+
+  if (env) {
+    const client = context.getTwilioClient();
+    const service = await client.serverless.services(env.serviceSid).fetch();
+    if (service.uiEditable) {
+      const consoleUrl = `https://console.twilio.com/service/functions/${env.serviceSid}/runtime-functions-editor?currentFrameUrl=%2Fconsole%2Ffunctions%2Feditor%2F${env.serviceSid}%2Fenvironment%2F${env.sid}%2Fconfig%2Fvariables`;
+
+      return `<p>You can change the admin password by editing the <code>ADMIN_PASSWORD</code> value on the <a href=${consoleUrl} target="_blank">Environment tab of your Functions editor</a>.</p>
+        <p>After updating environment variables, you must redeploy your application by pressing the <strong>Deploy All</strong> button in your Functions editor.</p>`;
+    }
+  }
+
+  return `<p>You can change the admin password by editing the <code>ADMIN_PASSWORD</code> value in the <code>.env</code> file in the root of this project.</p>
+    <p>After you have edited and saved your <code>.env</code> file, please redeploy with the following command:</p>
+    <code>twilio serverless:deploy</code>`;
+}
+
+async function checkAdminPassword(context, event, callback) {
+  const response = new Twilio.Response();
+  let responseBody;
+
+  if (adminPasswordChangedFromDefault() === false) {
+    response.setStatusCode(403);
+
+    responseBody = `<p>You must change your admin password.</p>`;
+  } else if (adminPasswordMeetsComplexityRequirements() === false) {
+    response.setStatusCode(403);
+
+    responseBody = `<p>Your admin password does not meet the complexity requirements.</p>`;
+  } else {
+    response.setStatusCode(200);
+    callback(null, response);
+    return true;
+  }
+
+  responseBody += await generateEnvVariableInstructions(context);
+
+  response.setBody(responseBody);
+  callback(null, response);
+  return false;
 }
 
 async function getEnvironmentVariables(context, environment) {
@@ -125,8 +179,12 @@ function urlForSiblingPage(newPage, ...paths) {
 }
 
 module.exports = {
+  adminPasswordChangedFromDefault,
+  adminPasswordMeetsComplexityRequirements,
   checkAuthorization,
+  checkAdminPassword,
   createToken,
+  generateEnvVariableInstructions,
   getCurrentEnvironment,
   getEnvironmentVariables,
   getEnvironmentVariable,

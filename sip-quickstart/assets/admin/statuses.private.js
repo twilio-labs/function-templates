@@ -1,9 +1,11 @@
 const { stripIndents } = require('common-tags');
 
 const assets = Runtime.getAssets();
-const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
-  '/admin/shared.js'
-].path);
+const {
+  getCurrentEnvironment,
+  urlForSiblingPage,
+  usesFunctionUi,
+} = require(assets['/admin/shared.js'].path);
 const extensions = require(assets['/extensions.js'].path);
 
 async function checkEnvironmentInitialization(context) {
@@ -14,13 +16,14 @@ async function checkEnvironmentInitialization(context) {
   };
   if (!environment) {
     status.description = stripIndents`
-    This application is **must be** deployed. 
+    This application **must be** deployed. 
     
     To deploy this function, use the following command:
     
     \`\`\`bash
     twilio serverless:deploy
     \`\`\`
+
     After it has been deployed, revisit this page in your deployed application.
     `;
     // eslint-disable-next-line no-negated-condition
@@ -384,30 +387,6 @@ async function getSipDomainIsWiredUp(context) {
   }
   return status;
 }
-async function getDefaultPasswordChanged(context) {
-  const status = {
-    title: 'Default admin password has been changed',
-    valid: false,
-  };
-  if (process.env.ADMIN_PASSWORD === 'default') {
-    status.description = stripIndents`
-    Please take a moment to change your admin password from the provided default password. 
-    
-    You can do this by editing the \`ADMIN_PASSWORD\` value in the \`.env\` in the root of this project.
-    
-    After you have saved that file, please redeploy.
-
-    \`\`\`bash
-    twilio serverless:deploy
-    \`\`\`
-    `;
-  } else {
-    status.valid = true;
-    status.description =
-      "You're all set. You can change this value in your `.env` file at anytime.";
-  }
-  return status;
-}
 
 module.exports = {
   environment: checkEnvironmentInitialization,
@@ -417,6 +396,5 @@ module.exports = {
     getCredentialListStatus,
     getIncomingNumberStatus,
     getCallerIdStatus,
-    getDefaultPasswordChanged,
   ],
 };
