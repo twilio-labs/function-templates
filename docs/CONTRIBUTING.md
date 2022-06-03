@@ -110,11 +110,11 @@ These comments will be replaced at build time and will result in the following:
 
 `<!-- APP_INFO_V2 -->`:
 
-![APP_INFO_V2](../docs/images/APP_INFO_V2_comment.png)
+![APP_INFO_V2](https://raw.githubusercontent.com/twilio-labs/function-templates/main/docs/images/APP_INFO_V2_comment.png)
 
 `<!-- EDIT_CODE -->`:
 
-![EDIT_CODE](../docs/images/EDIT_CODE_comment.png)
+![EDIT_CODE](https://raw.githubusercontent.com/twilio-labs/function-templates/main/docs/images/EDIT_CODE_comment.png)
 
 ### Adding yourself to `.owners`
 
@@ -282,7 +282,7 @@ feat(templates): add NAME_OF_YOUR_TEMPLATE template
 
 ## Code of Conduct
 
-We want to make sure that this project is as welcoming to people as possible. By interacting with the project in any shape or form you are agreeing to the project's [Code of Conduct](../CODE_OF_CONDUCT.md). If you feel like another individual has violated the code of conduct, please raise a complaint to [open-source@twilio.com](mailto:open-source@twilio.com).
+We want to make sure that this project is as welcoming to people as possible. By interacting with the project in any shape or form you are agreeing to the project's [Code of Conduct](https://raw.githubusercontent.com/twilio-labs/function-templates/main/CODE_OF_CONDUCT.md). If you feel like another individual has violated the code of conduct, please raise a complaint to [open-source@twilio.com](mailto:open-source@twilio.com).
 
 ## Licensing
 
