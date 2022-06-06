@@ -10,6 +10,7 @@ const {
   promptQuestions,
   copyTemplateFiles,
   addToTemplatesJson,
+  addToPackageJson,
 } = require('./utils/new-template');
 
 async function run() {
@@ -33,6 +34,10 @@ async function run() {
     {
       title: 'Adding template to templates.json',
       task: () => addToTemplatesJson(name, title, description),
+    },
+    {
+      title: 'Adding template to package.json',
+      task: () => addToPackageJson(name),
     },
   ]);
 

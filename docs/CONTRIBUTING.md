@@ -12,7 +12,7 @@ If this is your first time contributing to an open-source project, [check out ou
 
 - A GitHub account
 - git installed on your computer. [Learn how to install it](https://help.github.com/en/articles/set-up-git)
-- [Node.js](https://nodejs.org) and a package manager like [npm](https://npmjs.com)
+- [Node.js](https://nodejs.org) version 14 and [npm](https://npmjs.com) version 8
 
 ## CodeExchange
 

@@ -6,4 +6,4 @@ package-lock.json
 *.md
 *.html
 *.yml
-/_helpers/meta-template/package.json
+/_helpers/meta-template/_package.json
