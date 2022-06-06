@@ -14,7 +14,8 @@ const {
   addToTemplatesJson,
   isServerlessProject,
   parseServerlessProject,
-  generateEnvExampleFromRealEnv
+  generateEnvExampleFromRealEnv,
+  addToPackageJson,
 } = require('./utils/new-template');
 
 async function run(args) {
@@ -22,20 +23,24 @@ async function run(args) {
 
   const fullExistingProjectPath = path.resolve(existingProjectPath);
 
-  if (!await isServerlessProject(fullExistingProjectPath)) {
-    throw new Error(`${error} Invalid project structure. The path you specfied does not match what a Twilio Serverless project should look like. Please point the tool at the root of a project created with "twilio serverless:init".`)
+  if (!(await isServerlessProject(fullExistingProjectPath))) {
+    throw new Error(
+      `${error} Invalid project structure. The path you specfied does not match what a Twilio Serverless project should look like. Please point the tool at the root of a project created with "twilio serverless:init".`
+    );
   }
 
-  const { dependencies, functions, assets, hasEnvFile } = await parseServerlessProject(fullExistingProjectPath);
+  const { dependencies, functions, assets, hasEnvFile } =
+    await parseServerlessProject(fullExistingProjectPath);
 
   let shouldGenerateEnvFile = false;
   if (hasEnvFile) {
     const { confirm } = await inquirer.prompt({
       name: 'confirm',
       type: 'confirm',
-      message: 'We found a .env file. Do you want to use it as the base for your .env.example file? IMPORTANT: We will try to scrape any data from it but please double check before committing the file.',
-      default: false
-    })
+      message:
+        'We found a .env file. Do you want to use it as the base for your .env.example file? IMPORTANT: We will try to scrape any data from it but please double check before committing the file.',
+      default: false,
+    });
     shouldGenerateEnvFile = confirm;
   }
 
@@ -54,20 +59,26 @@ async function run(args) {
     },
     {
       title: 'Copy intial template files',
-      task: () => copyTemplateFiles(targetPath, { name, description, dependencies }),
+      task: () =>
+        copyTemplateFiles(targetPath, { name, description, dependencies }),
     },
     {
       title: 'Copy your Functions & Assets',
-      task: () => copyFunctionsAndAssets(targetPath, { functions, assets })
+      task: () => copyFunctionsAndAssets(targetPath, { functions, assets }),
     },
     {
       title: 'Update .env.example file',
-      task: () => generateEnvExampleFromRealEnv(fullExistingProjectPath, targetPath),
-      skip: () => !shouldGenerateEnvFile
+      task: () =>
+        generateEnvExampleFromRealEnv(fullExistingProjectPath, targetPath),
+      skip: () => !shouldGenerateEnvFile,
     },
     {
       title: 'Adding template to templates.json',
       task: () => addToTemplatesJson(name, title, description),
+    },
+    {
+      title: 'Adding template to package.json',
+      task: () => addToPackageJson(name),
     },
   ]);
 
@@ -94,4 +105,4 @@ run(process.argv).catch((err) => {
   } else {
     console.error(err.message);
   }
-})
+});

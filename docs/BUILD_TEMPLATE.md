@@ -179,10 +179,10 @@ TWILIO_VOICE_WEBHOOK_URL=/forward-message
 
 ### Adding external dependencies (npm)
 
-If you want to use external dependencies in your template, add them to the `package.json` inside your template's directory. You'll also have to install the same dependency as a `devDependency` in the root of the project. For example if we want to add the `twilio-video` library in the `video-token` template we would run:
+This project uses npm workspaces to handle dependencies. In order to add a new dependency to your template, you'll need to use the `-w` flag to specify which workspace (template) you want to install the dependency in. As an example if you want to install the `twilio-video` npm package in the `video-token` template you'd run:
 
 ```bash
-npm run add-dependency --template=video-token --package=twilio-video
+npm install twilio-video -w=video-token
 ```
 
 ### Adding environment variables

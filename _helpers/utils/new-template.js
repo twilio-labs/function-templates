@@ -4,7 +4,7 @@ const copy = require('copy-template-dir');
 const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
-const { stat, readdir, copyFile, mkdir } = require('fs/promises')
+const { stat, readdir, copyFile, mkdir, rename } = require('fs/promises');
 const { error, success } = require('log-symbols');
 const { parser } = require('configure-env');
 const { createOutput } = require('configure-env/dist/output');
@@ -19,12 +19,16 @@ const templatePath = path.join(__dirname, '..', 'meta-template');
 
 async function getFilesRecursive(dir, baseDir = dir) {
   const dirents = await readdir(dir, { withFileTypes: true });
-  const files = await Promise.all(dirents.map((dirent) => {
-    const absolutePath = path.resolve(dir, dirent.name);
-    const relativePath = path.relative(baseDir, absolutePath);
-    const directoryPath = path.dirname(relativePath);
-    return dirent.isDirectory() ? getFilesRecursive(absolutePath, baseDir) : { absolutePath, relativePath, directoryPath };
-  }));
+  const files = await Promise.all(
+    dirents.map((dirent) => {
+      const absolutePath = path.resolve(dir, dirent.name);
+      const relativePath = path.relative(baseDir, absolutePath);
+      const directoryPath = path.dirname(relativePath);
+      return dirent.isDirectory()
+        ? getFilesRecursive(absolutePath, baseDir)
+        : { absolutePath, relativePath, directoryPath };
+    })
+  );
   return files.flat();
 }
 
@@ -53,20 +57,37 @@ async function promptQuestions(additionalQuestions = []) {
       validate: (text) =>
         (text && text.length > 0) || 'Please specify a short description',
     },
-    ...additionalQuestions
+    ...additionalQuestions,
   ]);
 }
 
-async function copyTemplateFiles(targetPath, { name, description, dependencies }) {
+async function copyTemplateFiles(
+  targetPath,
+  { name, description, dependencies }
+) {
   dependencies = dependencies || {
-    "@twilio-labs/runtime-helpers": "^0.1.2"
+    '@twilio-labs/runtime-helpers': '^0.1.2',
   };
-  let dependenciesAsString = JSON.stringify(dependencies, null, 4).split('\n').map(x => x.trim() === '}' ? '  }' : x).join('\n');
-  return copyTemplate(templatePath, targetPath, { name, description, dependencies: dependenciesAsString });
+  let dependenciesAsString = JSON.stringify(dependencies, null, 4)
+    .split('\n')
+    .map((x) => (x.trim() === '}' ? '  }' : x))
+    .join('\n');
+  const createdFiles = await copyTemplate(templatePath, targetPath, {
+    name,
+    description,
+    dependencies: dependenciesAsString,
+  });
+  // await rename(path.resolve(targetPath, '_package.json'), path.resolve(targetPath, 'package.json'));
+  return createdFiles;
 }
 
 async function addToTemplatesJson(name, title, description) {
-  const templatesJsonPath = path.resolve(__dirname, '..', '..', 'templates.json');
+  const templatesJsonPath = path.resolve(
+    __dirname,
+    '..',
+    '..',
+    'templates.json'
+  );
   const content = await readFile(templatesJsonPath, 'utf8');
   let json = {};
   try {
@@ -88,6 +109,19 @@ async function addToTemplatesJson(name, title, description) {
   await writeFile(templatesJsonPath, resultContent, 'utf8');
 }
 
+async function addToPackageJson(name) {
+  const packageJsonPath = path.resolve(__dirname, '..', '..', 'package.json');
+  const content = await readFile(packageJsonPath, 'utf8');
+  try {
+    const packageJson = JSON.parse(content);
+    packageJson.workspaces = [...packageJson.workspaces, name];
+    const resultPackageJson = JSON.stringify(packageJson, null, 2);
+    await writeFile(packageJsonPath, resultPackageJson, 'utf8');
+  } catch (err) {
+    throw new Error('Failed to update package.json');
+  }
+}
+
 function createFileChecker(basePath) {
   return async function (relativePath, isDirectory = false) {
     const fullPath = path.resolve(basePath, relativePath);
@@ -102,7 +136,7 @@ function createFileChecker(basePath) {
     } catch (err) {
       return false;
     }
-  }
+  };
 }
 
 async function isServerlessProject(projectPath) {
@@ -131,39 +165,43 @@ async function isServerlessProject(projectPath) {
 async function parseServerlessProject(projectPath) {
   const has = createFileChecker(projectPath);
 
-  const packageJson = JSON.parse(await readFile(path.resolve(projectPath, 'package.json'), 'utf8'));
+  const packageJson = JSON.parse(
+    await readFile(path.resolve(projectPath, 'package.json'), 'utf8')
+  );
   const { dependencies } = packageJson;
 
   const hasEnvFile = await has('.env');
 
-  const functions = await getFilesRecursive(path.resolve(projectPath, 'functions'));
+  const functions = await getFilesRecursive(
+    path.resolve(projectPath, 'functions')
+  );
   const assets = await getFilesRecursive(path.resolve(projectPath, 'assets'));
 
   return {
     dependencies,
     hasEnvFile,
     functions,
-    assets
-  }
+    assets,
+  };
 }
 
 async function copyFunctionsAndAssets(targetDir, { functions, assets }) {
   const functionsDir = path.resolve(targetDir, 'functions');
   const assetsDir = path.resolve(targetDir, 'assets');
 
-  const copyFunctions = functions.map(async fn => {
+  const copyFunctions = functions.map(async (fn) => {
     const targetPath = path.resolve(functionsDir, fn.relativePath);
     const dirPath = path.resolve(functionsDir, fn.directoryPath);
     await mkdir(dirPath, { recursive: true });
     return copyFile(fn.absolutePath, targetPath);
-  })
+  });
 
-  const copyAssets = functions.map(async fn => {
+  const copyAssets = functions.map(async (fn) => {
     const targetPath = path.resolve(assetsDir, fn.relativePath);
     const dirPath = path.resolve(assetsDir, fn.directoryPath);
     await mkdir(dirPath, { recursive: true });
     return copyFile(fn.absolutePath, targetPath);
-  })
+  });
 
   await Promise.all(copyFunctions);
   await Promise.all(copyAssets);
@@ -172,25 +210,35 @@ async function copyFunctionsAndAssets(targetDir, { functions, assets }) {
 async function generateEnvExampleFromRealEnv(projectPath, targetPath) {
   const envFilePath = path.resolve(projectPath, '.env');
   const result = await parser.parseFile(envFilePath);
-  result.variables = result.variables.map(variable => {
+  result.variables = result.variables.map((variable) => {
     // overriding default and description to limit the risk of leaking content from real .env files
     return {
       ...variable,
       default: null,
-      description: 'TODO'
-    }
+      description: 'TODO',
+    };
   });
 
-  const outputEntries = result.variables.map(variable => {
-    return stripIndents`
+  const outputEntries = result.variables
+    .map((variable) => {
+      return stripIndents`
       # description: ${variable.description}
       # format: ${variable.format}
-      # required: ${variable.required}${variable.link ? `\n# link: ${variable.link}` : ''}${!variable.configurable ? '\n# configurable: false' : ''}${variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : ''}
+      # required: ${variable.required}${
+        variable.link ? `\n# link: ${variable.link}` : ''
+      }${!variable.configurable ? '\n# configurable: false' : ''}${
+        variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : ''
+      }
       ${variable.key}=
-    `
-  }).join('\n\n');
+    `;
+    })
+    .join('\n\n');
 
-  await writeFile(path.resolve(targetPath, '.env.example'), outputEntries, 'utf8');
+  await writeFile(
+    path.resolve(targetPath, '.env.example'),
+    outputEntries,
+    'utf8'
+  );
 }
 
 module.exports = {
@@ -199,6 +247,7 @@ module.exports = {
   promptQuestions,
   copyTemplateFiles,
   addToTemplatesJson,
+  addToPackageJson,
   copyFunctionsAndAssets,
-  generateEnvExampleFromRealEnv
+  generateEnvExampleFromRealEnv,
 };
