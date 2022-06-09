@@ -12,9 +12,7 @@ const generateCustomersList = (context) => {
       customer_id: 1,
       display_name: CUSTOMER_1_NAME,
       channels: [
-        { type: 'email', value: 'customer_test_1@example.com' },
         { type: 'sms', value: context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER },
-        // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, // TODO: figure out Whatsapp
       ],
       links: [
         {
@@ -42,9 +40,7 @@ const generateCustomersList = (context) => {
       customer_id: 2,
       display_name: CUSTOMER_2_NAME,
       channels: [
-        { type: 'email', value: 'customer_test_2@example.com' },
         { type: 'sms', value: context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER },
-        // { type: 'whatsapp', value: 'whatsapp:+1234567890' }, TODO
       ],
       links: [
         {
