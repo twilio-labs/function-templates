@@ -51,7 +51,7 @@ npm test
 
 ## Testing
 
-[Check out the dedicated testing guide](./TESTING.md)
+[Check out the dedicated testing guide][TESTING]
 
 ## Shared Logic
 
