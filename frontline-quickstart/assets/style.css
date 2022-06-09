@@ -42,3 +42,7 @@ section {
 p {
   margin-bottom: 1.5em;
 }
+
+p img {
+  max-width: 100%;
+}
