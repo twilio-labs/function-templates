@@ -10,7 +10,7 @@ exports.handler = function (context, event, callback) {
   base
     .table(context.AIRTABLE_TABLE_NAME)
     .create({
-      Sid: event.Sid,
+      Sid: event.MessageSid,
       From: event.From,
       Body: event.Body,
     })
