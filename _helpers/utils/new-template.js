@@ -68,17 +68,15 @@ async function copyTemplateFiles(
   dependencies = dependencies || {
     '@twilio-labs/runtime-helpers': '^0.1.2',
   };
-  let dependenciesAsString = JSON.stringify(dependencies, null, 4)
+  const dependenciesAsString = JSON.stringify(dependencies, null, 4)
     .split('\n')
     .map((x) => (x.trim() === '}' ? '  }' : x))
     .join('\n');
-  const createdFiles = await copyTemplate(templatePath, targetPath, {
+  return copyTemplate(templatePath, targetPath, {
     name,
     description,
     dependencies: dependenciesAsString,
   });
-  // await rename(path.resolve(targetPath, '_package.json'), path.resolve(targetPath, 'package.json'));
-  return createdFiles;
 }
 
 async function addToTemplatesJson(name, title, description) {
@@ -130,9 +128,9 @@ function createFileChecker(basePath) {
 
       if (isDirectory) {
         return statObject.isDirectory();
-      } else {
-        return statObject.isFile();
       }
+
+      return statObject.isFile();
     } catch (err) {
       return false;
     }
@@ -226,7 +224,7 @@ async function generateEnvExampleFromRealEnv(projectPath, targetPath) {
       # format: ${variable.format}
       # required: ${variable.required}${
         variable.link ? `\n# link: ${variable.link}` : ''
-      }${!variable.configurable ? '\n# configurable: false' : ''}${
+      }${variable.configurable ? '' : '\n# configurable: false'}${
         variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : ''
       }
       ${variable.key}=
