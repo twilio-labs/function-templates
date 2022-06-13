@@ -218,7 +218,7 @@ This project contains a set of helpers for the `index.html` inside the `docs/sta
 - Prepend the Base URL of functions to inputs
 - Handle Copy to Clipboard on inputs
 
-They are automatically included in new `index.html` files but you can also manually adding them by adding to your HTML:
+They are automatically included in new `index.html` files but you can also manually add them by adding to your HTML:
 
 ```html
 <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
@@ -226,7 +226,7 @@ They are automatically included in new `index.html` files but you can also manua
 <script src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js" defer></script>
 ```
 
-You are welcome to contribute more shared logic to the `ce-helpers.js` file inside the `docs/static/v1` folder. As a rule of thumb this is a good place for JavaScript logic that is lightweight and not relevant for the actual functionality of the application. By moving it out of the way, customer's can better understand what is actually required for the application.
+You are welcome to contribute more shared logic to the `ce-helpers.js` file inside the `docs/static/v1` folder. As a rule of thumb this is a good place for JavaScript logic that is lightweight and not relevant for the actual functionality of the application. By moving it out of the way, customers can better understand what is actually required for the application.
 
 #### Server-rendered elements
 
@@ -244,7 +244,7 @@ Every template should have either one of the comments in their `index.html` rega
 
 ### Using the runtime-helpers library
 
-One of the default dependencies for new function templates is the `runtime-helpers` library, which is a Twilio project that provides easy-to-use, tested implementations of various common Function building blocks and utlities. We recommend using the shared `runtime-helpers` version of a feature whenever it exists. Full documentation for the `runtime-helpers` API and feature set is available in [this reference](https://twilio-labs.github.io/runtime-helpers/).
+One of the default dependencies for new function templates is the `runtime-helpers` library, which is a Twilio project that provides easy-to-use, tested implementations of various common Function building blocks and utilities. We recommend using the shared `runtime-helpers` version of a feature whenever it exists. Full documentation for the `runtime-helpers` API and feature set is available in [this reference](https://twilio-labs.github.io/runtime-helpers/).
 
 ## Testing
 
