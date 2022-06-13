@@ -53,7 +53,7 @@
         <img src="https://twilio-labs.github.io/function-templates/static/v1/success.svg" />
         <div>
           <h1>Great news!</h1>
-          <h2>This Frontline Intergration Service using functions has been deployed successfully!</h2>
+          <h2>This Frontline Integration Service using Twilio Functions has been deployed successfully!</h2>
         </div>
       </div>
       <section>
@@ -68,8 +68,9 @@
         callbacks.</p>
 
       <form>
-        <p>First, add CRM Callbacks, Outgoing Conversations Callback, and Template Callback to the <a target="_blank"
-            href="https://console.twilio.com/?frameUrl=%2Fconsole%2Ffrontline%2Fconfigure">Frontline Callbacks
+        <p>First, add the CRM Callbacks, Outgoing Conversations Callback, and Template Callback below to the <a
+            target="_blank" href="https://console.twilio.com/?frameUrl=%2Fconsole%2Ffrontline%2Fconfigure">Frontline
+            Callbacks
             Configuration Page</a>. Don’t forget to save.</p>
 
         <ul>
@@ -96,8 +97,7 @@
         </ul>
         <p>Next, add the Custom Routing Callback URL below to the <a target="_blank"
             href="https://console.twilio.com/?frameUrl=%2Fconsole%2Ffrontline%2Frouting">Frontline Inbound Routing
-            page</a>. Remember to <strong>select the Custom Routing checkbox</strong>, and don’t forget to click on
-          Save.</p>
+            page</a>. Remember to <strong>select the Custom Routing checkbox</strong>, and don’t forget to save.</p>
 
         <ul>
           <li>
@@ -108,22 +108,31 @@
           </li>
         </ul>
 
-        <p>Finally, add the Conversation webhooks to the <strong>Pre and Post-event Webhook URLs</strong> in the <a
-            target="_blank"
+        <p>As the final step, add the Conversations Webhook URL below to the <strong>Pre and Post-event Webhook
+            URLs</strong>
+          in the <a target="_blank"
             href="https://console.twilio.com/?frameUrl=%2Fconsole%2Fconversations%2Fconfiguration%2Fwebhooks">Conversations
-            API webhook configuration page</a>. Select the <strong>onConversationAdd</strong> and
-          <strong>onParticipantAdded</strong> options under <strong>Webhook Filtering</strong> and click on Save.
+            API webhook configuration page</a>. Then select the <strong>onConversationAdd</strong> checkbox under
+          <strong>Pre-webhooks</strong>. Next, select the
+          <strong>onParticipantAdded</strong> checkbox under the <strong>Post-webhooks</strong>. Finally, don't forget
+          to save.
+        </p>
+        <p>
+          <img src="./conversations-webhooks-info.png" alt="Frontline Quickstart Webhooks" />
         </p>
         <ul>
           <li>
-            <label for="callbacks-twilio-conversations">Converstations Webhooks</label>
+            <label for="callbacks-twilio-conversations">Conversations Webhook URL</label>
             <div class="copy-input-wrapper">
               <input type="text" id="callbacks-twilio-conversations" class="function-root" readonly=true
                 value="/callbacks/twilio-conversations">
             </div>
           </li>
         </ul>
-        <p>That's it! We have now configured all the callbacks needed. Now lets head back to the Quickstart Guide for
+
+        <p>That's it! We have now configured all the callbacks needed. Now let's head back to the <a
+            href="https://www.twilio.com/docs/frontline/serverless-quickstart" target="_blank">Quickstart Guide</a>
+          for
           step 6.</p>
       </form>
       </section>
