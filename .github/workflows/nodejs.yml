@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [12, 14, 16]
+        node-version: [14, 16]
 
     steps:
       - uses: actions/checkout@v1
@@ -34,6 +34,9 @@ jobs:
       #       ${{ matrix.os }}-${{ matrix.node-version }}-cypress-${{ env.cache-name }}-
       #       ${{ matrix.os }}-${{ matrix.node-version }}-cypress-
       #       ${{ matrix.os }}-${{ matrix.node-version }}-
+      - name: install npm v8
+        run: |
+          npm install -g npm@8
       - name: npm install, build, and test
         run: |
           npm install
