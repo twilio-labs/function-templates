@@ -1,0 +1,10 @@
+{
+  "name": "verify-sna",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@twilio/runtime-handler": "1.2.3",
+    "amqplib": "0.10.0",
+    "twilio": "^3.56"
+  }
+}

@@ -309,6 +309,11 @@
       "id": "frontline-quickstart",
       "name": "Frontline Functions Quickstart",
       "description": "Creates 1 function for each callback needed to setup Frontline features. This is intended to be used as the Integration Service of a Frontline instance."
+    },
+    {
+      "id": "verify-sna",
+      "name": "verify-sna",
+      "description": "Sample Backend Silent Network Auth"
     }
   ]
 }
