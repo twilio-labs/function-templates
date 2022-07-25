@@ -13,7 +13,7 @@
  * }
  */
 
-let amqp = require('amqplib/callback_api');
+const amqp = require('amqplib/callback_api');
 
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
@@ -79,4 +79,5 @@ exports.handler = async function (context, event, callback) {
     });
     return callback(null, response);
   }
+  return callback(null, {});
 };

@@ -32,10 +32,10 @@ const phoneNumber = document.getElementById('phone-number');
 async function getSNAUrl(event) {
   event.preventDefault();
   console.log('Retrieving SNA URL for verification...');
-  console.log('Country code: ' + countryCode.value);
-  console.log('Phone number: ' + phoneNumber.value);
+  console.log(`Country code: ${countryCode.value}`);
+  console.log(`Phone number: ${phoneNumber.value}`);
 
-  let statusMessage = 'Retrieving SNA URL for verification...';
+  const statusMessage = 'Retrieving SNA URL for verification...';
   showPhoneStatus(statusMessage);
 
   const data = new URLSearchParams();
@@ -49,7 +49,7 @@ async function getSNAUrl(event) {
     });
 
     const json = await response.json();
-    if (response.status == 200) {
+    if (response.status === 200) {
       showPhoneStatus(
         `SNA URL for +${
           countryCode.value + phoneNumber.value
@@ -79,8 +79,8 @@ document
 async function checkVerification(event) {
   event.preventDefault();
   console.log('Checking verification...');
-  console.log('Country code: ' + countryCode.value);
-  console.log('Phone number: ' + phoneNumber.value);
+  console.log(`Country code: ${countryCode.value}`);
+  console.log(`Phone number: ${phoneNumber.value}`);
 
   showVerificationStatus('Checking verification...');
 
@@ -95,7 +95,7 @@ async function checkVerification(event) {
     });
 
     const json = await response.json();
-    if (response.status == 200) {
+    if (response.status === 200) {
       showVerificationStatus(json.message, { color: 'green' });
 
       // The application is able to continue before the phone number is verified
