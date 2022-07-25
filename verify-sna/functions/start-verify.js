@@ -28,15 +28,16 @@ exports.handler = async function (context, event, callback) {
     const client = context.getTwilioClient();
     const service = context.VERIFY_SERVICE_SID;
 
-    const countryCode = event.countryCode;
-    const phoneNumber = event.phoneNumber;
+    const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
 
     // TODO: Check that country code and phone number are present and correct
 
-    /*         const verification = await client.verify
-            .services(service)
-            .verifications
-            .create({to: countryCode + phoneNumber, channel: 'sna'}); */
+    /**
+     * const verification = await client.verify
+     * .services(service)
+     * .verifications
+     * .create({to: countryCode + phoneNumber, channel: 'sna'});
+     */
 
     const verification = {
       sna: {

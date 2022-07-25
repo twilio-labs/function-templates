@@ -13,7 +13,7 @@
  * }
  */
 
-var amqp = require('amqplib/callback_api');
+let amqp = require('amqplib/callback_api');
 
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
@@ -24,21 +24,22 @@ exports.handler = async function (context, event, callback) {
     const service = context.VERIFY_SERVICE_SID;
     const rabbitmqUrl = context.RABBIT_MQ_URL;
 
-    const countryCode = event.countryCode;
-    const phoneNumber = event.phoneNumber;
+    const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
 
     // TODO: Check that country code and phone number are present and correct
 
-    /*         const check = await client.verify
-            .services(service)
-            .verificationChecks
-            .create({to: countryCode + phoneNumber}); */
+    /**
+     * const check = await client.verify
+     * .services(service)
+     * .verificationChecks
+     * .create({to: countryCode + phoneNumber});
+     */
 
     const check = {
       status: 'approved',
     };
 
-    if (check.status == 'approved') {
+    if (check.status === 'approved') {
       response.setStatusCode(200);
       response.setBody({
         message: 'Phone number verified successfully',
@@ -53,7 +54,7 @@ exports.handler = async function (context, event, callback) {
           if (error1) {
             throw error1;
           }
-          var queue = 'verification-checks';
+          const queue = 'verification-checks';
 
           channel.assertQueue(queue, {
             durable: false,
@@ -65,7 +66,7 @@ exports.handler = async function (context, event, callback) {
         });
         setTimeout(function () {
           connection.close();
-          process.exit(0);
+          throw new Error('RabbitMQ send message timeout');
         }, 5000);
       });
     } else {
