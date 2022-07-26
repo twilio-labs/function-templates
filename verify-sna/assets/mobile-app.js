@@ -35,7 +35,7 @@ async function getSNAUrl(event) {
   console.log(`Country code: ${countryCode.value}`);
   console.log(`Phone number: ${phoneNumber.value}`);
 
-  const statusMessage = 'Retrieving SNA URL for verification...';
+  let statusMessage = 'Retrieving SNA URL for verification...';
   showPhoneStatus(statusMessage);
 
   const data = new URLSearchParams();
@@ -49,7 +49,7 @@ async function getSNAUrl(event) {
     });
 
     const json = await response.json();
-    if (response.status === 200) {
+    if (response.status == 200) {
       showPhoneStatus(
         `SNA URL for +${
           countryCode.value + phoneNumber.value
@@ -95,7 +95,7 @@ async function checkVerification(event) {
     });
 
     const json = await response.json();
-    if (response.status === 200) {
+    if (response.status == 200) {
       showVerificationStatus(json.message, { color: 'green' });
 
       // The application is able to continue before the phone number is verified
