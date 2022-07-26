@@ -35,7 +35,7 @@ async function getSNAUrl(event) {
   console.log(`Country code: ${countryCode.value}`);
   console.log(`Phone number: ${phoneNumber.value}`);
 
-  let statusMessage = 'Retrieving SNA URL for verification...';
+  const statusMessage = 'Retrieving SNA URL for verification...';
   showPhoneStatus(statusMessage);
 
   const data = new URLSearchParams();
@@ -49,7 +49,7 @@ async function getSNAUrl(event) {
     });
 
     const json = await response.json();
-    if (response.status == 200) {
+    if (response.status === 200) {
       showPhoneStatus(
         `SNA URL for +${
           countryCode.value + phoneNumber.value
@@ -61,6 +61,8 @@ async function getSNAUrl(event) {
     } else {
       clearStatus();
       showPhoneError(json.message);
+
+      // The application can try to get the URL again or provide the user other verification methods
     }
   } catch (error) {
     console.error(error);
@@ -69,6 +71,8 @@ async function getSNAUrl(event) {
         countryCode.value + phoneNumber.value
       }.`
     );
+
+    // The application can try to get the URL again or provide the user other verification methods
   }
 }
 
@@ -95,20 +99,20 @@ async function checkVerification(event) {
     });
 
     const json = await response.json();
-    if (response.status == 200) {
+    if (response.status === 200) {
       showVerificationStatus(json.message, { color: 'green' });
 
-      // The application is able to continue before the phone number is verified
+      // The application will be able to continue due to verificaiton success
     } else {
       showVerificationError(json.message);
 
-      // The application has to verify the user using other verification methods
+      // The application has to provide the user other verification methods
     }
   } catch (error) {
     console.error(error);
     showVerificationError('Something went wrong!');
 
-    // The application has to verify the user using other verification methods
+    // The application has to provide the user other verification methods
   }
 }
 

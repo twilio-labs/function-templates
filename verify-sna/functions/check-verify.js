@@ -13,7 +13,7 @@
  * }
  */
 
-const amqp = require('amqplib/callback_api');
+var amqp = require('amqplib/callback_api');
 
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
@@ -54,7 +54,7 @@ exports.handler = async function (context, event, callback) {
           if (error1) {
             throw error1;
           }
-          const queue = 'verification-checks';
+          var queue = 'verification-checks';
 
           channel.assertQueue(queue, {
             durable: false,
@@ -66,8 +66,8 @@ exports.handler = async function (context, event, callback) {
         });
         setTimeout(function () {
           connection.close();
-          throw new Error('RabbitMQ send message timeout');
-        }, 5000);
+          throw new Error('RabbitMQ timeout while sending message to queue');
+        }, 500);
       });
     } else {
       throw new Error("Phone number couldn't be verified");
@@ -79,5 +79,4 @@ exports.handler = async function (context, event, callback) {
     });
     return callback(null, response);
   }
-  return callback(null, {});
 };
