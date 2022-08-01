@@ -1,26 +1,9 @@
 /**
- * Create a new verification
+ * Remove locally stored verifications
  *
- * Creates a new SNA verification for a given phone number
- *
- * Pre-requisites
- * - Create a Verify Service (https://www.twilio.com/console/verify/services)
- * - Add VERIFY_SERVICE_SID from above to your Environment Variables (https://www.twilio.com/console/functions/configure)
- * - Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
- *
- * Parameters
- * - countryCode - required
- * - phoneNumber - required
+ * Removes locally stored verifications that are more than 30 minutes old from creation
  *
  * Returns JSON
- *
- * on Success:
- * {
- *      "message": string
- *      "snaUrl": string
- * }
- *
- * on Error:
  * {
  *      "message": string
  * }
@@ -36,43 +19,20 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   try {
-    const client = context.getTwilioClient();
-    const service = context.VERIFY_SERVICE_SID;
-
-    const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
-
-    // TODO: Check that country code and phone number are present and correct
-
-    /* const verification_test = await client
-         .verify
-         .services(service)
-         .verifications
-         .create({to: `+${countryCode}${phoneNumber}`, channel: 'sna'});
- 
-         console.log(verification_test); */
-
-    const verification = {
-      to: `+${countryCode}${phoneNumber}`,
-      sna: {
-        url: 'https://mi.dnlsrv.com/m/id/3tHbGDGD?data=TGSDDSFSD4',
-      },
-    };
-
     response.setStatusCode(200);
     response.setBody({
-      message: 'Creation of SNA verification successful',
-      snaUrl: verification.sna.url,
+      message: 'No records were removed',
     });
 
     // Connecting to database
     const dbName = 'verifications_db.db';
-    const db = new sqlite3.Database(
+    let db = new sqlite3.Database(
       path.join(os.tmpdir(), dbName),
       sqlite3.OPEN_READWRITE,
       (err) => {
-        if (err && err.code === 'SQLITE_CANTOPEN') {
+        if (err && err.code == 'SQLITE_CANTOPEN') {
           // Create database
-          const newdb = new sqlite3.Database(
+          let newdb = new sqlite3.Database(
             path.join(os.tmpdir(), dbName),
             (err) => {
               if (err) {
@@ -123,14 +83,13 @@ exports.handler = async function (context, event, callback) {
 
     // Run queries in database
     function runQueries(db) {
-      db.get(
+      db.all(
         `
-             SELECT status
+             SELECT *
              FROM verifications
-             WHERE phone_number = ? AND sna_url = ?;
+             WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
              `,
-        [verification.to, verification.sna.url],
-        (err, row) => {
+        (err, rows) => {
           if (err) {
             const statusCode = err.status || 400;
             response.setStatusCode(statusCode);
@@ -139,13 +98,18 @@ exports.handler = async function (context, event, callback) {
             });
             return callback(null, response);
           }
-          if (!row) {
+          if (rows.length > 0) {
+            response.setStatusCode(200);
+            response.setBody({
+              message: `At least ${rows.length} records were removed`,
+            });
+
             db.run(
               `
-                     INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
-                     VALUES (?, ?, 'pending', DATETIME('NOW'), NULL);
+                     DELETE
+                     FROM verifications
+                     WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
                      `,
-              [verification.to, verification.sna.url],
               (err) => {
                 if (err) {
                   const statusCode = err.status || 400;

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@twilio/runtime-handler": "1.2.3",
-    "amqplib": "0.10.0",
+    "sqlite3": "5.0.10",
     "twilio": "^3.56"
   }
 }
