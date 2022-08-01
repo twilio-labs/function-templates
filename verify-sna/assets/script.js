@@ -1,5 +1,4 @@
 const verificationsStatusSpan = document.getElementById('verifications-status');
-const removalStatusSpan = document.getElementById('removal-status');
 
 function showVerificationsStatus(message, options = { color: 'gray' }) {
   verificationsStatusSpan.style.color = options.color;
@@ -11,19 +10,8 @@ function showVerificationsError(error) {
   showVerificationsStatus(error, { color: '#a94442' });
 }
 
-function showRemovalStatus(message, options = { color: 'gray' }) {
-  removalStatusSpan.style.color = options.color;
-  removalStatusSpan.textContent = message;
-}
-
-function showRemovalError(error) {
-  console.error(error);
-  showRemovalStatus(error, { color: '#a94442' });
-}
-
 function clearStatus() {
   verificationsStatusSpan.textContent = '';
-  removalStatusSpan.textContent = '';
 }
 
 async function getVerifications(event) {
@@ -57,37 +45,6 @@ async function getVerifications(event) {
   }
 }
 
-async function removeOldVerifications(event) {
-  event.preventDefault();
-  console.log('Removing old verifications...');
-
-  showRemovalStatus('Removing old verifications...');
-
-  const data = new URLSearchParams();
-
-  try {
-    const response = await fetch('./remove-old-verifications', {
-      method: 'POST',
-      body: data,
-    });
-
-    const json = await response.json();
-
-    if (response.status === 200) {
-      showRemovalStatus(json.message, { color: 'green' });
-    } else {
-      showRemovalError(json.message);
-    }
-  } catch (error) {
-    console.error(error);
-    showRemovalError('Something went wrong!');
-  }
-}
-
 document
   .getElementById('get-verifications')
   .addEventListener('submit', (event) => getVerifications(event));
-
-/* document
-  .getElementById('remove-old-verifications')
-  .addEventListener('submit', (event) => removeOldVerifications(event)); */

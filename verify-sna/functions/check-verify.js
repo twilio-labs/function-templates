@@ -25,10 +25,108 @@
  *      "message": string
  * }
  */
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const sqlite3 = require('sqlite3');
+
+/**
+ * Updates verifications table when a verification check occurs
+ * @param {sqlite3.Database} db A sqlite3 Database object
+ * @param {Object} check The object returned by the Twilio Verify API when checking a SNA verification for a phone number
+ * @param {Twilio.Response} response A Twilio Response object
+ * @param {Function} callback A callback function
+ */
+function verificationCheckDatabaseUpdate(db, check, response, callback) {
+  db.all(
+    `
+    SELECT *
+    FROM verifications
+    WHERE phone_number = ?;
+    `,
+    check.to,
+    (err, rows) => {
+      if (err) {
+        const statusCode = err.status || 400;
+        response.setStatusCode(statusCode);
+        response.setBody({
+          message: err.message,
+        });
+        return callback(null, response);
+      }
+
+      if (rows.length > 0) {
+        pendingStatusRows = rows.filter((row) => row.status === 'pending');
+        if (pendingStatusRows.length > 0) {
+          sortedRows = pendingStatusRows.sort((a, b) => {
+            const aDate = new Date(a.verification_start_datetime);
+            const bDate = new Date(b.verification_start_datetime);
+            return bDate - aDate;
+          });
+          db.run(
+            `
+                UPDATE verifications
+                SET status = ?, verification_check_datetime = DATETIME('NOW')
+                WHERE phone_number = ? AND sna_url = ?;
+                `,
+            [response.body.status, check.to, sortedRows[0].sna_url],
+            (err) => {
+              if (err) {
+                const statusCode = err.status || 400;
+                response.setStatusCode(statusCode);
+                response.setBody({
+                  message: err.message,
+                });
+                return callback(null, response);
+              }
+              db.run(
+                `
+                    UPDATE verifications
+                    SET status = ?, verification_check_datetime = DATETIME('NOW')
+                    WHERE phone_number = ? AND sna_url != ?;
+                    `,
+                ['expired', check.to, sortedRows[0].sna_url],
+                (err) => {
+                  if (err) {
+                    const statusCode = err.status || 400;
+                    response.setStatusCode(statusCode);
+                    response.setBody({
+                      message: err.message,
+                    });
+                    return callback(null, response);
+                  }
+                  return callback(null, response);
+                }
+              );
+            }
+          );
+        } else {
+          return callback(null, response);
+        }
+      } else {
+        db.run(
+          `
+            INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
+            VALUES (?, ?, ?, NULL, DATETIME('NOW'));
+            `,
+          [check.to, 'no sna url generated', response.body.status],
+          (err) => {
+            if (err) {
+              const statusCode = err.status || 400;
+              response.setStatusCode(statusCode);
+              response.setBody({
+                message: err.message,
+              });
+              return callback(null, response);
+            }
+            return callback(null, response);
+          }
+        );
+      }
+    }
+  );
+}
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -41,29 +139,9 @@ exports.handler = async function (context, event, callback) {
 
     const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
 
-    // TODO: Check that country code and phone number are present and correct
-
-    /**
-     * const check = await client.verify
-     * .services(service)
-     * .verificationChecks
-     * .create({to: `+${countryCode}${phoneNumber}`});
-     */
-
-    const check = {
-      to: `+${countryCode}${phoneNumber}`,
-      status: 'approved',
-      sna_attempts_error_codes: [
-        {
-          attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-          code: 60519,
-        },
-        {
-          attempt_sid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
-          code: 60500, // Here the Twilio error code points to a "denied verification error"
-        },
-      ],
-    };
+    const check = await client.verify.v2
+      .services(service)
+      .verificationChecks.create({ to: `${countryCode}${phoneNumber}` });
 
     if (check.status === 'approved') {
       response.setStatusCode(200);
@@ -73,44 +151,35 @@ exports.handler = async function (context, event, callback) {
       });
     } else {
       if (
-        check.sna_attempts_error_codes[
-          check.sna_attempts_error_codes.length - 1
-        ].code === 60519
+        check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
+          .code === 60519 ||
+        check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
+          .code > 60520
       ) {
         response.setStatusCode(200);
         response.setBody({
           status: 'pending',
           message: 'Pending EVURL processing',
         });
-      } else if (
-        check.sna_attempts_error_codes[
-          check.sna_attempts_error_codes.length - 1
-        ].code <= 60520
-      ) {
+      } else {
         response.setStatusCode(200);
         response.setBody({
           status: 'not-verified',
           message: 'SNA verification unsuccessful, phone number not verified',
-        }); // Here I'm assuming the evurl can't be used any longer and a new one has to be generated
-      } else {
-        response.setStatusCode(200);
-        response.setBody({
-          status: 'pending',
-          message: 'Pending EVURL processing',
-        }); // Here I'm assuming that the sna url can be called afterward to potentially achieve a verified status
+        });
       }
     }
 
-    if (response.body.status != 'pending') {
-      // Connecting to database
+    if (response.body.status !== 'pending') {
+      // Connecting to database and running queries
       const dbName = 'verifications_db.db';
-      let db = new sqlite3.Database(
+      const db = new sqlite3.Database(
         path.join(os.tmpdir(), dbName),
         sqlite3.OPEN_READWRITE,
         (err) => {
-          if (err && err.code == 'SQLITE_CANTOPEN') {
+          if (err && err.code === 'SQLITE_CANTOPEN') {
             // Create database
-            let newdb = new sqlite3.Database(
+            const newdb = new sqlite3.Database(
               path.join(os.tmpdir(), dbName),
               (err) => {
                 if (err) {
@@ -142,7 +211,12 @@ exports.handler = async function (context, event, callback) {
                       });
                       return callback(null, response);
                     }
-                    runQueries(newdb);
+                    verificationCheckDatabaseUpdate(
+                      newdb,
+                      check,
+                      response,
+                      callback
+                    );
                   }
                 );
               }
@@ -155,103 +229,9 @@ exports.handler = async function (context, event, callback) {
             });
             return callback(null, response);
           }
-          runQueries(db);
+          verificationCheckDatabaseUpdate(db, check, response, callback);
         }
       );
-
-      // Run queries in database
-      function runQueries(db) {
-        db.all(
-          `
-                SELECT *
-                FROM verifications
-                WHERE phone_number = ?;
-                `,
-          check.to,
-          (err, rows) => {
-            if (err) {
-              const statusCode = err.status || 400;
-              response.setStatusCode(statusCode);
-              response.setBody({
-                message: err.message,
-              });
-              return callback(null, response);
-            }
-
-            if (rows.length > 0) {
-              /**
-               * Note: The most recent pending verification is updated to the status indicated by response.body.status, while the remaining pending verifications are updated to expired status
-               */
-              pendingStatusRows = rows.filter((row) => row.status == 'pending');
-              if (pendingStatusRows.length > 0) {
-                sortedRows = pendingStatusRows.sort((a, b) => {
-                  const aDate = new Date(a.verification_start_datetime);
-                  const bDate = new Date(b.verification_start_datetime);
-                  return bDate - aDate;
-                });
-                db.run(
-                  `
-                            UPDATE verifications
-                            SET status = ?, verification_check_datetime = DATETIME('NOW')
-                            WHERE phone_number = ? AND sna_url = ?;
-                            `,
-                  [response.body.status, check.to, sortedRows[0].sna_url],
-                  (err) => {
-                    if (err) {
-                      const statusCode = err.status || 400;
-                      response.setStatusCode(statusCode);
-                      response.setBody({
-                        message: err.message,
-                      });
-                      return callback(null, response);
-                    }
-                    db.run(
-                      `
-                                UPDATE verifications
-                                SET status = ?, verification_check_datetime = DATETIME('NOW')
-                                WHERE phone_number = ? AND sna_url != ?;
-                                `,
-                      ['expired', check.to, sortedRows[0].sna_url],
-                      (err) => {
-                        if (err) {
-                          const statusCode = err.status || 400;
-                          response.setStatusCode(statusCode);
-                          response.setBody({
-                            message: err.message,
-                          });
-                          return callback(null, response);
-                        }
-                        return callback(null, response);
-                      }
-                    );
-                  }
-                );
-              } else {
-                return callback(null, response);
-              }
-            } else {
-              db.run(
-                `
-                        INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
-                        VALUES (?, ?, ?, NULL, DATETIME('NOW'));
-                        `,
-                [check.to, 'no sna url generated', response.body.status],
-                (err) => {
-                  if (err) {
-                    const statusCode = err.status || 400;
-                    response.setStatusCode(statusCode);
-                    response.setBody({
-                      message: err.message,
-                    });
-                    return callback(null, response);
-                  }
-                  return callback(null, response);
-                }
-              );
-            }
-          }
-        );
-      }
     } else {
       return callback(null, response);
     }

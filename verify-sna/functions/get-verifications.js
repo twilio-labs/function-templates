@@ -16,10 +16,42 @@
  *      "message": string
  * }
  */
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const sqlite3 = require('sqlite3');
+
+/**
+ * Fetchs all the records from the verifications table
+ * @param {sqlite3.Database} db A sqlite3 Database object
+ * @param {Twilio.Response} response A Twilio Response object
+ * @param {Function} callback A callback function
+ */
+function getVerifications(db, response, callback) {
+  db.all(
+    `
+    SELECT *
+    FROM verifications;
+    `,
+    (err, rows) => {
+      if (err) {
+        const statusCode = err.status || 400;
+        response.setStatusCode(statusCode);
+        response.setBody({
+          message: err.message,
+        });
+        return callback(null, response);
+      }
+      response.setStatusCode(200);
+      response.setBody({
+        message: 'Verifications retrieved sucessfully',
+        verifications: rows,
+      });
+      return callback(null, response);
+    }
+  );
+}
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -27,15 +59,15 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   try {
-    // Connecting to database
+    // Connecting to database and running queries
     const dbName = 'verifications_db.db';
-    let db = new sqlite3.Database(
+    const db = new sqlite3.Database(
       path.join(os.tmpdir(), dbName),
       sqlite3.OPEN_READWRITE,
       (err) => {
-        if (err && err.code == 'SQLITE_CANTOPEN') {
+        if (err && err.code === 'SQLITE_CANTOPEN') {
           // Create database
-          let newdb = new sqlite3.Database(
+          const newdb = new sqlite3.Database(
             path.join(os.tmpdir(), dbName),
             (err) => {
               if (err) {
@@ -49,15 +81,15 @@ exports.handler = async function (context, event, callback) {
               // Table(s) creation
               newdb.exec(
                 `
-                     CREATE TABLE verifications (
-                         phone_number VARCHAR(30) NOT NULL,
-                         sna_url VARCHAR(500) NOT NULL,
-                         status VARCHAR(10) NOT NULL,
-                         verification_start_datetime DATETIME,
-                         verification_check_datetime DATETIME,
-                         PRIMARY KEY (phone_number, sna_url)
-                     );
-                     `,
+                    CREATE TABLE verifications (
+                        phone_number VARCHAR(30) NOT NULL,
+                        sna_url VARCHAR(500) NOT NULL,
+                        status VARCHAR(10) NOT NULL,
+                        verification_start_datetime DATETIME,
+                        verification_check_datetime DATETIME,
+                        PRIMARY KEY (phone_number, sna_url)
+                    );
+                    `,
                 (err) => {
                   if (err) {
                     const statusCode = err.status || 400;
@@ -67,7 +99,7 @@ exports.handler = async function (context, event, callback) {
                     });
                     return callback(null, response);
                   }
-                  runQueries(newdb);
+                  getVerifications(newdb, response, callback);
                 }
               );
             }
@@ -80,35 +112,9 @@ exports.handler = async function (context, event, callback) {
           });
           return callback(null, response);
         }
-        runQueries(db);
+        getVerifications(db, response, callback);
       }
     );
-
-    // Run queries in database
-    function runQueries(db) {
-      db.all(
-        `
-             SELECT *
-             FROM verifications;
-             `,
-        (err, rows) => {
-          if (err) {
-            const statusCode = err.status || 400;
-            response.setStatusCode(statusCode);
-            response.setBody({
-              message: err.message,
-            });
-            return callback(null, response);
-          }
-          response.setStatusCode(200);
-          response.setBody({
-            message: 'Verifications retrieved sucessfully',
-            verifications: rows,
-          });
-          return callback(null, response);
-        }
-      );
-    }
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
