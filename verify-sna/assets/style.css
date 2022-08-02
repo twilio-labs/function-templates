@@ -14,7 +14,6 @@ th div {
 table {
   border-collapse: collapse;
 }
-/* tr:nth-child(even) { background: #EEE; } */
 
 .verifications-table-div {
   display: flex;
@@ -31,6 +30,11 @@ table {
 .verifications-table td,
 .verifications-table th div {
   padding: 31px;
+}
+
+.verifications-table td,
+.verifications-table th {
+  min-width: 150px;
 }
 
 .verifications-table tbody tr:hover {
