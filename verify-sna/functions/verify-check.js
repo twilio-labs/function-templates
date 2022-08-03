@@ -16,7 +16,7 @@
  *
  * on Success:
  * {
- *      "status": string
+ *      "success": boolean
  *      "message": string
  * }
  *
@@ -41,10 +41,10 @@ const sqlite3 = require('sqlite3');
 function verificationCheckDatabaseUpdate(db, check, response, callback) {
   db.all(
     `
-    SELECT *
-    FROM verifications
-    WHERE phone_number = ?;
-    `,
+     SELECT *
+     FROM verifications
+     WHERE phone_number = ?;
+     `,
     check.to,
     (err, rows) => {
       if (err) {
@@ -66,11 +66,15 @@ function verificationCheckDatabaseUpdate(db, check, response, callback) {
           });
           db.run(
             `
-                UPDATE verifications
-                SET status = ?, verification_check_datetime = DATETIME('NOW')
-                WHERE phone_number = ? AND sna_url = ?;
-                `,
-            [response.body.status, check.to, sortedRows[0].sna_url],
+                 UPDATE verifications
+                 SET status = ?, verification_check_datetime = DATETIME('NOW')
+                 WHERE phone_number = ? AND sna_url = ?;
+                 `,
+            [
+              response.body.status ? 'verified' : 'not-verified',
+              check.to,
+              sortedRows[0].sna_url,
+            ],
             (err) => {
               if (err) {
                 const statusCode = err.status || 400;
@@ -82,10 +86,10 @@ function verificationCheckDatabaseUpdate(db, check, response, callback) {
               }
               db.run(
                 `
-                    UPDATE verifications
-                    SET status = ?, verification_check_datetime = DATETIME('NOW')
-                    WHERE phone_number = ? AND sna_url != ?;
-                    `,
+                     UPDATE verifications
+                     SET status = ?, verification_check_datetime = DATETIME('NOW')
+                     WHERE phone_number = ? AND sna_url != ? AND status = 'pending';
+                     `,
                 ['expired', check.to, sortedRows[0].sna_url],
                 (err) => {
                   if (err) {
@@ -107,10 +111,14 @@ function verificationCheckDatabaseUpdate(db, check, response, callback) {
       } else {
         db.run(
           `
-            INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
-            VALUES (?, ?, ?, NULL, DATETIME('NOW'));
-            `,
-          [check.to, 'no sna url generated', response.body.status],
+             INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
+             VALUES (?, ?, ?, NULL, DATETIME('NOW'));
+             `,
+          [
+            check.to,
+            'no sna url generated',
+            response.body.status ? 'verified' : 'not-verified',
+          ],
           (err) => {
             if (err) {
               const statusCode = err.status || 400;
@@ -146,31 +154,29 @@ exports.handler = async function (context, event, callback) {
     if (check.status === 'approved') {
       response.setStatusCode(200);
       response.setBody({
-        status: 'verified',
+        success: true,
         message: 'SNA verification successful, phone number verified',
       });
     } else {
       if (
         check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
-          .code === 60519 ||
-        check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
-          .code > 60520
+          .code === 60519
       ) {
-        response.setStatusCode(200);
+        response.setStatusCode(400);
         response.setBody({
-          status: 'pending',
-          message: 'Pending EVURL processing',
+          message: 'SNA Verification Result Pending',
+          errorCode: 60519,
         });
       } else {
         response.setStatusCode(200);
         response.setBody({
-          status: 'not-verified',
+          success: false,
           message: 'SNA verification unsuccessful, phone number not verified',
         });
       }
     }
 
-    if (response.body.status !== 'pending') {
+    if (response.statusCode === 200) {
       // Connecting to database and running queries
       const dbName = 'verifications_db.db';
       const db = new sqlite3.Database(
@@ -193,15 +199,15 @@ exports.handler = async function (context, event, callback) {
                 // Table(s) creation
                 newdb.exec(
                   `
-                        CREATE TABLE verifications (
-                            phone_number VARCHAR(30) NOT NULL,
-                            sna_url VARCHAR(500) NOT NULL,
-                            status VARCHAR(10) NOT NULL,
-                            verification_start_datetime DATETIME,
-                            verification_check_datetime DATETIME,
-                            PRIMARY KEY (phone_number, sna_url)
-                        );
-                        `,
+                         CREATE TABLE verifications (
+                             phone_number VARCHAR(30) NOT NULL,
+                             sna_url VARCHAR(500) NOT NULL,
+                             status VARCHAR(10) NOT NULL,
+                             verification_start_datetime DATETIME,
+                             verification_check_datetime DATETIME,
+                             PRIMARY KEY (phone_number, sna_url)
+                         );
+                         `,
                   (err) => {
                     if (err) {
                       const statusCode = err.status || 400;

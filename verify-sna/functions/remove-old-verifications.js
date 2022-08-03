@@ -23,10 +23,10 @@ const sqlite3 = require('sqlite3');
 function removeRecords(db, response, callback) {
   db.all(
     `
-    SELECT *
-    FROM verifications
-    WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
-    `,
+     SELECT *
+     FROM verifications
+     WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
+     `,
     (err, rows) => {
       if (err) {
         const statusCode = err.status || 400;
@@ -44,10 +44,10 @@ function removeRecords(db, response, callback) {
 
         db.run(
           `
-            DELETE
-            FROM verifications
-            WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
-            `,
+             DELETE
+             FROM verifications
+             WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
+             `,
           (err) => {
             if (err) {
               const statusCode = err.status || 400;
@@ -100,15 +100,15 @@ exports.handler = async function (context, event, callback) {
               // Table(s) creation
               newdb.exec(
                 `
-                    CREATE TABLE verifications (
-                        phone_number VARCHAR(30) NOT NULL,
-                        sna_url VARCHAR(500) NOT NULL,
-                        status VARCHAR(10) NOT NULL,
-                        verification_start_datetime DATETIME,
-                        verification_check_datetime DATETIME,
-                        PRIMARY KEY (phone_number, sna_url)
-                    );
-                    `,
+                     CREATE TABLE verifications (
+                         phone_number VARCHAR(30) NOT NULL,
+                         sna_url VARCHAR(500) NOT NULL,
+                         status VARCHAR(10) NOT NULL,
+                         verification_start_datetime DATETIME,
+                         verification_check_datetime DATETIME,
+                         PRIMARY KEY (phone_number, sna_url)
+                     );
+                     `,
                 (err) => {
                   if (err) {
                     const statusCode = err.status || 400;

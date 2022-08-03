@@ -34,7 +34,7 @@ table {
 
 .verifications-table td,
 .verifications-table th {
-  min-width: 150px;
+  min-width: 180px;
 }
 
 .verifications-table tbody tr:hover {

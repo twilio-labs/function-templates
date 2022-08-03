@@ -1,19 +1,3 @@
-const verificationsStatusSpan = document.getElementById('verifications-status');
-
-function showVerificationsStatus(message, options = { color: 'gray' }) {
-  verificationsStatusSpan.style.color = options.color;
-  verificationsStatusSpan.textContent = message;
-}
-
-function showVerificationsError(error) {
-  console.error(error);
-  showVerificationsStatus(error, { color: '#a94442' });
-}
-
-function clearStatus() {
-  verificationsStatusSpan.textContent = '';
-}
-
 const verificationsTable = document.getElementById('verifications-table');
 
 const addAttributes = (element, attrObj) => {
@@ -44,7 +28,9 @@ const createCustomElement = (element, attributes, children) => {
 function newTableRow(verification) {
   // Phone number
   let phoneNumber = document.createElement('td');
-  phoneNumber.innerHTML = verification.phone_number;
+  phoneNumber.innerHTML = `+${'*'.repeat(
+    verification.phone_number.length - 5
+  )}${verification.phone_number.slice(-4)}`;
 
   // Verification start datetime
   let verificationStart = document.createElement('td');
@@ -80,40 +66,32 @@ function newTableRow(verification) {
 function updateVerificationsTable(verifications) {
   let newTableBody = '';
   verifications.forEach((verification) => {
-    newTableBody = `${newTableBody}${newTableRow(verification)}\n`;
+    newTableBody = `${newTableBody}${newTableRow(verification)}`;
   });
   verificationsTable.tBodies[0].innerHTML = newTableBody;
-  console.log(verificationsTable.tBodies[0]);
 }
 
-async function getVerifications(event) {
-  event.preventDefault();
-  console.log('Getting verifications...');
-
-  // showVerificationsStatus('Getting verifications...');
-
-  const data = new URLSearchParams();
-
+async function fetchVerifications() {
   try {
     const response = await fetch('./get-verifications', {
-      method: 'POST',
-      body: data,
+      method: 'GET',
     });
-
     const json = await response.json();
 
-    if (response.status === 200) {
-      // showVerificationsStatus(json.message, { color: 'green' });
-      updateVerificationsTable(json.verifications);
+    if (response.status == 502) {
+      await fetchVerifications();
+    } else if (response.status != 200) {
+      console.error(json.message);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await fetchVerifications();
     } else {
-      showVerificationsError(json.message);
+      updateVerificationsTable(json.verifications);
+      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await fetchVerifications();
     }
   } catch (error) {
     console.error(error);
-    showVerificationsError('Something went wrong!');
   }
 }
 
-document
-  .getElementById('get-verifications')
-  .addEventListener('submit', (event) => getVerifications(event));
+fetchVerifications();

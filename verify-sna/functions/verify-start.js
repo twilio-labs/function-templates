@@ -41,10 +41,10 @@ const sqlite3 = require('sqlite3');
 function verificationStartDatabaseUpdate(db, verification, response, callback) {
   db.get(
     `
-    SELECT status
-    FROM verifications
-    WHERE phone_number = ? AND sna_url = ?;
-    `,
+     SELECT status
+     FROM verifications
+     WHERE phone_number = ? AND sna_url = ?;
+     `,
     [verification.to, verification.sna.url],
     (err, row) => {
       if (err) {
@@ -58,9 +58,9 @@ function verificationStartDatabaseUpdate(db, verification, response, callback) {
       if (!row) {
         db.run(
           `
-            INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
-            VALUES (?, ?, 'pending', DATETIME('NOW'), NULL);
-            `,
+             INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
+             VALUES (?, ?, 'pending', DATETIME('NOW'), NULL);
+             `,
           [verification.to, verification.sna.url],
           (err) => {
             if (err) {
@@ -127,15 +127,15 @@ exports.handler = async function (context, event, callback) {
               // Table(s) creation
               newdb.exec(
                 `
-                    CREATE TABLE verifications (
-                        phone_number VARCHAR(30) NOT NULL,
-                        sna_url VARCHAR(500) NOT NULL,
-                        status VARCHAR(10) NOT NULL,
-                        verification_start_datetime DATETIME,
-                        verification_check_datetime DATETIME,
-                        PRIMARY KEY (phone_number, sna_url)
-                    );
-                    `,
+                     CREATE TABLE verifications (
+                         phone_number VARCHAR(30) NOT NULL,
+                         sna_url VARCHAR(500) NOT NULL,
+                         status VARCHAR(10) NOT NULL,
+                         verification_start_datetime DATETIME,
+                         verification_check_datetime DATETIME,
+                         PRIMARY KEY (phone_number, sna_url)
+                     );
+                     `,
                 (err) => {
                   if (err) {
                     const statusCode = err.status || 400;

@@ -31,9 +31,9 @@ const sqlite3 = require('sqlite3');
 function getVerifications(db, response, callback) {
   db.all(
     `
-    SELECT *
-    FROM verifications;
-    `,
+     SELECT *
+     FROM verifications;
+     `,
     (err, rows) => {
       if (err) {
         const statusCode = err.status || 400;
@@ -43,6 +43,11 @@ function getVerifications(db, response, callback) {
         });
         return callback(null, response);
       }
+      sortedRows = rows.sort((a, b) => {
+        const aDate = new Date(a.verification_start_datetime);
+        const bDate = new Date(b.verification_start_datetime);
+        return bDate - aDate;
+      });
       response.setStatusCode(200);
       response.setBody({
         message: 'Verifications retrieved sucessfully',
@@ -81,15 +86,15 @@ exports.handler = async function (context, event, callback) {
               // Table(s) creation
               newdb.exec(
                 `
-                    CREATE TABLE verifications (
-                        phone_number VARCHAR(30) NOT NULL,
-                        sna_url VARCHAR(500) NOT NULL,
-                        status VARCHAR(10) NOT NULL,
-                        verification_start_datetime DATETIME,
-                        verification_check_datetime DATETIME,
-                        PRIMARY KEY (phone_number, sna_url)
-                    );
-                    `,
+                     CREATE TABLE verifications (
+                         phone_number VARCHAR(30) NOT NULL,
+                         sna_url VARCHAR(500) NOT NULL,
+                         status VARCHAR(10) NOT NULL,
+                         verification_start_datetime DATETIME,
+                         verification_check_datetime DATETIME,
+                         PRIMARY KEY (phone_number, sna_url)
+                     );
+                     `,
                 (err) => {
                   if (err) {
                     const statusCode = err.status || 400;

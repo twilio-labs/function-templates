@@ -61,141 +61,22 @@
                     <p>This example shows how to deploy Twilio Verify and Twilio Functions for serverless Silent Network Auth (SNA) user verification.</p>
                     <hr>
                     <h2>SNA Verifications</h2>
-                    <p>Fetch SNA verifications that have been created/checked in the iOS sample app</p>
+                    <p>Fetch SNA verifications that have been created/checked in the sample app</p>
 
                     <div class="verifications-table-div">
                         <table class="verifications-table" id="verifications-table">
                             <thead>
                                 <tr>
                                     <th><div>Phone Number</div></th>
-                                    <th><div>Verification Start</div></th>
-                                    <th><div>Verification Check</div></th>
+                                    <th><div>Verification Started</div></th>
+                                    <th><div>Verification Completed</div></th>
                                     <th><div>Status</div></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>+573185984037</td>
-                                    <td>07/09/2022 22:17:23</td>
-                                    <td>07/09/2022 22:18:23</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:27:23</td>
-                                    <td></td>
-                                    <td class="status"><span class="expired">Expired</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="not-verified">Not verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td></td>
-                                    <td class="status"><span class="pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="not-verified">Not verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="not-verified">Not verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="not-verified">Not verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="not-verified">Not verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="not-verified">Not verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
-                                <tr>
-                                    <td>+573185984038</td>
-                                    <td>07/09/2022 22:38:23</td>
-                                    <td>07/09/2022 22:38:32</td>
-                                    <td class="status"><span class="verified">Verified</span></td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
-
-                    <form id="get-verifications">
-                        <input type="submit" value="List verifications" />
-                        <span id="verifications-status"></span>
-                    </form>
                 </section>
             </div>
         </main>
@@ -203,5 +84,5 @@
             <span>We can't wait to see what you build.</span>
         </footer>
     </body>
-    <script src="script.js"></script>
+    <script src="utils.js"></script>
 </html>
