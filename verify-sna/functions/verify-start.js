@@ -31,14 +31,18 @@ const path = require('path');
 const os = require('os');
 const sqlite3 = require('sqlite3');
 
+const assets = Runtime.getAssets();
+const { connectToDatabaseAndRunQueries } = require(assets['/helpers/db.js']
+  .path);
+
 /**
  * Updates verifications table when a verification start occurs
  * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Object} verification The object returned by the Twilio Verify API when creating a SNA verification
  * @param {Twilio.Response} response A Twilio Response object
  * @param {Function} callback A callback function
+ * @param {Object} verification The object returned by the Twilio Verify API when creating a SNA verification
  */
-function verificationStartDatabaseUpdate(db, verification, response, callback) {
+function verificationStartDatabaseUpdate(db, response, callback, verification) {
   db.get(
     `
      SELECT status
@@ -104,67 +108,11 @@ exports.handler = async function (context, event, callback) {
       message: 'Creation of SNA verification successful',
       snaUrl: verification.sna.url,
     });
-
-    // Connecting to database and running queries
-    const dbName = 'verifications_db.db';
-    const db = new sqlite3.Database(
-      path.join(os.tmpdir(), dbName),
-      sqlite3.OPEN_READWRITE,
-      (err) => {
-        if (err && err.code === 'SQLITE_CANTOPEN') {
-          // Create database
-          const newdb = new sqlite3.Database(
-            path.join(os.tmpdir(), dbName),
-            (err) => {
-              if (err) {
-                const statusCode = err.status || 400;
-                response.setStatusCode(statusCode);
-                response.setBody({
-                  message: err.message,
-                });
-                return callback(null, response);
-              }
-              // Table(s) creation
-              newdb.exec(
-                `
-                     CREATE TABLE verifications (
-                         phone_number VARCHAR(30) NOT NULL,
-                         sna_url VARCHAR(500) NOT NULL,
-                         status VARCHAR(10) NOT NULL,
-                         verification_start_datetime DATETIME,
-                         verification_check_datetime DATETIME,
-                         PRIMARY KEY (phone_number, sna_url)
-                     );
-                     `,
-                (err) => {
-                  if (err) {
-                    const statusCode = err.status || 400;
-                    response.setStatusCode(statusCode);
-                    response.setBody({
-                      message: err.message,
-                    });
-                    return callback(null, response);
-                  }
-                  verificationStartDatabaseUpdate(
-                    newdb,
-                    verification,
-                    response,
-                    callback
-                  );
-                }
-              );
-            }
-          );
-        } else if (err) {
-          const statusCode = err.status || 400;
-          response.setStatusCode(statusCode);
-          response.setBody({
-            message: err.message,
-          });
-          return callback(null, response);
-        }
-        verificationStartDatabaseUpdate(db, verification, response, callback);
-      }
+    connectToDatabaseAndRunQueries(
+      verificationStartDatabaseUpdate,
+      callback,
+      response,
+      verification
     );
   } catch (error) {
     const statusCode = error.status || 400;

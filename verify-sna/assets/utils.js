@@ -94,4 +94,28 @@ async function fetchVerifications() {
   }
 }
 
+async function removeVerifications() {
+  try {
+    const response = await fetch('./remove-old-verifications', {
+      method: 'GET',
+    });
+    const json = await response.json();
+
+    if (response.status == 502) {
+      await removeVerifications();
+    } else if (response.status != 200) {
+      console.error(json.message);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await removeVerifications();
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 60000 * 30));
+      await removeVerifications();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 fetchVerifications();
+
+removeVerifications();
