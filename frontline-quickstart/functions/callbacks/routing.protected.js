@@ -50,10 +50,14 @@ const routeConversationToWorker = async (
   }
 };
 
+/**
+ * Inbound messages handler
+ * Read more: https://www.twilio.com/docs/frontline/handle-incoming-conversations
+ */
 exports.handler = async function (context, event, callback) {
-  const twilioClient = context.getTwilioClient();
+  console.log('[ Inbound Routing Callback ]');
 
-  console.log('Frontline Routing Callback');
+  const twilioClient = context.getTwilioClient();
 
   try {
     const conversationSid = event.ConversationSid;

@@ -1,8 +1,9 @@
-# Frontline Functions Quickstart
+# Frontline Serverless Quickstart
 
-Creates 1 function for each callback needed to setup Frontline features. 
+## What is this?
+This is the code that we use for the [Frontline Serverless Quickstart](https://www.twilio.com/docs/frontline/serverless-quickstart). It's intended to be deployed to [Twilio Functions](https://www.twilio.com/docs/runtime/functions), whereit ceates one function for each callback needed to setup Frontline features. 
 
-This is intended to be used as the Integration Service of a Frontline instance.
+This is intended to be used as the [Integration Service of a Frontline instance](https://www.twilio.com/docs/frontline/frontline-integration-service).
 
 ## Pre-requisites
 
@@ -47,10 +48,12 @@ twilio serverless:start
 
 ## Deploying
 
-Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
+Run the following command while being inside your project folder:
 
-With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
+```bash
 twilio serverless:deploy
 ```
+
+Read more:
+- [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart)
+- [Serverless Toolkit.](https://www.twilio.com/docs/labs/serverless-toolkit)

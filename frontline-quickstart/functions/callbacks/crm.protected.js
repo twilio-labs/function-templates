@@ -19,7 +19,10 @@ const handleGetCustomersListCallback = async (context, event) => {
     anchor
   );
 
-  // Respond with Customers object
+  /**
+   * Respond with a Customers object list
+   * https://www.twilio.com/docs/frontline/data-transfer-objects#customer
+   */
   return {
     objects: {
       customers: customersList,
@@ -30,17 +33,20 @@ const handleGetCustomersListCallback = async (context, event) => {
 const handleGetCustomerDetailsByCustomerIdCallback = async (event, context) => {
   const customersFile = Runtime.getAssets()['/providers/customers.js'].path;
   const { getCustomerById } = require(customersFile);
-  console.log('Getting Customer details: ', event.CustomerId);
-
   const customerId = event.CustomerId;
 
+  console.log('Getting Customer details for ID: ', event.CustomerId);
+
   /**
-   *  Fetch Customer Details based on their ID
+   * Fetch Customer details based on their ID
    * and information about a worker, that requested that information
    */
   const customerDetails = getCustomerById(context, customerId);
 
-  // Respond with Contact object
+  /**
+   * Respond with Customer object
+   * Read more: https://www.twilio.com/docs/frontline/data-transfer-objects#customer
+   */
   return {
     objects: {
       customer: {
@@ -55,13 +61,20 @@ const handleGetCustomerDetailsByCustomerIdCallback = async (event, context) => {
   };
 };
 
+/**
+ * CRM Callback Handler
+ * Read more: https://www.twilio.com/docs/frontline/my-customers
+ */
 exports.handler = async function (context, event, callback) {
-  const location = event.Location;
+  console.log('[ CRM Callback ]');
 
   /**
    * Location helps to determine which information was requested.
-   * CRM callback is a general purpose tool and might be used to fetch different kind of information
+   * This callback is used to fetch different types of information.
+   * Read more: https://www.twilio.com/docs/frontline/my-customers#responding-to-the-crm-callback
    */
+  const location = event.Location;
+
   switch (location) {
     case 'GetCustomerDetailsByCustomerId': {
       const resp = await handleGetCustomerDetailsByCustomerIdCallback(

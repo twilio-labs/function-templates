@@ -3,7 +3,6 @@ const setCustomerParticipantProperties = async (
   customerParticipant,
   customerDetails
 ) => {
-  console.log('[setCustomerParticipantProperties] ');
   const participantAttributes = JSON.parse(customerParticipant.attributes);
   const customerProperties = {
     attributes: JSON.stringify({
@@ -24,14 +23,17 @@ const setCustomerParticipantProperties = async (
       .catch((e) => console.log('Update customer participant failed: ', e));
   }
 };
-
+/**
+ * Conversations API Webhooks
+ * Read more: https://www.twilio.com/docs/frontline/conversations-webhooks
+ */
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const assets = Runtime.getAssets();
   const { getCustomerByNumber } = require(assets['/providers/customers.js']
     .path);
 
-  console.log('((( Conversations API Callback )))) ');
+  console.log('[ Outgoing Conversations Callback ]');
 
   const client = context.getTwilioClient();
 
@@ -39,7 +41,7 @@ exports.handler = async function (context, event, callback) {
 
   switch (eventType) {
     case 'onConversationAdd': {
-      console.log('[[[onConversationAdd]]]');
+      console.log('EventType: onConversationAdd');
 
       /**
        *  PRE-WEBHOOK
@@ -76,7 +78,7 @@ exports.handler = async function (context, event, callback) {
       return callback(null);
     }
     case 'onParticipantAdded': {
-      console.log('[[[onParticipantAdded]]]');
+      console.log('EventType: onParticipantAdded');
       /**
        * POST-WEBHOOK
        *
