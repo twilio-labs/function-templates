@@ -129,6 +129,7 @@
     "verify-push-backend",
     "verify-retry",
     "verify-totp",
+    "verify-totp-sms",
     "video",
     "video-token",
     "voice-client-javascript",
