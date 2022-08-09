@@ -1,4 +1,5 @@
-const { detectMissingParams } = require('../assets/utils.private');
+const assets = Runtime.getAssets();
+const { detectMissingParams } = require(assets['/utils.js'].path);
 
 function validateParams(paramsList, event) {
   const missingParams = detectMissingParams(paramsList, event);

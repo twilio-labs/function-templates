@@ -35,7 +35,7 @@ describe('verify-totp-sms-fallback/send-otp', () => {
       expect(result).toBeDefined();
       expect(result._body.ok).toEqual(false);
       expect(result._body.error).toEqual(
-        "Missing 'to' parameter; please provide a phone number or email."
+        "Missing 'to' parameter; please provide a phone number."
       );
       expect(mockClient.verify.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
