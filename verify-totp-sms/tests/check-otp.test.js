@@ -1,4 +1,3 @@
-const checkVerifyFunction = require('../functions/check-otp').handler;
 const helpers = require('../../test/test-helper');
 
 const mockService = {
@@ -24,7 +23,16 @@ const testContext = {
 
 describe('verify/check-verification', () => {
   beforeAll(() => {
-    helpers.setup({});
+    const runtime = new helpers.MockRuntime();
+    runtime._addAsset('/utils.js', '../assets/utils.private.js');
+    helpers.setup(testContext, runtime);
+    jest.mock('../assets/utils.private.js', () => {
+      const missing = jest.requireActual('../assets/utils.private.js');
+      return {
+        detectMissingParams: missing.detectMissingParams,
+      };
+    });
+    checkOtpFunction = require('../functions/check-otp').handler;
   });
   afterAll(() => {
     helpers.teardown();
@@ -39,7 +47,7 @@ describe('verify/check-verification', () => {
     const event = {
       code: '123456',
     };
-    checkVerifyFunction(testContext, event, callback);
+    checkOtpFunction(testContext, event, callback);
   });
 
   test('returns an error response when required code parameter is missing', (done) => {
@@ -51,7 +59,7 @@ describe('verify/check-verification', () => {
     const event = {
       to: '+17341234567',
     };
-    checkVerifyFunction(testContext, event, callback);
+    checkOtpFunction(testContext, event, callback);
   });
 
   test('returns an error response when required parameters are missing', (done) => {
@@ -61,7 +69,7 @@ describe('verify/check-verification', () => {
       done();
     };
     const event = {};
-    checkVerifyFunction(testContext, event, callback);
+    checkOtpFunction(testContext, event, callback);
   });
 
   test('returns Incorrect Token with invalid code', (done) => {
@@ -81,7 +89,7 @@ describe('verify/check-verification', () => {
         status: 'pending',
       })
     );
-    checkVerifyFunction(testContext, event, callback);
+    checkOtpFunction(testContext, event, callback);
   });
 
   test('returns success with valid request', (done) => {
@@ -94,6 +102,6 @@ describe('verify/check-verification', () => {
       to: '+17341234567',
       code: '123456',
     };
-    checkVerifyFunction(testContext, event, callback);
+    checkOtpFunction(testContext, event, callback);
   });
 });
