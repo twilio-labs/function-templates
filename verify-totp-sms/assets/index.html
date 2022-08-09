@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>TOTP authentication - Phone verification</title>
+
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+    <link
+      rel="stylesheet"
+      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"
+      integrity="sha256-DhdpoP64xch/Frz8CiBQE12en55NX+RhlPGRg6KWm5s="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css"
+      integrity="sha256-xpVuhxDPR39wFEQDha4W7kuMx+z9Av3dTS8MbH/RWEU="
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"
+      integrity="sha256-uPbemOnf3P4eaeLHebLwPC71YRbu3WNBvO4ibYeBnGs="
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg
+              class="logo"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 60 60"
+            >
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <a href="/index.html" style="text-decoration: none; color: white"
+            ><span>Your Twilio Verify Application</span>
+            <aside>
+              <svg
+                class="icon"
+                role="img"
+                aria-hidden="true"
+                width="100%"
+                height="100%"
+                viewBox="0 0 20 20"
+                aria-labelledby="NewIcon-1577"
+              >
+                <path
+                  fill="currentColor"
+                  fill-rule="evenodd"
+                  d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+                ></path>
+              </svg>
+              Live
+            </aside>
+          </a>
+        </nav>
+      </header>
+    </div>
+    <main>
+      <div class="content">
+        <section>
+          <p>
+            <a href="https://www.twilio.com/docs/glossary/totp"
+              >Time-based one-time password (TOTP)</a
+            >
+            authentication with SMS or WhatsApp fallback.
+          </p>
+          <hr />
+          <form id="register">
+            <label for="name">First name:</label>
+            <input type="text" id="name" class="form-control" required />
+            <p>Select your verification channel:</p>
+            <div>
+              <input
+                type="radio"
+                name="channel"
+                id="channel-sms"
+                value="sms"
+                checked
+              />
+              <label for="channel-sms">SMS</label>
+            </div>
+            <div>
+              <input
+                type="radio"
+                name="channel"
+                id="channel-whatsapp"
+                value="whatsapp"
+              />
+              <label for="channel-whatsapp">WhatsApp</label>
+            </div>
+            <div id="phone-input">
+              <p>Enter your phone number:</p>
+              <input type="tel" id="phone_number" />
+            </div>
+            <div id="email-input" style="display: none">
+              <p>Enter your email:</p>
+              <input type="email" id="email" />
+            </div>
+            <input type="submit" value="Register" />
+            <span id="status" class="status"></span>
+          </form>
+          <div>
+            <span id="status"></span>
+          </div>
+        </section>
+        <div id="otp-modal">
+          <div class="modal-content">
+            <span id="close">&times;</span>
+            <form id="check-code">
+              <div>
+                <p>Enter the code:</p>
+                <input type="text" id="code" placeholder="123456" required />
+              </div>
+              <div>
+                <input type="submit" value="Verify code" />
+              </div>
+              <span id="modal-status" class="status"></span>
+            </form>
+          </div>
+        </div>
+        <!-- EDIT_CODE_V2 -->
+      </div>
+    </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
+    <script src="/helpers.js"></script>
+    <script>
+      // Handle international prefixes, format phone input field
+      // Uses intl-tel-input library
+      const phoneInputField = document.querySelector('#phone_number');
+      const phoneInput = window.intlTelInput(phoneInputField, {
+        // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+        preferredCountries: ['us', 'co', 'in', 'de'],
+        utilsScript:
+          'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js',
+      });
+
+      function selectedChannel() {
+        const checked = "input[name='channel']:checked";
+        return document.querySelector(checked).value;
+      }
+
+      const modal = document.getElementById('otp-modal');
+      var to;
+
+      async function register(event) {
+        event.preventDefault();
+        console.log('Registering new user...');
+
+        const name = document.getElementById('name').value;
+        sessionStorage.setItem('name', name);
+
+        const channel = selectedChannel();
+        sessionStorage.setItem('channel', channel);
+
+        const statusMessage = 'Sending verification code...';
+        showStatus(statusMessage);
+
+        to = phoneInput.getNumber();
+
+        const data = new URLSearchParams();
+        data.append('channel', channel);
+        data.append('to', to);
+
+        try {
+          const response = await fetch('./send-otp', {
+            method: 'POST',
+            body: data,
+          });
+
+          const json = await response.json();
+
+          if (response.status >= 400) {
+            clearStatus();
+            showError(json.error);
+          } else {
+            modal.style.display = 'block';
+            if (json.ok) {
+              showStatus(`Sent verification code to ${to}`);
+            } else {
+              showError(json.error);
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          showError(`Something went wrong while sending code to ${to}.`);
+        }
+      }
+
+      async function checkOtp(event) {
+        event.preventDefault();
+        let code = document.getElementById('code');
+        showModalStatus(`Checking code ${code.value}...`);
+
+        const data = new URLSearchParams();
+        data.append('type', 'verification');
+        data.append('to', to);
+        data.append('code', code.value);
+
+        try {
+          const response = await fetch('./check-otp', {
+            method: 'POST',
+            body: data,
+          });
+
+          const json = await response.json();
+          if (json.ok) {
+            showModalStatus('Verification success!', { color: 'green' });
+            code.value = '';
+            sessionStorage.setItem('to', to);
+            window.location.replace('/totp-setup.html');
+          } else {
+            showModalStatus('Incorrect token!', { color: '#a94442' });
+            code.value = '';
+          }
+        } catch (error) {
+          console.error(error);
+          showModalStatus('Something went wrong!');
+          code.value = '';
+        }
+      }
+
+      let checkCode = document.getElementById('check-code');
+      checkCode.addEventListener('submit', (event) => checkOtp(event));
+
+      let closeButton = document.getElementById('close');
+      closeButton.addEventListener('click', () => {
+        clearStatus();
+        modal.style.display = 'none';
+      });
+
+      document
+        .getElementById('register')
+        .addEventListener('submit', (event) => register(event));
+
+      window.onclick = function (event) {
+        switch (event.target.id) {
+          case 'otp-modal':
+            modal.style.display = 'none';
+            clearStatus();
+            document.getElementById('modal-status').textContent = '';
+            break;
+        }
+      };
+    </script>
+  </body>
+</html>
