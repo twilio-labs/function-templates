@@ -1,15 +1,20 @@
-document.getElementById('session-reset').addEventListener('click', (event) => {
-  event.preventDefault();
-  sessionStorage.removeItem('name');
-  sessionStorage.removeItem('identity');
-  sessionStorage.removeItem('totpFactorSid');
-  sessionStorage.removeItem('to');
-  sessionStorage.removeItem('channel');
-  window.location.reload(false);
-});
+const reset = document.getElementById('session-reset');
+if (reset !== null) {
+  reset.addEventListener('click', (event) => {
+    event.preventDefault();
+    sessionStorage.removeItem('name');
+    sessionStorage.removeItem('identity');
+    sessionStorage.removeItem('totpFactorSid');
+    sessionStorage.removeItem('to');
+    sessionStorage.removeItem('channel');
+    window.location.reload(false);
+  });
+}
 
 function hide(element) {
-  element.style.display = 'none';
+  if (element !== null) {
+    element.style.display = 'none';
+  }
 }
 
 function hideAll(className) {
