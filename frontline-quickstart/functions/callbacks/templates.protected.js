@@ -70,17 +70,21 @@ const handleGetTemplatesByCustomerIdCallback = async (context, event) => {
   return [openersCategory, repliesCategory, closingCategory];
 };
 
+/**
+ * Templates Callback Handler
+ */
 exports.handler = async function (context, event, callback) {
-  console.log('[[ Templates handler ]]');
+  console.log('[ Templates Callback ]');
   try {
-    const location = event.Location;
-
     /**
      * Location helps to determine which information was requested.
-     * callback is a general purpose tool and might be used to fetch different kind of information
+     * This callback is used to fetch different types of information.
+     * Read more: https://www.twilio.com/docs/frontline/templated-messages#responding-to-templates-callback
      */
+    const location = event.Location;
+
     if (location === 'GetTemplatesByCustomerId') {
-      console.log('[[[ GetTemplatesByCustomerId ]]]');
+      console.log('Location: GetTemplatesByCustomerId');
       try {
         const resp = await handleGetTemplatesByCustomerIdCallback(
           context,
