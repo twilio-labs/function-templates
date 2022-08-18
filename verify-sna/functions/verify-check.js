@@ -58,13 +58,13 @@ exports.handler = async function (context, event, callback) {
         success: true,
         message: 'SNA verification successful, phone number verified',
       });
-      return connectToDatabaseAndRunQueries(
+      const dbResponse = await connectToDatabaseAndRunQueries(
         verificationCheckDatabaseUpdate,
-        callback,
         response,
         check,
         true
       );
+      return callback(null, dbResponse);
     } else {
       if (
         check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
@@ -85,13 +85,13 @@ exports.handler = async function (context, event, callback) {
             check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
               .code,
         });
-        return connectToDatabaseAndRunQueries(
+        const dbResponse = await connectToDatabaseAndRunQueries(
           verificationCheckDatabaseUpdate,
-          callback,
           response,
           check,
           false
         );
+        return callback(null, dbResponse);
       }
     }
   } catch (error) {

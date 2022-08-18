@@ -33,7 +33,11 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   try {
-    return connectToDatabaseAndRunQueries(getVerifications, callback, response);
+    const dbResponse = await connectToDatabaseAndRunQueries(
+      getVerifications,
+      response
+    );
+    return callback(null, dbResponse);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);

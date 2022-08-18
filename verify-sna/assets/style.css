@@ -13,7 +13,7 @@ table {
 
 /* width */
 table::-webkit-scrollbar {
-  width: 5px;
+  width: 0px;
 }
 
 /* Button Up */

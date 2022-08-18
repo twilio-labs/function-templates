@@ -25,7 +25,15 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   try {
-    return connectToDatabaseAndRunQueries(removeRecords, callback, response);
+    response.setStatusCode(200);
+    response.setBody({
+      message: 'Records removed successfully',
+    });
+    const dbResponse = await connectToDatabaseAndRunQueries(
+      removeRecords,
+      response
+    );
+    return callback(null, dbResponse);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);

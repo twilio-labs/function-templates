@@ -5,6 +5,10 @@ describe('verify-sna/get-verifications', () => {
     jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
     runtime._addAsset('/helpers/db.js', '../assets/helpers/db.private.js');
+    runtime._addAsset(
+      '/helpers/dbConf.js',
+      '../assets/helpers/dbConf.private.js'
+    );
     helpers.setup({}, runtime);
   });
   afterAll(() => {

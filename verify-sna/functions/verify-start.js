@@ -60,12 +60,12 @@ exports.handler = async function (context, event, callback) {
       message: 'Creation of SNA verification successful',
       snaUrl: verification.sna.url,
     });
-    return connectToDatabaseAndRunQueries(
+    const dbResponse = await connectToDatabaseAndRunQueries(
       verificationStartDatabaseUpdate,
-      callback,
       response,
       verification
     );
+    return callback(null, dbResponse);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);

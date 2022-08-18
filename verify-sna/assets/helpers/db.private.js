@@ -3,85 +3,79 @@ const path = require('path');
 const os = require('os');
 const sqlite3 = require('sqlite3');
 
-// const dbName = require('./dbConf').dbName;
-// const dbFolder = require('./dbConf').dbFolder;
-
-const dbName = 'verifications_db.db';
-const dbFolder = os.tmpdir();
+const assets = Runtime.getAssets();
+const { dbName, dbFolder } = require(assets['/helpers/dbConf.js'].path);
 
 function connectToDatabaseAndRunQueries(
   queries,
-  callback,
   response,
   verification = null,
   checkStatus = null
 ) {
-  const db = new sqlite3.Database(
-    path.join(dbFolder, dbName),
-    sqlite3.OPEN_READWRITE,
-    (err) => {
-      if (err && err.code === 'SQLITE_CANTOPEN') {
-        // Create database
-        const newdb = new sqlite3.Database(
-          path.join(dbFolder, dbName),
-          (err) => {
-            if (err) {
-              const error = new Error(err.message);
-              error.status = err.status || 400;
-              throw error;
-            }
-            // Table(s) creation
-            newdb.exec(
-              `
-                    CREATE TABLE verifications (
-                        phone_number VARCHAR(30) NOT NULL,
-                        sna_url VARCHAR(500) NOT NULL,
-                        status VARCHAR(10) NOT NULL,
-                        verification_start_datetime DATETIME,
-                        verification_check_datetime DATETIME,
-                        PRIMARY KEY (phone_number, sna_url)
-                    );
-                    `,
-              (err) => {
-                if (err) {
-                  const error = new Error(err.message);
-                  error.status = err.status || 400;
-                  throw error;
-                }
-                return queries(
-                  newdb,
-                  response,
-                  callback,
-                  verification,
-                  checkStatus
-                );
+  return new Promise((resolve, reject) => {
+    const db = new sqlite3.Database(
+      path.join(dbFolder, dbName),
+      sqlite3.OPEN_READWRITE,
+      (err) => {
+        if (err && err.code === 'SQLITE_CANTOPEN') {
+          // Create database
+          const newdb = new sqlite3.Database(
+            path.join(dbFolder, dbName),
+            (err) => {
+              if (err) {
+                return reject(err);
               }
-            );
-          }
-        );
-      } else if (err) {
-        const error = new Error(err.message);
-        error.status = err.status || 400;
-        throw error;
+              // Table(s) creation
+              newdb.exec(
+                `
+                      CREATE TABLE verifications (
+                          phone_number VARCHAR(30) NOT NULL,
+                          sna_url VARCHAR(500) NOT NULL,
+                          status VARCHAR(10) NOT NULL,
+                          verification_start_datetime DATETIME,
+                          verification_check_datetime DATETIME,
+                          PRIMARY KEY (phone_number, sna_url)
+                      );
+                      `,
+                (err) => {
+                  if (err) {
+                    return reject(err);
+                  } else {
+                    queries(
+                      newdb,
+                      response,
+                      verification,
+                      checkStatus,
+                      resolve,
+                      reject
+                    );
+                  }
+                }
+              );
+            }
+          );
+        } else if (err) {
+          return reject(err);
+        } else {
+          queries(db, response, verification, checkStatus, resolve, reject);
+        }
       }
-      return queries(db, response, callback, verification, checkStatus);
-    }
-  );
+    );
+  });
 }
 
 /**
  * Updates verifications table when a verification start occurs
  * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Twilio.Response} response A Twilio Response object
- * @param {Function} callback A callback function
  * @param {Object} verification The object returned by the Twilio Verify API when creating a SNA verification
  */
 function verificationStartDatabaseUpdate(
   db,
   response,
-  callback,
   verification,
-  checkStatus
+  checkStatus,
+  resolve,
+  reject
 ) {
   db.run(
     `
@@ -91,11 +85,10 @@ function verificationStartDatabaseUpdate(
     [verification.to, verification.sna.url],
     (err) => {
       if (err) {
-        const error = new Error(err.message);
-        error.status = err.status || 400;
-        throw error;
+        return reject(err);
+      } else {
+        return resolve(response);
       }
-      return callback(null, response);
     }
   );
 }
@@ -103,16 +96,15 @@ function verificationStartDatabaseUpdate(
 /**
  * Updates verifications table when a verification check occurs
  * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Twilio.Response} response A Twilio Response object
- * @param {Function} callback A callback function
  * @param {Object} check The object returned by the Twilio Verify API when checking a SNA verification for a given phone number
  */
 function verificationCheckDatabaseUpdate(
   db,
   response,
-  callback,
   check,
-  checkStatus
+  checkStatus,
+  resolve,
+  reject
 ) {
   db.all(
     `
@@ -123,9 +115,7 @@ function verificationCheckDatabaseUpdate(
     check.to,
     (err, rows) => {
       if (err) {
-        const error = new Error(err.message);
-        error.status = err.status || 400;
-        throw error;
+        return reject(err);
       }
       pendingStatusRows = rows.filter((row) => row.status === 'pending');
       if (pendingStatusRows.length > 0) {
@@ -147,9 +137,7 @@ function verificationCheckDatabaseUpdate(
           ],
           (err) => {
             if (err) {
-              const error = new Error(err.message);
-              error.status = err.status || 400;
-              throw error;
+              return reject(err);
             }
             db.run(
               `
@@ -160,17 +148,16 @@ function verificationCheckDatabaseUpdate(
               ['expired', check.to, sortedRows[0].sna_url],
               (err) => {
                 if (err) {
-                  const error = new Error(err.message);
-                  error.status = err.status || 400;
-                  throw error;
+                  return reject(err);
+                } else {
+                  return resolve(response);
                 }
-                return callback(null, response);
               }
             );
           }
         );
       } else {
-        return callback(null, response);
+        return resolve(response);
       }
     }
   );
@@ -179,10 +166,15 @@ function verificationCheckDatabaseUpdate(
 /**
  * Removes records from the verifications table that are more than 30 minutes old
  * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Twilio.Response} response A Twilio Response object
- * @param {Function} callback A callback function
  */
-function removeRecords(db, response, callback, verification, checkStatus) {
+function removeRecords(
+  db,
+  response,
+  verification,
+  checkStatus,
+  resolve,
+  reject
+) {
   db.run(
     `
        DELETE
@@ -191,15 +183,10 @@ function removeRecords(db, response, callback, verification, checkStatus) {
        `,
     (err) => {
       if (err) {
-        const error = new Error(err.message);
-        error.status = err.status || 400;
-        throw error;
+        return reject(err);
+      } else {
+        return resolve(response);
       }
-      response.setStatusCode(200);
-      response.setBody({
-        message: 'Records removed successfully',
-      });
-      return callback(null, response);
     }
   );
 }
@@ -207,10 +194,15 @@ function removeRecords(db, response, callback, verification, checkStatus) {
 /**
  * Fetchs all the records from the verifications table
  * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Twilio.Response} response A Twilio Response object
- * @param {Function} callback A callback function
  */
-function getVerifications(db, response, callback, verification, checkStatus) {
+function getVerifications(
+  db,
+  response,
+  verification,
+  checkStatus,
+  resolve,
+  reject
+) {
   db.all(
     `
      SELECT *
@@ -218,9 +210,7 @@ function getVerifications(db, response, callback, verification, checkStatus) {
      `,
     (err, rows) => {
       if (err) {
-        const error = new Error(err.message);
-        error.status = err.status || 400;
-        throw error;
+        return reject(err);
       }
       sortedRows = rows.sort((a, b) => {
         const aDate = new Date(a.verification_start_datetime);
@@ -230,9 +220,9 @@ function getVerifications(db, response, callback, verification, checkStatus) {
       response.setStatusCode(200);
       response.setBody({
         message: 'Verifications retrieved sucessfully',
-        verifications: rows,
+        verifications: sortedRows,
       });
-      return callback(null, response);
+      return resolve(response);
     }
   );
 }
