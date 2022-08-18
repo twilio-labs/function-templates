@@ -1,11 +1,11 @@
 const helpers = require('../../test/test-helper');
 
 function randomId(length) {
-  var result = '';
-  var characters =
+  let result = '';
+  const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
@@ -49,8 +49,9 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
+        const {
+          connectToDatabaseAndRunQueries,
+        } = require('../assets/helpers/db.private');
         await expect(
           connectToDatabaseAndRunQueries(null, null)
         ).rejects.toThrowError('SQLITE_CANTOPEN: unable to open database file');
@@ -61,11 +62,11 @@ describe('verify-sna/helpers/db', () => {
       it('throws an error', async () => {
         jest.mock('../assets/helpers/dbConf.private.js', () => {
           function randomFileName(length) {
-            var result = '';
-            var characters =
+            let result = '';
+            const characters =
               'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            var charactersLength = characters.length;
-            for (var i = 0; i < length; i++) {
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
               result += characters.charAt(
                 Math.floor(Math.random() * charactersLength)
               );
@@ -102,8 +103,9 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
+        const {
+          connectToDatabaseAndRunQueries,
+        } = require('../assets/helpers/db.private');
         await expect(
           connectToDatabaseAndRunQueries(null, null)
         ).rejects.toThrowError('SQLITE_ERROR');
@@ -137,10 +139,10 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const verificationStartDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationStartDatabaseUpdate;
+        const {
+          connectToDatabaseAndRunQueries,
+          verificationStartDatabaseUpdate,
+        } = require('../assets/helpers/db.private');
         const verification = {
           to: '+14085040458',
           sna: {
@@ -185,20 +187,20 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const verificationCheckDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationCheckDatabaseUpdate;
+        const {
+          connectToDatabaseAndRunQueries,
+          verificationCheckDatabaseUpdate,
+        } = require('../assets/helpers/db.private');
         const check = {
           to: '+14085040458',
           status: 'pending',
           snaAttemptsErrorCodes: [
             {
-              attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+              attemptSid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
               code: 60519,
             },
             {
-              attempt_sid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
+              attemptSid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
               code: 60500,
             },
           ],
@@ -239,20 +241,20 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const verificationCheckDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationCheckDatabaseUpdate;
+        const {
+          connectToDatabaseAndRunQueries,
+          verificationCheckDatabaseUpdate,
+        } = require('../assets/helpers/db.private');
         const check = {
           to: '+14085040458',
           status: 'pending',
           snaAttemptsErrorCodes: [
             {
-              attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+              attemptSid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
               code: 60519,
             },
             {
-              attempt_sid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
+              attemptSid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
               code: 60500,
             },
           ],
@@ -292,12 +294,11 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const verificationCheckDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationCheckDatabaseUpdate;
-        const verificationStartDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationStartDatabaseUpdate;
+        const {
+          connectToDatabaseAndRunQueries,
+          verificationCheckDatabaseUpdate,
+          verificationStartDatabaseUpdate,
+        } = require('../assets/helpers/db.private');
 
         // create verification in order to ensure that there will be at least one in pending status for this test
         const verification = {
@@ -317,11 +318,11 @@ describe('verify-sna/helpers/db', () => {
           status: 'pending',
           snaAttemptsErrorCodes: [
             {
-              attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+              attemptSid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
               code: 60519,
             },
             {
-              attempt_sid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
+              attemptSid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
               code: 60500,
             },
           ],
@@ -363,12 +364,11 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const verificationCheckDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationCheckDatabaseUpdate;
-        const verificationStartDatabaseUpdate =
-          require('../assets/helpers/db.private').verificationStartDatabaseUpdate;
+        const {
+          connectToDatabaseAndRunQueries,
+          verificationCheckDatabaseUpdate,
+          verificationStartDatabaseUpdate,
+        } = require('../assets/helpers/db.private');
 
         // create verification in order to ensure that there will be at least one in pending status for this test
         const verification = {
@@ -388,11 +388,11 @@ describe('verify-sna/helpers/db', () => {
           status: 'pending',
           snaAttemptsErrorCodes: [
             {
-              attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+              attemptSid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
               code: 60519,
             },
             {
-              attempt_sid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
+              attemptSid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
               code: 60500,
             },
           ],
@@ -436,10 +436,10 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: dbConf.selectAllVerificationsQuery,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const removeRecords =
-          require('../assets/helpers/db.private').removeRecords;
+        const {
+          connectToDatabaseAndRunQueries,
+          removeRecords,
+        } = require('../assets/helpers/db.private');
         await expect(
           connectToDatabaseAndRunQueries(removeRecords, null)
         ).rejects.toThrowError('SQLITE_ERROR');
@@ -473,10 +473,10 @@ describe('verify-sna/helpers/db', () => {
             selectAllVerificationsQuery: selectAllVerificationsQueryMock,
           };
         });
-        const connectToDatabaseAndRunQueries =
-          require('../assets/helpers/db.private').connectToDatabaseAndRunQueries;
-        const getVerifications =
-          require('../assets/helpers/db.private').getVerifications;
+        const {
+          connectToDatabaseAndRunQueries,
+          getVerifications,
+        } = require('../assets/helpers/db.private');
         await expect(
           connectToDatabaseAndRunQueries(getVerifications, null)
         ).rejects.toThrowError('SQLITE_ERROR');

@@ -72,8 +72,7 @@ describe('verify-sna/remove-old-verifications', () => {
       jest.mock('../assets/helpers/db.private.js', () => {
         const db = jest.requireActual('../assets/helpers/db.private.js');
         const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          const error = new Error('An error occurred');
-          throw error;
+          throw new Error('An error occurred');
         });
         return {
           connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,

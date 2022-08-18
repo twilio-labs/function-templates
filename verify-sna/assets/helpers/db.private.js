@@ -26,29 +26,31 @@ function connectToDatabaseAndRunQueries(
     const db = new sqlite3.Database(
       path.join(dbFolder, dbName),
       sqlite3.OPEN_READWRITE,
+      // eslint-disable-next-line consistent-return
       (err) => {
         if (err && err.code === 'SQLITE_CANTOPEN') {
           // Create database
           const newdb = new sqlite3.Database(
             path.join(dbFolder, dbName),
+            // eslint-disable-next-line consistent-return
             (err) => {
               if (err) {
                 return reject(err);
               }
               // Table(s) creation
+              // eslint-disable-next-line consistent-return
               newdb.exec(createTableQuery, (err) => {
                 if (err) {
                   return reject(err);
-                } else {
-                  queries(
-                    newdb,
-                    response,
-                    verification,
-                    checkStatus,
-                    resolve,
-                    reject
-                  );
                 }
+                queries(
+                  newdb,
+                  response,
+                  verification,
+                  checkStatus,
+                  resolve,
+                  reject
+                );
               });
             }
           );
@@ -81,9 +83,8 @@ function verificationStartDatabaseUpdate(
     (err) => {
       if (err) {
         return reject(err);
-      } else {
-        return resolve(response);
       }
+      return resolve(response);
     }
   );
 }
@@ -101,6 +102,7 @@ function verificationCheckDatabaseUpdate(
   resolve,
   reject
 ) {
+  // eslint-disable-next-line consistent-return
   db.all(selectPhoneNumberVerificationsQuery, check.to, (err, rows) => {
     if (err) {
       return reject(err);
@@ -119,6 +121,7 @@ function verificationCheckDatabaseUpdate(
           check.to,
           sortedRows[0].sna_url,
         ],
+        // eslint-disable-next-line consistent-return
         (err) => {
           if (err) {
             return reject(err);
@@ -129,9 +132,8 @@ function verificationCheckDatabaseUpdate(
             (err) => {
               if (err) {
                 return reject(err);
-              } else {
-                return resolve(response);
               }
+              return resolve(response);
             }
           );
         }
@@ -157,9 +159,8 @@ function removeRecords(
   db.run(deleteVerificationsQuery, (err) => {
     if (err) {
       return reject(err);
-    } else {
-      return resolve(response);
     }
+    return resolve(response);
   });
 }
 

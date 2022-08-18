@@ -125,12 +125,11 @@ async function fetchVerifications() {
 
     if (response.status === 502) {
       await fetchVerifications();
-    } else if (response.status !== 200) {
-      console.error(json.message);
+    } else if (response.status === 200) {
+      updateVerificationsTable(json.verifications);
+    } else {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       await fetchVerifications();
-    } else {
-      updateVerificationsTable(json.verifications);
     }
   } catch (error) {
     console.error(error);
@@ -146,12 +145,11 @@ async function removeVerifications() {
 
     if (response.status === 502) {
       await removeVerifications();
-    } else if (response.status !== 200) {
-      console.error(json.message);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } else if (response.status === 200) {
+      await new Promise((resolve) => setTimeout(resolve, 60000 * 30));
       await removeVerifications();
     } else {
-      await new Promise((resolve) => setTimeout(resolve, 60000 * 30));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       await removeVerifications();
     }
   } catch (error) {
@@ -203,4 +201,4 @@ document
   .getElementById('start-verifications-retrieval')
   .addEventListener('submit', (event) => startVerificationsRetrieval(event));
 
-// removeVerifications();
+removeVerifications();

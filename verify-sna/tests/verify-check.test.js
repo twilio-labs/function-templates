@@ -80,7 +80,7 @@ describe('verify-sna/verify-check', () => {
               status: 'pending',
               snaAttemptsErrorCodes: [
                 {
-                  attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+                  attemptSid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
                   code: 60519,
                 },
               ],
@@ -139,11 +139,11 @@ describe('verify-sna/verify-check', () => {
               status: 'pending',
               snaAttemptsErrorCodes: [
                 {
-                  attempt_sid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+                  attemptSid: 'VLXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
                   code: 60519,
                 },
                 {
-                  attempt_sid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
+                  attemptSid: 'VLYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY',
                   code: 60500,
                 },
               ],
@@ -280,8 +280,7 @@ describe('verify-sna/verify-check', () => {
       jest.mock('../assets/helpers/db.private.js', () => {
         const db = jest.requireActual('../assets/helpers/db.private.js');
         const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          const error = new Error('An error occurred');
-          throw error;
+          throw new Error('An error occurred');
         });
         return {
           connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,

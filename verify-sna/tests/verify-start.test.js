@@ -1,11 +1,11 @@
 const helpers = require('../../test/test-helper');
 
 function randomId(length) {
-  var result = '';
-  var characters =
+  let result = '';
+  const characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
@@ -179,8 +179,7 @@ describe('verify-sna/verify-start', () => {
       jest.mock('../assets/helpers/db.private.js', () => {
         const db = jest.requireActual('../assets/helpers/db.private.js');
         const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          const error = new Error('An error occurred');
-          throw error;
+          throw new Error('An error occurred');
         });
         return {
           connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,

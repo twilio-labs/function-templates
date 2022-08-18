@@ -52,48 +52,46 @@ exports.handler = async function (context, event, callback) {
       .services(service)
       .verificationChecks.create({ to: `${countryCode}${phoneNumber}` });
 
+    let dbResponse;
     if (check.status === 'approved') {
       response.setStatusCode(200);
       response.setBody({
         success: true,
         message: 'SNA verification successful, phone number verified',
       });
-      const dbResponse = await connectToDatabaseAndRunQueries(
+      dbResponse = await connectToDatabaseAndRunQueries(
         verificationCheckDatabaseUpdate,
         response,
         check,
         true
       );
-      return callback(null, dbResponse);
+    } else if (
+      check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
+        .code === 60519
+    ) {
+      response.setStatusCode(400);
+      response.setBody({
+        message: 'SNA Verification Result Pending',
+        errorCode: 60519,
+      });
+      dbResponse = response;
     } else {
-      if (
-        check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
-          .code === 60519
-      ) {
-        response.setStatusCode(400);
-        response.setBody({
-          message: 'SNA Verification Result Pending',
-          errorCode: 60519,
-        });
-        return callback(null, response);
-      } else {
-        response.setStatusCode(200);
-        response.setBody({
-          success: false,
-          message: 'SNA verification unsuccessful, phone number not verified',
-          errorCode:
-            check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
-              .code,
-        });
-        const dbResponse = await connectToDatabaseAndRunQueries(
-          verificationCheckDatabaseUpdate,
-          response,
-          check,
-          false
-        );
-        return callback(null, dbResponse);
-      }
+      response.setStatusCode(200);
+      response.setBody({
+        success: false,
+        message: 'SNA verification unsuccessful, phone number not verified',
+        errorCode:
+          check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
+            .code,
+      });
+      dbResponse = await connectToDatabaseAndRunQueries(
+        verificationCheckDatabaseUpdate,
+        response,
+        check,
+        false
+      );
     }
+    return callback(null, dbResponse);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
