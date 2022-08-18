@@ -4,7 +4,17 @@ const os = require('os');
 const sqlite3 = require('sqlite3');
 
 const assets = Runtime.getAssets();
-const { dbName, dbFolder } = require(assets['/helpers/dbConf.js'].path);
+const {
+  dbName,
+  dbFolder,
+  createTableQuery,
+  insertNewVerificationQuery,
+  selectPhoneNumberVerificationsQuery,
+  updateCheckedVerificationQuery,
+  updateExpiredVerificationsQuery,
+  deleteVerificationsQuery,
+  selectAllVerificationsQuery,
+} = require(assets['/helpers/dbConf.js'].path);
 
 function connectToDatabaseAndRunQueries(
   queries,
@@ -26,32 +36,20 @@ function connectToDatabaseAndRunQueries(
                 return reject(err);
               }
               // Table(s) creation
-              newdb.exec(
-                `
-                      CREATE TABLE verifications (
-                          phone_number VARCHAR(30) NOT NULL,
-                          sna_url VARCHAR(500) NOT NULL,
-                          status VARCHAR(10) NOT NULL,
-                          verification_start_datetime DATETIME,
-                          verification_check_datetime DATETIME,
-                          PRIMARY KEY (phone_number, sna_url)
-                      );
-                      `,
-                (err) => {
-                  if (err) {
-                    return reject(err);
-                  } else {
-                    queries(
-                      newdb,
-                      response,
-                      verification,
-                      checkStatus,
-                      resolve,
-                      reject
-                    );
-                  }
+              newdb.exec(createTableQuery, (err) => {
+                if (err) {
+                  return reject(err);
+                } else {
+                  queries(
+                    newdb,
+                    response,
+                    verification,
+                    checkStatus,
+                    resolve,
+                    reject
+                  );
                 }
-              );
+              });
             }
           );
         } else if (err) {
@@ -78,10 +76,7 @@ function verificationStartDatabaseUpdate(
   reject
 ) {
   db.run(
-    `
-       INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
-       VALUES (?, ?, 'pending', DATETIME('NOW'), NULL);
-       `,
+    insertNewVerificationQuery,
     [verification.to, verification.sna.url],
     (err) => {
       if (err) {
@@ -106,61 +101,45 @@ function verificationCheckDatabaseUpdate(
   resolve,
   reject
 ) {
-  db.all(
-    `
-     SELECT *
-     FROM verifications
-     WHERE phone_number = ?;
-     `,
-    check.to,
-    (err, rows) => {
-      if (err) {
-        return reject(err);
-      }
-      pendingStatusRows = rows.filter((row) => row.status === 'pending');
-      if (pendingStatusRows.length > 0) {
-        sortedRows = pendingStatusRows.sort((a, b) => {
-          const aDate = new Date(a.verification_start_datetime);
-          const bDate = new Date(b.verification_start_datetime);
-          return bDate - aDate;
-        });
-        db.run(
-          `
-                UPDATE verifications
-                SET status = ?, verification_check_datetime = DATETIME('NOW')
-                WHERE phone_number = ? AND sna_url = ?;
-                `,
-          [
-            checkStatus ? 'verified' : 'not-verified',
-            check.to,
-            sortedRows[0].sna_url,
-          ],
-          (err) => {
-            if (err) {
-              return reject(err);
-            }
-            db.run(
-              `
-                    UPDATE verifications
-                    SET status = ?
-                    WHERE phone_number = ? AND sna_url != ? AND status = 'pending';
-                    `,
-              ['expired', check.to, sortedRows[0].sna_url],
-              (err) => {
-                if (err) {
-                  return reject(err);
-                } else {
-                  return resolve(response);
-                }
-              }
-            );
-          }
-        );
-      } else {
-        return resolve(response);
-      }
+  db.all(selectPhoneNumberVerificationsQuery, check.to, (err, rows) => {
+    if (err) {
+      return reject(err);
     }
-  );
+    pendingStatusRows = rows.filter((row) => row.status === 'pending');
+    if (pendingStatusRows.length > 0) {
+      sortedRows = pendingStatusRows.sort((a, b) => {
+        const aDate = new Date(a.verification_start_datetime);
+        const bDate = new Date(b.verification_start_datetime);
+        return bDate - aDate;
+      });
+      db.run(
+        updateCheckedVerificationQuery,
+        [
+          checkStatus ? 'verified' : 'not-verified',
+          check.to,
+          sortedRows[0].sna_url,
+        ],
+        (err) => {
+          if (err) {
+            return reject(err);
+          }
+          db.run(
+            updateExpiredVerificationsQuery,
+            ['expired', check.to, sortedRows[0].sna_url],
+            (err) => {
+              if (err) {
+                return reject(err);
+              } else {
+                return resolve(response);
+              }
+            }
+          );
+        }
+      );
+    } else {
+      return resolve(response);
+    }
+  });
 }
 
 /**
@@ -175,20 +154,13 @@ function removeRecords(
   resolve,
   reject
 ) {
-  db.run(
-    `
-       DELETE
-       FROM verifications
-       WHERE DATETIME(verification_start_datetime, '+30 minute') < DATETIME('NOW') OR DATETIME(verification_check_datetime, '+30 minute') < DATETIME('NOW');
-       `,
-    (err) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(response);
-      }
+  db.run(deleteVerificationsQuery, (err) => {
+    if (err) {
+      return reject(err);
+    } else {
+      return resolve(response);
     }
-  );
+  });
 }
 
 /**
@@ -203,28 +175,22 @@ function getVerifications(
   resolve,
   reject
 ) {
-  db.all(
-    `
-     SELECT *
-     FROM verifications;
-     `,
-    (err, rows) => {
-      if (err) {
-        return reject(err);
-      }
-      sortedRows = rows.sort((a, b) => {
-        const aDate = new Date(a.verification_start_datetime);
-        const bDate = new Date(b.verification_start_datetime);
-        return bDate - aDate;
-      });
-      response.setStatusCode(200);
-      response.setBody({
-        message: 'Verifications retrieved sucessfully',
-        verifications: sortedRows,
-      });
-      return resolve(response);
+  db.all(selectAllVerificationsQuery, (err, rows) => {
+    if (err) {
+      return reject(err);
     }
-  );
+    sortedRows = rows.sort((a, b) => {
+      const aDate = new Date(a.verification_start_datetime);
+      const bDate = new Date(b.verification_start_datetime);
+      return bDate - aDate;
+    });
+    response.setStatusCode(200);
+    response.setBody({
+      message: 'Verifications retrieved sucessfully',
+      verifications: sortedRows,
+    });
+    return resolve(response);
+  });
 }
 
 module.exports = {
