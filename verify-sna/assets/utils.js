@@ -1,3 +1,39 @@
+const startVerificationsRetrievalStatusSpan = document.getElementById(
+  'start-verifications-retrieval-status'
+);
+const ldsDualRingDiv = document.getElementById('lds-dual-ring');
+const startVerificationsRetrievalButtonInput = document.getElementById(
+  'start-verifications-retrieval-button'
+);
+
+const TIME_LIMIT = 180;
+
+function showStartVerificationsRetrievalStatus(
+  message,
+  options = { color: 'gray' }
+) {
+  startVerificationsRetrievalStatusSpan.style.color = options.color;
+  startVerificationsRetrievalStatusSpan.textContent = message;
+}
+
+function showStartVerificationsRetrievalError(error) {
+  console.error(error);
+  showStartVerificationsRetrievalStatus(error, { color: '#a94442' });
+}
+
+function clearStatus() {
+  startVerificationsRetrievalStatusSpan.textContent = '';
+}
+
+function formatTimeLeft(time) {
+  const minutes = Math.floor(time / 60);
+  let seconds = time % 60;
+  if (seconds < 10) {
+    seconds = `0${seconds}`;
+  }
+  return `${minutes}:${seconds}`;
+}
+
 const verificationsTable = document.getElementById('verifications-table');
 
 const addAttributes = (element, attrObj) => {
@@ -65,9 +101,18 @@ function newTableRow(verification) {
 
 function updateVerificationsTable(verifications) {
   let newTableBody = '';
-  verifications.forEach((verification) => {
-    newTableBody = `${newTableBody}${newTableRow(verification)}`;
-  });
+  if (verifications.length === 0) {
+    let emptyTableStateTh = createCustomElement('th', { colspan: '4' }, [
+      'No verifications to show',
+    ]);
+    newTableBody = createCustomElement('tr', { class: 'empty-table-state' }, [
+      emptyTableStateTh,
+    ]).outerHTML;
+  } else {
+    verifications.forEach((verification) => {
+      newTableBody = `${newTableBody}${newTableRow(verification)}`;
+    });
+  }
   verificationsTable.tBodies[0].innerHTML = newTableBody;
 }
 
@@ -86,8 +131,6 @@ async function fetchVerifications() {
       await fetchVerifications();
     } else {
       updateVerificationsTable(json.verifications);
-      await new Promise((resolve) => setTimeout(resolve, 10000));
-      await fetchVerifications();
     }
   } catch (error) {
     console.error(error);
@@ -116,6 +159,48 @@ async function removeVerifications() {
   }
 }
 
-fetchVerifications();
+async function startVerificationsRetrieval(event) {
+  event.preventDefault();
+  let timePassed = 0;
+  let timeLeft = TIME_LIMIT;
+  try {
+    ldsDualRingDiv.style.display = 'inline-block';
+    document.getElementById('lds-dual-ring-span').innerHTML =
+      formatTimeLeft(timeLeft);
+    showStartVerificationsRetrievalStatus('Fetching verifications');
+    startVerificationsRetrievalButtonInput.disabled = true;
 
-removeVerifications();
+    // fetch verifications
+    const fetchVerificationsIntervalID = setInterval(fetchVerifications, 5000);
+    // update timer
+    const updateTimerIntervalID = setInterval(() => {
+      timePassed = timePassed + 1;
+      timeLeft = TIME_LIMIT - timePassed;
+      document.getElementById('lds-dual-ring-span').innerHTML =
+        formatTimeLeft(timeLeft);
+    }, 1000);
+    await new Promise((resolve) => setTimeout(resolve, 180000));
+    clearInterval(updateTimerIntervalID);
+    clearInterval(fetchVerificationsIntervalID);
+
+    ldsDualRingDiv.style.display = 'none';
+    showStartVerificationsRetrievalStatus(
+      'Verifications retrieved successfully',
+      { color: 'green' }
+    );
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    clearStatus();
+    startVerificationsRetrievalButtonInput.disabled = false;
+  } catch (error) {
+    console.error(error);
+    showStartVerificationsRetrievalError(
+      'Something went wrong! Please try again'
+    );
+  }
+}
+
+document
+  .getElementById('start-verifications-retrieval')
+  .addEventListener('submit', (event) => startVerificationsRetrieval(event));
+
+// removeVerifications();

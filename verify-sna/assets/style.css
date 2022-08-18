@@ -1,18 +1,53 @@
 /* scrolltable rules */
 table {
-  margin-top: 65px;
+  margin-top: 60px;
   margin-bottom: 10px;
   display: inline-block;
   overflow: auto;
-}
-th div {
-  margin-top: -65px;
-  position: absolute;
 }
 
 /* design */
 table {
   border-collapse: collapse;
+}
+
+/* width */
+table::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Button Up */
+table::-webkit-scrollbar-button:vertical:start {
+  background: #f8f9fd;
+  width: 5px;
+  height: 15px;
+}
+
+/* Button Down */
+table::-webkit-scrollbar-button:vertical:end {
+  background: #f8f9fd;
+  width: 5px;
+  height: 5px;
+}
+
+/* Track */
+table::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+table::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+table::-webkit-scrollbar-thumb:hover {
+  background: rgba(136, 136, 136, 0.707);
+}
+
+/* Handle on active */
+table::-webkit-scrollbar-thumb:active {
+  background: #555;
 }
 
 .verifications-table-div {
@@ -22,22 +57,41 @@ table {
 }
 
 .verifications-table {
-  height: 20em;
+  max-height: 280px;
   border-collapse: separate;
   border-spacing: 0 5px;
 }
 
-.verifications-table td,
-.verifications-table th div {
-  padding: 31px;
+.verifications-table tbody td {
+  padding: 20px 20px;
 }
 
-.verifications-table td,
-.verifications-table th {
+.verifications-table thead tr.head-labels th {
+  padding: 0px 20px;
   min-width: 180px;
 }
 
-.verifications-table tbody tr:hover {
+.verifications-table thead tr.head-labels th div {
+  margin-top: -40px;
+  position: absolute;
+  color: white;
+  z-index: 2;
+}
+
+.verifications-table thead tr.head-color th {
+  padding: 0px;
+}
+
+.verifications-table thead tr.head-color th div {
+  margin-top: -55px;
+  position: absolute;
+  width: 880px;
+  height: 64.5px;
+  background-color: #06033a;
+  z-index: 1;
+}
+
+.verifications-table tbody tr:not(.empty-table-state):hover {
   background-color: #ececff;
 }
 
@@ -95,4 +149,62 @@ table {
 
 .verifications-table tbody td.status .expired:after {
   background: #1d1df2;
+}
+
+.start-verifications-retrieval {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.start-verifications-retrieval input {
+  width: 100%;
+}
+
+.verifications-table tbody tr.empty-table-state th {
+  padding: 40px 0px;
+}
+
+.countdown-div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.lds-dual-ring {
+  position: relative;
+  display: none;
+  width: 67px;
+  height: 67px;
+}
+.lds-dual-ring:after {
+  content: ' ';
+  display: block;
+  width: 39px;
+  height: 39px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #06033a;
+  border-color: #06033a transparent #06033a transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.lds-dual-ring span {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: small;
 }

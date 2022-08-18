@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css" />
     </head>
     <body style="background-color: #f8f9fd;">
-        <div class="page-top">
+        <div class="page-top" style="margin-bottom: 1rem;">
             <header>
                 <div id="twilio-logo">
                     <a href="https://www.twilio.com/" target="_blank" rel="noopener">
@@ -66,7 +66,10 @@
                     <div class="verifications-table-div">
                         <table class="verifications-table" id="verifications-table">
                             <thead>
-                                <tr>
+                                <tr class="head-color">
+                                    <th colspan="4"><div></div></th>
+                                </tr>
+                                <tr class="head-labels">
                                     <th><div>Phone Number</div></th>
                                     <th><div>Verification Started</div></th>
                                     <th><div>Verification Completed</div></th>
@@ -74,13 +77,25 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <tr class="empty-table-state">
+                                    <th colspan="4">No verifications to show</th>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
+                    <form id="start-verifications-retrieval" class="start-verifications-retrieval">
+                        <input type="submit" value="Fetch verifications" id="start-verifications-retrieval-button" />
+                        <div class="countdown-div">
+                            <div class="lds-dual-ring" id="lds-dual-ring">
+                                <span id="lds-dual-ring-span"></span>
+                            </div>
+                            <span id="start-verifications-retrieval-status"></span>
+                        </div>
+                    </form>
                 </section>
             </div>
         </main>
-        <footer>
+        <footer style="margin-top: 0.2rem;">
             <span>We can't wait to see what you build.</span>
         </footer>
     </body>

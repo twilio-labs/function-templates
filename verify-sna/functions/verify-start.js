@@ -32,58 +32,10 @@ const os = require('os');
 const sqlite3 = require('sqlite3');
 
 const assets = Runtime.getAssets();
-const { connectToDatabaseAndRunQueries } = require(assets['/helpers/db.js']
-  .path);
-
-/**
- * Updates verifications table when a verification start occurs
- * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Twilio.Response} response A Twilio Response object
- * @param {Function} callback A callback function
- * @param {Object} verification The object returned by the Twilio Verify API when creating a SNA verification
- */
-function verificationStartDatabaseUpdate(db, response, callback, verification) {
-  db.get(
-    `
-     SELECT status
-     FROM verifications
-     WHERE phone_number = ? AND sna_url = ?;
-     `,
-    [verification.to, verification.sna.url],
-    (err, row) => {
-      if (err) {
-        const statusCode = err.status || 400;
-        response.setStatusCode(statusCode);
-        response.setBody({
-          message: err.message,
-        });
-        return callback(null, response);
-      }
-      if (!row) {
-        db.run(
-          `
-             INSERT INTO verifications (phone_number, sna_url, status, verification_start_datetime, verification_check_datetime)
-             VALUES (?, ?, 'pending', DATETIME('NOW'), NULL);
-             `,
-          [verification.to, verification.sna.url],
-          (err) => {
-            if (err) {
-              const statusCode = err.status || 400;
-              response.setStatusCode(statusCode);
-              response.setBody({
-                message: err.message,
-              });
-              return callback(null, response);
-            }
-            return callback(null, response);
-          }
-        );
-      } else {
-        return callback(null, response);
-      }
-    }
-  );
-}
+const {
+  connectToDatabaseAndRunQueries,
+  verificationStartDatabaseUpdate,
+} = require(assets['/helpers/db.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -96,7 +48,7 @@ exports.handler = async function (context, event, callback) {
 
     const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
 
-    const verification = await client.verify.v2
+    const verification = await client.verify
       .services(service)
       .verifications.create({
         to: `${countryCode}${phoneNumber}`,
@@ -108,7 +60,7 @@ exports.handler = async function (context, event, callback) {
       message: 'Creation of SNA verification successful',
       snaUrl: verification.sna.url,
     });
-    connectToDatabaseAndRunQueries(
+    return connectToDatabaseAndRunQueries(
       verificationStartDatabaseUpdate,
       callback,
       response,
