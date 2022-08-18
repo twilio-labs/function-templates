@@ -37,7 +37,7 @@ function formatTimeLeft(time) {
 const verificationsTable = document.getElementById('verifications-table');
 
 const addAttributes = (element, attrObj) => {
-  for (let attr in attrObj) {
+  for (const attr in attrObj) {
     if (attrObj.hasOwnProperty(attr)) {
       element.setAttribute(attr, attrObj[attr]);
     }
@@ -45,11 +45,11 @@ const addAttributes = (element, attrObj) => {
 };
 
 const createCustomElement = (element, attributes, children) => {
-  let customElement = document.createElement(element);
+  const customElement = document.createElement(element);
   if (children !== undefined) {
     children.forEach((e) => {
       if (e.nodeType) {
-        if (e.nodeType == 1 || e.nodeType == 11) {
+        if (e.nodeType === 1 || e.nodeType === 11) {
           customElement.appendChild(e);
         }
       } else {
@@ -63,21 +63,21 @@ const createCustomElement = (element, attributes, children) => {
 
 function newTableRow(verification) {
   // Phone number
-  let phoneNumber = document.createElement('td');
+  const phoneNumber = document.createElement('td');
   phoneNumber.innerHTML = `+${'*'.repeat(
     verification.phone_number.length - 5
   )}${verification.phone_number.slice(-4)}`;
 
   // Verification start datetime
-  let verificationStart = document.createElement('td');
+  const verificationStart = document.createElement('td');
   verificationStart.innerHTML = verification.verification_start_datetime;
 
   // Verification check datetime
-  let verificationCheck = document.createElement('td');
+  const verificationCheck = document.createElement('td');
   verificationCheck.innerHTML = verification.verification_check_datetime;
 
   // Status
-  let statusSpan = document.createElement('span');
+  const statusSpan = document.createElement('span');
   statusSpan.classList.add(verification.status);
   if (verification.status === 'verified') {
     statusSpan.innerHTML = 'Verified';
@@ -88,7 +88,7 @@ function newTableRow(verification) {
   } else {
     statusSpan.innerHTML = 'Expired';
   }
-  let status = createCustomElement('td', { class: 'status' }, [statusSpan]);
+  const status = createCustomElement('td', { class: 'status' }, [statusSpan]);
 
   // Create new row
   return createCustomElement('tr', {}, [
@@ -102,7 +102,7 @@ function newTableRow(verification) {
 function updateVerificationsTable(verifications) {
   let newTableBody = '';
   if (verifications.length === 0) {
-    let emptyTableStateTh = createCustomElement('th', { colspan: '4' }, [
+    const emptyTableStateTh = createCustomElement('th', { colspan: '4' }, [
       'No verifications to show',
     ]);
     newTableBody = createCustomElement('tr', { class: 'empty-table-state' }, [
@@ -123,9 +123,9 @@ async function fetchVerifications() {
     });
     const json = await response.json();
 
-    if (response.status == 502) {
+    if (response.status === 502) {
       await fetchVerifications();
-    } else if (response.status != 200) {
+    } else if (response.status !== 200) {
       console.error(json.message);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       await fetchVerifications();
@@ -144,9 +144,9 @@ async function removeVerifications() {
     });
     const json = await response.json();
 
-    if (response.status == 502) {
+    if (response.status === 502) {
       await removeVerifications();
-    } else if (response.status != 200) {
+    } else if (response.status !== 200) {
       console.error(json.message);
       await new Promise((resolve) => setTimeout(resolve, 1000));
       await removeVerifications();
@@ -174,7 +174,7 @@ async function startVerificationsRetrieval(event) {
     const fetchVerificationsIntervalID = setInterval(fetchVerifications, 5000);
     // update timer
     const updateTimerIntervalID = setInterval(() => {
-      timePassed = timePassed + 1;
+      timePassed += 1;
       timeLeft = TIME_LIMIT - timePassed;
       document.getElementById('lds-dual-ring-span').innerHTML =
         formatTimeLeft(timeLeft);
