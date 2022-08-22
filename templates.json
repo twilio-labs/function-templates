@@ -312,8 +312,8 @@
     },
     {
       "id": "verify-sna",
-      "name": "verify-sna",
-      "description": "Sample Backend Silent Network Auth"
+      "name": "Verify Silent Network Auth Sample Backend",
+      "description": "Starts and checks SNA verifications and shows their status in the dashboard as they come in"
     }
   ]
 }

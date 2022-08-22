@@ -36,11 +36,27 @@ const {
   connectToDatabaseAndRunQueries,
   verificationCheckDatabaseUpdate,
 } = require(assets['/helpers/db.js'].path);
+const { detectMissingParams } = require(assets['/helpers/missing-params.js']
+  .path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+
+  const missingParams = detectMissingParams(
+    ['countryCode', 'phoneNumber'],
+    event
+  );
+  if (missingParams.length > 0) {
+    response.setStatusCode(400);
+    response.setBody({
+      message: `Missing parameters; please provide: '${missingParams.join(
+        ', '
+      )}'.`,
+    });
+    return callback(null, response);
+  }
 
   try {
     const client = context.getTwilioClient();
