@@ -38,7 +38,7 @@ In your `.env` file, set the following values:
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
 | `countryCode`           | A valid country code, including the + sign | Yes |
-| `phoneNumber`      | A phone number in [E.164 format](https://www.twilio.com/docs/glossary/what-e164), but not including the country code | Yes |
+| `phoneNumber`      | A phone number in [E.164 format](https://www.twilio.com/docs/glossary/what-e164), not including the country code | Yes |
 
 
 ## Create a new project with the template
