@@ -26,12 +26,21 @@ exports.handler = async function (context, event, callback) {
 
     const types = typeof event.types === 'object' ? event.types : [event.types];
     const client = context.getTwilioClient();
-    const pn = await client.lookups
+
+    const resp = await client.lookups
       .phoneNumbers(event.phone)
       .fetch({ type: types });
 
+    if (types.includes('lti')) {
+      const { lineTypeIntelligence } = await client.lookups.v2
+        .phoneNumbers(event.phone)
+        .fetch({ fields: 'line_type_intelligence' });
+
+      resp.lineTypeIntelligence = lineTypeIntelligence;
+    }
+
     response.setStatusCode(200);
-    response.setBody(pn);
+    response.setBody(resp);
     return callback(null, response);
   } catch (error) {
     console.error(error.message);

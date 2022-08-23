@@ -8,6 +8,9 @@ const mockFetch = {
 const mockClient = {
   lookups: {
     phoneNumbers: jest.fn(() => mockFetch),
+    v2: {
+      phoneNumbers: jest.fn(() => mockFetch),
+    },
   },
 };
 
@@ -57,6 +60,27 @@ describe('international-telephone-input/lookup', () => {
       expect(result).toBeDefined();
       expect(result._statusCode).toEqual(200);
       expect(mockFetch.fetch).toHaveBeenCalledWith(expectedParams);
+      done();
+    };
+    lookupFunction(testContext, event, callback);
+  });
+
+  test('uses v2 api if lti is provided as type', (done) => {
+    const event = {
+      phone: '+17341234567',
+      types: 'lti',
+    };
+    const expectedParams = {
+      type: ['lti'],
+    };
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(result._statusCode).toEqual(200);
+      expect('lineTypeIntelligence' in result._body).toEqual(true);
+      expect(mockFetch.fetch).toHaveBeenCalledWith(expectedParams);
+      expect(mockClient.lookups.v2.phoneNumbers).toHaveBeenCalledWith(
+        event.phone
+      );
       done();
     };
     lookupFunction(testContext, event, callback);
