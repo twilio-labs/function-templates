@@ -16,183 +16,212 @@ const {
   selectAllVerificationsQuery,
 } = require(assets['/helpers/dbConf.js'].path);
 
-function connectToDatabaseAndRunQueries(
+/**
+ * ------------------------------- Helper Functions -------------------------------------- *
+ */
+
+const createDatabase = async () => {
+  return new Promise((resolve, reject) => {
+    const newdb = new sqlite3.Database(path.join(dbFolder, dbName), (err) => {
+      if (err) {
+        return reject(err);
+      }
+      newdb.exec(createTableQuery, (err) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(newdb);
+      });
+    });
+  });
+};
+
+const runQueries = async (
+  db,
+  queries,
+  response,
+  verification,
+  checkStatus,
+  resolve,
+  reject
+) => {
+  try {
+    const newResponse = await queries(db, verification, checkStatus);
+    if (newResponse) {
+      return resolve(newResponse);
+    } else {
+      return resolve(response);
+    }
+  } catch (error) {
+    return reject(error);
+  }
+};
+
+const updateCheckedVerification = async (
+  db,
+  check,
+  checkStatus,
+  sortedRows
+) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      updateCheckedVerificationQuery,
+      [
+        checkStatus ? 'verified' : 'not-verified',
+        check.to,
+        sortedRows[0].sna_url,
+      ],
+      (err) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve();
+      }
+    );
+  });
+};
+
+const updateExpiredVerifications = async (db, check, sortedRows) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      updateExpiredVerificationsQuery,
+      ['expired', check.to, sortedRows[0].sna_url],
+      (err) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve();
+      }
+    );
+  });
+};
+
+/**
+ * -------------------------------------------------------------------------------------- *
+ */
+
+const connectToDatabaseAndRunQueries = async (
   queries,
   response,
   verification = null,
   checkStatus = null
-) {
+) => {
   return new Promise((resolve, reject) => {
     const db = new sqlite3.Database(
       path.join(dbFolder, dbName),
       sqlite3.OPEN_READWRITE,
       // eslint-disable-next-line consistent-return
-      (err) => {
+      async (err) => {
         if (err && err.code === 'SQLITE_CANTOPEN') {
-          // Create database
-          const newdb = new sqlite3.Database(
-            path.join(dbFolder, dbName),
-            // eslint-disable-next-line consistent-return
-            (err) => {
-              if (err) {
-                return reject(err);
-              }
-              // Table(s) creation
-              // eslint-disable-next-line consistent-return
-              newdb.exec(createTableQuery, (err) => {
-                if (err) {
-                  return reject(err);
-                }
-                queries(
-                  newdb,
-                  response,
-                  verification,
-                  checkStatus,
-                  resolve,
-                  reject
-                );
-              });
-            }
-          );
+          try {
+            const newdb = await createDatabase();
+            await runQueries(
+              newdb,
+              queries,
+              response,
+              verification,
+              checkStatus,
+              resolve,
+              reject
+            );
+          } catch (error) {
+            return reject(error);
+          }
         } else if (err) {
           return reject(err);
         } else {
-          queries(db, response, verification, checkStatus, resolve, reject);
+          await runQueries(
+            db,
+            queries,
+            response,
+            verification,
+            checkStatus,
+            resolve,
+            reject
+          );
         }
       }
     );
   });
-}
+};
 
-/**
- * Updates verifications table when a verification start occurs
- * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Object} verification The object returned by the Twilio Verify API when creating a SNA verification
- */
-function verificationStartDatabaseUpdate(
+const verificationStartDatabaseUpdate = async (
   db,
-  response,
   verification,
-  checkStatus,
-  resolve,
-  reject
-) {
-  db.run(
-    insertNewVerificationQuery,
-    [verification.to, verification.sna.url],
-    (err) => {
+  checkStatus
+) => {
+  return new Promise((resolve, reject) => {
+    db.run(
+      insertNewVerificationQuery,
+      [verification.to, verification.sna.url],
+      (err) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve();
+      }
+    );
+  });
+};
+
+const verificationCheckDatabaseUpdate = async (db, check, checkStatus) => {
+  return new Promise((resolve, reject) => {
+    db.all(selectPhoneNumberVerificationsQuery, check.to, async (err, rows) => {
       if (err) {
         return reject(err);
       }
-      return resolve(response);
-    }
-  );
-}
+      try {
+        let pendingStatusRows = rows.filter((row) => row.status === 'pending');
+        if (pendingStatusRows.length > 0) {
+          let sortedRows = pendingStatusRows.sort((a, b) => {
+            const aDate = new Date(a.verification_start_datetime);
+            const bDate = new Date(b.verification_start_datetime);
+            return bDate - aDate;
+          });
+          await updateCheckedVerification(db, check, checkStatus, sortedRows);
+          await updateExpiredVerifications(db, check, sortedRows);
+        }
+        return resolve();
+      } catch (error) {
+        return reject(error);
+      }
+    });
+  });
+};
 
-/**
- * Updates verifications table when a verification check occurs
- * @param {sqlite3.Database} db A sqlite3 Database object
- * @param {Object} check The object returned by the Twilio Verify API when checking a SNA verification for a given phone number
- */
-function verificationCheckDatabaseUpdate(
-  db,
-  response,
-  check,
-  checkStatus,
-  resolve,
-  reject
-) {
-  // eslint-disable-next-line consistent-return
-  db.all(selectPhoneNumberVerificationsQuery, check.to, (err, rows) => {
-    if (err) {
-      return reject(err);
-    }
-    pendingStatusRows = rows.filter((row) => row.status === 'pending');
-    if (pendingStatusRows.length > 0) {
-      sortedRows = pendingStatusRows.sort((a, b) => {
+const removeRecords = async (db, verification, checkStatus) => {
+  return new Promise((resolve, reject) => {
+    db.run(deleteVerificationsQuery, (err) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve();
+    });
+  });
+};
+
+const getVerifications = async (db, verification, checkStatus) => {
+  return new Promise((resolve, reject) => {
+    db.all(selectAllVerificationsQuery, (err, rows) => {
+      if (err) {
+        return reject(err);
+      }
+      let sortedRows = rows.sort((a, b) => {
         const aDate = new Date(a.verification_start_datetime);
         const bDate = new Date(b.verification_start_datetime);
         return bDate - aDate;
       });
-      db.run(
-        updateCheckedVerificationQuery,
-        [
-          checkStatus ? 'verified' : 'not-verified',
-          check.to,
-          sortedRows[0].sna_url,
-        ],
-        // eslint-disable-next-line consistent-return
-        (err) => {
-          if (err) {
-            return reject(err);
-          }
-          db.run(
-            updateExpiredVerificationsQuery,
-            ['expired', check.to, sortedRows[0].sna_url],
-            (err) => {
-              if (err) {
-                return reject(err);
-              }
-              return resolve(response);
-            }
-          );
-        }
-      );
-    } else {
+      const response = new Twilio.Response();
+      response.appendHeader('Content-Type', 'application/json');
+      response.setStatusCode(200);
+      response.setBody({
+        message: 'Verifications retrieved sucessfully',
+        verifications: sortedRows,
+      });
       return resolve(response);
-    }
-  });
-}
-
-/**
- * Removes records from the verifications table that are more than 30 minutes old
- * @param {sqlite3.Database} db A sqlite3 Database object
- */
-function removeRecords(
-  db,
-  response,
-  verification,
-  checkStatus,
-  resolve,
-  reject
-) {
-  db.run(deleteVerificationsQuery, (err) => {
-    if (err) {
-      return reject(err);
-    }
-    return resolve(response);
-  });
-}
-
-/**
- * Fetchs all the records from the verifications table
- * @param {sqlite3.Database} db A sqlite3 Database object
- */
-function getVerifications(
-  db,
-  response,
-  verification,
-  checkStatus,
-  resolve,
-  reject
-) {
-  db.all(selectAllVerificationsQuery, (err, rows) => {
-    if (err) {
-      return reject(err);
-    }
-    sortedRows = rows.sort((a, b) => {
-      const aDate = new Date(a.verification_start_datetime);
-      const bDate = new Date(b.verification_start_datetime);
-      return bDate - aDate;
     });
-    response.setStatusCode(200);
-    response.setBody({
-      message: 'Verifications retrieved sucessfully',
-      verifications: sortedRows,
-    });
-    return resolve(response);
   });
-}
+};
 
 module.exports = {
   connectToDatabaseAndRunQueries,
