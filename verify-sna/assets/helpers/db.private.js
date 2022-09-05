@@ -49,9 +49,8 @@ const runQueries = async (
     const newResponse = await queries(db, verification, checkStatus);
     if (newResponse) {
       return resolve(newResponse);
-    } else {
-      return resolve(response);
     }
+    return resolve(response);
   } catch (error) {
     return reject(error);
   }
@@ -171,9 +170,11 @@ const verificationCheckDatabaseUpdate = async (db, check, checkStatus) => {
         return reject(err);
       }
       try {
-        let pendingStatusRows = rows.filter((row) => row.status === 'pending');
+        const pendingStatusRows = rows.filter(
+          (row) => row.status === 'pending'
+        );
         if (pendingStatusRows.length > 0) {
-          let sortedRows = pendingStatusRows.sort((a, b) => {
+          const sortedRows = pendingStatusRows.sort((a, b) => {
             const aDate = new Date(a.verification_start_datetime);
             const bDate = new Date(b.verification_start_datetime);
             return bDate - aDate;
@@ -206,7 +207,7 @@ const getVerifications = async (db, verification, checkStatus) => {
       if (err) {
         return reject(err);
       }
-      let sortedRows = rows.sort((a, b) => {
+      const sortedRows = rows.sort((a, b) => {
         const aDate = new Date(a.verification_start_datetime);
         const bDate = new Date(b.verification_start_datetime);
         return bDate - aDate;
