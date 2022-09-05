@@ -26,18 +26,10 @@
  * }
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const sqlite3 = require('sqlite3');
-
 const assets = Runtime.getAssets();
-const {
-  connectToDatabaseAndRunQueries,
-  verificationCheckDatabaseUpdate,
-} = require(assets['/helpers/db.js'].path);
-const { detectMissingParams } = require(assets['/helpers/missing-params.js']
+const { checkVerification } = require(assets['/services/verifications.js']
   .path);
+const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -62,25 +54,19 @@ exports.handler = async function (context, event, callback) {
     const client = context.getTwilioClient();
     const service = context.VERIFY_SERVICE_SID;
 
-    const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
+    const { countryCode, phoneNumber } = event;
 
     const check = await client.verify
       .services(service)
       .verificationChecks.create({ to: `${countryCode}${phoneNumber}` });
 
-    let dbResponse;
     if (check.status === 'approved') {
       response.setStatusCode(200);
       response.setBody({
         success: true,
         message: 'SNA verification successful, phone number verified',
       });
-      dbResponse = await connectToDatabaseAndRunQueries(
-        verificationCheckDatabaseUpdate,
-        response,
-        check,
-        true
-      );
+      await checkVerification(check.to, 'verified');
     } else if (
       check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
         .code === 60519
@@ -90,7 +76,6 @@ exports.handler = async function (context, event, callback) {
         message: 'SNA Verification Result Pending',
         errorCode: 60519,
       });
-      dbResponse = response;
     } else {
       response.setStatusCode(200);
       response.setBody({
@@ -100,14 +85,9 @@ exports.handler = async function (context, event, callback) {
           check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
             .code,
       });
-      dbResponse = await connectToDatabaseAndRunQueries(
-        verificationCheckDatabaseUpdate,
-        response,
-        check,
-        false
-      );
+      await checkVerification(check.to, 'not-verified');
     }
-    return callback(null, dbResponse);
+    return callback(null, response);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);

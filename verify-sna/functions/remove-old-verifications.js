@@ -9,31 +9,21 @@
  * }
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const sqlite3 = require('sqlite3');
-
 const assets = Runtime.getAssets();
-const { connectToDatabaseAndRunQueries, removeRecords } = require(assets[
-  '/helpers/db.js'
-].path);
+const { removeOldVerifications } = require(assets['/services/verifications.js']
+  .path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-
   try {
+    await removeOldVerifications();
     response.setStatusCode(200);
     response.setBody({
-      message: 'Records removed successfully',
+      message: 'Verifications removed successfully',
     });
-    const dbResponse = await connectToDatabaseAndRunQueries(
-      removeRecords,
-      response
-    );
-    return callback(null, dbResponse);
+    return callback(null, response);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);

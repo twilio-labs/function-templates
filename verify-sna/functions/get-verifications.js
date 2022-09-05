@@ -17,27 +17,21 @@
  * }
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const sqlite3 = require('sqlite3');
-
 const assets = Runtime.getAssets();
-const { connectToDatabaseAndRunQueries, getVerifications } = require(assets[
-  '/helpers/db.js'
-].path);
+const { getVerifications } = require(assets['/services/verifications.js'].path);
+const { sortVerifications } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-
   try {
-    const dbResponse = await connectToDatabaseAndRunQueries(
-      getVerifications,
-      response
-    );
-    return callback(null, dbResponse);
+    response.setStatusCode(200);
+    response.setBody({
+      message: 'Verifications retrieved sucessfully',
+      verifications: sortVerifications(await getVerifications()),
+    });
+    return callback(null, response);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);

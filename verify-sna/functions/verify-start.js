@@ -26,18 +26,10 @@
  * }
  */
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
-const sqlite3 = require('sqlite3');
-
 const assets = Runtime.getAssets();
-const {
-  connectToDatabaseAndRunQueries,
-  verificationStartDatabaseUpdate,
-} = require(assets['/helpers/db.js'].path);
-const { detectMissingParams } = require(assets['/helpers/missing-params.js']
+const { createVerification } = require(assets['/services/verifications.js']
   .path);
+const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -61,27 +53,20 @@ exports.handler = async function (context, event, callback) {
   try {
     const client = context.getTwilioClient();
     const service = context.VERIFY_SERVICE_SID;
-
-    const [countryCode, phoneNumber] = [event.countryCode, event.phoneNumber];
-
+    const { countryCode, phoneNumber } = event;
     const verification = await client.verify
       .services(service)
       .verifications.create({
         to: `${countryCode}${phoneNumber}`,
         channel: 'sna',
       });
-
+    await createVerification(verification.to);
     response.setStatusCode(200);
     response.setBody({
       message: 'Creation of SNA verification successful',
       snaUrl: verification.sna.url,
     });
-    const dbResponse = await connectToDatabaseAndRunQueries(
-      verificationStartDatabaseUpdate,
-      response,
-      verification
-    );
-    return callback(null, dbResponse);
+    return callback(null, response);
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
