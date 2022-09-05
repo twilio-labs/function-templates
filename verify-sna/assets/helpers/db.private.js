@@ -22,17 +22,21 @@ const {
 
 const createDatabase = async () => {
   return new Promise((resolve, reject) => {
-    const newdb = new sqlite3.Database(path.join(dbFolder, dbName), (err) => {
-      if (err) {
-        return reject(err);
-      }
-      newdb.exec(createTableQuery, (err) => {
+    const newdb = new sqlite3.Database(
+      path.join(dbFolder, dbName),
+      // eslint-disable-next-line consistent-return
+      (err) => {
         if (err) {
           return reject(err);
         }
-        return resolve(newdb);
-      });
-    });
+        newdb.exec(createTableQuery, (err) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(newdb);
+        });
+      }
+    );
   });
 };
 
