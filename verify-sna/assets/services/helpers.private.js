@@ -9,8 +9,8 @@ const detectMissingParams = (paramNames, event) => {
 
 const sortVerifications = (verifications) => {
   return verifications.sort((a, b) => {
-    const aDate = new Date(a.verification_start_datetime);
-    const bDate = new Date(b.verification_start_datetime);
+    const aDate = new Date(a.verificationStartDatetime);
+    const bDate = new Date(b.verificationStartDatetime);
     return bDate - aDate;
   });
 };

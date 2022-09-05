@@ -89,11 +89,19 @@ exports.handler = async function (context, event, callback) {
     }
     return callback(null, response);
   } catch (error) {
+    const errorCode = error.code;
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
-    response.setBody({
-      message: error.message,
-    });
+    if (statusCode === 404 && errorCode === 20404) {
+      response.setBody({
+        message:
+          'No verification was found for the entered phone number. You have to execute the Create Verification request first.',
+      });
+    } else {
+      response.setBody({
+        message: error.message,
+      });
+    }
     return callback(null, response);
   }
 };

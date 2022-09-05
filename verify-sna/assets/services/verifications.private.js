@@ -64,7 +64,7 @@ const checkVerification = async (phoneNumber, status) => {
           db,
           phoneNumber,
           status,
-          verification.verification_start_datetime,
+          verification.verificationStartDatetime,
           new Date().toLocaleString()
         );
       }

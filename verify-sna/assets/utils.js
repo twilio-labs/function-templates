@@ -65,16 +65,16 @@ function newTableRow(verification) {
   // Phone number
   const phoneNumber = document.createElement('td');
   phoneNumber.innerHTML = `+${'*'.repeat(
-    verification.phone_number.length - 5
-  )}${verification.phone_number.slice(-4)}`;
+    verification.phoneNumber.length - 5
+  )}${verification.phoneNumber.slice(-4)}`;
 
   // Verification start datetime
-  const verificationStart = document.createElement('td');
-  verificationStart.innerHTML = verification.verification_start_datetime;
+  const verificationStartDatetime = document.createElement('td');
+  verificationStartDatetime.innerHTML = verification.verificationStartDatetime;
 
   // Verification check datetime
-  const verificationCheck = document.createElement('td');
-  verificationCheck.innerHTML = verification.verification_check_datetime;
+  const verificationCheckDatetime = document.createElement('td');
+  verificationCheckDatetime.innerHTML = verification.verificationCheckDatetime;
 
   // Status
   const statusSpan = document.createElement('span');
@@ -93,8 +93,8 @@ function newTableRow(verification) {
   // Create new row
   return createCustomElement('tr', {}, [
     phoneNumber,
-    verificationStart,
-    verificationCheck,
+    verificationStartDatetime,
+    verificationCheckDatetime,
     status,
   ]).outerHTML;
 }
