@@ -8,7 +8,10 @@
  * on Success:
  * {
  *      "message": string
- *      "verifications": {phone_number: string, sna_url: string, status: string, verification_start_datetime: string | null, verification_check_datetime: string | null} []
+ *      "verifications": {phoneNumber: string,
+ *                        status: boolean,
+ *                        verificationStartDatetime: string | null,
+ *                        verificationCheckDatetime: string | null} []
  * }
  *
  * on Error:

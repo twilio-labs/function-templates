@@ -4,10 +4,19 @@ describe('verify-sna/get-verifications', () => {
   beforeAll(() => {
     jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/helpers/db.js', '../assets/helpers/db.private.js');
+    runtime._addAsset('/data/config.js', '../assets/data/config.private.js');
+    runtime._addAsset('/data/index.js', '../assets/data/index.private.js');
     runtime._addAsset(
-      '/helpers/dbConf.js',
-      '../assets/helpers/dbConf.private.js'
+      '/data/operations.js',
+      '../assets/data/operations.private.js'
+    );
+    runtime._addAsset(
+      '/services/helpers.js',
+      '../assets/services/helpers.private.js'
+    );
+    runtime._addAsset(
+      '/services/verifications.js',
+      '../assets/services/verifications.private.js'
     );
     helpers.setup({}, runtime);
   });
@@ -17,15 +26,7 @@ describe('verify-sna/get-verifications', () => {
   beforeEach(() => jest.resetModules());
 
   describe('when the verifications are retrieved successfully from the database', () => {
-    it('returns a 200 status code and a verifications array', (done) => {
-      // mock for this test
-      jest.mock('../assets/helpers/db.private.js', () => {
-        const db = jest.requireActual('../assets/helpers/db.private.js');
-        return {
-          connectToDatabaseAndRunQueries: db.connectToDatabaseAndRunQueries,
-          getVerifications: db.getVerifications,
-        };
-      });
+    it('returns a 200 status code and an array containing the verifications', (done) => {
       const getVerificationsFunction =
         require('../functions/get-verifications').handler;
 
@@ -39,19 +40,24 @@ describe('verify-sna/get-verifications', () => {
     });
   });
 
-  describe('when the call to the connectToDatabaseAndRunQueries function throws an error with a defined status code', () => {
+  describe('when it occurs and error while trying to get the verifications and the thrown error has a defined status code', () => {
     it('returns a status code different from 200 with a message of the error description', (done) => {
-      // mock for this test
-      jest.mock('../assets/helpers/db.private.js', () => {
-        const db = jest.requireActual('../assets/helpers/db.private.js');
-        const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          const error = new Error('An error occurred');
-          error.status = 405;
-          throw error;
+      jest.mock('../assets/services/verifications.private.js', () => {
+        const verifications = jest.requireActual(
+          '../assets/services/verifications.private.js'
+        );
+        const getVerificationsMock = jest.fn(() => {
+          return new Promise((resolve, reject) => {
+            const error = new Error('An error occurred');
+            error.status = 405;
+            return reject(error);
+          });
         });
         return {
-          connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,
-          getVerifications: db.getVerifications,
+          removeOldVerifications: verifications.removeOldVerifications,
+          getVerifications: getVerificationsMock,
+          createVerification: verifications.createVerification,
+          checkVerification: verifications.checkVerification,
         };
       });
       const getVerificationsFunction =
@@ -61,23 +67,29 @@ describe('verify-sna/get-verifications', () => {
         expect(result).toBeDefined();
         expect(result._statusCode).not.toEqual(200);
         expect(result._body.message).toBeDefined();
+        expect(result._body.message).toEqual('An error occurred');
         done();
       };
       getVerificationsFunction({}, {}, callback);
     });
   });
 
-  describe('when the call to the connectToDatabaseAndRunQueries function throws an error with no status code', () => {
+  describe('when it occurs and error while trying to get the verifications and the thrown error has no defined status code', () => {
     it('returns a 400 status code with a message of the error description', (done) => {
-      // mock for this test
-      jest.mock('../assets/helpers/db.private.js', () => {
-        const db = jest.requireActual('../assets/helpers/db.private.js');
-        const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          throw new Error('An error occurred');
+      jest.mock('../assets/services/verifications.private.js', () => {
+        const verifications = jest.requireActual(
+          '../assets/services/verifications.private.js'
+        );
+        const getVerificationsMock = jest.fn(() => {
+          return new Promise((resolve, reject) => {
+            return reject(new Error('An error occurred'));
+          });
         });
         return {
-          connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,
-          getVerifications: db.getVerifications,
+          removeOldVerifications: verifications.removeOldVerifications,
+          getVerifications: getVerificationsMock,
+          createVerification: verifications.createVerification,
+          checkVerification: verifications.checkVerification,
         };
       });
       const getVerificationsFunction =
@@ -87,6 +99,7 @@ describe('verify-sna/get-verifications', () => {
         expect(result).toBeDefined();
         expect(result._statusCode).toEqual(400);
         expect(result._body.message).toBeDefined();
+        expect(result._body.message).toEqual('An error occurred');
         done();
       };
       getVerificationsFunction({}, {}, callback);

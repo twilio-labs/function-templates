@@ -4,10 +4,19 @@ describe('verify-sna/remove-old-verifications', () => {
   beforeAll(() => {
     jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/helpers/db.js', '../assets/helpers/db.private.js');
+    runtime._addAsset('/data/config.js', '../assets/data/config.private.js');
+    runtime._addAsset('/data/index.js', '../assets/data/index.private.js');
     runtime._addAsset(
-      '/helpers/dbConf.js',
-      '../assets/helpers/dbConf.private.js'
+      '/data/operations.js',
+      '../assets/data/operations.private.js'
+    );
+    runtime._addAsset(
+      '/services/helpers.js',
+      '../assets/services/helpers.private.js'
+    );
+    runtime._addAsset(
+      '/services/verifications.js',
+      '../assets/services/verifications.private.js'
     );
     helpers.setup({}, runtime);
   });
@@ -16,41 +25,41 @@ describe('verify-sna/remove-old-verifications', () => {
   });
   beforeEach(() => jest.resetModules());
 
-  describe('when the delete query is executed successfully', () => {
-    it('returns a 200 status code', (done) => {
-      // mock for this test
-      jest.mock('../assets/helpers/db.private.js', () => {
-        const db = jest.requireActual('../assets/helpers/db.private.js');
-        return {
-          connectToDatabaseAndRunQueries: db.connectToDatabaseAndRunQueries,
-          removeRecords: db.removeRecords,
-        };
-      });
+  describe('when the verifications are removed successfully from the database', () => {
+    it('returns a 200 status code and an a message indicating that the operation was successful', (done) => {
       const removeOldVerificationsFunction =
         require('../functions/remove-old-verifications').handler;
 
       const callback = (_err, result) => {
         expect(result).toBeDefined();
         expect(result._statusCode).toEqual(200);
+        expect(result._body.message).toEqual(
+          'Verifications removed successfully'
+        );
         done();
       };
       removeOldVerificationsFunction({}, {}, callback);
     });
   });
 
-  describe('when the call to the connectToDatabaseAndRunQueries function throws an error with a defined status code', () => {
+  describe('when it occurs and error while trying to remove the verifications and the thrown error has a defined status code', () => {
     it('returns a status code different from 200 with a message of the error description', (done) => {
-      // mock for this test
-      jest.mock('../assets/helpers/db.private.js', () => {
-        const db = jest.requireActual('../assets/helpers/db.private.js');
-        const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          const error = new Error('An error occurred');
-          error.status = 405;
-          throw error;
+      jest.mock('../assets/services/verifications.private.js', () => {
+        const verifications = jest.requireActual(
+          '../assets/services/verifications.private.js'
+        );
+        const removeOldVerificationsMock = jest.fn(() => {
+          return new Promise((resolve, reject) => {
+            const error = new Error('An error occurred');
+            error.status = 405;
+            return reject(error);
+          });
         });
         return {
-          connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,
-          removeRecords: db.removeRecords,
+          removeOldVerifications: removeOldVerificationsMock,
+          getVerifications: verifications.getVerifications,
+          createVerification: verifications.createVerification,
+          checkVerification: verifications.checkVerification,
         };
       });
       const removeOldVerificationsFunction =
@@ -60,23 +69,29 @@ describe('verify-sna/remove-old-verifications', () => {
         expect(result).toBeDefined();
         expect(result._statusCode).not.toEqual(200);
         expect(result._body.message).toBeDefined();
+        expect(result._body.message).toEqual('An error occurred');
         done();
       };
       removeOldVerificationsFunction({}, {}, callback);
     });
   });
 
-  describe('when the call to the connectToDatabaseAndRunQueries function throws an error with no status code', () => {
-    it('returns a 400 status code with a message of the error description', (done) => {
-      // mock for this test
-      jest.mock('../assets/helpers/db.private.js', () => {
-        const db = jest.requireActual('../assets/helpers/db.private.js');
-        const mockConnectToDatabaseAndRunQueries = jest.fn(() => {
-          throw new Error('An error occurred');
+  describe('when it occurs and error while trying to remove the verifications and the thrown error has no defined status code', () => {
+    it('returns a status code different from 200 with a message of the error description', (done) => {
+      jest.mock('../assets/services/verifications.private.js', () => {
+        const verifications = jest.requireActual(
+          '../assets/services/verifications.private.js'
+        );
+        const removeOldVerificationsMock = jest.fn(() => {
+          return new Promise((resolve, reject) => {
+            return reject(new Error('An error occurred'));
+          });
         });
         return {
-          connectToDatabaseAndRunQueries: mockConnectToDatabaseAndRunQueries,
-          removeRecords: db.removeRecords,
+          removeOldVerifications: removeOldVerificationsMock,
+          getVerifications: verifications.getVerifications,
+          createVerification: verifications.createVerification,
+          checkVerification: verifications.checkVerification,
         };
       });
       const removeOldVerificationsFunction =
@@ -86,6 +101,7 @@ describe('verify-sna/remove-old-verifications', () => {
         expect(result).toBeDefined();
         expect(result._statusCode).toEqual(400);
         expect(result._body.message).toBeDefined();
+        expect(result._body.message).toEqual('An error occurred');
         done();
       };
       removeOldVerificationsFunction({}, {}, callback);
