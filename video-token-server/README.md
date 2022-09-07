@@ -1,6 +1,6 @@
 # video-token-server
 
-Todo - description
+This function template will deploy an endpoint that can be used to obtain access tokens for Twilio Video. The endpoint will be secured with a passcode, which is generated when you visit index.html for the deployed URL.
 
 ## Pre-requisites
 
@@ -10,22 +10,22 @@ This project requires some environment variables to be set. A file named `.env` 
 
 In your `.env` file, set the following values:
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
+| Variable      | Description                                                                       | Required |
+| :------------ | :-------------------------------------------------------------------------------- | :------- |
+| `ACCOUNT_SID` | Find in the [console](https://www.twilio.com/console)                             | Yes      |
+| `API_KEY`     | Twilio API Key. Create one here (https://www.twilio.com/console/runtime/api-keys) | Yes      |
+| `API_SECRET`  | Twilio API Secret corresponding to your API Key                                   | Yes      |
 
 
 ### Function Parameters
 
-`/blank` expects the following parameters:
+`/token` expects the following parameters:
 
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
+| Parameter   | Description                                                        | Required |
+| :---------- | :----------------------------------------------------------------- | :------- |
+| `identity`  | The identity of the user that is connecting to a Twilio Video room | yes      |
+| `room_name` | The name of the Twilio Video room to connect to                    | yes      |
+| `passcode`  | The passcode for the Token Server                                  | yes      |
 
 
 ## Create a new project with the template
@@ -43,19 +43,7 @@ twilio plugins:install @twilio-labs/plugin-serverless
 twilio serverless:init example --template=video-token-server && cd example
 ```
 
-4. Start the server with the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:start
-```
-
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
-
-ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
-
-## Deploying
-
-Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
+4. Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
 
 With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 
