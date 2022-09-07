@@ -1,0 +1,159 @@
+div.content {
+  width: 75%;
+  max-width: 860px;
+}
+
+.copy-textarea-wrapper {
+  background-color: #f4f4f6;
+  cursor: text;
+  position: relative;
+  padding: 0.4em 1.4em 0.7em;
+}
+
+.copy-textarea-wrapper .copy-button {
+  position: absolute;
+  right: 2.2em;
+  top: 1.2em;
+  background: #fff;
+  padding: 0.2em 0.4em;
+  border: 1px solid #8891aa;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+.copy-textarea-wrapper .copy-button-tabs {
+  top: 5em;
+}
+
+.copy-textarea-wrapper .copy-button:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.copy-textarea-wrapper .copy-button:hover:before {
+  content: 'Copy';
+  position: absolute;
+  top: -35px;
+  left: -5px;
+  padding: 6px 10px 7px;
+  color: white;
+  background-color: #141f2d;
+  border-radius: 4px;
+}
+
+.copy-textarea-wrapper .copy-button:hover:after {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 15px;
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #141f2d transparent transparent;
+}
+
+.copy-button.copied:hover:before {
+  content: 'Copied!';
+}
+
+.copy-textarea-wrapper .tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 1px solid grey;
+}
+
+.copy-textarea-wrapper .tabs button {
+  height: 3em;
+  width: 12em;
+  display: flex;
+  padding: 0em;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: grey;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+
+.copy-textarea-wrapper .tabs button.active {
+  border-bottom: 2px solid blue;
+  color: blue;
+}
+
+textarea {
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0px;
+  outline: none;
+  padding: 0.5em 0.75em 0.25em;
+  resize: none;
+  width: 100%;
+}
+
+.alert {
+  background: #fef5ee;
+  box-shadow: inset 0px -2px 0px #f47c22;
+  padding: 0.1em 3em;
+  margin: 1em 0;
+}
+
+.alert p:first-child {
+  padding-top: 0;
+  position: relative;
+}
+
+.alert p:last-child {
+  padding-bottom: 0;
+}
+
+.alert p:first-child:before {
+  content: ' ';
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M17.7981 14.7915L11.316 3.74375C10.7341 2.75208 9.26591 2.75208 8.68405 3.74375L2.20193 14.7915C1.62456 15.7756 2.35414 17 3.51788 17H16.4821C17.6459 17 18.3754 15.7756 17.7981 14.7915ZM9.98975 8H10.0101C10.621 8.0074 11.0826 8.59236 10.9876 9.24396L10.5599 11.4817C10.5192 11.7779 10.2816 12 10.0033 12H9.99653C9.71823 12 9.48066 11.7779 9.43993 11.4817L9.01229 9.24396C8.91726 8.59236 9.38563 8 9.98975 8ZM10 15C10.5523 15 11 14.5523 11 14C11 13.4477 10.5523 13 10 13C9.44772 13 9 13.4477 9 14C9 14.5523 9.44772 15 10 15Z' fill='%23E36A19'/%3E%3C/svg%3E");
+  height: 20px;
+  width: 20px;
+  display: block;
+  position: absolute;
+  left: -2em;
+  top: 1px;
+}
+
+.info {
+  padding: 0 2.2em 0.5em;
+}
+
+.info p:first-child {
+  padding-top: 0;
+  position: relative;
+}
+
+.info p:last-child {
+  padding-bottom: 0;
+}
+
+.info p:first-child:before {
+  content: ' ';
+  background-image: url("data:image/svg+xml,%3Csvg width='17' height='17' viewBox='0 0 17 17' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M16.4981 8.50001C16.4981 3.86081 12.8172 0.100006 8.27669 0.100006C3.73616 0.100006 0.0553284 3.86081 0.0553284 8.50001C0.0553284 13.1392 3.73616 16.9 8.27669 16.9C12.8172 16.9 16.4981 13.1392 16.4981 8.50001ZM1.33992 8.50001C1.33992 4.58569 4.44562 1.41251 8.27669 1.41251C12.1078 1.41251 15.2135 4.58569 15.2135 8.50001C15.2135 12.4143 12.1078 15.5875 8.27669 15.5875C4.44562 15.5875 1.33992 12.4143 1.33992 8.50001ZM7.24902 8.45001C7.24902 7.89772 7.69674 7.45001 8.24902 7.45001H8.30436C8.85665 7.45001 9.30436 7.89772 9.30436 8.45001V11.7C9.30436 12.2523 8.85665 12.7 8.30436 12.7H8.24902C7.69673 12.7 7.24902 12.2523 7.24902 11.7V8.45001ZM8.27669 6.40001C8.84426 6.40001 9.30436 5.9299 9.30436 5.35001C9.30436 4.77011 8.84426 4.30001 8.27669 4.30001C7.70912 4.30001 7.24902 4.77011 7.24902 5.35001C7.24902 5.9299 7.70912 6.40001 8.27669 6.40001Z' fill='%23606B85'/%3E%3C/svg%3E");
+  height: 17px;
+  width: 17px;
+  display: block;
+  position: absolute;
+  left: -2em;
+  top: 3px;
+}
+
+code {
+  background: #f4f4f6;
+  padding: 0.2em 0.4em;
+  color: #d61f1f;
+}

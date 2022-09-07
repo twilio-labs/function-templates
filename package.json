@@ -131,6 +131,7 @@
     "verify-totp",
     "video",
     "video-token",
+    "video-token-server",
     "voice-client-javascript",
     "voice-ivr",
     "voice-javascript-sdk",
