@@ -1,4 +1,5 @@
 const { customAlphabet } = require('nanoid');
+
 const alphabet =
   '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 32);
@@ -35,14 +36,13 @@ exports.handler = async function (context, event, callback) {
       response.setStatusCode(500);
       response.setBody({ error: 'passcode already generated' });
       return callback(null, response);
-    } else {
-      const passcode = await initializeServer(client, context);
-      response.setStatusCode(200);
-      response.setBody({ passcode });
-      return callback(null, response);
     }
-  } else {
-    response.setStatusCode(400);
+    const passcode = await initializeServer(client, context);
+    response.setStatusCode(200);
+    response.setBody({ passcode });
     return callback(null, response);
   }
+
+  response.setStatusCode(400);
+  return callback(null, response);
 };

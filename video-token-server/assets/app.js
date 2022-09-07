@@ -13,6 +13,8 @@ function updateCurlCommandTextBox(kind, passcode) {
     case 'windows-powershell':
       text = 'TODO: windows-powershell';
       break;
+    default:
+      break;
   }
   const textarea = document.getElementById('curl-commands');
   textarea.value = text;
@@ -20,7 +22,7 @@ function updateCurlCommandTextBox(kind, passcode) {
 }
 
 function updateEnvTextBox(passcode) {
-  let text = `TWILIO_TOKEN_BASE_URL=${window.location.origin}
+  const text = `TWILIO_TOKEN_BASE_URL=${window.location.origin}
 TWILIO_TOKEN_PASSCODE=${passcode || ''}`;
 
   const textarea = document.getElementById('env-file');

@@ -50,6 +50,7 @@ describe('the /token endpoint', () => {
     const mockCallback = jest.fn();
     tokenFunction(
       { PASSCODE: 'ok' },
+      // eslint-disable-next-line camelcase
       { passcode: 'ok', room_name: 'room' },
       mockCallback
     );
@@ -69,6 +70,7 @@ describe('the /token endpoint', () => {
         API_KEY_SID: 'test-api-key-sid',
         API_KEY_SECRET: 'test-api-key-secret',
       },
+      // eslint-disable-next-line camelcase
       { passcode: 'ok', room_name: 'room', identity: 'tim' },
       mockCallback
     );
@@ -77,7 +79,7 @@ describe('the /token endpoint', () => {
       token: expect.any(String),
     });
 
-    const token = mockCallback.mock.calls[0][1].token;
+    const { token } = mockCallback.mock.calls[0][1];
     const payload = Buffer.from(token.split('.')[1], 'base64').toString();
 
     expect(JSON.parse(payload)).toMatchObject({

@@ -1,7 +1,10 @@
 const fs = require('fs');
+const path = require('path');
 const { JSDOM } = require('jsdom');
 
-const AppHTML = fs.readFileSync(__dirname + '/../assets/index.html').toString();
+const AppHTML = fs
+  .readFileSync(path.join(__dirname, '/../assets/index.html'))
+  .toString();
 
 describe('the app', () => {
   beforeEach(() => {
@@ -13,8 +16,8 @@ describe('the app', () => {
 
     global.fetch = jest.fn();
 
-    global.inputPrependBaseURL = () => {};
-    global.handleCopyToClipboard = () => {};
+    global.inputPrependBaseURL = jest.fn();
+    global.handleCopyToClipboard = jest.fn();
   });
 
   it('should not display the passcode when an error is received from the /initialize endpoint', (done) => {
