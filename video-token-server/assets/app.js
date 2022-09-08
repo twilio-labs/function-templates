@@ -3,9 +3,9 @@ function updateCurlCommandTextBox(kind, passcode) {
   switch (kind) {
     case 'linux':
       text = `curl -X POST ${window.location.origin}/token \\
-  --data-urlencode "passcode=${passcode || ''}” \\
-  --data-urlencode "identity=user” \\
-  --data-urlencode “room=cool room”`;
+  --data-urlencode "passcode=${passcode || ''}" \\
+  --data-urlencode "identity=user" \\
+  --data-urlencode "room_name=cool room"`;
       break;
     case 'windows-curl':
       text = 'TODO: windows-curl';
@@ -39,7 +39,7 @@ document.querySelector('.tabs').addEventListener('click', (e) => {
       .querySelectorAll('.tabs button')
       .forEach((el) => el.classList.remove('active'));
     e.target.classList.add('active');
-    updateCurlCommandTextBox(e.target.dataset.tab);
+    updateCurlCommandTextBox(e.target.dataset.tab, passcode);
   }
 });
 
@@ -55,11 +55,14 @@ document.querySelectorAll('.copy-textarea-wrapper .copy-button').forEach((el) =>
   })
 );
 
+let passcode;
+
 // The /initialize route requires this parameter so plain GET requests can't trigger an initialization
 fetch('/initialize?initialize=true')
   .then((res) => res.json())
   .then((res) => {
     if (res.passcode) {
+      passcode = res.passcode;
       document.getElementById('passcode-generated').style.display = 'block';
       updateCurlCommandTextBox('linux', res.passcode);
       updateEnvTextBox(res.passcode);
