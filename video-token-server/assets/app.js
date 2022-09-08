@@ -1,3 +1,5 @@
+let passcode;
+
 function updateCurlCommandTextBox(kind, passcode) {
   let text;
   switch (kind) {
@@ -55,13 +57,12 @@ document.querySelectorAll('.copy-textarea-wrapper .copy-button').forEach((el) =>
   })
 );
 
-let passcode;
-
 // The /initialize route requires this parameter so plain GET requests can't trigger an initialization
 fetch('/initialize?initialize=true')
   .then((res) => res.json())
   .then((res) => {
     if (res.passcode) {
+      // eslint-disable-next-line prefer-destructuring
       passcode = res.passcode;
       document.getElementById('passcode-generated').style.display = 'block';
       updateCurlCommandTextBox('linux', res.passcode);
