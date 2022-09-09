@@ -10,10 +10,16 @@ function updateCurlCommandTextBox(kind, passcode) {
   --data-urlencode "room_name=cool room"`;
       break;
     case 'windows-curl':
-      text = 'TODO: windows-curl';
+      text = `curl -X POST ${window.location.origin}/token ^
+  --data-urlencode "passcode=${passcode || ''}" ^
+  --data-urlencode "identity=user" ^
+  --data-urlencode "room_name=cool room"`;
       break;
     case 'windows-powershell':
-      text = 'TODO: windows-powershell';
+      text = `Invoke-WebRequest -Method POST -Uri "${window.location.origin}/token" \`
+  -Body @{passcode='${passcode}'; \`
+          identity='user'; \`
+          room_name='cool room'}`;
       break;
     default:
       break;
@@ -52,6 +58,7 @@ document.querySelectorAll('.copy-textarea-wrapper .copy-button').forEach((el) =>
       .writeText(el.parentElement.querySelector('textarea').value)
       .then(() => {
         el.classList.add('copied');
+        setTimeout(() => el.classList.remove('copied'), 5000);
       })
       .catch(() => console.error('Error copying text to clipboard'));
   })
