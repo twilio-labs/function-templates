@@ -104,7 +104,7 @@ const insertVerification = async (db, phoneNumber) => {
         $phoneNumber: phoneNumber,
         $verificationStartDatetime: new Date().toLocaleString(),
       });
-      return resolve();
+      return resolve(true);
     } catch (error) {
       return reject(error);
     }

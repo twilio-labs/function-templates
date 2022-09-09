@@ -313,7 +313,7 @@
     {
       "id": "verify-sna",
       "name": "Verify Silent Network Auth Sample Backend",
-      "description": "Starts and checks SNA verifications and shows their status in the dashboard as they come in"
+      "description": "Backend to communicate with Verify API. This backend starts and validates login request against the Verify API by using the SNA channel functionality. The results will be presented on the UI dashboard."
     }
   ]
 }

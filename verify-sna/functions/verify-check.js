@@ -29,7 +29,11 @@
 const assets = Runtime.getAssets();
 const { checkVerification } = require(assets['/services/verifications.js']
   .path);
-const { detectMissingParams } = require(assets['/services/helpers.js'].path);
+const {
+  detectMissingParams,
+  countryCodeField,
+  phoneNumberField,
+} = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -37,7 +41,7 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   const missingParams = detectMissingParams(
-    ['countryCode', 'phoneNumber'],
+    [countryCodeField, phoneNumberField],
     event
   );
   if (missingParams.length > 0) {
@@ -96,6 +100,7 @@ exports.handler = async function (context, event, callback) {
       response.setBody({
         message:
           'No verification was found for the entered phone number. You have to execute the Create Verification request first.',
+        errorCode: error.code,
       });
     } else {
       response.setBody({
