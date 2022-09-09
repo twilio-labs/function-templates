@@ -1,29 +1,32 @@
 let passcode;
 
 function updateCurlCommandTextBox(kind, passcode) {
+  const url = `${window.location.origin}/token`;
+  passcode = passcode || '';
   let text;
+
   switch (kind) {
     case 'linux':
-      text = `curl -X POST ${window.location.origin}/token \\
-  --data-urlencode "passcode=${passcode || ''}" \\
+      text = `curl -X POST ${url} \\
+  --data-urlencode "passcode=${passcode}" \\
   --data-urlencode "identity=user" \\
   --data-urlencode "room_name=cool room"`;
       break;
     case 'windows-curl':
-      text = `curl -X POST ${window.location.origin}/token ^
-  --data-urlencode "passcode=${passcode || ''}" ^
+      text = `curl -X POST ${url} ^
+  --data-urlencode "passcode=${passcode}" ^
   --data-urlencode "identity=user" ^
   --data-urlencode "room_name=cool room"`;
       break;
     case 'windows-powershell':
-      text = `Invoke-WebRequest -Uri "${window.location.origin}/token" \`
+      text = `Invoke-WebRequest -Uri "${url}" \`
   -Method POST \`
   -Body @{passcode='${passcode}'; \`
           identity='user'; \`
           room_name='cool room'}`;
       break;
     default:
-      break;
+      return;
   }
   const textarea = document.getElementById('curl-commands');
   textarea.value = text;
