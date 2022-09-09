@@ -16,7 +16,8 @@ function updateCurlCommandTextBox(kind, passcode) {
   --data-urlencode "room_name=cool room"`;
       break;
     case 'windows-powershell':
-      text = `Invoke-WebRequest -Method POST -Uri "${window.location.origin}/token" \`
+      text = `Invoke-WebRequest -Uri "${window.location.origin}/token" \`
+  -Method POST \`
   -Body @{passcode='${passcode}'; \`
           identity='user'; \`
           room_name='cool room'}`;
