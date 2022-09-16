@@ -56,12 +56,12 @@ exports.handler = async function (context, event, callback) {
 
   try {
     const client = context.getTwilioClient();
-    const service = context.VERIFY_SERVICE_SID;
+    const verifyServiceSid = context.VERIFY_SERVICE_SID;
 
     const { countryCode, phoneNumber } = event;
 
     const check = await client.verify
-      .services(service)
+      .services(verifyServiceSid)
       .verificationChecks.create({ to: `${countryCode}${phoneNumber}` });
 
     if (check.status === 'approved') {

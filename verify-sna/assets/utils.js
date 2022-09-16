@@ -6,6 +6,8 @@ const startVerificationsRetrievalButtonInput = document.getElementById(
   'start-verifications-retrieval-button'
 );
 
+const verificationsTable = document.getElementById('verifications-table');
+
 const TIME_LIMIT = 180;
 
 function showStartVerificationsRetrievalStatus(
@@ -33,8 +35,6 @@ function formatTimeLeft(time) {
   }
   return `${minutes}:${seconds}`;
 }
-
-const verificationsTable = document.getElementById('verifications-table');
 
 const addAttributes = (element, attrObj) => {
   for (const attr in attrObj) {
@@ -65,27 +65,33 @@ function newTableRow(verification) {
   // Phone number
   const phoneNumberElement = document.createElement('td');
   phoneNumberElement.innerHTML = `+${'*'.repeat(
-    verification.phoneNumber.length - 5
-  )}${verification.phoneNumber.slice(-4)}`;
+    verification.key.length - 5
+  )}${verification.key.slice(-4)}`;
 
   // Verification start datetime
   const verificationStartDatetimeElement = document.createElement('td');
-  verificationStartDatetimeElement.innerHTML =
-    verification.verificationStartDatetime;
+  verificationStartDatetimeElement.innerHTML = new Date(
+    verification.dateCreated
+  ).toLocaleString();
 
   // Verification check datetime
   const verificationCheckDatetimeElement = document.createElement('td');
-  verificationCheckDatetimeElement.innerHTML =
-    verification.verificationCheckDatetime;
+  if (verification.dateCreated === verification.dateUpdated) {
+    verificationCheckDatetimeElement.innerHTML = '';
+  } else {
+    verificationCheckDatetimeElement.innerHTML = new Date(
+      verification.dateUpdated
+    ).toLocaleString();
+  }
 
   // Status
   const statusSpan = document.createElement('span');
-  statusSpan.classList.add(verification.status);
-  if (verification.status === 'verified') {
+  statusSpan.classList.add(verification.data.status);
+  if (verification.data.status === 'verified') {
     statusSpan.innerHTML = 'Verified';
-  } else if (verification.status === 'pending') {
+  } else if (verification.data.status === 'pending') {
     statusSpan.innerHTML = 'Pending';
-  } else if (verification.status === 'not-verified') {
+  } else if (verification.data.status === 'not-verified') {
     statusSpan.innerHTML = 'Not verified';
   } else {
     statusSpan.innerHTML = 'Expired';
@@ -134,27 +140,6 @@ async function fetchVerifications() {
     } else {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       await fetchVerifications();
-    }
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function removeVerifications() {
-  try {
-    const response = await fetch('./remove-old-verifications', {
-      method: 'GET',
-    });
-    const json = await response.json();
-
-    if (response.status === 502) {
-      await removeVerifications();
-    } else if (response.status === 200) {
-      await new Promise((resolve) => setTimeout(resolve, 60000 * 30));
-      await removeVerifications();
-    } else {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      await removeVerifications();
     }
   } catch (error) {
     console.error(error);
