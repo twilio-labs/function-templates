@@ -4,7 +4,6 @@ describe('verify-sna/get-verifications', () => {
   beforeAll(() => {
     jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/data/config.js', '../assets/data/config.private.js');
     runtime._addAsset('/data/index.js', '../assets/data/index.private.js');
     runtime._addAsset(
       '/data/operations.js',
@@ -54,7 +53,6 @@ describe('verify-sna/get-verifications', () => {
           });
         });
         return {
-          removeOldVerifications: verifications.removeOldVerifications,
           getVerifications: getVerificationsMock,
           createVerification: verifications.createVerification,
           checkVerification: verifications.checkVerification,
@@ -86,7 +84,6 @@ describe('verify-sna/get-verifications', () => {
           });
         });
         return {
-          removeOldVerifications: verifications.removeOldVerifications,
           getVerifications: getVerificationsMock,
           createVerification: verifications.createVerification,
           checkVerification: verifications.checkVerification,

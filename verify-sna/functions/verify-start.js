@@ -64,7 +64,7 @@ exports.handler = async function (context, event, callback) {
         to: `${countryCode}${phoneNumber}`,
         channel: 'sna',
       });
-    await createVerification(verification.to);
+    await createVerification(context, verification.to);
     response.setStatusCode(200);
     response.setBody({
       message: 'Creation of SNA verification successful',

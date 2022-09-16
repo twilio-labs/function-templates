@@ -32,7 +32,7 @@ exports.handler = async function (context, event, callback) {
     response.setStatusCode(200);
     response.setBody({
       message: 'Verifications retrieved sucessfully',
-      verifications: sortVerifications(await getVerifications()),
+      verifications: sortVerifications(await getVerifications(context)),
     });
     return callback(null, response);
   } catch (error) {

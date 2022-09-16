@@ -4,7 +4,6 @@ describe('verify-sna/verify-check', () => {
   beforeAll(() => {
     jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/data/config.js', '../assets/data/config.private.js');
     runtime._addAsset('/data/index.js', '../assets/data/index.private.js');
     runtime._addAsset(
       '/data/operations.js',

@@ -70,7 +70,7 @@ exports.handler = async function (context, event, callback) {
         success: true,
         message: 'SNA verification successful, phone number verified',
       });
-      await checkVerification(check.to, 'verified');
+      await checkVerification(context, check.to, 'verified');
     } else if (
       check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
         .code === 60519
@@ -89,7 +89,7 @@ exports.handler = async function (context, event, callback) {
           check.snaAttemptsErrorCodes[check.snaAttemptsErrorCodes.length - 1]
             .code,
       });
-      await checkVerification(check.to, 'not-verified');
+      await checkVerification(context, check.to, 'not-verified');
     }
     return callback(null, response);
   } catch (error) {

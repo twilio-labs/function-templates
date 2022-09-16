@@ -8,10 +8,10 @@ const {
   deleteVerification,
 } = require(assets['/data/operations.js'].path);
 
-const getVerifications = async () => {
+const getVerifications = async (context) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const syncMap = await connectToSyncMap();
+      const syncMap = await connectToSyncMap(context);
       return resolve(await getAllVerifications(syncMap));
     } catch (error) {
       return reject(error);
@@ -19,10 +19,10 @@ const getVerifications = async () => {
   });
 };
 
-const createVerification = async (phoneNumber) => {
+const createVerification = async (context, phoneNumber) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const syncMap = await connectToSyncMap();
+      const syncMap = await connectToSyncMap(context);
       const response = await getVerification(syncMap, phoneNumber);
       if (response.success) {
         await deleteVerification(syncMap, phoneNumber);
@@ -39,10 +39,10 @@ const createVerification = async (phoneNumber) => {
   });
 };
 
-const checkVerification = async (phoneNumber, status) => {
+const checkVerification = async (context, phoneNumber, status) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const syncMap = await connectToSyncMap();
+      const syncMap = await connectToSyncMap(context);
       const response = await getVerification(syncMap, phoneNumber);
       if (response.success && response.verification.data.status === 'pending') {
         await updateVerification(syncMap, phoneNumber, status);
