@@ -11,8 +11,8 @@ describe('verify-sna/data/index', () => {
   });
   beforeEach(() => jest.resetModules());
 
-  describe('when trying to connect to a sync map with the wrong credentials', () => {
-    it('creates a new database and the associated tables', async () => {
+  describe('when trying to connect to a sync map with no context', () => {
+    it('throws an error', async () => {
       const { connectToSyncMap } = require('../assets/data/index.private');
 
       await expect(connectToSyncMap({})).rejects.toThrowError(

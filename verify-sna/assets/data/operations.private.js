@@ -1,3 +1,6 @@
+const assets = Runtime.getAssets();
+const { PENDING_STATUS } = require(assets['/services/constants.js'].path);
+
 const getAllVerifications = async (syncMap) => {
   return new Promise(async (resolve, reject) => {
     await syncMap.syncMapItems
@@ -49,7 +52,7 @@ const createNewVerification = async (syncMap, phoneNumber) => {
       .create({
         key: phoneNumber,
         data: {
-          status: 'pending',
+          status: PENDING_STATUS,
         },
         ttl: 1800,
       })

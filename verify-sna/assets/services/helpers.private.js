@@ -1,6 +1,3 @@
-const countryCodeField = 'countryCode';
-const phoneNumberField = 'phoneNumber';
-
 const detectMissingParams = (paramNames, event) => {
   return paramNames.reduce((acc, param) => {
     if (typeof event[param] === 'undefined') {
@@ -21,6 +18,4 @@ const sortVerifications = (verifications) => {
 module.exports = {
   detectMissingParams,
   sortVerifications,
-  countryCodeField,
-  phoneNumberField,
 };

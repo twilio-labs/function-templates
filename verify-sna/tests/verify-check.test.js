@@ -15,7 +15,6 @@ const mockSyncMapItem = {
       mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       revision: 'revision',
       serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
     })
   ),
   update: jest.fn(() =>
@@ -32,7 +31,6 @@ const mockSyncMapItem = {
       mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       revision: 'revision',
       serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
     })
   ),
   remove: jest.fn(() => Promise.resolve()),
@@ -58,7 +56,6 @@ syncMapItemsPrototype.create = jest.fn(() =>
     mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     revision: 'revision',
     serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
   })
 );
 
@@ -77,7 +74,6 @@ syncMapItemsPrototype.list = jest.fn(() =>
       mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       revision: 'revision',
       serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
     },
   ])
 );
@@ -98,6 +94,10 @@ describe('verify-sna/verify-check', () => {
     runtime._addAsset(
       '/services/helpers.js',
       '../assets/services/helpers.private.js'
+    );
+    runtime._addAsset(
+      '/services/constants.js',
+      '../assets/services/constants.private.js'
     );
     runtime._addAsset(
       '/services/verifications.js',

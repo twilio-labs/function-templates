@@ -7,6 +7,9 @@ const {
   createNewVerification,
   deleteVerification,
 } = require(assets['/data/operations.js'].path);
+const { RESOURCE_NOT_FOUND_ERROR_CODE, PENDING_STATUS } = require(assets[
+  '/services/constants.js'
+].path);
 
 const getVerifications = async (context) => {
   return new Promise(async (resolve, reject) => {
@@ -27,7 +30,7 @@ const createVerification = async (context, phoneNumber) => {
       if (response.success) {
         await deleteVerification(syncMap, phoneNumber);
         await createNewVerification(syncMap, phoneNumber);
-      } else if (response.error.code === 20404) {
+      } else if (response.error.code === RESOURCE_NOT_FOUND_ERROR_CODE) {
         await createNewVerification(syncMap, phoneNumber);
       } else {
         throw response.error;
@@ -44,7 +47,10 @@ const checkVerification = async (context, phoneNumber, status) => {
     try {
       const syncMap = await connectToSyncMap(context);
       const response = await getVerification(syncMap, phoneNumber);
-      if (response.success && response.verification.data.status === 'pending') {
+      if (
+        response.success &&
+        response.verification.data.status === PENDING_STATUS
+      ) {
         await updateVerification(syncMap, phoneNumber, status);
       }
       return resolve(true);

@@ -29,11 +29,11 @@
 const assets = Runtime.getAssets();
 const { createVerification } = require(assets['/services/verifications.js']
   .path);
-const {
-  detectMissingParams,
-  countryCodeField,
-  phoneNumberField,
-} = require(assets['/services/helpers.js'].path);
+const { detectMissingParams } = require(assets['/services/helpers.js'].path);
+
+const { COUNTRY_CODE_FIELD, PHONE_NUMBER_FIELD } = require(assets[
+  '/services/constants.js'
+].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
@@ -41,7 +41,7 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   const missingParams = detectMissingParams(
-    [countryCodeField, phoneNumberField],
+    [COUNTRY_CODE_FIELD, PHONE_NUMBER_FIELD],
     event
   );
   if (missingParams.length > 0) {
