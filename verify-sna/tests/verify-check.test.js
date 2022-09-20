@@ -1,5 +1,91 @@
 const helpers = require('../../test/test-helper');
 
+const mockSyncMapItem = {
+  fetch: jest.fn(() =>
+    Promise.resolve({
+      accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      createdBy: 'created_by',
+      data: {
+        status: 'pending',
+      },
+      dateExpires: '2015-07-30T21:00:00Z',
+      dateCreated: '2015-07-30T20:00:00Z',
+      dateUpdated: '2015-07-30T20:00:00Z',
+      key: '+14085040458',
+      mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      revision: 'revision',
+      serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+    })
+  ),
+  update: jest.fn(() =>
+    Promise.resolve({
+      accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      createdBy: 'created_by',
+      data: {
+        status: 'verified',
+      },
+      dateExpires: '2015-07-30T21:00:00Z',
+      dateCreated: '2015-07-30T20:00:00Z',
+      dateUpdated: '2015-07-30T20:00:00Z',
+      key: '+14085040458',
+      mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      revision: 'revision',
+      serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+    })
+  ),
+  remove: jest.fn(() => Promise.resolve()),
+};
+
+const mockSyncMap = {
+  syncMapItems: jest.fn(() => mockSyncMapItem),
+};
+
+const syncMapItemsPrototype = Object.getPrototypeOf(mockSyncMap.syncMapItems);
+
+syncMapItemsPrototype.create = jest.fn(() =>
+  Promise.resolve({
+    accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    createdBy: 'created_by',
+    data: {
+      status: 'pending',
+    },
+    dateExpires: '2015-07-30T21:00:00Z',
+    dateCreated: '2015-07-30T20:00:00Z',
+    dateUpdated: '2015-07-30T20:00:00Z',
+    key: '+14085040458',
+    mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    revision: 'revision',
+    serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+  })
+);
+
+syncMapItemsPrototype.list = jest.fn(() =>
+  Promise.resolve([
+    {
+      accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      createdBy: 'created_by',
+      data: {
+        status: 'pending',
+      },
+      dateExpires: '2015-07-30T21:00:00Z',
+      dateCreated: '2015-07-30T20:00:00Z',
+      dateUpdated: '2015-07-30T20:00:00Z',
+      key: '+14085040458',
+      mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      revision: 'revision',
+      serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+    },
+  ])
+);
+
+const mockSyncService = {
+  syncMaps: jest.fn(() => mockSyncMap),
+};
+
 describe('verify-sna/verify-check', () => {
   beforeAll(() => {
     jest.clearAllMocks();
@@ -80,7 +166,7 @@ describe('verify-sna/verify-check', () => {
 
   describe('when the verification status is approved', () => {
     it('returns a 200 status code a success flag set to true', (done) => {
-      const mockService = {
+      const mockVerifyService = {
         verificationChecks: {
           create: jest.fn(() =>
             Promise.resolve({
@@ -94,12 +180,17 @@ describe('verify-sna/verify-check', () => {
 
       const mockClient = {
         verify: {
-          services: jest.fn(() => mockService),
+          services: jest.fn(() => mockVerifyService),
+        },
+        sync: {
+          services: jest.fn(() => mockSyncService),
         },
       };
 
       const testContext = {
         VERIFY_SERVICE_SID: 'default',
+        SYNC_SERVICE_SID: 'default',
+        SYNC_MAP_SID: 'default',
         getTwilioClient: () => mockClient,
       };
 
@@ -112,7 +203,15 @@ describe('verify-sna/verify-check', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verificationChecks.create).toHaveBeenCalledWith({
+        expect(mockClient.sync.services).toHaveBeenCalledWith(
+          testContext.SYNC_SERVICE_SID
+        );
+        expect(mockSyncService.syncMaps).toHaveBeenCalledWith(
+          testContext.SYNC_MAP_SID
+        );
+        expect(
+          mockVerifyService.verificationChecks.create
+        ).toHaveBeenCalledWith({
           to: '+14085040458',
         });
         done();
@@ -127,7 +226,7 @@ describe('verify-sna/verify-check', () => {
 
   describe('when the verification status is set to pending and the latest snaAttemptErrorCode is set to a pending error code', () => {
     it('returns a 400 status code and the corresponding error code', (done) => {
-      const mockService = {
+      const mockVerifyService = {
         verificationChecks: {
           create: jest.fn(() =>
             Promise.resolve({
@@ -146,12 +245,17 @@ describe('verify-sna/verify-check', () => {
 
       const mockClient = {
         verify: {
-          services: jest.fn(() => mockService),
+          services: jest.fn(() => mockVerifyService),
+        },
+        sync: {
+          services: jest.fn(() => mockSyncService),
         },
       };
 
       const testContext = {
         VERIFY_SERVICE_SID: 'default',
+        SYNC_SERVICE_SID: 'default',
+        SYNC_MAP_SID: 'default',
         getTwilioClient: () => mockClient,
       };
 
@@ -164,7 +268,9 @@ describe('verify-sna/verify-check', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verificationChecks.create).toHaveBeenCalledWith({
+        expect(
+          mockVerifyService.verificationChecks.create
+        ).toHaveBeenCalledWith({
           to: '+14085040458',
         });
         done();
@@ -179,7 +285,7 @@ describe('verify-sna/verify-check', () => {
 
   describe('when the verification status is set to pending and the latest snaAttemptErrorCode is set to an unsuccessful error code', () => {
     it('returns a 200 status code and a success flag set to false', (done) => {
-      const mockService = {
+      const mockVerifyService = {
         verificationChecks: {
           create: jest.fn(() =>
             Promise.resolve({
@@ -202,12 +308,17 @@ describe('verify-sna/verify-check', () => {
 
       const mockClient = {
         verify: {
-          services: jest.fn(() => mockService),
+          services: jest.fn(() => mockVerifyService),
+        },
+        sync: {
+          services: jest.fn(() => mockSyncService),
         },
       };
 
       const testContext = {
         VERIFY_SERVICE_SID: 'default',
+        SYNC_SERVICE_SID: 'default',
+        SYNC_MAP_SID: 'default',
         getTwilioClient: () => mockClient,
       };
 
@@ -221,7 +332,15 @@ describe('verify-sna/verify-check', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verificationChecks.create).toHaveBeenCalledWith({
+        expect(mockClient.sync.services).toHaveBeenCalledWith(
+          testContext.SYNC_SERVICE_SID
+        );
+        expect(mockSyncService.syncMaps).toHaveBeenCalledWith(
+          testContext.SYNC_MAP_SID
+        );
+        expect(
+          mockVerifyService.verificationChecks.create
+        ).toHaveBeenCalledWith({
           to: '+14085040458',
         });
         done();
@@ -236,7 +355,7 @@ describe('verify-sna/verify-check', () => {
 
   describe('when the Verify API call throws an error with a 20404 error code', () => {
     it('returns a 404 status code and the corresponding error code', (done) => {
-      const mockService = {
+      const mockVerifyService = {
         verificationChecks: {
           create: jest.fn(() => {
             const error = new Error(
@@ -251,12 +370,17 @@ describe('verify-sna/verify-check', () => {
 
       const mockClient = {
         verify: {
-          services: jest.fn(() => mockService),
+          services: jest.fn(() => mockVerifyService),
+        },
+        sync: {
+          services: jest.fn(() => mockSyncService),
         },
       };
 
       const testContext = {
         VERIFY_SERVICE_SID: 'default',
+        SYNC_SERVICE_SID: 'default',
+        SYNC_MAP_SID: 'default',
         getTwilioClient: () => mockClient,
       };
 
@@ -269,7 +393,9 @@ describe('verify-sna/verify-check', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verificationChecks.create).toHaveBeenCalledWith({
+        expect(
+          mockVerifyService.verificationChecks.create
+        ).toHaveBeenCalledWith({
           to: '+14085040458',
         });
         done();
@@ -284,7 +410,7 @@ describe('verify-sna/verify-check', () => {
 
   describe('when the Verify API call throws an error with a 500 status code', () => {
     it('returns a 500 status code and an error message', (done) => {
-      const mockService = {
+      const mockVerifyService = {
         verificationChecks: {
           create: jest.fn(() => {
             const error = new Error('Internal server error');
@@ -296,12 +422,17 @@ describe('verify-sna/verify-check', () => {
 
       const mockClient = {
         verify: {
-          services: jest.fn(() => mockService),
+          services: jest.fn(() => mockVerifyService),
+        },
+        sync: {
+          services: jest.fn(() => mockSyncService),
         },
       };
 
       const testContext = {
         VERIFY_SERVICE_SID: 'default',
+        SYNC_SERVICE_SID: 'default',
+        SYNC_MAP_SID: 'default',
         getTwilioClient: () => mockClient,
       };
 
@@ -314,7 +445,9 @@ describe('verify-sna/verify-check', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verificationChecks.create).toHaveBeenCalledWith({
+        expect(
+          mockVerifyService.verificationChecks.create
+        ).toHaveBeenCalledWith({
           to: '+14085040458',
         });
         done();
@@ -329,7 +462,7 @@ describe('verify-sna/verify-check', () => {
 
   describe('when the Verify API call throws an error with no status code', () => {
     it('returns a 400 status code and an error message', (done) => {
-      const mockService = {
+      const mockVerifyService = {
         verificationChecks: {
           create: jest.fn(() => {
             throw new Error('An error occurred');
@@ -339,12 +472,17 @@ describe('verify-sna/verify-check', () => {
 
       const mockClient = {
         verify: {
-          services: jest.fn(() => mockService),
+          services: jest.fn(() => mockVerifyService),
+        },
+        sync: {
+          services: jest.fn(() => mockSyncService),
         },
       };
 
       const testContext = {
         VERIFY_SERVICE_SID: 'default',
+        SYNC_SERVICE_SID: 'default',
+        SYNC_MAP_SID: 'default',
         getTwilioClient: () => mockClient,
       };
 
@@ -357,7 +495,9 @@ describe('verify-sna/verify-check', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verificationChecks.create).toHaveBeenCalledWith({
+        expect(
+          mockVerifyService.verificationChecks.create
+        ).toHaveBeenCalledWith({
           to: '+14085040458',
         });
         done();

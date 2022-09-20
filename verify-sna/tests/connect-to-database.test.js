@@ -15,7 +15,9 @@ describe('verify-sna/data/index', () => {
     it('creates a new database and the associated tables', async () => {
       const { connectToSyncMap } = require('../assets/data/index.private');
 
-      await expect(true).toBe(true);
+      await expect(connectToSyncMap({})).rejects.toThrowError(
+        'context.getTwilioClient is not a function'
+      );
     });
   });
 });

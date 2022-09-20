@@ -1,5 +1,91 @@
 const helpers = require('../../test/test-helper');
 
+const mockSyncMapItem = {
+  fetch: jest.fn(() =>
+    Promise.resolve({
+      accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      createdBy: 'created_by',
+      data: {
+        status: 'pending',
+      },
+      dateExpires: '2015-07-30T21:00:00Z',
+      dateCreated: '2015-07-30T20:00:00Z',
+      dateUpdated: '2015-07-30T20:00:00Z',
+      key: '+14085040458',
+      mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      revision: 'revision',
+      serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+    })
+  ),
+  update: jest.fn(() =>
+    Promise.resolve({
+      accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      createdBy: 'created_by',
+      data: {
+        status: 'verified',
+      },
+      dateExpires: '2015-07-30T21:00:00Z',
+      dateCreated: '2015-07-30T20:00:00Z',
+      dateUpdated: '2015-07-30T20:00:00Z',
+      key: '+14085040458',
+      mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      revision: 'revision',
+      serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+    })
+  ),
+  remove: jest.fn(() => Promise.resolve()),
+};
+
+const mockSyncMap = {
+  syncMapItems: jest.fn(() => mockSyncMapItem),
+};
+
+const syncMapItemsPrototype = Object.getPrototypeOf(mockSyncMap.syncMapItems);
+
+syncMapItemsPrototype.create = jest.fn(() =>
+  Promise.resolve({
+    accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    createdBy: 'created_by',
+    data: {
+      status: 'pending',
+    },
+    dateExpires: '2015-07-30T21:00:00Z',
+    dateCreated: '2015-07-30T20:00:00Z',
+    dateUpdated: '2015-07-30T20:00:00Z',
+    key: '+14085040458',
+    mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    revision: 'revision',
+    serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+  })
+);
+
+syncMapItemsPrototype.list = jest.fn(() =>
+  Promise.resolve([
+    {
+      accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      createdBy: 'created_by',
+      data: {
+        status: 'pending',
+      },
+      dateExpires: '2015-07-30T21:00:00Z',
+      dateCreated: '2015-07-30T20:00:00Z',
+      dateUpdated: '2015-07-30T20:00:00Z',
+      key: '+14085040458',
+      mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      revision: 'revision',
+      serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+      url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
+    },
+  ])
+);
+
+const mockSyncService = {
+  syncMaps: jest.fn(() => mockSyncMap),
+};
+
 describe('verify-sna/verify-start', () => {
   beforeAll(() => {
     jest.clearAllMocks();
@@ -90,88 +176,6 @@ describe('verify-sna/verify-start', () => {
         },
       };
 
-      const mockSyncMapItem = {
-        fetch: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'pending',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        update: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'verified',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        remove: jest.fn(() => Promise.resolve()),
-        create: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'pending',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        list: jest.fn(() =>
-          Promise.resolve([
-            {
-              accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              createdBy: 'created_by',
-              data: {
-                status: 'pending',
-              },
-              dateExpires: '2015-07-30T21:00:00Z',
-              dateCreated: '2015-07-30T20:00:00Z',
-              dateUpdated: '2015-07-30T20:00:00Z',
-              key: '+14085040458',
-              mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              revision: 'revision',
-              serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-            },
-          ])
-        ),
-      };
-
-      const mockSyncMap = {
-        syncMapItems: jest.fn(() => mockSyncMapItem),
-      };
-
-      const mockSyncService = {
-        syncMaps: jest.fn(() => mockSyncMap),
-      };
-
       const mockClient = {
         verify: {
           services: jest.fn(() => mockVerifyService),
@@ -197,7 +201,13 @@ describe('verify-sna/verify-start', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verifications.create).toHaveBeenCalledWith({
+        expect(mockClient.sync.services).toHaveBeenCalledWith(
+          testContext.SYNC_SERVICE_SID
+        );
+        expect(mockSyncService.syncMaps).toHaveBeenCalledWith(
+          testContext.SYNC_MAP_SID
+        );
+        expect(mockVerifyService.verifications.create).toHaveBeenCalledWith({
           to: '+14085040458',
           channel: 'sna',
         });
@@ -215,99 +225,12 @@ describe('verify-sna/verify-start', () => {
     it('returns a 500 status code and an error message', (done) => {
       const mockVerifyService = {
         verifications: {
-          create: jest.fn(() =>
-            Promise.resolve({
-              to: '+14085040458',
-              sna: {
-                url: `https://mi.dnlsrv.com/m/id/12345678?data=TGSDDSFSD4`,
-              },
-            })
-          ),
+          create: jest.fn(() => {
+            const error = new Error('Internal server error');
+            error.status = 500;
+            throw error;
+          }),
         },
-      };
-
-      const mockSyncMapItem = {
-        fetch: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'pending',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        update: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'verified',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        remove: jest.fn(() => Promise.resolve()),
-      };
-
-      const mockSyncMap = {
-        syncMapItems: {
-          create: jest.fn(() =>
-            Promise.resolve({
-              accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              createdBy: 'created_by',
-              data: {
-                status: 'pending',
-              },
-              dateExpires: '2015-07-30T21:00:00Z',
-              dateCreated: '2015-07-30T20:00:00Z',
-              dateUpdated: '2015-07-30T20:00:00Z',
-              key: '+14085040458',
-              mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              revision: 'revision',
-              serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-            })
-          ),
-          list: jest.fn(() =>
-            Promise.resolve([
-              {
-                accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                createdBy: 'created_by',
-                data: {
-                  status: 'pending',
-                },
-                dateExpires: '2015-07-30T21:00:00Z',
-                dateCreated: '2015-07-30T20:00:00Z',
-                dateUpdated: '2015-07-30T20:00:00Z',
-                key: '+14085040458',
-                mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                revision: 'revision',
-                serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-              },
-            ])
-          ),
-        },
-        syncMapItems: jest.fn(() => mockSyncMapItem),
-      };
-
-      const mockSyncService = {
-        syncMaps: jest.fn(() => mockSyncMap),
       };
 
       const mockClient = {
@@ -335,7 +258,7 @@ describe('verify-sna/verify-start', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verifications.create).toHaveBeenCalledWith({
+        expect(mockVerifyService.verifications.create).toHaveBeenCalledWith({
           to: '+14085040458',
           channel: 'sna',
         });
@@ -353,99 +276,10 @@ describe('verify-sna/verify-start', () => {
     it('returns a 400 status code and an error message', (done) => {
       const mockVerifyService = {
         verifications: {
-          create: jest.fn(() =>
-            Promise.resolve({
-              to: '+14085040458',
-              sna: {
-                url: `https://mi.dnlsrv.com/m/id/12345678?data=TGSDDSFSD4`,
-              },
-            })
-          ),
+          create: jest.fn(() => {
+            throw new Error('An error occurred');
+          }),
         },
-      };
-
-      const mockSyncMapItem = {
-        fetch: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'pending',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        update: jest.fn(() =>
-          Promise.resolve({
-            accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            createdBy: 'created_by',
-            data: {
-              status: 'verified',
-            },
-            dateExpires: '2015-07-30T21:00:00Z',
-            dateCreated: '2015-07-30T20:00:00Z',
-            dateUpdated: '2015-07-30T20:00:00Z',
-            key: '+14085040458',
-            mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            revision: 'revision',
-            serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-            url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-          })
-        ),
-        remove: jest.fn(() => Promise.resolve()),
-      };
-
-      const mockSyncMap = {
-        syncMapItems: {
-          create: jest.fn(() =>
-            Promise.resolve({
-              accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              createdBy: 'created_by',
-              data: {
-                status: 'pending',
-              },
-              dateExpires: '2015-07-30T21:00:00Z',
-              dateCreated: '2015-07-30T20:00:00Z',
-              dateUpdated: '2015-07-30T20:00:00Z',
-              key: '+14085040458',
-              mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              revision: 'revision',
-              serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-              url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-            })
-          ),
-          list: jest.fn(() =>
-            Promise.resolve([
-              {
-                accountSid: 'ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                createdBy: 'created_by',
-                data: {
-                  status: 'pending',
-                },
-                dateExpires: '2015-07-30T21:00:00Z',
-                dateCreated: '2015-07-30T20:00:00Z',
-                dateUpdated: '2015-07-30T20:00:00Z',
-                key: '+14085040458',
-                mapSid: 'MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                revision: 'revision',
-                serviceSid: 'ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-                url: 'https://sync.twilio.com/v1/Services/ISXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Maps/MPXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/Items/key',
-              },
-            ])
-          ),
-        },
-        syncMapItems: jest.fn(() => mockSyncMapItem),
-      };
-
-      const mockSyncService = {
-        syncMaps: jest.fn(() => mockSyncMap),
       };
 
       const mockClient = {
@@ -473,7 +307,7 @@ describe('verify-sna/verify-start', () => {
         expect(mockClient.verify.services).toHaveBeenCalledWith(
           testContext.VERIFY_SERVICE_SID
         );
-        expect(mockService.verifications.create).toHaveBeenCalledWith({
+        expect(mockVerifyService.verifications.create).toHaveBeenCalledWith({
           to: '+14085040458',
           channel: 'sna',
         });
