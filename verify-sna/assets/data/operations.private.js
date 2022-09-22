@@ -2,16 +2,7 @@ const assets = Runtime.getAssets();
 const { PENDING_STATUS } = require(assets['/services/constants.js'].path);
 
 const getAllVerifications = async (syncMap) => {
-  return new Promise(async (resolve, reject) => {
-    await syncMap.syncMapItems
-      .list()
-      .then((syncMapItems) => {
-        return resolve(syncMapItems);
-      })
-      .catch((err) => {
-        return reject(err);
-      });
-  });
+  return syncMap.syncMapItems.list();
 };
 
 const getVerification = async (syncMap, phoneNumber) => {
@@ -29,54 +20,25 @@ const getVerification = async (syncMap, phoneNumber) => {
 };
 
 const updateVerification = async (syncMap, phoneNumber, newStatus) => {
-  return new Promise(async (resolve, reject) => {
-    await syncMap
-      .syncMapItems(phoneNumber)
-      .update({
-        data: {
-          status: newStatus,
-        },
-      })
-      .then((_) => {
-        return resolve(true);
-      })
-      .catch((err) => {
-        return reject(err);
-      });
+  return syncMap.syncMapItems(phoneNumber).update({
+    data: {
+      status: newStatus,
+    },
   });
 };
 
 const createNewVerification = async (syncMap, phoneNumber) => {
-  return new Promise(async (resolve, reject) => {
-    await syncMap.syncMapItems
-      .create({
-        key: phoneNumber,
-        data: {
-          status: PENDING_STATUS,
-        },
-        ttl: 1800,
-      })
-      .then((_) => {
-        return resolve(true);
-      })
-      .catch((err) => {
-        return reject(err);
-      });
+  return syncMap.syncMapItems.create({
+    key: phoneNumber,
+    data: {
+      status: PENDING_STATUS,
+    },
+    ttl: 1800,
   });
 };
 
 const deleteVerification = async (syncMap, phoneNumber) => {
-  return new Promise(async (resolve, reject) => {
-    await syncMap
-      .syncMapItems(phoneNumber)
-      .remove()
-      .then(() => {
-        return resolve(true);
-      })
-      .catch((err) => {
-        return reject(err);
-      });
-  });
+  return syncMap.syncMapItems(phoneNumber).remove();
 };
 
 module.exports = {
