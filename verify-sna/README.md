@@ -9,7 +9,8 @@ The best way to use the Function templates is through the Twilio CLI as describe
 ## Pre-requisites
 
 - [Create a Verify Service](https://www.twilio.com/console/verify/services)
-- Set up and run the sample app for [iOS](https://github.com/twilio/twilio-verify-ios)
+- [Create a Sync Service](https://www.twilio.com/console/sync/services). You can also use the Default Service in your Twilio Console account.
+- Create a Map in your Sync service.
 
 ### Environment variables
 
@@ -22,6 +23,8 @@ In your `.env` file, set the following values:
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console)             | Yes      |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console)             | Yes      |
 | `VERIFY_SERVICE_SID` | Create one [here](https://www.twilio.com/console/verify/services) | Yes      |
+| `SYNC_SERVICE_SID` | Create one [here](https://www.twilio.com/console/sync/services) | Yes      |
+| `SYNC_MAP_SID` | Create one [here](https://www.twilio.com/console/sync/services) | Yes      |
 
 
 ### Function Parameters
