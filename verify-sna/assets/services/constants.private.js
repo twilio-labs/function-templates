@@ -1,4 +1,3 @@
-const COUNTRY_CODE_FIELD = 'countryCode';
 const PHONE_NUMBER_FIELD = 'phoneNumber';
 const RESOURCE_NOT_FOUND_ERROR_CODE = 20404;
 const VERIFIED_STATUS = 'verified';
@@ -6,7 +5,6 @@ const PENDING_STATUS = 'pending';
 const NOT_VERIFIED_STATUS = 'not-verified';
 
 module.exports = {
-  COUNTRY_CODE_FIELD,
   PHONE_NUMBER_FIELD,
   RESOURCE_NOT_FOUND_ERROR_CODE,
   VERIFIED_STATUS,

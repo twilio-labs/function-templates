@@ -32,7 +32,6 @@ const { checkVerification } = require(assets['/services/verifications.js']
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 const {
-  COUNTRY_CODE_FIELD,
   PHONE_NUMBER_FIELD,
   RESOURCE_NOT_FOUND_ERROR_CODE,
   VERIFIED_STATUS,
@@ -44,10 +43,7 @@ exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  const missingParams = detectMissingParams(
-    [COUNTRY_CODE_FIELD, PHONE_NUMBER_FIELD],
-    event
-  );
+  const missingParams = detectMissingParams([PHONE_NUMBER_FIELD], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
@@ -62,11 +58,11 @@ exports.handler = async function (context, event, callback) {
     const client = context.getTwilioClient();
     const verifyServiceSid = context.VERIFY_SERVICE_SID;
 
-    const { countryCode, phoneNumber } = event;
+    const { phoneNumber } = event;
 
     const check = await client.verify
       .services(verifyServiceSid)
-      .verificationChecks.create({ to: `${countryCode}${phoneNumber}` });
+      .verificationChecks.create({ to: phoneNumber });
 
     if (check.status === 'approved') {
       response.setStatusCode(200);

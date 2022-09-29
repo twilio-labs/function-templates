@@ -110,24 +110,6 @@ describe('verify-sna/verify-start', () => {
   });
   beforeEach(() => jest.resetModules());
 
-  describe('when required countryCode parameter is missing', () => {
-    it('returns an error response indicating the missing parameters', (done) => {
-      const verifyStartFunction = require('../functions/verify-start').handler;
-      const callback = (_err, result) => {
-        expect(result).toBeDefined();
-        expect(result._statusCode).toEqual(400);
-        expect(result._body.message).toEqual(
-          `Missing parameters; please provide: 'countryCode'.`
-        );
-        done();
-      };
-      const event = {
-        phoneNumber: '4085040458',
-      };
-      verifyStartFunction({}, event, callback);
-    });
-  });
-
   describe('when required phoneNumber parameter is missing', () => {
     it('returns an error response indicating the missing parameters', (done) => {
       const verifyStartFunction = require('../functions/verify-start').handler;
@@ -136,24 +118,6 @@ describe('verify-sna/verify-start', () => {
         expect(result._statusCode).toEqual(400);
         expect(result._body.message).toEqual(
           `Missing parameters; please provide: 'phoneNumber'.`
-        );
-        done();
-      };
-      const event = {
-        countryCode: '+57',
-      };
-      verifyStartFunction({}, event, callback);
-    });
-  });
-
-  describe('when required parameters are missing', () => {
-    it('returns an error response indicating the missing parameters', (done) => {
-      const verifyStartFunction = require('../functions/verify-start').handler;
-      const callback = (_err, result) => {
-        expect(result).toBeDefined();
-        expect(result._statusCode).toEqual(400);
-        expect(result._body.message).toEqual(
-          `Missing parameters; please provide: 'countryCode, phoneNumber'.`
         );
         done();
       };
@@ -214,8 +178,7 @@ describe('verify-sna/verify-start', () => {
         done();
       };
       const event = {
-        countryCode: '+1',
-        phoneNumber: '4085040458',
+        phoneNumber: '+14085040458',
       };
       verifyStartFunction(testContext, event, callback);
     });
@@ -265,8 +228,7 @@ describe('verify-sna/verify-start', () => {
         done();
       };
       const event = {
-        countryCode: '+1',
-        phoneNumber: '4085040458',
+        phoneNumber: '+14085040458',
       };
       verifyStartFunction(testContext, event, callback);
     });
@@ -314,8 +276,7 @@ describe('verify-sna/verify-start', () => {
         done();
       };
       const event = {
-        countryCode: '+1',
-        phoneNumber: '4085040458',
+        phoneNumber: '+14085040458',
       };
       verifyStartFunction(testContext, event, callback);
     });

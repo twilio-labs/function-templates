@@ -31,19 +31,14 @@ const { createVerification } = require(assets['/services/verifications.js']
   .path);
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
-const { COUNTRY_CODE_FIELD, PHONE_NUMBER_FIELD } = require(assets[
-  '/services/constants.js'
-].path);
+const { PHONE_NUMBER_FIELD } = require(assets['/services/constants.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  const missingParams = detectMissingParams(
-    [COUNTRY_CODE_FIELD, PHONE_NUMBER_FIELD],
-    event
-  );
+  const missingParams = detectMissingParams([PHONE_NUMBER_FIELD], event);
   if (missingParams.length > 0) {
     response.setStatusCode(400);
     response.setBody({
@@ -57,11 +52,11 @@ exports.handler = async function (context, event, callback) {
   try {
     const client = context.getTwilioClient();
     const verifyServiceSid = context.VERIFY_SERVICE_SID;
-    const { countryCode, phoneNumber } = event;
+    const { phoneNumber } = event;
     const verification = await client.verify
       .services(verifyServiceSid)
       .verifications.create({
-        to: `${countryCode}${phoneNumber}`,
+        to: phoneNumber,
         channel: 'sna',
       });
     await createVerification(context, verification.to);
