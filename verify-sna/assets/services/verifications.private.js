@@ -15,7 +15,19 @@ const getVerifications = async (context) => {
   return new Promise(async (resolve, reject) => {
     try {
       const syncMap = await connectToSyncMap(context);
-      return resolve(await getAllVerifications(syncMap));
+      const verifications = await getAllVerifications(syncMap);
+      verifications.forEach((verification) => {
+        verification.dateCreated = new Date(
+          verification.dateCreated
+        ).toLocaleString();
+        verification.dateUpdated = new Date(
+          verification.dateUpdated
+        ).toLocaleString();
+        verification.dateExpires = new Date(
+          verification.dateExpires
+        ).toLocaleString();
+      });
+      return resolve(verifications);
     } catch (error) {
       return reject(error);
     }
