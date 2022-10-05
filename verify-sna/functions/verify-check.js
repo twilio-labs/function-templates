@@ -5,11 +5,14 @@
  *
  * Pre-requisites
  * - Create a Verify Service (https://www.twilio.com/console/verify/services)
+ * - Create a Sync Service (https://www.twilio.com/console/sync/services)
+ * - Create a Map (https://www.twilio.com/console/sync/services)
  * - Add VERIFY_SERVICE_SID from above to your Environment Variables (https://www.twilio.com/console/functions/configure)
+ * - Add SYNC_SERVICE_SID from above to your Environment Variables (https://www.twilio.com/console/functions/configure)
+ * - Add SYNC_MAP_SID from above to your Environment Variables (https://www.twilio.com/console/functions/configure)
  * - Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
  *
  * Parameters
- * - countryCode - required
  * - phoneNumber - required
  *
  * Returns JSON
