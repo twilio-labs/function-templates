@@ -70,14 +70,18 @@ function newTableRow(verification) {
 
   // Verification start datetime
   const verificationStartDatetimeElement = document.createElement('td');
-  verificationStartDatetimeElement.innerHTML = verification.dateCreated;
+  verificationStartDatetimeElement.innerHTML = new Date(
+    verification.dateCreated
+  ).toLocaleString();
 
   // Verification check datetime
   const verificationCheckDatetimeElement = document.createElement('td');
   if (verification.dateCreated === verification.dateUpdated) {
     verificationCheckDatetimeElement.innerHTML = '';
   } else {
-    verificationCheckDatetimeElement.innerHTML = verification.dateUpdated;
+    verificationCheckDatetimeElement.innerHTML = new Date(
+      verification.dateUpdated
+    ).toLocaleString();
   }
 
   // Status
