@@ -134,6 +134,7 @@
     "voice-client-javascript",
     "voice-ivr",
     "voice-javascript-sdk",
-    "voicemail"
+    "voicemail",
+    "verify-sna"
   ]
 }
