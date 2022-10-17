@@ -311,8 +311,8 @@
       "description": "Creates 1 function for each callback needed to setup Frontline features. This is intended to be used as the Integration Service of a Frontline instance."
     },
     {
-      "id": "video-token-server",
-      "name": "A Video Token Server",
+      "id": "video-token-backend",
+      "name": "A Video Token Backend",
       "description": "Creates a server that mints Twilio Video Access tokens"
     }
   ]
