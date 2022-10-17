@@ -29,7 +29,7 @@ afterAll(() => {
 });
 
 describe('the /initialize endpoint', () => {
-  it('should generate a passcode with ?initialize is true', async () => {
+  it('should generate a passcode if ?initialize is true', async () => {
     mockVariableList.mockImplementation(() => []);
     const mockCallback = jest.fn();
 
