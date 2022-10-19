@@ -221,6 +221,11 @@
       "description": "Use authenticator apps like Authy or Google Authenticator that support Time-based One-Time Passwords (TOTP) with the Verify API."
     },
     {
+      "id": "verify-totp-sms",
+      "name": "Combined authenticator app (TOTP) authentication with SMS/WhatsApp fallback",
+      "description": "Use Time-based One-Time Passwords (TOTP) authentication with fallback options to SMS or WhatsApp using the Verify API."
+    },
+    {
       "id": "verify-retry",
       "name": "Verification with Retry Logic",
       "description": "Best practices UI for resending SMS verification codes and voice channel fallback."
