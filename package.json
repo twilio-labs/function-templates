@@ -132,6 +132,7 @@
     "verify-totp-sms",
     "video",
     "video-token",
+    "video-token-backend",
     "voice-client-javascript",
     "voice-ivr",
     "voice-javascript-sdk",
