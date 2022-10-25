@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Get started with your Twilio Video Token Server!</title>
+
+    <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico" />
+    <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg class="logo" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 60 60">
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <span>Your Twilio Video Token Server</span>
+          <aside>
+            <svg
+              class="icon"
+              role="img"
+              aria-hidden="true"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="NewIcon-1577"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+              ></path>
+            </svg>
+            Live
+          </aside>
+        </nav>
+      </header>
+    </div>
+    <main>
+      <div class="content">
+        <h1>
+          <img src="https://twilio-labs.github.io/function-templates/static/v1/success.svg" />
+          <div>
+            <p>Welcome!</p>
+            <p>Your video token server with Twilio is ready!</p>
+          </div>
+        </h1>
+        <section>
+          <h2>Get started with your token server</h2>
+          <p>
+            You now have a <code>/token</code> endpoint that you can use from your client-side application to obtain
+            access tokens. Access tokens are needed for end-users to connect to Twilio Video Rooms. Your token server
+            information is as follows:
+          </p>
+
+          <form>
+            <label for="token-server-url">Token Server URL</label>
+            <div class="copy-input-wrapper">
+              <input type="text" id="token-server-url" class="function-root" readonly="true" value="/token" />
+            </div>
+          </form>
+
+          <form>
+            <label for="token-server-passcode">Token Server Passcode</label>
+            <div class="copy-input-wrapper">
+              <input type="text" id="token-server-passcode" readonly="true" value="" />
+            </div>
+          </form>
+
+          <div id="passcode-generated" class="alert" style="display: none">
+            <p>
+              Your token server passcode will only be shown once, so be sure to save it somewhere safe. This passcode
+              provides an additional layer of security while you are in development.
+            </p>
+            <p>
+              <strong>PLEASE READ:</strong>
+              In production, you would want to restrict access token retrieval to the currently authenticated user.
+            </p>
+          </div>
+
+          <div id="passcode-already-generated" class="alert" style="display: none">
+            <p>
+              A passcode for your token server was already generated. For security reasons, this passcode is only
+              displayed on the first user visit. To find your passcode,
+              <a target="_blank" rel="noopener" href="https://twilio.com/console/functions/overview/services"
+                >visit the serverless section in the Console.</a
+              >
+            </p>
+          </div>
+
+          <p>Now that you have your token server deployed, here are the next steps to start using it:</p>
+
+          <ol class="steps">
+            <li>
+              Generate your first Access Token:
+              <form>
+                <div class="copy-textarea-wrapper">
+                  <ul class="tabs">
+                    <button type="button" data-tab="linux" class="active">Linux or MacOS-cURL</button>
+                    <button type="button" data-tab="windows-curl">Windows-cURL</button>
+                    <button type="button" data-tab="windows-powershell">Windows-PowerShell</button>
+                  </ul>
+                  <button class="copy-button copy-button-tabs">
+                    <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M15.0342 3.59414C14.9718 2.97958 14.4527 2.5 13.8217 2.5H4.07172L3.94711 2.50629C3.33254 2.5687 2.85297 3.08772 2.85297 3.71875V13.4688L2.85926 13.5934C2.92167 14.2079 3.44069 14.6875 4.07172 14.6875H5.66547V16.0938C5.66547 16.8704 6.29507 17.5 7.07172 17.5H16.4467C17.2234 17.5 17.853 16.8704 17.853 16.0938V6.71875C17.853 5.9421 17.2234 5.3125 16.4467 5.3125H15.0405V3.71875L15.0342 3.59414ZM14.103 5.3125V3.71875C14.103 3.58561 14.0105 3.47408 13.8862 3.44493L13.8217 3.4375H4.07172C3.93858 3.4375 3.82704 3.53001 3.79789 3.65426L3.79047 3.71875V13.4688C3.79047 13.6019 3.88298 13.7134 4.00723 13.7426L4.07172 13.75H5.66547V6.71875C5.66547 5.9421 6.29507 5.3125 7.07172 5.3125H14.103ZM7.07172 6.25H16.4467C16.7056 6.25 16.9155 6.45987 16.9155 6.71875V16.0938C16.9155 16.3526 16.7056 16.5625 16.4467 16.5625H7.07172C6.81283 16.5625 6.60297 16.3526 6.60297 16.0938V6.71875C6.60297 6.45987 6.81283 6.25 7.07172 6.25Z"
+                        fill="#121C2D"
+                      />
+                    </svg>
+                    Copy
+                  </button>
+                  <textarea id="curl-commands" rows="3" readonly="true" value=""> </textarea>
+                </div>
+              </form>
+
+              <div class="info">
+                <p>
+                  A handy tool for decoding your token is
+                  <a target="_blank" rel="noopener" href="https://jwt.io">https://jwt.io</a>. In this case, we are only
+                  creating a Video grant but the serverless function you just deployed can be edited to include grants
+                  for other Twilio products.
+                </p>
+              </div>
+            </li>
+
+            <li>
+              Copy your token server base URL and passcode into your .env file:
+              <form>
+                <div class="copy-textarea-wrapper">
+                  <button class="copy-button">
+                    <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M15.0342 3.59414C14.9718 2.97958 14.4527 2.5 13.8217 2.5H4.07172L3.94711 2.50629C3.33254 2.5687 2.85297 3.08772 2.85297 3.71875V13.4688L2.85926 13.5934C2.92167 14.2079 3.44069 14.6875 4.07172 14.6875H5.66547V16.0938C5.66547 16.8704 6.29507 17.5 7.07172 17.5H16.4467C17.2234 17.5 17.853 16.8704 17.853 16.0938V6.71875C17.853 5.9421 17.2234 5.3125 16.4467 5.3125H15.0405V3.71875L15.0342 3.59414ZM14.103 5.3125V3.71875C14.103 3.58561 14.0105 3.47408 13.8862 3.44493L13.8217 3.4375H4.07172C3.93858 3.4375 3.82704 3.53001 3.79789 3.65426L3.79047 3.71875V13.4688C3.79047 13.6019 3.88298 13.7134 4.00723 13.7426L4.07172 13.75H5.66547V6.71875C5.66547 5.9421 6.29507 5.3125 7.07172 5.3125H14.103ZM7.07172 6.25H16.4467C16.7056 6.25 16.9155 6.45987 16.9155 6.71875V16.0938C16.9155 16.3526 16.7056 16.5625 16.4467 16.5625H7.07172C6.81283 16.5625 6.60297 16.3526 6.60297 16.0938V6.71875C6.60297 6.45987 6.81283 6.25 7.07172 6.25Z"
+                        fill="#121C2D"
+                      />
+                    </svg>
+                    Copy
+                  </button>
+                  <textarea id="env-file" rows="2" readonly="true" value=""> </textarea>
+                </div>
+              </form>
+            </li>
+            <li>
+              Follow one of our
+              <a target="_blank" rel="noopener" href="https://www.twilio.com/docs/video/tutorials/code-exchange-token-backend">tutorials</a> to build your
+              front-end video application using one of our client-side SDKs (JavaScript, iOS, Android).
+            </li>
+          </ol>
+        </section>
+
+        <section>
+          <!-- APP_INFO_V2 -->
+        </section>
+      </div>
+    </main>
+    <footer>
+      <span class="statement">We can't wait to see what you build.</span>
+    </footer>
+    <script src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
