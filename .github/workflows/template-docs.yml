@@ -11,10 +11,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14
+      - name: Use Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
+      - name: install npm v8
+        run: |
+          npm install -g npm@8
       - name: generate doc
         run: |
           node ./_helpers/template-docs.js
