@@ -48,7 +48,7 @@ exports.handler = async function callOutboundJoin(context, event, callback) {
             attributes: {
               to: to,
               name: fromName,
-              from: process.env.TWILIO_NUMBER,
+              from: process.env.TWILIO_PHONE_NUMBER,
               targetWorker: to,
               autoAnswer: 'false',
               conferenceSid: taskSid,
