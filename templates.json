@@ -324,6 +324,11 @@
       "id": "verify-sna",
       "name": "Verify Silent Network Auth Sample Backend",
       "description": "Backend to communicate with Verify API. This backend starts and validates login requests against the Verify API by using the SNA channel functionality. The results will be presented on the UI dashboard."
+    },
+    {
+      "id": "flex-dialpad",
+      "name": "Native Flex Dialpad Add-on",
+      "description": "Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad "
     }
   ]
 }
