@@ -1,24 +1,57 @@
 import { Actions, Notifications, StateHelper } from '@twilio/flex-ui';
-import * as InternalCallActions from './internalCall';
+import {
+  acceptInternalTask,
+  rejectInternalTask,
+  isInternalCall,
+  toggleHoldInternalCall,
+} from './internalCall';
 import { kickExternalTransferParticipant } from './externalTransfer';
-import ConferenceService from '../services/ConferenceService';
+import ConferenceService from '../helpers/ConferenceService';
 import { CustomNotifications } from '../notifications';
 
 export default (manager) => {
-  Actions.addListener('beforeAcceptTask', async (payload, abortFunction) => {
-    await InternalCallActions.beforeAcceptTask(payload, abortFunction);
+  Actions.addListener('beforeAcceptTask', (payload, abortFunction) => {
+    const reservation = payload.task.sourceObject;
+
+    if (isInternalCall(payload)) {
+      abortFunction();
+
+      acceptInternalTask({ reservation, payload });
+    }
   });
 
-  Actions.addListener('beforeRejectTask', async (payload, abortFunction) => {
-    await InternalCallActions.beforeRejectTask(payload, abortFunction);
+  Actions.addListener('beforeRejectTask', (payload, abortFunction) => {
+    if (isInternalCall(payload)) {
+      abortFunction();
+
+      rejectInternalTask({ manager, payload });
+    }
   });
 
-  Actions.addListener('beforeHoldCall', async (payload) => {
-    await InternalCallActions.beforeHoldCall(payload);
+  const holdCall = (payload, hold) => {
+    return new Promise((resolve, reject) => {
+      const task = payload.task;
+
+      if (isInternalCall(payload)) {
+        toggleHoldInternalCall({
+          task,
+          manager,
+          hold,
+          resolve,
+          reject,
+        });
+      } else {
+        resolve();
+      }
+    });
+  };
+
+  Actions.addListener('beforeHoldCall', (payload) => {
+    return holdCall(payload, true);
   });
 
-  Actions.addListener('beforeUnholdCall', async (payload) => {
-    await InternalCallActions.beforeUnholdCall(payload);
+  Actions.addListener('beforeUnholdCall', (payload) => {
+    return holdCall(payload, false);
   });
 
   Actions.addListener('beforeHoldParticipant', (payload, abortFunction) => {
@@ -70,7 +103,7 @@ export default (manager) => {
     };
 
     // check if worker hanging up is last worker on the call
-    if (conference && conference.liveWorkerCount === 1) {
+    if (conference.liveWorkerCount === 1) {
       //if so, ensure no other participants are on hold as
       //no external parties will be able to remove them from being on hold.
       conference.participants.forEach(async (participant) => {

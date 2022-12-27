@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ConferenceService from '../../services/ConferenceService';
+import ConferenceService from '../../helpers/ConferenceService';
 
 class ConferenceMonitor extends React.Component {
   state = {
@@ -23,7 +23,7 @@ class ConferenceMonitor extends React.Component {
       participants = [],
     } = conference;
     const liveParticipants = participants.filter((p) => p.status === 'joined');
-    const myActiveParticipant = liveParticipants.find((p) => p.isCurrentWorker);
+    const myActiveParticipant = liveParticipants.find((p) => p.isMyself);
 
     if (liveParticipantCount > 2 && this.state.liveParticipantCount <= 2) {
       if (this.shouldUpdateParticipants(participants, liveWorkerCount)) {

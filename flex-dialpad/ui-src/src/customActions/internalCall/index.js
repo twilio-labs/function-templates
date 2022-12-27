@@ -1,38 +1,60 @@
-import ConferenceService from '../../services/ConferenceService';
-import InternalCallService from '../../services/InternalCallService';
+import { request } from '../../helpers/request';
 
 export const isInternalCall = (payload) =>
   payload.task.attributes.client_call === true;
 
-export const beforeAcceptTask = async (payload, abortFunction) => {
-  if (!isInternalCall(payload)) {
-    return false;
-  }
+export const acceptInternalTask = async ({ reservation, payload }) => {
+  const { REACT_APP_SERVICE_BASE_URL } = process.env;
 
-  abortFunction();
-  await InternalCallService.acceptInternalTask(
-    payload.task.sourceObject,
-    payload.task.taskSid
-  );
-  return true;
+  await payload.task.setAttributes({
+    ...payload.task.attributes,
+    outbound_to: payload.task.attributes.name,
+  });
+
+  if (typeof reservation.task.attributes.conference !== 'undefined') {
+    reservation.call(
+      reservation.task.attributes.from,
+      `${REACT_APP_SERVICE_BASE_URL}/internal-call/agent-join-conference?conferenceName=${reservation.task.attributes.conference.friendlyName}`,
+      {
+        accept: true,
+      }
+    );
+  } else {
+    reservation.call(
+      reservation.task.attributes.from,
+      `${REACT_APP_SERVICE_BASE_URL}/internal-call/agent-outbound-join?taskSid=${payload.task.taskSid}`,
+      {
+        accept: true,
+      }
+    );
+  }
 };
 
-export const beforeRejectTask = async (payload, abortFunction) => {
-  if (!isInternalCall(payload)) {
-    return false;
-  }
+export const rejectInternalTask = async ({ manager, payload }) => {
+  await payload.task._reservation.accept();
+  await payload.task.wrapUp();
+  await payload.task.complete();
 
-  abortFunction();
-  await InternalCallService.rejectInternalTask(payload.task);
-  return true;
+  const taskSid = payload.task.attributes.conferenceSid;
+
+  request('internal-call/cleanup-rejected-task', manager, {
+    taskSid,
+  })
+    .then((response) => {
+      console.log('Outbound call has been placed into wrapping');
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
-export const beforeHoldCall = async (payload, abortFunction) => {
-  if (!isInternalCall(payload)) {
-    return false;
-  }
-
-  const { task } = payload;
+export const toggleHoldInternalCall = ({
+  task,
+  manager,
+  hold,
+  resolve,
+  reject,
+}) => {
   const conference = task.attributes.conference
     ? task.attributes.conference.sid
     : task.attributes.conferenceSid;
@@ -41,26 +63,16 @@ export const beforeHoldCall = async (payload, abortFunction) => {
     ? task.attributes.conference.participants.worker
     : task.attributes.worker_call_sid;
 
-  await ConferenceService.holdParticipant(conference, participant);
-  abortFunction();
-  return true;
-};
-
-export const beforeUnholdCall = async (payload, abortFunction) => {
-  if (!isInternalCall(payload)) {
-    return false;
-  }
-
-  const { task } = payload;
-  const conference = task.attributes.conference
-    ? task.attributes.conference.sid
-    : task.attributes.conferenceSid;
-
-  const participant = task.attributes.conference.participants
-    ? task.attributes.conference.participants.worker
-    : task.attributes.worker_call_sid;
-
-  await ConferenceService.unholdParticipant(conference, participant);
-  abortFunction();
-  return true;
+  return request('internal-call/hold-call', manager, {
+    conference,
+    participant,
+    hold,
+  })
+    .then((response) => {
+      resolve(response);
+    })
+    .catch((error) => {
+      console.log(error);
+      reject(error);
+    });
 };

@@ -1,69 +1,53 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { Actions, withTheme, Manager, withTaskContext } from '@twilio/flex-ui';
-import ConferenceService from '../../services/ConferenceService';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import TextField from '@material-ui/core/TextField';
+import ConferenceService from '../../helpers/ConferenceService';
 
-import { useUID } from '@twilio-paste/core/uid-library';
-import { Box } from '@twilio-paste/core/box';
-import { Button } from '@twilio-paste/core/button';
-import { Input } from '@twilio-paste/core/input';
-import { Label } from '@twilio-paste/core/label';
-import {
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalFooterActions,
-  ModalHeader,
-  ModalHeading,
-} from '@twilio-paste/core/modal';
-
-const ConferenceDialog = (props) => {
-  const [conferenceTo, setConferenceTo] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-
-  const modalHeadingID = useUID();
-  const inputRef = React.createRef();
-  const inputID = useUID();
-
-  useEffect(() => {
-    setIsOpen(props.isOpen);
-  }, [props.isOpen]);
-
-  const handleClose = (e) => {
-    closeDialog();
-    if (e) e.preventDefault();
+class ConferenceDialog extends React.Component {
+  state = {
+    conferenceTo: '',
   };
 
-  const closeDialog = () => {
+  handleClose = () => {
+    this.closeDialog();
+  };
+
+  closeDialog = () => {
     Actions.invokeAction('SetComponentState', {
       name: 'ConferenceDialog',
       state: { isOpen: false },
     });
   };
 
-  const handleKeyPress = (e) => {
+  handleKeyPress = (e) => {
     const key = e.key;
 
     if (key === 'Enter') {
-      addConferenceParticipant();
-      closeDialog();
-      e.preventDefault();
+      this.addConferenceParticipant();
+      this.closeDialog();
     }
   };
 
-  const handleChange = (e) => {
+  handleChange = (e) => {
     const value = e.target.value;
-    setConferenceTo(value);
+    this.setState({ conferenceTo: value });
   };
 
-  const handleDialButton = (e) => {
-    addConferenceParticipant();
-    closeDialog();
-    e.preventDefault();
+  handleDialButton = () => {
+    this.addConferenceParticipant();
+    this.closeDialog();
   };
 
-  const addConferenceParticipant = async () => {
-    const { task } = props;
+  addConferenceParticipant = async () => {
+    const to = this.state.conferenceTo;
+
+    const { task } = this.props;
     const conference = task && (task.conference || {});
     const { conferenceSid } = conference;
 
@@ -72,8 +56,8 @@ const ConferenceDialog = (props) => {
       : conferenceSid;
 
     let from;
-    if (props.phoneNumber) {
-      from = props.phoneNumber;
+    if (this.props.phoneNumber) {
+      from = this.props.phoneNumber;
     } else {
       from =
         Manager.getInstance().serviceConfiguration.outbound_call_flows.default
@@ -81,13 +65,13 @@ const ConferenceDialog = (props) => {
     }
 
     // Adding entered number to the conference
-    console.log(`Adding ${conferenceTo} to conference`);
+    console.log(`Adding ${to} to conference`);
     let participantCallSid;
     try {
       participantCallSid = await ConferenceService.addParticipant(
         mainConferenceSid,
         from,
-        conferenceTo
+        to
       );
       ConferenceService.addConnectingParticipant(
         mainConferenceSid,
@@ -97,65 +81,51 @@ const ConferenceDialog = (props) => {
     } catch (error) {
       console.error('Error adding conference participant:', error);
     }
-
-    setConferenceTo('');
+    this.setState({ conferenceTo: '' });
   };
 
-  return (
-    <Modal
-      ariaLabelledby={modalHeadingID}
-      isOpen={isOpen}
-      onDismiss={handleClose}
-      // set initial focus here
-      initialFocusRef={inputRef}
-      size="default"
-    >
-      <ModalHeader>
-        <ModalHeading as="h3" id={modalHeadingID}>
-          {
-            Manager.getInstance().strings
-              .DIALPADExternalTransferPhoneNumberPopupHeader
-          }
-        </ModalHeading>
-      </ModalHeader>
-      <ModalBody>
-        <Box as="form">
-          <Label htmlFor={inputID}>
+  render() {
+    return (
+      <Dialog open={this.props.isOpen || false} onClose={this.handleClose}>
+        <DialogContent>
+          <DialogContentText>
             {
+              Manager.getInstance().strings
+                .DIALPADExternalTransferPhoneNumberPopupHeader
+            }
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="conferenceNumber"
+            label={
               Manager.getInstance().strings
                 .DIALPADExternalTransferPhoneNumberPopupTitle
             }
-          </Label>
-          <Input
-            id={inputID}
-            value={conferenceTo}
-            // assign the target ref here
-            ref={inputRef}
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-            type="text"
+            fullWidth
+            value={this.state.conferenceTo}
+            onKeyPress={this.handleKeyPress}
+            onChange={this.handleChange}
           />
-        </Box>
-      </ModalBody>
-      <ModalFooter>
-        <ModalFooterActions>
-          <Button variant="secondary" onClick={handleClose}>
-            {
-              Manager.getInstance().strings
-                .DIALPADExternalTransferPhoneNumberPopupCancel
-            }
-          </Button>
-          <Button variant="primary" onClick={handleDialButton}>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.handleDialButton} color="primary">
             {
               Manager.getInstance().strings
                 .DIALPADExternalTransferPhoneNumberPopupDial
             }
           </Button>
-        </ModalFooterActions>
-      </ModalFooter>
-    </Modal>
-  );
-};
+          <Button onClick={this.closeDialog} color="secondary">
+            {
+              Manager.getInstance().strings
+                .DIALPADExternalTransferPhoneNumberPopupCancel
+            }
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+}
 
 const mapStateToProps = (state) => {
   const componentViewStates = state.flex.view.componentViewStates;

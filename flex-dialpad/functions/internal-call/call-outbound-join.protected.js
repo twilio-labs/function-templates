@@ -1,11 +1,53 @@
-const TaskOperations = require(Runtime.getFunctions()[
-  'common/twilio-wrappers/taskrouter'
-].path);
+const fetchTask = (client, taskSid) =>
+  client.taskrouter
+    .workspaces(process.env.TWILIO_WORKSPACE_SID)
+    .tasks(taskSid)
+    .fetch();
 
-exports.handler = async function callOutboundJoin(context, event, callback) {
+const updateTaskAttributes = (client, taskSid, attributes) =>
+  client.taskrouter
+    .workspaces(process.env.TWILIO_WORKSPACE_SID)
+    .tasks(taskSid)
+    .update({
+      attributes: JSON.stringify(attributes),
+    });
+
+const addParticipantToConference = (
+  client,
+  conferenceSid,
+  taskSid,
+  to,
+  fromName
+) => {
+  if (to.substring(0, 6) === 'client') {
+    return client.taskrouter
+      .workspaces(process.env.TWILIO_WORKSPACE_SID)
+      .tasks.create({
+        attributes: JSON.stringify({
+          to: to,
+          name: fromName,
+          from: process.env.TWILIO_PHONE_NUMBER,
+          targetWorker: to,
+          autoAnswer: 'false',
+          conferenceSid: taskSid,
+          conference: {
+            sid: conferenceSid,
+            friendlyName: taskSid,
+          },
+          internal: 'true',
+          client_call: true,
+        }),
+        workflowSid: process.env.TWILIO_WORKFLOW_SID,
+        taskChannel: 'voice',
+      });
+  }
+};
+
+exports.handler = async (context, event, callback) => {
   const client = context.getTwilioClient();
   const { FriendlyName: taskSid, ConferenceSid } = event;
-  const scriptName = arguments.callee.name;
+
+  let attributes = {};
 
   if (event.StatusCallbackEvent === 'participant-join') {
     console.log(
@@ -17,16 +59,10 @@ exports.handler = async function callOutboundJoin(context, event, callback) {
     if (call.to.includes('client')) {
       console.log(`agent ${call.to} joined the conference`);
 
-      const fetchTaskResult = await TaskOperations.fetchTask({
-        context,
-        scriptName,
-        taskSid,
-        attempts: 0,
-      });
+      const task = await fetchTask(client, taskSid);
 
-      const { task } = fetchTaskResult;
-
-      let newAttributes = {
+      attributes = {
+        ...JSON.parse(task.attributes),
         conference: {
           sid: event.ConferenceSid,
           participants: {
@@ -36,104 +72,56 @@ exports.handler = async function callOutboundJoin(context, event, callback) {
       };
 
       if (
-        task.attributes.worker_call_sid ===
-        newAttributes.conference.participants.worker
+        attributes.worker_call_sid === attributes.conference.participants.worker
       ) {
-        const { to, fromName } = task.attributes;
+        const { to, fromName } = attributes;
 
-        if (to.substring(0, 6) === 'client') {
-          const createTaskResult = await TaskOperations.createTask({
-            context,
-            scriptName,
-            attributes: {
-              to: to,
-              name: fromName,
-              from: process.env.TWILIO_PHONE_NUMBER,
-              targetWorker: to,
-              autoAnswer: 'false',
-              conferenceSid: taskSid,
-              conference: {
-                sid: ConferenceSid,
-                friendlyName: taskSid,
-              },
-              internal: 'true',
-              client_call: true,
-            },
-            workflowSid: process.env.TWILIO_WORKFLOW_SID,
-            taskChannel: 'voice',
-            attempts: 0,
-          });
-
-          newAttributes.conference.participants.taskSid =
-            createTaskResult.task.sid;
-        }
-
-        await TaskOperations.updateTaskAttributes({
-          context,
-          scriptName,
+        const result = await addParticipantToConference(
+          client,
+          ConferenceSid,
           taskSid,
-          attributesUpdate: JSON.stringify(newAttributes),
-          attempts: 0,
-        });
+          to,
+          fromName
+        );
+
+        attributes.conference.participants.taskSid = result.sid;
+
+        await updateTaskAttributes(client, taskSid, attributes);
       }
     }
   }
 
   if (event.StatusCallbackEvent === 'conference-end') {
     try {
-      const fetchTaskResult = await TaskOperations.fetchTask({
-        context,
-        scriptName,
-        taskSid,
-        attempts: 0,
-      });
+      const task = await fetchTask(client, taskSid);
 
-      const { task } = fetchTaskResult;
+      const attributes = JSON.parse(task.attributes);
+
+      const targetTaskSid = attributes.conference.participants.taskSid;
 
       if (['assigned', 'pending', 'reserved'].includes(task.assignmentStatus)) {
-        await TaskOperations.updateTask({
-          context,
-          scriptName,
-          taskSid,
-          updateParams: {
+        await client.taskrouter
+          .workspaces(context.TWILIO_WORKSPACE_SID)
+          .tasks(taskSid)
+          .update({
             assignmentStatus:
               task.assignmentStatus === 'assigned' ? 'wrapping' : 'canceled',
             reason: 'conference is complete',
-          },
-          attempts: 0,
-        });
+          });
       }
 
-      const targetTaskSid = task.attributes.conference?.participants?.taskSid;
-
       if (targetTaskSid) {
-        const fetchTargetTaskResult = await TaskOperations.fetchTask({
-          context,
-          scriptName,
-          taskSid: targetTaskSid,
-          attempts: 0,
-        });
+        const { assignmentStatus } = await fetchTask(client, targetTaskSid);
 
-        const { task: targetTask } = fetchTargetTaskResult;
-
-        if (
-          ['assigned', 'pending', 'reserved'].includes(
-            targetTask.assignmentStatus
-          )
-        ) {
-          await TaskOperations.updateTask({
-            context,
-            scriptName,
-            taskSid: targetTaskSid,
-            updateParams: {
+        if (['assigned', 'pending', 'reserved'].includes(assignmentStatus)) {
+          await client.taskrouter
+            .workspaces(context.TWILIO_WORKSPACE_SID)
+            .tasks(targetTaskSid)
+            .update({
               assignmentStatus:
-                targetTask.assignmentStatus === 'assigned'
-                  ? 'wrapping'
-                  : 'canceled',
+                assignmentStatus === 'assigned' ? 'wrapping' : 'canceled',
               reason: 'conference is complete',
-            },
-            attempts: 0,
-          });
+            });
         }
       }
     } catch (err) {

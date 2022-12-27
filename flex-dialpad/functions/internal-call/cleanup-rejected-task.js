@@ -1,68 +1,24 @@
 const TokenValidator = require('twilio-flex-token-validator').functionValidator;
-const ParameterValidator = require(Runtime.getFunctions()[
-  'common/helpers/parameter-validator'
-].path);
-const ConferenceOperations = require(Runtime.getFunctions()[
-  'common/twilio-wrappers/conference-participant'
-].path);
 
-exports.handler = TokenValidator(async function cleanupRejectedTask(
-  context,
-  event,
-  callback
-) {
-  const scriptName = arguments.callee.name;
-  const response = new Twilio.Response();
-  const requiredParameters = [
-    { key: 'taskSid', purpose: 'unique ID of task to clean up' },
-  ];
-  const parameterError = ParameterValidator.validate(
-    context.PATH,
-    event,
-    requiredParameters
-  );
+let path = Runtime.getFunctions()['dialpad-utils'].path;
+let assets = require(path);
 
-  response.appendHeader('Access-Control-Allow-Origin', '*');
-  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS POST');
-  response.appendHeader('Content-Type', 'application/json');
-  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+exports.handler = TokenValidator(async (context, event, callback) => {
+  const taskSid = event.taskSid;
 
-  if (parameterError) {
-    console.error(`${scriptName} invalid parameters passed`);
-    response.setStatusCode(400);
-    response.setBody({ data: null, message: parameterError });
-    callback(null, response);
-    return;
-  }
+  let client = context.getTwilioClient();
 
-  const { taskSid } = event;
-
-  const conferencesResponse = await ConferenceOperations.fetchByTask({
-    context,
-    scriptName,
-    taskSid,
+  const conferences = await client.conferences.list({
+    friendlyName: taskSid,
     status: 'in-progress',
     limit: 20,
-    attempts: 0,
   });
 
-  if (!conferencesResponse.success) {
-    callback(null, assets.response('json', {}));
-    return;
-  }
-
   await Promise.all(
-    conferencesResponse.conferences.map((conference) => {
-      return ConferenceOperations.updateConference({
-        context,
-        scriptName,
-        conference: conference.sid,
-        updateParams: { status: 'completed' },
-        attempts: 0,
-      });
+    conferences.map((conference) => {
+      return client.conferences(conference.sid).update({ status: 'completed' });
     })
   );
 
-  response.setBody({});
-  callback(null, response);
+  callback(null, assets.response('json', {}));
 });

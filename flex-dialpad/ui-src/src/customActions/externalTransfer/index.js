@@ -1,4 +1,4 @@
-import ConferenceService from '../../services/ConferenceService';
+import ConferenceService from '../../helpers/ConferenceService';
 
 export const kickExternalTransferParticipant = (payload) => {
   const { task, targetSid } = payload;

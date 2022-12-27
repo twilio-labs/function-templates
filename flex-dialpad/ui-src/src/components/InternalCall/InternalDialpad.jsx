@@ -1,44 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-import { IconButton } from '@twilio/flex-ui';
-import { Box } from '@twilio-paste/core/box';
-import { Combobox } from '@twilio-paste/core/combobox';
-import { Flex } from '@twilio-paste/core/flex';
-import { Stack } from '@twilio-paste/core/stack';
-import { Text } from '@twilio-paste/core/text';
-import { makeInternalCall } from '../../helpers/internalCall';
+import sharedTheme from '../../styling/theme.js';
+import FormControl from '@material-ui/core/FormControl';
+import Select from 'react-select';
+import Button from '@material-ui/core/Button';
+import { Icon } from '@twilio/flex-ui';
+import { withStyles } from '@material-ui/core/styles';
+import { makeInternalCall } from './index';
 import { debounce } from 'lodash';
 
-const InternalDialpad = (props) => {
-  const [inputText, setInputText] = useState('');
-  const [selectedWorker, setSelectedWorker] = useState(null);
-  const [workerList, setWorkerList] = useState([]);
+const styles = (theme) => sharedTheme(theme);
 
-  useEffect(() => {
-    setWorkers();
-  }, []);
+class InternalDialpad extends React.Component {
+  state = {
+    workerList: [],
+    selectedWorker: null,
+    inputText: '',
+  };
 
-  useEffect(() => {
-    handleWorkersListUpdate(inputText);
+  async componentDidMount() {
+    this.setWorkers();
+  }
 
-    if (selectedWorker && inputText !== selectedWorker.attributes.full_name) {
-      setSelectedWorker(null);
-    }
-  }, [inputText]);
-
-  const setWorkers = (query = '') => {
+  setWorkers = (query = '') => {
     const { contact_uri: worker_contact_uri } =
-      props.manager.workerClient.attributes;
+      this.props.manager.workerClient.attributes;
 
-    props.manager.insightsClient.instantQuery('tr-worker').then((q) => {
+    this.props.manager.insightsClient.instantQuery('tr-worker').then((q) => {
       q.on('searchResult', (items) => {
-        const initialList = Object.keys(items).map(
-          (workerSid) => items[workerSid]
-        );
-        const availableList = initialList.filter(
-          (worker) => worker.activity_name !== 'Offline'
-        );
-        setWorkerList(availableList);
+        console.log(items);
+        this.setState({
+          workerList: Object.keys(items).map((workerSid) => items[workerSid]),
+        });
       });
 
       q.search(
@@ -49,79 +42,95 @@ const InternalDialpad = (props) => {
     });
   };
 
-  const selectWorker = (event) => {
-    setSelectedWorker(event);
+  handleChange = (event) => {
+    console.log('hey');
+    this.setState({ selectedWorker: event });
   };
 
-  const handleInput = (inputValue) => {
-    setInputText(inputValue);
+  handleInputChange = (event) => {
+    this.setState({ inputText: event });
+    this.handleWorkersListUpdate(event);
+
+    if (event !== '') {
+      this.setState({ selectedWorker: null });
+    }
   };
 
-  const handleWorkersListUpdate = debounce(
+  handleWorkersListUpdate = debounce(
     (e) => {
       if (e) {
-        setWorkers(`data.attributes.full_name CONTAINS "${e}"`);
+        this.setWorkers(`data.attributes.full_name CONTAINS "${e}"`);
       }
     },
     250,
     { maxWait: 1000 }
   );
 
-  const handleOpenChange = (e) => {
-    if (e.isOpen === true && inputText === '' && workerList.length === 0) {
-      setWorkers();
+  handleOnFocus = () => {
+    if (this.state.inputText === '' && this.state.workerList.length === 0) {
+      this.setWorkers();
     }
   };
 
-  const makeCall = () => {
-    if (selectedWorker != null) {
-      const { manager } = props;
+  makeCall = () => {
+    if (this.state.selectedWorker != null) {
+      const { manager } = this.props;
 
       makeInternalCall({
         manager,
-        selectedWorker: selectedWorker,
+        selectedWorker: this.state.selectedWorker.value,
+        workerList: this.state.workerList,
       });
     }
   };
 
-  return (
-    <Box
-      borderTopWidth="borderWidth10"
-      borderTopColor="colorBorder"
-      borderTopStyle="solid"
-      marginTop="space80"
-      paddingTop="space80"
-      paddingBottom="230px"
-      width="100%"
-    >
-      <Stack orientation="vertical" spacing="space60">
-        <Text as="span" fontSize="fontSize60" fontWeight="fontWeightBold">
-          Call Agent
-        </Text>
-        <Combobox
-          autocomplete
-          items={workerList}
-          inputValue={inputText}
-          itemToString={(item) => item.attributes.full_name}
-          labelText="Select an agent"
-          onInputValueChange={({ inputValue }) => handleInput(inputValue)}
-          onIsOpenChange={handleOpenChange}
-          onSelectedItemChange={({ selectedItem }) =>
-            selectWorker(selectedItem)
-          }
-          optionTemplate={(item) => <>{item.attributes.full_name}</>}
-        />
-        <Flex hAlignContent="center">
-          <IconButton
-            variant="primary"
-            icon="Call"
-            disabled={!selectedWorker}
-            onClick={makeCall}
-          />
-        </Flex>
-      </Stack>
-    </Box>
-  );
-};
+  render() {
+    const { classes } = this.props;
 
-export default InternalDialpad;
+    const workers = this.state.workerList
+      .map((worker) => {
+        const { activity_name } = worker;
+        const { contact_uri, full_name } = worker.attributes;
+
+        return activity_name !== 'Offline'
+          ? { label: full_name, value: contact_uri }
+          : null;
+      })
+      .filter((elem) => elem);
+
+    return (
+      <div className={classes.boxDialpad}>
+        <div className={classes.titleAgentDialpad}>Call Agent</div>
+        <div className={classes.subtitleDialpad}>Select agent</div>
+        <FormControl className={classes.formControl}>
+          <Select
+            className="basic-single"
+            classNamePrefix="select"
+            isSearchable={true}
+            name="workers"
+            maxMenuHeight={150}
+            onChange={this.handleChange}
+            onInputChange={this.handleInputChange}
+            onMenuOpen={this.handleOnFocus}
+            options={workers}
+            inputValue={this.state.inputText}
+            value={this.state.selectedWorker || null}
+          />
+          <div className={classes.buttonAgentDialpad}>
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={!this.state.selectedWorker}
+              onClick={this.makeCall}
+              className={classes.dialPadBtn}
+            >
+              <Icon icon="Call" />
+            </Button>
+          </div>
+        </FormControl>
+      </div>
+    );
+  }
+}
+
+export default withStyles(styles)(InternalDialpad);

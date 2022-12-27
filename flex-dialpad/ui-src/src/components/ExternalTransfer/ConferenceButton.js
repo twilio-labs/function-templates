@@ -24,7 +24,7 @@ class ConferenceButton extends React.PureComponent {
           icon="Add"
           disabled={!isLiveCall}
           onClick={this.handleClick}
-          variant="secondary"
+          themeOverride={this.props.theme.CallCanvas.Button}
           title={Manager.getInstance().strings.DIALPADExternalTransferHoverOver}
         />
       </React.Fragment>

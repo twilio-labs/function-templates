@@ -4,8 +4,11 @@ import styled from '@emotion/styled';
 import { withTheme, templates, Template } from '@twilio/flex-ui';
 
 const Status = styled('div')`
-  font-size: 0.75rem;
-  line-height: 1rem;
+  font-size: 12px;
+`;
+
+const StatusListItem = styled('div')`
+  font-size: 10px;
 `;
 
 class ParticipantStatus extends React.PureComponent {
@@ -26,7 +29,11 @@ class ParticipantStatus extends React.PureComponent {
       statusTemplate = templates.CallParticipantStatusKickConfirmation;
     }
 
-    return (
+    return this.props.listMode ? (
+      <StatusListItem className="ParticipantCanvas-Status">
+        <Template source={statusTemplate} />
+      </StatusListItem>
+    ) : (
       <Status className="ParticipantCanvas-Status">
         <Template source={statusTemplate} />
       </Status>

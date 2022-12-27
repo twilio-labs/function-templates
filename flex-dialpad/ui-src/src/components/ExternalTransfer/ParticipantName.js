@@ -1,24 +1,22 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import styled from '@emotion/styled';
-import { withTheme } from '@twilio/flex-ui';
-import ConferenceService from '../../services/ConferenceService';
+import { Manager, withTheme } from '@twilio/flex-ui';
+import { request } from '../../helpers/request';
 
 const Name = styled('div')`
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 1.25rem;
-  margin-top: 0.75rem;
-  margin-bottom: 0.25rem;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
 const NameListItem = styled('div')`
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 1.25rem;
+  font-size: 12px;
+  font-weight: bold;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -34,29 +32,23 @@ class ParticipantName extends React.Component {
 
     if (participant.participantType === 'customer') {
       this.setState({
-        name:
-          task.attributes.outbound_to ||
-          task.attributes.name ||
-          task.attributes.from,
+        name: task.attributes.outbound_to || task.attributes.name,
       });
       return;
     }
 
     if (participant.participantType === 'unknown') {
-      ConferenceService.getCallProperties(participant.callSid)
-        .then((response) => {
-          if (response) {
-            const name = (response && response.to) || 'Unknown';
-            this.setState({ name });
-          }
-        })
-        .catch((_error) => {
-          const name = 'Unknown';
+      request('external-transfer/get-call-properties', Manager.getInstance(), {
+        callSid: participant.callSid,
+      }).then((response) => {
+        if (response) {
+          const name = (response && response.to) || 'unknown';
           this.setState({ name });
-        });
+        }
+      });
     } else {
       this.setState({
-        name: participant.worker ? participant.worker.fullName : 'Unknown',
+        name: participant.worker ? participant.worker.fullName : 'unknown',
       });
     }
   }

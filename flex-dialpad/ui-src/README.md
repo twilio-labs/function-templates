@@ -1,9 +1,13 @@
-# Native Flex Dialpad Add-on 
+# Native Flex Dialpad Add-on
+
+# Notice
+This plugin is no longer maintained as of September 27, 2022. Work to support this feature in Flex v2 has been transitioned to the [Twilio Professional Services Flex Project Template](https://github.com/twilio-professional-services/twilio-proserv-flex-project-template) in the form of the [conference feature](https://github.com/twilio-professional-services/twilio-proserv-flex-project-template/tree/main/plugin-flex-ts-template-v2/src/feature-library/conference) and the [internal call feature](https://github.com/twilio-professional-services/twilio-proserv-flex-project-template/tree/main/plugin-flex-ts-template-v2/src/feature-library/internal-call).
+
 # Notes
 This plugin was upgraded to the latest version of the Plugin Builder (v4), now part of the Twilio CLI.
 See: https://www.twilio.com/docs/flex/developer/plugins/migrate
 
-**For the Flex UI 1.x version of this plugin, see [the main branch](https://github.com/twilio-professional-services/flex-dialpad-addon-plugin/tree/main).**
+**For the Flex UI 2.x version of this plugin, see [the flex-ui-v2 branch](https://github.com/twilio-professional-services/flex-dialpad-addon-plugin/tree/flex-ui-v2).**
 
 The native Flex Dialpad does not support agent-to-agent direct calls or external transfers yet. This plugin is meant to be an add-on to the native Flex Diapad, adding both agent-to-agent direct calls and external transfers.
 
@@ -90,29 +94,6 @@ Before using this plugin you must first create a dedicated TaskRouter workflow o
 *1==1*
 
 <img width="700px" src="screenshots/outbound-filter.png"/>
-
-## Outbound Call Configuration
-
-When conferencing in an external party, the default outbound call settings are used for caller ID. If this has not yet been configured, you will encounter errors. This can be updated using the Flex Configuration API:
-
-```
-POST https://flex-api.twilio.com/v1/Configuration
-Authorization: Basic {base64-encoded Twilio Account SID : Auth Token}
-Content-Type: application/json
-
-{
-  "account_sid": "Enter your Twilio Account SID here",
-  "outbound_call_flows": {
-    "default": {
-      "workflow_sid": "WWxxxc",
-      "enabled": true,
-      "queue_sid": "WQxxx",
-      "caller_id": "+1xxx",
-      "location": "US"
-    }
-  },
-}
-```
 
 ## Twilio Serverless 
 

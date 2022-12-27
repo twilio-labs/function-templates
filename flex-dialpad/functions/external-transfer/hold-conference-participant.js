@@ -4,25 +4,27 @@ let path = Runtime.getFunctions()['dialpad-utils'].path;
 let assets = require(path);
 
 exports.handler = TokenValidator(async (context, event, callback) => {
-  const { taskSid, to, from } = event;
+  const { conference, participant, hold } = event;
 
-  console.log(`Adding ${to} to named conference ${taskSid}`);
+  console.log(
+    `${hold ? 'Holding' : 'Unholding'} participant ${participant} ` +
+      `in conference ${conference}`
+  );
 
   const client = context.getTwilioClient();
 
   const participantsResponse = await client
-    .conferences(taskSid)
-    .participants.create({
-      to,
-      from,
-      earlyMedia: true,
-      endConferenceOnExit: false,
+    .conferences(conference)
+    .participants(participant)
+    .update({
+      hold,
     });
 
-  console.log('Participant response properties:');
+  console.log(`Participant ${participant} updated in conference \
+  ${conference}. Participant response properties:`);
 
   Object.keys(participantsResponse).forEach((key) => {
-    console.log(`${key}: ${participantsResponse[key]}`);
+    console.log(`  ${key}:`, participantsResponse[key]);
   });
 
   callback(null, assets.response('json', participantsResponse));
