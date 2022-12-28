@@ -7,4 +7,4 @@ package-lock.json
 *.html
 *.yml
 /_helpers/meta-template/_package.json
-flex-dialpad-addon-plugin.private.js
+flex-dialpad-addon.private.js
