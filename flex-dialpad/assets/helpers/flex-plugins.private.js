@@ -1,5 +1,6 @@
 const axios = require('axios');
 const helpers = require('@twilio-labs/runtime-helpers');
+const querystring = require('querystring');
 const { TwilioServerlessApiClient } = require('@twilio-labs/serverless-api');
 const {
   createService,
@@ -18,6 +19,9 @@ const {
   getOrCreateAssetResources,
   uploadAsset,
 } = require('@twilio-labs/serverless-api/dist/api/assets');
+const {
+  removeEnvironmentVariables,
+} = require('@twilio-labs/serverless-api/dist/api/variables');
 
 const Status = {
   NOT_STARTED: 'not-started',
@@ -102,7 +106,6 @@ async function getFlexPluginServiceSid(serverlessApiClient, flexApiClient) {
 }
 
 async function getEnvironment(serverlessApiClient, serviceSid, pluginName) {
-  console.log('List environments');
   const environments = await listEnvironments(serviceSid, serverlessApiClient);
   const pluginEnvironment = environments.find((environment) => {
     return environment.unique_name === pluginName;
@@ -295,11 +298,11 @@ exports.getStatus = async function (context, pluginName, version) {
   return Status.BUILDING;
 };
 
-async function upsertFlexPlugin(pluginName, flexApiClient) {
+async function upsertFlexPlugin(pluginName, description, flexApiClient) {
   const payload = {
     UniqueName: pluginName,
     FriendlyName: pluginName,
-    Description: 'Quick deployed plugin',
+    Description: description,
   };
 
   try {
@@ -309,20 +312,26 @@ async function upsertFlexPlugin(pluginName, flexApiClient) {
       Description: payload.Description,
     });
   } catch (err) {
-    console.log('caught!');
-    console.log(err);
-    if (err.status === 404) {
-      console.log('HEEEEELP');
+    if (err.response.status === 404) {
       console.log(payload);
-      return flexApiClient
-        .post('PluginService/Plugins', payload)
-        .catch((err) => {
-          console.error(err);
-          throw err;
-        });
+      return flexApiClient.post(
+        'PluginService/Plugins',
+        querystring.stringify(payload)
+      );
     }
     throw err;
   }
+}
+
+async function getLatestFlexPluginVersion(pluginName, flexApiClient) {
+  const resp = await flexApiClient.get(
+    `PluginService/Plugins/${pluginName}/Versions`
+  );
+  if (resp.data && resp.data.plugin_versions) {
+    return resp.data.plugin_versions[0];
+  }
+
+  return undefined;
 }
 
 async function registerFlexPluginVersion(
@@ -331,19 +340,38 @@ async function registerFlexPluginVersion(
   pluginUrl,
   flexApiClient
 ) {
-  const payload = {
-    Version: version,
-    PluginUrl: pluginUrl,
-    Private: true,
-    Changelog: 'Automatic deployment from Quick Deploy',
-  };
-  return flexApiClient.post(
-    'PluginService/Plugins/' + pluginName + '/Versions',
-    payload
-  );
+  if (!(await getLatestFlexPluginVersion(pluginName, flexApiClient))) {
+    const payload = {
+      Version: version,
+      PluginUrl: pluginUrl,
+      Private: true,
+      Changelog: 'Automatic deployment from Quick Deploy',
+    };
+    return flexApiClient.post(
+      'PluginService/Plugins/' + pluginName + '/Versions',
+      querystring.stringify(payload)
+    );
+  }
 }
 
-exports.deployPlugin = async function (context, pluginName, version) {
+async function createFlexPluginConfiguration(
+  pluginName,
+  version,
+  flexApiClient
+) {
+  // TODO
+}
+
+async function releaseConfiguration() {
+  // TODO
+}
+
+exports.deployPlugin = async function (
+  context,
+  pluginName,
+  version,
+  description
+) {
   const serverlessClient = new TwilioServerlessApiClient({
     username: context.ACCOUNT_SID,
     password: context.AUTH_TOKEN,
@@ -363,24 +391,18 @@ exports.deployPlugin = async function (context, pluginName, version) {
   const bundleUri = `${pluginBaseUrl}/bundle.js`;
   const pluginUrl = `https://${domain_name}${bundleUri}`;
 
-  console.log('activating build....');
   await activateBuild(
     context.IN_PROGRESS_BUILD_SID,
     environmentSid,
     serviceSid,
     serverlessClient
   );
-  console.log('registering config sid...');
   await registerFlexConfigurationServiceSid(
     context,
     serviceSid,
     flexApiClientJson
   );
-
-  console.log('creating flex plugin...');
-  await upsertFlexPlugin(pluginName, flexApiClient);
-
-  console.log('registering flex plugin version...');
+  await upsertFlexPlugin(pluginName, description, flexApiClient);
   await registerFlexPluginVersion(
     pluginName,
     version,

@@ -11,6 +11,6 @@
     "twilio-flex-token-validator": "^1.5.1"
   },
   "scripts": {
-    "build": "cd ui-src && twilio flex:plugins:build && cp build/** ../assets"
+    "build": "cd ui-src && twilio flex:plugins:build -p flex-plugins && cp build/** ../assets"
   }
 }
