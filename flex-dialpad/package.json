@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@twilio-labs/runtime-helpers": "^0.1.2",
+    "@twilio-labs/serverless-api": "^5.5.0",
     "@twilio-labs/serverless-runtime-types": "^2.2.3",
     "axios": "^0.27.2",
     "twilio": "^3.84.0",

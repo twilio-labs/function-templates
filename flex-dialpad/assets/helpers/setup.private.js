@@ -1,4 +1,10 @@
+/**
+ * This code is responsible of configuring other services required for the front-end or back-end of the template.
+ */
+
 const helpers = require('@twilio-labs/runtime-helpers');
+// const twilio = require('twilio');
+// const twilioClient = require('twilio')();
 
 function isNotEmptyString(variable) {
   return typeof variable === 'string' && variable.length > 0;
@@ -18,13 +24,13 @@ exports.setupProject = async (context) => {
   );
   if (!currentEnvironment) {
     console.error('Could not find enviroment');
-    return false;
+    return { setupDone: false };
   }
 
   const workspace = await getWorkspaceSid(twilioClient);
   if (!workspace) {
     console.error('Could not find Flex Task Router workspace');
-    return false;
+    return { setupDone: false };
   }
   const TWILIO_WORKSPACE_SID = workspace.sid;
   await helpers.environment.setEnvironmentVariable(
@@ -44,53 +50,73 @@ exports.setupProject = async (context) => {
 
   if (!queue) {
     console.error('Could not find relevant "Everyone" queue in workspace');
-    return false;
+    return { setupDone: false };
   }
 
-  if (!context.TWILIO_WORKFLOW_SID) {
-    const [workflow, error] = await twilioClient.taskrouter
+  const { sid: VOICE_CHANNEL_SID } = (
+    await twilioClient.taskrouter
       .workspaces(TWILIO_WORKSPACE_SID)
-      .workflows.create({
-        friendlyName: 'Outbound Dialer',
-        configuration: JSON.stringify({
-          task_routing: {
-            filters: [
-              {
-                filter_friendly_name: 'Outbound',
-                expression: `targetWorker != null`,
-                targets: [
-                  {
-                    queue: queue.sid,
-                    expression: `task.targetWorker==worker.contact_uri`,
-                    priority: 1000,
-                  },
-                ],
-              },
-            ],
-          },
-        }),
-      })
-      .then(
-        (result) => [result],
-        (error) => [null, error]
-      );
+      .taskChannels.list()
+  ).find((entry) => {
+    return entry.uniqueName === 'voice';
+  });
 
-    if (!workflow) {
-      console.error('Failed to create a new Workflow');
-      console.error(error);
-      return false;
-    }
-
-    const TWILIO_WORKFLOW_SID = workflow.sid;
-    await helpers.environment.setEnvironmentVariable(
-      context,
-      currentEnvironment,
-      'TWILIO_WORKFLOW_SID',
-      TWILIO_WORKFLOW_SID
-    );
+  if (context.TWILIO_WORKFLOW_SID) {
+    return {
+      setupDone: true,
+      TWILIO_WORKSPACE_SID,
+      TWILIO_WORKFLOW_SID: context.TWILIO_WORKFLOW_SID,
+      VOICE_CHANNEL_SID,
+    };
   }
 
-  return true;
+  const [workflow, error] = await twilioClient.taskrouter
+    .workspaces(TWILIO_WORKSPACE_SID)
+    .workflows.create({
+      friendlyName: 'Outbound Dialer',
+      configuration: JSON.stringify({
+        task_routing: {
+          filters: [
+            {
+              filter_friendly_name: 'Outbound',
+              expression: `targetWorker != null`,
+              targets: [
+                {
+                  queue: queue.sid,
+                  expression: `task.targetWorker==worker.contact_uri`,
+                  priority: 1000,
+                },
+              ],
+            },
+          ],
+        },
+      }),
+    })
+    .then(
+      (result) => [result],
+      (error) => [null, error]
+    );
+
+  if (!workflow) {
+    console.error('Failed to create a new Workflow');
+    console.error(error);
+    return { setupDone: false };
+  }
+
+  const TWILIO_WORKFLOW_SID = workflow.sid;
+  await helpers.environment.setEnvironmentVariable(
+    context,
+    currentEnvironment,
+    'TWILIO_WORKFLOW_SID',
+    TWILIO_WORKFLOW_SID
+  );
+
+  return {
+    setupDone: true,
+    TWILIO_WORKSPACE_SID,
+    TWILIO_WORKFLOW_SID,
+    VOICE_CHANNEL_SID,
+  };
 };
 
 exports.isConfigured = (context) => {
