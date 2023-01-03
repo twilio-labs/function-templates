@@ -1795,6 +1795,38 @@
         "configurable": true,
         "contentKey": null
       }
+    ],
+    "experimental-flex-dialpad": [
+      {
+        "key": "TWILIO_WORKFLOW_SID",
+        "required": true,
+        "format": "text",
+        "description": "SID of the TaskRouter workflow used for transfers",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_WORKSPACE_SID",
+        "required": true,
+        "format": "text",
+        "description": "SID for the TaskRouter Workspace that contains your workflow",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "text",
+        "description": "The phone number used for your transfers",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
     ]
   }
 }
