@@ -137,6 +137,7 @@
     "voice-ivr",
     "voice-javascript-sdk",
     "voicemail",
-    "verify-sna"
+    "verify-sna",
+    "flex-dialpad"
   ]
 }

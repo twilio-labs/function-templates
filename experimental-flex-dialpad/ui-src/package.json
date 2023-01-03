@@ -1,0 +1,23 @@
+{
+  "name": "flex-dialpad-addon",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "prebuild": "rimraf build && npm run bootstrap",
+    "postinstall": "flex-plugin pre-script-check",
+    "prestart": "npm run bootstrap"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "lodash": "^4.17.20",
+    "react": "16.5.2",
+    "react-dom": "16.5.2",
+    "react-select": "^3.1.0",
+    "@twilio/flex-plugin-scripts": "6.0.3"
+  },
+  "devDependencies": {
+    "@twilio/flex-ui": "^1",
+    "react-test-renderer": "16.5.2"
+  }
+}
