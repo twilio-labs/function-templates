@@ -7,7 +7,9 @@ const helpers = require('@twilio-labs/runtime-helpers');
 // const twilioClient = require('twilio')();
 
 function isNotEmptyString(variable) {
-  return typeof variable === 'string' && variable.length > 0;
+  return (
+    typeof variable === 'string' && variable.length > 0 && variable !== '""'
+  );
 }
 
 async function getWorkspaceSid(twilioClient) {
