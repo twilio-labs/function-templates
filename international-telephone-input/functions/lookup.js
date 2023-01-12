@@ -14,7 +14,7 @@
  */
 
 // eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
@@ -25,34 +25,30 @@ exports.handler = function (context, event, callback) {
    * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
    */
 
-  if (event.phone === '' || typeof event.phone === 'undefined') {
+  try {
+    if (event.phone === '' || typeof event.phone === 'undefined') {
+      throw new Error('Missing parameter; please provide a phone number.');
+    }
+
+    const client = context.getTwilioClient();
+    const lookup = await client.lookups.v2.phoneNumbers(event.phone).fetch();
+
+    const success = lookup.valid;
+    if (success) {
+      response.setStatusCode(200);
+      response.setBody({ success });
+      return callback(null, response);
+    }
+
+    throw new Error(
+      `Invalid phone number ${event.phone}: ${lookup.validationErrors}`
+    );
+  } catch (error) {
     response.setBody({
       success: false,
-      error: 'Missing parameter; please provide a phone number.',
+      error: error.message,
     });
-    response.setStatusCode(400);
+    response.setStatusCode(error.status || 400);
     return callback(null, response);
   }
-
-  const client = context.getTwilioClient();
-
-  client.lookups
-    .phoneNumbers(event.phone)
-    .fetch()
-    .then((resp) => {
-      response.setStatusCode(200);
-      response.setBody({
-        success: true,
-      });
-      callback(null, response);
-    })
-    .catch((error) => {
-      console.log(error);
-      response.setStatusCode(error.status);
-      response.setBody({
-        success: false,
-        error: error.message,
-      });
-      callback(null, response);
-    });
 };
