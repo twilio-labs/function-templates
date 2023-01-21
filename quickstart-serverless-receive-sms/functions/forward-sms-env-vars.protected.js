@@ -5,11 +5,11 @@ exports.handler = (context, event, callback) => {
    * Use any of the Node.js SDK methods, such as `message`, to compose a response
    * Access incoming text information like the from number and contents off of `event`
    * Access environment variables and other runtime data from `context`
+   * Note: providing the `to` parameter like so will forward this text instead of responding to the sender
    */
-  twiml.message(
-    { to: context.TWILIO_PHONE_NUMBER },
-    `${event.From}: ${event.Body}`
-  );
+  twiml.message(`From: ${event.From}. Body: ${event.Body}`, {
+    to: context.MY_PHONE_NUMBER,
+  });
   /*
    * Return the TwiML as the second argument to `callback`
    * This will render the response as XML in reply to the webhook request
