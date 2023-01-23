@@ -111,5 +111,5 @@ exports.handler = async function (context, event, callback) {
   cleanupService();
 
   response.appendHeader('Location', getStudioRedirectUrl(flow.sid));
-  callback(null, response);
+  return callback(null, response);
 };

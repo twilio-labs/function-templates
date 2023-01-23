@@ -14,5 +14,7 @@ afterAll(() => {
 });
 
 describe('studio-quick-deploy-test auth function', () => {
-  it('Does something', () => {});
+  it('Does something', () => {
+    console.log('Something');
+  });
 });

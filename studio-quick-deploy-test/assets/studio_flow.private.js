@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const flowDefinition = {
   description: 'A New Flow',
   flags: {
