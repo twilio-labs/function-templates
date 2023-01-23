@@ -329,6 +329,11 @@
       "id": "experimental-flex-dialpad",
       "name": "Native Flex Dialpad Add-on",
       "description": "Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad "
+    },
+    {
+      "id": "studio-quick-deploy-test",
+      "name": "Studio Quick Deploy Test",
+      "description": "Test try out studio deploy test"
     }
   ]
 }
