@@ -18,9 +18,7 @@ exports.handler = async function (context, event, callback) {
   // TODO: Move to it's own function which can be kicked off async?
   async function cleanupService() {
     console.log(`Deleting - https://${context.DOMAIN_NAME}/delete`);
-    const result = await axios.get(`https://${context.DOMAIN_NAME}/delete`);
-
-    return result;
+    return await axios.get(`https://${context.DOMAIN_NAME}/delete`);
   }
 
   // Deploy Twilio Studio Flow

@@ -1,5 +1,5 @@
 const helpers = require('../../test/test-helper');
-const auth = require('../functions/auth.private');
+const deleteFunction = require('../functions/delete');
 const Twilio = require('twilio');
 
 const context = {};
