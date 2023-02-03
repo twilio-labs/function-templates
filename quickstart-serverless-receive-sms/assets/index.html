@@ -39,18 +39,18 @@
                     <img src="https://twilio-labs.github.io/function-templates/static/v1/success.svg" />
                     <div>
                         <p>Welcome!</p>
-                        <p>Your live application with Twilio is ready to use!</p>
+                        <p>All code samples are deployed, and ready to test!</p>
                     </div>
                 </h1>
                 <section>
-                    <h2>Get started with your application</h2>
+                    <h2>Get started</h2>
                     <p>
-                        Follow these steps to try out your new app:
+                        Every code sample from the <a href="https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms"  target="_blank" rel="noopener">Receive an inbound SMS example</a> is now deployed on your behalf, no need to create everything yourself and copy-paste any code :)
                     </p>
                     <p>
-                        This app will return the
+                        By default, this app will return the
                         <a href="https://www.twilio.com/docs/sms/twiml" target="_blank" rel="noopener">TwiML</a>
-                        required to respond "Hello World" to incoming SMS messages.
+                        required to respond "Hello, World!" to incoming SMS messages. Exactly the same as the <a href="https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms?code-sample=code-respond-to-an-inbound-sms&code-language=Node.js&code-sdk-version=default" target="_blank" rel="noopener">first example</a> in the documentation.
                     </p>
                     <ol class="steps">
                         <li>Text any message to your Twilio phone number</li>
@@ -58,23 +58,47 @@
                     </ol>
                 </section>
                 <section>
+                  <h2>Experiment with and modify your first example</h2>
+                  <p>Now that you've verified that your Serverless Twilio application works, it's time to make this code your own or proceed to other examples!</p>
+                  <p>The <b>Edit this application</b> button will take you to the Twilio Console, where you can make edits to and re-deploy any of the examples in this guide.</p>
+                  <p>For example: try editing the <code>/static-response</code> code so that the response is something unique to you, other than "Hello, World!". Save the Function, click <b>Deploy All</b> to deploy your updates to the code, and try sending a new text message to your Twilio number to see the modified response.</p>
+                </section>
+                <section>
+                  <h2>Next steps</h2>
+                  <p>Once you're satisfied with your changes to <code>/static-response</code>, there are several other code samples to experiment with!</p>
+                  <p>Remember, each code sample is identical to those in the quickstart, and you are encouraged to refer back to <a href="https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms"  target="_blank" rel="noopener">the documentation</a> for deeper explanations related to each sample. Each sample also includes helpful comments, to better explain the use for and reasoning behind each Function.</p>
+                  <h3>Modify and test more examples</h3>
+                  <p>To learn from and follow along with the examples in the documentation, follow these steps:</p>
+                  <ol class="steps">
+                    <li>Decide on an example (it's easiest to go in the same order as the documentation does)</li>
+                    <li>Navigate to your <a href="https://www.twilio.com/console/phone-numbers/incoming" target="_blank" rel="noopener">phone number configuration</a>, and click on the phone number that's currently connected to this application.</li>
+                    <li>Scroll down to the configuration titled <b>A Message Comes In</b>. (It should already be configured to handle messages using type <code>Function</code>, and be pointed to your most recently used Function from this application.)</li>
+                    <li>Under <b>Function Path</b>, click the dropdown, and select the path of the example you would like to test out next.</li>
+                    <li>Click <b>Save</b>. Your Phone number will now be connected to the newly selected example.</li>
+                    <li>Send a test message to your phone number, check the response, and modify then re-deploy the code of the responsible Function from the console as necessary.</li>
+                    <li>Repeat these steps until you've tried all the examples, and feel comfortable handling any incoming SMS with Functions!</li>
+                  </ol>
+                </section>
+                <section>
                     <!-- APP_INFO_V2 -->
+                </section>
+                <section>
+                  <!-- EDIT_CODE -->
                 </section>
                 <section>
                     <h2>Troubleshooting</h2>
                     <ul>
                         <li>
-                            Check the
+                            Check your
                             <a href="https://www.twilio.com/console/phone-numbers/incoming"
                                target="_blank"
                                rel="noopener">
-                                phone number configuration
-                            </a>
+                                phone number configuration</a> 
                             and make sure the Twilio phone number you want for your app has a SMS webhook
                             configured to point at the following URL
                             <form>
                                 <label for="twilio-webhook">Webhook URL</label>
-                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/hello-messaging">
+                                <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/static-response">
                             </form>
                         </li>
                     </ul>
