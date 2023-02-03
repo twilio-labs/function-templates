@@ -1,6 +1,6 @@
 # quickstart-serverless-receive-sms
 
-This template application contains all sample code for a user to follow along the quickstart guide at https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms
+This template application contains all sample code for a user to follow along the [Receive an inbound SMS](https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms) quickstart guide.
 
 ## Pre-requisites
 
