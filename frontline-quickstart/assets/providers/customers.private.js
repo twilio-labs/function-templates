@@ -1,6 +1,8 @@
 /* eslint-disable camelcase */
 /**
- * Generates a static list of customers based on the information provided through env vars
+ * Generates a static list of Customer objects based on the information provided through env vars.
+ * Here's where you can hook in your CRM system to fetch the list of customers.
+ * Read more: https://www.twilio.com/docs/frontline/data-transfer-objects#customer
  */
 const generateCustomersList = (context) => {
   const CUSTOMER_1_NAME = 'Example Customer 1';
@@ -26,7 +28,7 @@ const generateCustomersList = (context) => {
         content:
           'This a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.SSO_USERNAME,
+      worker: context.SSO_USERNAME, // assign this customer to a worker
       address: context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER,
     });
   }
@@ -54,7 +56,7 @@ const generateCustomersList = (context) => {
         content:
           'This is a static example customer. When your app is connected to a CRM, it will pull data from the system.',
       },
-      worker: context.SSO_USERNAME,
+      worker: context.SSO_USERNAME, // assign this customer to a worker
       address: context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER,
     });
   }
@@ -87,7 +89,6 @@ const findRandomWorker = async (context) => {
   const uniqueWorkers = [];
   const customers = generateCustomersList(context);
   for (const customer of customers) {
-    console.log(customer.worker);
     if (!uniqueWorkers.includes(customer.worker)) {
       uniqueWorkers.push(customer.worker);
     }

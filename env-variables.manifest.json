@@ -1076,6 +1076,18 @@
         "contentKey": null
       }
     ],
+    "verify-totp-sms": [
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
     "verify-retry": [
       {
         "key": "VERIFY_SERVICE_SID",
@@ -1704,6 +1716,112 @@
         "required": true,
         "format": "text",
         "description": "This is the username of the user that you’ve added to your Identity Provider (IdP) that you will use to login to Frontline.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "video-token-backend": [
+      {
+        "key": "API_KEY_SID",
+        "required": true,
+        "format": "text",
+        "description": "API key for your Twilio Account",
+        "link": "https://www.twilio.com/console/runtime/api-keys/create",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "API_KEY_SECRET",
+        "required": true,
+        "format": "secret",
+        "description": "API secret for your API Key",
+        "link": "https://www.twilio.com/console/runtime/api-keys/create",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "verify-sna": [
+      {
+        "key": "ACCOUNT_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Account or Subaccount",
+        "link": "https://www.twilio.com/console",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "AUTH_TOKEN",
+        "required": true,
+        "format": "text",
+        "description": "Auth Token of your Twilio Account or Subaacount",
+        "link": "https://www.twilio.com/console",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "SYNC_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Sync Service",
+        "link": "https://www.twilio.com/console/sync/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "SYNC_MAP_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of the Sync Map in your Sync Service that you want to use for storage",
+        "link": "https://www.twilio.com/console/sync/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "experimental-flex-dialpad": [
+      {
+        "key": "TWILIO_WORKFLOW_SID",
+        "required": true,
+        "format": "text",
+        "description": "SID of the TaskRouter workflow used for transfers",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_WORKSPACE_SID",
+        "required": true,
+        "format": "text",
+        "description": "SID for the TaskRouter Workspace that contains your workflow",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "text",
+        "description": "The phone number used for your transfers",
         "link": null,
         "default": null,
         "configurable": true,

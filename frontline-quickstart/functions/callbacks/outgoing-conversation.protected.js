@@ -1,7 +1,9 @@
 /* eslint-disable camelcase */
 const getCustomerProxyAddress = (context, channelName) => {
   /**
-   * if you are also using whatsapp, you can use the following code:
+   * if you are also using whatsapp,
+   * you can add the TWILIO_WHATSAPP_NUMBER
+   * environment variable and use the following code:
    * if (channelName === 'whatsapp') {
    *   return context.TWILIO_WHATSAPP_NUMBER;
    * }
@@ -19,8 +21,8 @@ const handleGetProxyAddress = (context, event, callback) => {
   const proxyAddress = getCustomerProxyAddress(context, channelName);
 
   /**
-   * In order to start a new conversation ConversationsApp need a proxy address
-   *  otherwise the app doesn't know from which number send a message to a customer
+   * In order to start a new conversation the Conversations API needs a proxy address.
+   * This is the number from which the message is sent
    */
   if (proxyAddress) {
     const resp = { proxy_address: proxyAddress };
@@ -33,10 +35,20 @@ const handleGetProxyAddress = (context, event, callback) => {
   return callback(null, response);
 };
 
+/**
+ * Outgoing Conversation Callback Handler.
+ * Read more: https://www.twilio.com/docs/frontline/outgoing-conversations
+ */
 exports.handler = async function (context, event, callback) {
+  console.log('[ Outgoing Conversation Callback ]');
+
+  /**
+   * Location helps to determine which information was requested.
+   * This callback is used to fetch different types of information.
+   * Read more: https://www.twilio.com/docs/frontline/outgoing-conversations#getproxyaddress
+   */
   const location = event.Location;
 
-  // Location helps to determine which action to perform.
   if (location === 'GetProxyAddress') {
     return handleGetProxyAddress(context, event, callback);
   }

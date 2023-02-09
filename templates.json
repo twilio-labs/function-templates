@@ -221,6 +221,11 @@
       "description": "Use authenticator apps like Authy or Google Authenticator that support Time-based One-Time Passwords (TOTP) with the Verify API."
     },
     {
+      "id": "verify-totp-sms",
+      "name": "Combined authenticator app (TOTP) authentication with SMS/WhatsApp fallback",
+      "description": "Use Time-based One-Time Passwords (TOTP) authentication with fallback options to SMS or WhatsApp using the Verify API."
+    },
+    {
       "id": "verify-retry",
       "name": "Verification with Retry Logic",
       "description": "Best practices UI for resending SMS verification codes and voice channel fallback."
@@ -309,6 +314,21 @@
       "id": "frontline-quickstart",
       "name": "Frontline Functions Quickstart",
       "description": "Creates 1 function for each callback needed to setup Frontline features. This is intended to be used as the Integration Service of a Frontline instance."
+    },
+    {
+      "id": "video-token-backend",
+      "name": "A Video Token Backend",
+      "description": "Creates a backend that mints Twilio Video Access tokens"
+    },
+    {
+      "id": "verify-sna",
+      "name": "Verify Silent Network Auth Sample Backend",
+      "description": "Backend to communicate with Verify API. This backend starts and validates login requests against the Verify API by using the SNA channel functionality. The results will be presented on the UI dashboard."
+    },
+    {
+      "id": "experimental-flex-dialpad",
+      "name": "Native Flex Dialpad Add-on",
+      "description": "Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad "
     }
   ]
 }

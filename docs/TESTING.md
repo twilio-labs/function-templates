@@ -44,6 +44,8 @@ npx jest --watch
 
 ## E2E tests using Cypress
 
+_See an example in the `/verify-totp-sms` template._
+
 ### Creating your first tests
 
 1. Add an `e2e.js` file to your template with the following content:

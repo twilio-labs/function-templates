@@ -2,12 +2,14 @@ const lookupFunction = require('../functions/lookup').handler;
 const helpers = require('../../test/test-helper');
 
 const mockFetch = {
-  fetch: jest.fn(() => Promise.resolve({ sid: 'sid' })),
+  fetch: jest.fn(() => Promise.resolve({ sid: 'sid', valid: true })),
 };
 
 const mockClient = {
   lookups: {
-    phoneNumbers: jest.fn(() => mockFetch),
+    v2: {
+      phoneNumbers: jest.fn(() => mockFetch),
+    },
   },
 };
 
@@ -37,11 +39,36 @@ describe('international-telephone-input/lookup', () => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
+      expect(result._body.error).toEqual(
+        'Missing parameter; please provide a phone number.'
+      );
       done();
     };
     const event = {
       phone: '',
     };
+    lookupFunction(testContext, event, callback);
+  });
+
+  test('returns an error with invalid phone number', (done) => {
+    const callback = (_err, result) => {
+      expect(result).toBeDefined();
+      expect(result._body.success).toEqual(false);
+      expect(result._body.error).toEqual(
+        'Invalid phone number +12345: TOO_SHORT'
+      );
+      done();
+    };
+    const event = {
+      phone: '+12345',
+    };
+
+    mockFetch.fetch.mockReturnValueOnce(
+      Promise.resolve({
+        valid: false,
+        validationErrors: ['TOO_SHORT'],
+      })
+    );
     lookupFunction(testContext, event, callback);
   });
 

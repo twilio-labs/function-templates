@@ -2,11 +2,10 @@
 
 ***NOTE: Effective February 9, 2023***, Twilio Frontline is limited to existing Frontline accounts only. New and existing Twilio customers without previous access to Frontline will not be able to get Frontline through Twilio's Console nor access developer documentation.   For more information, please check out the Twilio [Frontline](https://support.twilio.com/hc/en-us/articles/12427869273627-Twilio-Frontline-Limitation-of-New-Sales-Notice-and-Information) Support documentation.
 
-## What it does
+## What is this?
+This is the code that we use for the [Frontline Serverless Quickstart](https://www.twilio.com/docs/frontline/serverless-quickstart). It's intended to be deployed to [Twilio Functions](https://www.twilio.com/docs/runtime/functions), whereit ceates one function for each callback needed to setup Frontline features. 
 
-Creates 1 function for each callback needed to setup Frontline features. 
-
-This is intended to be used as the Integration Service of a Frontline instance.
+This is intended to be used as the [Integration Service of a Frontline instance](https://www.twilio.com/docs/frontline/frontline-integration-service).
 
 ## Pre-requisites
 
@@ -51,10 +50,12 @@ twilio serverless:start
 
 ## Deploying
 
-Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
+Run the following command while being inside your project folder:
 
-With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
+```bash
 twilio serverless:deploy
 ```
+
+Read more:
+- [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart)
+- [Serverless Toolkit.](https://www.twilio.com/docs/labs/serverless-toolkit)

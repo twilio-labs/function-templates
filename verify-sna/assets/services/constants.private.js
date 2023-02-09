@@ -1,0 +1,13 @@
+const PHONE_NUMBER_FIELD = 'phoneNumber';
+const RESOURCE_NOT_FOUND_ERROR_CODE = 20404;
+const VERIFIED_STATUS = 'verified';
+const PENDING_STATUS = 'pending';
+const NOT_VERIFIED_STATUS = 'not-verified';
+
+module.exports = {
+  PHONE_NUMBER_FIELD,
+  RESOURCE_NOT_FOUND_ERROR_CODE,
+  VERIFIED_STATUS,
+  PENDING_STATUS,
+  NOT_VERIFIED_STATUS,
+};
