@@ -1,0 +1,5 @@
+[Echo-1] Successful Echo
+<?xml version="1.0"?>
+<Response>
+  <Say>echo okay</Say>
+</Response>

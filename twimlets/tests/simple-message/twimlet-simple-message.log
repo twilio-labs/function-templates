@@ -1,0 +1,39 @@
+[SIMPLE-MESSAGE-0] No Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response/>
+
+[SIMPLE-MESSAGE-1] Single Recorded Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>https://example.com/recorded-message.mp3</Play>
+</Response>
+
+[SIMPLE-MESSAGE-2] Single Text Message
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Single message</Say>
+</Response>
+
+[SIMPLE-MESSAGE-3] Multiple Messages
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Say>Message one</Say>
+  <Play>https://example.com/message-two.mp3</Play>
+  <Say>Message three</Say>
+</Response>
+
+[SIMPLE-MESSAGE-4] Play a greeting then say some text (Example 1)
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>http://myserver.com/hello.mp3</Play>
+  <Say>Thank You For Calling</Say>
+</Response>
+
+[SIMPLE-MESSAGE-5] Play two greetings then say two text blurbs (Example 2)
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+  <Play>http://myserver.com/1.mp3</Play>
+  <Play>http://myserver.com/2.mp3</Play>
+  <Say>I Just Played A File</Say>
+  <Say>I Just Said Some Text</Say>
+</Response>
