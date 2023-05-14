@@ -329,6 +329,11 @@
       "id": "experimental-flex-dialpad",
       "name": "Native Flex Dialpad Add-on",
       "description": "Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad "
+    },
+    {
+      "id": "quickstart-serverless-receive-sms",
+      "name": "Serverless Quickstart: Receive incoming SMS",
+      "description": "This template application contains all sample code for a user to follow along the quickstart guide at https://www.twilio.com/docs/serverless/functions-assets/quickstart/receive-sms"
     }
   ]
 }
