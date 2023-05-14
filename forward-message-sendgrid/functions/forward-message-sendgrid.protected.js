@@ -1,31 +1,28 @@
-const got = require('got');
+// Importing the sendgrid module
+const sgMail = require('@sendgrid/mail');
 
 exports.handler = function (context, event, callback) {
-  const requestBody = {
-    personalizations: [{ to: [{ email: context.TO_EMAIL_ADDRESS }] }],
-    from: { email: context.FROM_EMAIL_ADDRESS },
+  // Setting the API key for Sendgrid
+  sgMail.setApiKey(context.SENDGRID_API_KEY);
+
+  // Creating the message content to send to Sendgrid
+  const message = {
+    to: context.TO_EMAIL_ADDRESS,
+    from: context.FROM_EMAIL_ADDRESS,
     subject: `New SMS message from: ${event.From}`,
-    content: [
-      {
-        type: 'text/plain',
-        value: event.Body,
-      },
-    ],
+    text: event.Body,
   };
 
-  got
-    .post('https://api.sendgrid.com/v3/mail/send', {
-      headers: {
-        Authorization: `Bearer ${context.SENDGRID_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestBody),
-    })
-    .then((_response) => {
+  // Sending the message using the sendgrid module
+  sgMail
+    .send(message)
+    .then(() => {
+      // Return a TwiML response back to Twilio
       const twiml = new Twilio.twiml.MessagingResponse();
       callback(null, twiml);
     })
-    .catch((err) => {
-      callback(err);
+    .catch((error) => {
+      // Return an error response back to Twilio
+      callback(error);
     });
 };

@@ -1,6 +1,5 @@
 const helpers = require('../../test/test-helper');
-
-const got = jest.mock('got');
+const sgMail = require('@sendgrid/mail');
 const sendGrid =
   require('../functions/forward-message-sendgrid.protected').handler;
 const Twilio = require('twilio');
@@ -15,6 +14,12 @@ const event = {
   From: 'ExternalNumber',
 };
 
+// Mock the send function of sgMail
+jest.mock('@sendgrid/mail', () => ({
+  setApiKey: jest.fn(),
+  send: jest.fn(),
+}));
+
 beforeAll(() => {
   helpers.setup(context);
 });
@@ -24,6 +29,9 @@ afterAll(() => {
 });
 
 test('returns an TwiML MessagingResponse', (done) => {
+  // Mock the sgMail send method to resolve successfully
+  sgMail.send.mockResolvedValue({});
+
   const callback = (_err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     done();
@@ -33,12 +41,13 @@ test('returns an TwiML MessagingResponse', (done) => {
 });
 
 test('returns an error when the external request fails', (done) => {
-  const callback = (err, _result) => {
-    expect(err).toBeInstanceOf(Error);
+  // Mock the sgMail send method to reject with an error
+  sgMail.send.mockRejectedValue(new Error('send failed'));
+
+  const callback = (error, _result) => {
+    expect(error).toBeInstanceOf(Error);
     done();
   };
-
-  got.shouldSucceed = false;
 
   sendGrid(context, event, callback);
 });
