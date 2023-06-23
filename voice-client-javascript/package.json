@@ -3,6 +3,6 @@
   "private": true,
   "dependencies": {
     "common-tags": "^1.8.0",
-    "twilio": "^3.61.0"
+    "twilio": "^4.12.0"
   }
 }
