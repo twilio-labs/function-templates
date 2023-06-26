@@ -34,7 +34,7 @@
     "got": "^6.7.1",
     "husky": "^6.0.0",
     "inquirer": "^7.0.4",
-    "jest-cli": "^26.6.3",
+    "jest-cli": "^27.0.0",
     "listr": "^0.14.3",
     "log-symbols": "^3.0.0",
     "prettier": "^2.3.0",
