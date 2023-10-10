@@ -1,6 +1,7 @@
 exports.handler = async function (context, event, callback) {
   let finalData = null;
   let resp = null;
+  let pageResp=null;
   const accountSid = process.env.ACCOUNT_SID;
   const authToken = process.env.AUTH_TOKEN;
   const subAccount = event.subAcc;
@@ -18,13 +19,13 @@ exports.handler = async function (context, event, callback) {
     finalData = { er: 0 };
     return callback(null, finalData);
   } else if (pageSize > 0) {
-    var page_resp = await client.incomingPhoneNumbers.page({
+      pageResp = await client.incomingPhoneNumbers.page({
       pageSize: pageSize,
       Page: page,
       pageToken: pageToken,
     });
 
-    return callback(null, page_resp);
+    return callback(null, pageResp);
   }
 
   try {

@@ -339,26 +339,24 @@
       </div>
     </main>
     <script type="text/javascript">
-      let allNumbers = "";
-      let page = 0;
-      let Pagetoken = "";
-      let pageAll = 0;
-      let columnAdded = 0;
-      let date = null;
-      let response = null;
-      let json = null;
-      let numNumbers = null;
-
-      const subaccount = document.getElementById("sAccount").value;
-      const password = document.getElementById("password").value;
-      const pagination = document.getElementById("pagination").value;
-      const pageSize = document.getElementById("page_size").value;
-
       const info = document.querySelector(".alert-info");
       const error = document.querySelector(".alert-error");
 
       async function list_numbers(down) {
-        //event.preventDefault();
+        let allNumbers = "";
+        let page = 0;
+        let Pagetoken = "";
+        let pageAll = 0;
+        let columnAdded = 0;
+        let data = null;
+        let response = null;
+        let json = null;
+        let numNumbers = null;
+
+        const subaccount = document.getElementById("sAccount").value;
+        const password = document.getElementById("password").value;
+        const pagination = document.getElementById("pagination").value;
+        const pageSize = document.getElementById("page_size").value;
 
         try {
           info.innerHTML = `loading...`;
@@ -367,7 +365,7 @@
 
           info.style.display = "none";
           error.style.display = "none";
-          while (pageAll == 0) {
+          while (pageAll === 0) {
             if (pagination === "No") {
               pageAll = 1;
               data = {
@@ -384,7 +382,7 @@
               };
             }
 
-            //console.log(data);
+            console.log(data);
             response = await fetch("./list_numbers", {
               method: "POST",
               headers: {
@@ -523,105 +521,105 @@
                     allNumbers = allNumbers + "emergencyAddressSid;";
                   }
                   columnAdded = 1;
-                } else {
-                  if (document.getElementById("accountSid").checked) {
-                    allNumbers = allNumbers + json[i].accountSid + ";";
-                  }
-                  if (document.getElementById("addressSid").checked) {
-                    allNumbers = allNumbers + json[i].addressSid + ";";
-                  }
-                  if (document.getElementById("addressRequirements").checked) {
-                    allNumbers = allNumbers + json[i].addressRequirements + ";";
-                  }
-                  if (document.getElementById("beta").checked) {
-                    allNumbers = allNumbers + json[i].beta + ";";
-                  }
-                  if (document.getElementById("bundleSid").checked) {
-                    allNumbers = allNumbers + json[i].bundleSid + ";";
-                  }
-                  if (document.getElementById("fax").checked) {
-                    allNumbers = allNumbers + json[i].capabilities.fax + ";";
-                  }
-                  if (document.getElementById("voice").checked) {
-                    allNumbers = allNumbers + json[i].capabilities.voice + ";";
-                  }
-                  if (document.getElementById("sms").checked) {
-                    allNumbers = allNumbers + json[i].capabilities.sms + ";";
-                  }
-                  if (document.getElementById("mms").checked) {
-                    allNumbers = allNumbers + json[i].capabilities.mms + ";";
-                  }
-                  if (document.getElementById("dateCreated").checked) {
-                    allNumbers = allNumbers + json[i].dateCreated + ";";
-                  }
-                  if (document.getElementById("dateUpdated").checked) {
-                    allNumbers = allNumbers + json[i].dateUpdated + ";";
-                  }
-                  if (document.getElementById("friendlyName").checked) {
-                    allNumbers = allNumbers + json[i].friendlyName + ";";
-                  }
-                  if (document.getElementById("phoneNumber").checked) {
-                    allNumbers = allNumbers + json[i].phoneNumber + ";";
-                  }
-                  if (document.getElementById("sid").checked) {
-                    allNumbers = allNumbers + json[i].sid + ";";
-                  }
-                  if (document.getElementById("smsApplicationSid").checked) {
-                    allNumbers = allNumbers + json[i].smsApplicationSid + ";";
-                  }
-                  if (document.getElementById("smsFallbackMethod").checked) {
-                    allNumbers = allNumbers + json[i].smsFallbackMethod + ";";
-                  }
-                  if (document.getElementById("smsFallbackUrl").checked) {
-                    allNumbers = allNumbers + json[i].smsFallbackUrl + ";";
-                  }
-                  if (document.getElementById("smsMethod").checked) {
-                    allNumbers = allNumbers + json[i].smsMethod + ";";
-                  }
-                  if (document.getElementById("smsUrl").checked) {
-                    allNumbers = allNumbers + json[i].smsUrl + ";";
-                  }
-                  if (document.getElementById("status").checked) {
-                    allNumbers = allNumbers + json[i].status + ";";
-                  }
-                  if (document.getElementById("statusCallback").checked) {
-                    allNumbers = allNumbers + json[i].statusCallback + ";";
-                  }
-                  if (document.getElementById("statusCallbackMethod").checked) {
-                    allNumbers =
-                      allNumbers + json[i].statusCallbackMethod + ";";
-                  }
-                  if (document.getElementById("trunkSid").checked) {
-                    allNumbers = allNumbers + json[i].trunkSid + ";";
-                  }
-                  if (document.getElementById("uri").checked) {
-                    allNumbers = allNumbers + json[i].uri + ";";
-                  }
-                  if (document.getElementById("voiceApplicationSid").checked) {
-                    allNumbers = allNumbers + json[i].voiceApplicationSid + ";";
-                  }
-                  if (document.getElementById("voiceCallerIdLookup").checked) {
-                    allNumbers = allNumbers + json[i].voiceCallerIdLookup + ";";
-                  }
-                  if (document.getElementById("voiceFallbackMethod").checked) {
-                    allNumbers = allNumbers + json[i].voiceFallbackMethod + ";";
-                  }
-                  if (document.getElementById("voiceFallbackUrl").checked) {
-                    allNumbers = allNumbers + json[i].voiceFallbackUrl + ";";
-                  }
-                  if (document.getElementById("voiceMethod").checked) {
-                    allNumbers = allNumbers + json[i].voiceMethod + ";";
-                  }
-                  if (document.getElementById("voiceUrl").checked) {
-                    allNumbers = allNumbers + json[i].voiceUrl + ";";
-                  }
-                  if (document.getElementById("emergencyStatus").checked) {
-                    allNumbers = allNumbers + json[i].emergencyStatus + ";";
-                  }
-                  if (document.getElementById("emergencyAddressSid").checked) {
-                    allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
-                  }
-                } // else closed
+                  allNumbers = allNumbers + "<pre>";
+                } 
+                if (document.getElementById("accountSid").checked) {
+                  allNumbers = allNumbers + json[i].accountSid + ";";
+                }
+                if (document.getElementById("addressSid").checked) {
+                  allNumbers = allNumbers + json[i].addressSid + ";";
+                }
+                if (document.getElementById("addressRequirements").checked) {
+                  allNumbers = allNumbers + json[i].addressRequirements + ";";
+                }
+                if (document.getElementById("beta").checked) {
+                  allNumbers = allNumbers + json[i].beta + ";";
+                }
+                if (document.getElementById("bundleSid").checked) {
+                  allNumbers = allNumbers + json[i].bundleSid + ";";
+                }
+                if (document.getElementById("fax").checked) {
+                  allNumbers = allNumbers + json[i].capabilities.fax + ";";
+                }
+                if (document.getElementById("voice").checked) {
+                  allNumbers = allNumbers + json[i].capabilities.voice + ";";
+                }
+                if (document.getElementById("sms").checked) {
+                  allNumbers = allNumbers + json[i].capabilities.sms + ";";
+                }
+                if (document.getElementById("mms").checked) {
+                  allNumbers = allNumbers + json[i].capabilities.mms + ";";
+                }
+                if (document.getElementById("dateCreated").checked) {
+                  allNumbers = allNumbers + json[i].dateCreated + ";";
+                }
+                if (document.getElementById("dateUpdated").checked) {
+                  allNumbers = allNumbers + json[i].dateUpdated + ";";
+                }
+                if (document.getElementById("friendlyName").checked) {
+                  allNumbers = allNumbers + json[i].friendlyName + ";";
+                }
+                if (document.getElementById("phoneNumber").checked) {
+                  allNumbers = allNumbers + json[i].phoneNumber + ";";
+                }
+                if (document.getElementById("sid").checked) {
+                  allNumbers = allNumbers + json[i].sid + ";";
+                }
+                if (document.getElementById("smsApplicationSid").checked) {
+                  allNumbers = allNumbers + json[i].smsApplicationSid + ";";
+                }
+                if (document.getElementById("smsFallbackMethod").checked) {
+                  allNumbers = allNumbers + json[i].smsFallbackMethod + ";";
+                }
+                if (document.getElementById("smsFallbackUrl").checked) {
+                  allNumbers = allNumbers + json[i].smsFallbackUrl + ";";
+                }
+                if (document.getElementById("smsMethod").checked) {
+                  allNumbers = allNumbers + json[i].smsMethod + ";";
+                }
+                if (document.getElementById("smsUrl").checked) {
+                  allNumbers = allNumbers + json[i].smsUrl + ";";
+                }
+                if (document.getElementById("status").checked) {
+                  allNumbers = allNumbers + json[i].status + ";";
+                }
+                if (document.getElementById("statusCallback").checked) {
+                  allNumbers = allNumbers + json[i].statusCallback + ";";
+                }
+                if (document.getElementById("statusCallbackMethod").checked) {
+                  allNumbers =
+                    allNumbers + json[i].statusCallbackMethod + ";";
+                }
+                if (document.getElementById("trunkSid").checked) {
+                  allNumbers = allNumbers + json[i].trunkSid + ";";
+                }
+                if (document.getElementById("uri").checked) {
+                  allNumbers = allNumbers + json[i].uri + ";";
+                }
+                if (document.getElementById("voiceApplicationSid").checked) {
+                  allNumbers = allNumbers + json[i].voiceApplicationSid + ";";
+                }
+                if (document.getElementById("voiceCallerIdLookup").checked) {
+                  allNumbers = allNumbers + json[i].voiceCallerIdLookup + ";";
+                }
+                if (document.getElementById("voiceFallbackMethod").checked) {
+                  allNumbers = allNumbers + json[i].voiceFallbackMethod + ";";
+                }
+                if (document.getElementById("voiceFallbackUrl").checked) {
+                  allNumbers = allNumbers + json[i].voiceFallbackUrl + ";";
+                }
+                if (document.getElementById("voiceMethod").checked) {
+                  allNumbers = allNumbers + json[i].voiceMethod + ";";
+                }
+                if (document.getElementById("voiceUrl").checked) {
+                  allNumbers = allNumbers + json[i].voiceUrl + ";";
+                }
+                if (document.getElementById("emergencyStatus").checked) {
+                  allNumbers = allNumbers + json[i].emergencyStatus + ";";
+                }
+                if (document.getElementById("emergencyAddressSid").checked) {
+                  allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
+                }
               } //for closed
             } //if status 200 closed
             else {
