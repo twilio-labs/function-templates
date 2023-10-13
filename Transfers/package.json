@@ -1,9 +1,0 @@
-{
-  "version": "1.0.0",
-  "private": true,
- "dependencies": {
-  "twilio": "^3.61.0",
- "scripts": {
-  "e2e": "node e2e.js"
- }
-}
