@@ -116,9 +116,9 @@
             >Function</a
           >
           - open the Function and click on "Environment Variables" in the bottom
-          left corner, and change the value of Password. <br />The default
-          Password is <i><b>1</b></i
-          >.
+          left corner, and change the value of Password. Click <b>"Deploy All"</b> afterwards in the bottom left corner.
+          <br />
+          The default Password is <i><b>1</b></i>.
         </p>
         Password:<input id="password" type="password" name="password" />
         <br />
@@ -352,6 +352,7 @@
         let response = null;
         let json = null;
         let numNumbers = null;
+        let k=0;
 
         const subaccount = document.getElementById("sAccount").value;
         const password = document.getElementById("password").value;
@@ -359,7 +360,7 @@
         const pageSize = document.getElementById("page_size").value;
 
         try {
-          info.innerHTML = `loading...`;
+          info.innerHTML = `loading...checked 0 numbers`;
 
           console.log(pagination);
 
@@ -382,7 +383,6 @@
               };
             }
 
-            console.log(data);
             response = await fetch("./list_numbers", {
               method: "POST",
               headers: {
@@ -620,6 +620,7 @@
                 if (document.getElementById("emergencyAddressSid").checked) {
                   allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
                 }
+                info.innerHTML = `loading...processed ${++k} numbers`;
               } //for closed
             } //if status 200 closed
             else {
