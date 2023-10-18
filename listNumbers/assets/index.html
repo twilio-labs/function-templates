@@ -521,7 +521,7 @@
                     allNumbers = allNumbers + "emergencyAddressSid;";
                   }
                   columnAdded = 1;
-                  allNumbers = allNumbers + "<pre>";
+                  allNumbers = allNumbers + "</pre><pre>";
                 } 
                 if (document.getElementById("accountSid").checked) {
                   allNumbers = allNumbers + json[i].accountSid + ";";
@@ -620,6 +620,7 @@
                 if (document.getElementById("emergencyAddressSid").checked) {
                   allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
                 }
+                allNumbers = allNumbers + "</pre>";
                 info.innerHTML = `loading...processed ${++k} numbers`;
               } //for closed
             } //if status 200 closed
