@@ -122,14 +122,14 @@
         </p>
         Password:<input id="password" type="password" name="password" />
         <br />
-        <br />
-        <p>You are working with account:</p>
+        <div><p>You are working with account:</p><div>
         <div id="masking"></div>
         <div><button onclick="unmask()">Show Account</button></div>
-        <br />
-        <div id="status_acc"></div>
-        <br />
+        <div id="status_acc" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;"></div>
         <div>
+          <br />
+          Select the Number Properties you want to see in the results:
+          <br />
           <button onclick="checkAll()">Select all</button> <br />
           <input
             type="checkbox"
@@ -297,7 +297,6 @@
           />emergencyAddressSid
         </div>
         <div>
-          <form id="fetchSID" action="javascript:list_numbers()">
             <p>
               Enter the subaccount SID. Leave empty if you want the list of
               numbers on your main account.
@@ -310,7 +309,7 @@
                 <option value="Yes">Yes</option>
                 <option value="No" selected>No</option>
               </select>
-              Maximum amount of numbers returned per page:
+              Maximum amount of numbers returned per page (1-1000):
               <input
                 type="number"
                 id="page_size"
@@ -321,21 +320,21 @@
               />
             </div>
             <br />
-            <div><input id="lbutton" type="submit" value="List numbers" /></div>
-          </form>
-          <div>
+            <div><button onclick="list_numbers()">List numbers</button> &nbsp;
+                 <button onclick="list_numbers(1)">Download without listing numbers</button>
+            </div>
+          <div><br />
             <button onclick="clear_list()">Clear list</button>
             <button onclick="download()">Download listed numbers</button>
-            <button onclick="list_numbers(1)">
-              Download without listing numbers
-            </button>
           </div>
           <pre></pre>
 
           <div id="info1" class="alert alert-info" style="display: none"></div>
           <div class="alert alert-error" style="display: none"></div>
         </div>
+        <div>
         <!-- EDIT_CODE -->
+        <div>
       </div>
     </main>
     <script type="text/javascript">
@@ -361,11 +360,20 @@
 
         try {
           info.innerHTML = `loading...checked 0 numbers`;
+          status_acc.innerHTML = ``;
+          error.innerHTML=``;
 
           console.log(pagination);
 
           info.style.display = "none";
           error.style.display = "none";
+
+          if (pagination==="Yes" && (pageSize<1 || pageSize>1000)){
+            error.style.display = "";
+            error.innerHTML = `The amount of numbers returned per page must be between 1 and 1000`;
+            return;
+          }
+
           while (pageAll === 0) {
             if (pagination === "No") {
               pageAll = 1;
@@ -397,6 +405,7 @@
 
             if (json.er == 0) {
               error.style.display = "";
+              info.style.display = "none";
               error.innerHTML = `Wrong password.`;
               console.log(response);
               return;
@@ -627,7 +636,7 @@
             else {
               console.error(json.error);
               error.style.display = "";
-              info.innerHTML = ``;
+              info.style.display = "none";
               error.innerHTML = `Something Wrong: ${json.error}`;
               return;
             }
@@ -649,7 +658,7 @@
         } catch (err) {
           //console.log (err);
           error.style.display = "";
-          info.innerHTML = ``;
+          info.style.display = "none";
           error.innerHTML = `Something went wrong: ${err} - if you receive a JSON error, check if the inserted Account SID is correct and that it exists under the Main account you are using.`;
         }
       }
@@ -713,6 +722,7 @@
 
       async function clear_list() {
         info.innerHTML = ``;
+        info.style.display = "none";
       }
     </script>
   </body>

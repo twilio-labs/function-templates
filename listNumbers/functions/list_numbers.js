@@ -11,11 +11,15 @@ exports.handler = async function (context, event, callback) {
   });
 
   const response = new Twilio.Response();
+  
 
   if (password !== process.env.Password) {
     finalData = { er: 0 };
     return callback(null, finalData);
-  } else if (event.pageSize > 0) {
+  }
+  
+  try {
+    if (event.pageSize > 0) {
       pageResp = await client.incomingPhoneNumbers.page({
       pageSize: event.pageSize,
       Page: event.page,
@@ -24,8 +28,6 @@ exports.handler = async function (context, event, callback) {
 
     return callback(null, pageResp);
   }
-
-  try {
     resp = await client.incomingPhoneNumbers.list();
     return callback(null, resp);
   } catch (error) {
