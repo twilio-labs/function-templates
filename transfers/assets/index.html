@@ -116,25 +116,22 @@
             href="https://console.twilio.com/us1/develop/functions/services"
             >Function</a>
           - open the Function and click on "Environment Variables" in the bottom
-          left corner, and change the value of Password. <br />The default
+          left corner, and change the value of Password. Click on "Deploy All" button afterwards in the bottom left corner. <br />The default
           Password is <i><b>1</b></i>.
         </p>
         Password:<input id="password" type="password" name="password" />
         <br />
-        <br />
-        <p>You are working with account:</p>
+        <div><p>You are working with account:</p></div>
         <div id="masking"></div>
         <div><button onclick="unmask()">Show Account</button></div>
-        <br />
-        <div id="status_acc"></div>
-
-        <br />
+        <div id="status_acc" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;"></div>
+        <div><h3>Fetch Number SID</h3></div>
         <div>
           <form id="fetchSID" action="javascript:number_fetch()">
             <p>
-              Enter the number to get the SID that you need to use to transfer
-              the number. The search is done on your main accounts and its
-              subaccounts automatically. <br />Be carefull, if you insert an
+              In the below field, enter the number to get the SID that you need to use to transfer
+              it. The search is done on your main account and its
+              subaccounts automatically. <br /><b>Be carefull</b>, if you insert an
               incomplete number, the system will search for a number on your
               accounts (main account and subaccounts) that starts with what you
               inserted. <br />
@@ -153,6 +150,7 @@
             <div class="alert alert-warning" style="display: none"></div>
           </div>
         </div>
+        <div><h3>Transfer the Number</h3></div>
         <div>
           <form id="transfer" action="javascript:transfer()">
             <p>
@@ -182,7 +180,7 @@
               name="accountSID"
               value=""
               required
-            /><br />
+            />
             <p>
               Gaining Account - Enter the Account SID where you want the number
               transferred (mandatory field):
@@ -193,12 +191,12 @@
               name="accountSID"
               value=""
               required
-            /><br />
+            />
             <p>
               Insert the Bundle SID (depends on regulatory requirements of the
               number):
             </p>
-            <input id="bundleSID" type="text" name="bundleSID" value="" /><br />
+            <input id="bundleSID" type="text" name="bundleSID" value="" />
             <p>
               Insert the Address SID (depends on regulatory requirements of the
               number):
@@ -208,17 +206,17 @@
               type="text"
               name="addressSID"
               value=""
-            /><br />
+            />
             <input id="transfer" type="submit" value="Transfer" />
           </form>
           <div class="alert alert-info" style="display: none"></div>
           <div class="alert alert-error" style="display: none"></div>
         </div>
+        <div>
         <!-- EDIT_CODE -->
+        </div>
       </div>
     </main>
-
-
     <script type="text/javascript">
 const info = document.querySelector(".alert-info");
 const error = document.querySelector(".alert-error");
@@ -248,6 +246,7 @@ async function transfer() {
       console.log(addressSID);
       info.style.display = "none";
       error.style.display = "none";
+      status_acc.style.display = "none";
      
       data = {
         phone: phoneSID,
@@ -277,7 +276,7 @@ async function transfer() {
 
       if (response.status === 200) {
         info.style.display = "";
-        info.innerHTML = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
+        info.innerHTML = `<pre>Success:<br />${JSON.stringify(json, null, 2)}</pre>`;
       } else {
         console.error(json.error);
         error.style.display = "";
@@ -307,6 +306,7 @@ async function number_fetch() {
   try {
     success.style.display = "none";
     warning.style.display = "none";
+    status_acc.style.display = "none";
 
     fdata = {
       phone: phoneNumber,
@@ -416,11 +416,10 @@ async function unmask() {
 
     return;
   }
+  status_acc.style.display = "none";
   masking.innerHTML = acc.acc;
   status_acc.innerHTML = ``;
 }
       </script>
   </body>
 </html>
-
-
