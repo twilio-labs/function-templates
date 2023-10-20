@@ -19,7 +19,7 @@ exports.handler = async function (context, event, callback) {
     sub = await client.api.v2010.accounts.list().then((accounts) =>
       accounts.forEach((a) => {
         allAccounts[i] = a.sid;
-        i = i + 1;
+        i += 1;
       }),
     );
 
