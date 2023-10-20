@@ -247,7 +247,7 @@ async function transfer() {
       info.style.display = "none";
       error.style.display = "none";
       status_acc.style.display = "none";
-     
+
       data = {
         phone: phoneSID,
         laccount: losingAccountSID,
@@ -269,6 +269,7 @@ async function transfer() {
 
       if (json.er === 0) {
         error.style.display = "";
+        info.style.display = "none";
         error.innerHTML = `Wrong password.`;
         console.log(response);
         return;
@@ -276,11 +277,15 @@ async function transfer() {
 
       if (response.status === 200) {
         info.style.display = "";
-        info.innerHTML = `<pre>Success:<br />${JSON.stringify(json, null, 2)}</pre>`;
+        info.innerHTML = `<pre>Success :<br />${JSON.stringify(
+          json,
+          null,
+          2,
+        )}</pre>`;
       } else {
         console.error(json.error);
         error.style.display = "";
-        error.innerHTML = `Something Wrong: ${json.error} - if you see the error "An internal server error has occurred", check that the Bundle SID is correct, present on the gaining account and approved for the number type you are transferring`;
+        error.innerHTML = `Something Wrong: ${json.error} <br />If you see the error "An internal server error has occurred", check that the Bundle SID is correct, present on the gaining account and approved for the number type you are transferring`;
       }
     } catch (err) {
       //console.log (err);
@@ -291,9 +296,12 @@ async function transfer() {
 }
 
 async function number_fetch() {
+  let adata = null;
   let fdata = null;
+  let aresponse = null;
   let fresponse = null;
   let json2 = null;
+  let ajson = null;
   let sid = null;
   let asid = null;
   let phoneNumber = null;
@@ -308,40 +316,81 @@ async function number_fetch() {
     warning.style.display = "none";
     status_acc.style.display = "none";
 
-    fdata = {
-      phone: phoneNumber,
+    adata = {
       pass: password,
     };
 
-    fresponse = await fetch("./fetch_sid", {
+    aresponse = await fetch("./list_accounts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(fdata),
+      body: JSON.stringify(adata),
     });
-    console.log("return from function");
-    json2 = await fresponse.json();
+    console.log("return from Acc function");
+    console.log(aresponse);
+    if (aresponse.status === 200) {
+      ajson = await aresponse.json();
+      console.log(ajson);
 
-    if (json2.er === 0) {
+      if (ajson.er === 0) {
+        warning.style.display = "";
+        status_acc.style.display="none";
+        success.style.display = "none";
+        warning.innerHTML = `Wrong password.`;
+        return;
+      }
+    } else {
       warning.style.display = "";
-      warning.innerHTML = `Wrong password.`;
-
+      warning.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
       return;
+    }
+
+    for (a = 0; a < ajson.length; a++) {
+      fdata = {
+        phone: phoneNumber,
+        sub: ajson[a],
+        pass: password,
+      };
+
+      fresponse = await fetch("./fetch_sid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(fdata),
+      });
+      console.log("return from function");
+      json2 = await fresponse.json();
+      success.style.display = "";
+      success.innerHTML = `<pre>Checked ${a} accounts.</pre>`;
+
+      if (json2.er === 0) {
+        warning.style.display = "";
+        success.style.display = "none";
+        status_acc.style.display="none";
+        warning.innerHTML = `Wrong password.`;
+        return;
+      }
+      if (json2 !== "not here") {
+        console.log(json2);
+        sid = json2.SID;
+        console.log(sid);
+        asid = json2.Acc;
+        phoneNumber = json2.pnumber;
+        numStatus = json2.status;
+        addReq = json2.addressReq;
+        break;
+      } else if (json2 === "not here") {
+        json2 = "number not found";
+      }
     }
 
     if (json2 === "number not found") {
       warning.style.display = "";
+      success.style.display = "none";
       warning.innerHTML = `<pre> ${JSON.stringify(json2, null, 2)}</pre>`;
     } else {
-      console.log(json2);
-      sid = json2.SID;
-      console.log(sid);
-      asid = json2.Acc;
-      phoneNumber = json2.pnumber;
-      numStatus = json2.status;
-      addReq=json2.addressReq;
-
       if (fresponse.status === 200) {
         success.style.display = "";
         success.innerHTML = `<pre>Number ${JSON.stringify(
@@ -359,15 +408,12 @@ async function number_fetch() {
         )} <br>Number Status ${JSON.stringify(
           numStatus,
           null,
-          2
-          )} <br>Address Requirements ${JSON.stringify(
-          addReq,
-          null,
-          2
-          )} </pre>`;
+          2,
+        )} <br>Address Requirements ${JSON.stringify(addReq, null, 2)} </pre>`;
       } else {
         console.error(json2.error);
         warning.style.display = "";
+        success.style.display = "none";
         warning.innerHTML = `Something Wrong: ${json2.error}`;
       }
     }
@@ -412,11 +458,16 @@ async function unmask() {
   acc = await response.json();
 
   if (acc.er === 0) {
+    status_acc.style.display = "";
+    warning.style.display="none";
+    warning.innerHTML="";
     status_acc.innerHTML = `Wrong password.`;
 
     return;
   }
   status_acc.style.display = "none";
+  warning.style.display="none";
+  warning.innerHTML="";
   masking.innerHTML = acc.acc;
   status_acc.innerHTML = ``;
 }

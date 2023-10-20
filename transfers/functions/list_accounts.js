@@ -1,9 +1,13 @@
 exports.handler = async function (context, event, callback) {
   let finalData = null;
-  let resp = null;
+  let i = 0;
+
   const accountSid = process.env.ACCOUNT_SID;
   const authToken = process.env.AUTH_TOKEN;
+  const client = require("twilio")(accountSid, authToken);
   const response = new Twilio.Response();
+  const allAccounts = [];
+
   response.appendHeader("Content-Type", "application/json");
 
   if (event.pass !== process.env.Password) {
@@ -12,20 +16,15 @@ exports.handler = async function (context, event, callback) {
   }
 
   try {
-    const client = require("twilio")(accountSid, authToken, {
-      accountSid: event.laccount,
-    });
-
-    resp = await client
-      .incomingPhoneNumbers(event.phone)  // number SID
-      .update({
-        accountSid: event.gaccount,
-        bundleSid: event.bSID,
-        addressSid: event.aSID,
-      }); // account sid where the number should be transferred to
+    sub = await client.api.v2010.accounts.list().then((accounts) =>
+      accounts.forEach((a) => {
+        allAccounts[i] = a.sid;
+        i = i + 1;
+      }),
+    );
 
     response.setStatusCode(200);
-    response.setBody(resp);
+    response.setBody(allAccounts);
     return callback(null, response);
   } catch (error) {
     console.error(error.message);
