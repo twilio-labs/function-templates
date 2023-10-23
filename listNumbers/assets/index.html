@@ -337,6 +337,9 @@
         <div>
       </div>
     </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
     <script type="text/javascript">
       const info = document.querySelector(".alert-info");
       const error = document.querySelector(".alert-error");
@@ -400,18 +403,18 @@
             });
             console.log("response is");
             console.log(response);
-            json = await response.json();
-            console.log(json);
-
-            if (json.er == 0) {
-              error.style.display = "";
-              info.style.display = "none";
-              error.innerHTML = `Wrong password.`;
-              console.log(response);
-              return;
-            }
-
             if (response.status === 200) {
+              json = await response.json();
+              console.log(json);
+
+              if (json.er == 0) {
+                error.style.display = "";
+                info.style.display = "none";
+                error.innerHTML = `Wrong password.`;
+                console.log(response);
+                return;
+              }
+
               if (pagination === "Yes") {
                 if (json.nextPageUrl) {
                   Pagetoken = json.nextPageUrl.split("PageToken=")[1];
@@ -637,7 +640,8 @@
               console.error(json.error);
               error.style.display = "";
               info.style.display = "none";
-              error.innerHTML = `Something Wrong: ${json.error}`;
+              error.innerHTML = `Something Wrong: ${json.error} <br />Server response status is: ${response.status}
+              <br />Server message is: ${response.message}`;
               return;
             }
           } //while closed
