@@ -371,9 +371,9 @@
           info.style.display = "none";
           error.style.display = "none";
 
-          if (pagination==="Yes" && (pageSize<1 || pageSize>1000)){
+          if (pagination === "Yes" && ((pageSize<1 || pageSize>1000) || (pageSize % 1 !== 0))){
             error.style.display = "";
-            error.innerHTML = `The amount of numbers returned per page must be between 1 and 1000`;
+            error.innerHTML = `The amount of numbers returned per page must be between 1 and 1000, and it must be a complete number - no decimals.`;
             return;
           }
 
