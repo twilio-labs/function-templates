@@ -105,7 +105,9 @@
           If you have a <b>large amount of numbers</b> on your account, the
           "List Numbers" request might timeout. Use Pagination if you have
           thousands of numbers on your account, and rely on the "Download
-          without listing numbers" button.
+          without listing numbers" button. Results listed on this page will be 
+          limited to 200 numbers. "Download without listing numbers" button 
+          has no limits. 
         </p>
 
         <p>
@@ -302,6 +304,10 @@
               numbers on your main account.
             </p>
             <input id="sAccount" type="text" name="sAccount" />
+            <p>
+              Only show results for numbers that start with (filter based on country-code):
+            </p>
+            <input id="startNumber" type="text" name="startNumber" />
             <br />
             <div>
               Use Pagination?
@@ -366,6 +372,7 @@ async function list_numbers(down) {
   const password = document.getElementById("password").value;
   const pagination = document.getElementById("pagination").value;
   const pageSize = document.getElementById("page_size").value;
+  const startNumber = document.getElementById("startNumber").value;
 
   try {
     status_acc.innerHTML = ``;
@@ -449,6 +456,10 @@ async function list_numbers(down) {
         info.style.display = "";
 
         for (let i = 0; i < numNumbers; i++) {
+          if(!json[i].phoneNumber.startsWith(startNumber)){
+            continue;
+          }
+
           allNumbers = allNumbers + "<pre>";
 
           if (columnAdded === 0) {
@@ -650,8 +661,13 @@ async function list_numbers(down) {
           }
           allNumbers = allNumbers + "</pre>";
           info.innerHTML = `loading...processed ${++k} numbers`;
-        } //for closed
-      } //if status 200 closed
+
+          if (k === 200 && down !== 1){
+            allNumbers = allNumbers + '<pre> <b>Results limited to 200 numbers<b>. Not all results displayed. Use the button "Download without listing numbers" for larger requests.</pre>';
+            break;
+          }
+        } // for closed
+      } // if status 200 closed
       else {
         console.error(json.error);
         error.style.display = "";

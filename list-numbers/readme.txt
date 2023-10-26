@@ -12,6 +12,8 @@ The next section is to chose which number parameters you want to see. You can cl
 
 In the following field, you can insert a subaccount present on the main account that you are working with, in order to show the numbers of that subaccount. Leave this field empty if you want to list the numbers that are present on your main account. 
 
+In the next field you can filter results based on the country code. Use it to show numbers of a specific country or with a specific prefix. 
+
 The next 4 buttons do the following:
 - List numbers - displays in the browser all the numbers on the selected account
 - Clear list - removes the numbers that were displayed in the browser 
