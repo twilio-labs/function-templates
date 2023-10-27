@@ -367,6 +367,7 @@ async function list_numbers(down) {
   let json = null;
   let numNumbers = null;
   let k = 0;
+  let numCount = 0;
 
   const subaccount = document.getElementById("sAccount").value;
   const password = document.getElementById("password").value;
@@ -392,6 +393,19 @@ async function list_numbers(down) {
       error.style.display = "";
       error.innerHTML = `The amount of numbers returned per page must be between 1 and 1000, and it must be a complete number - no decimals.`;
       return;
+    }
+    if(startNumber !== ""){
+      if (!/^\+/.test(startNumber))
+      {
+         error.style.display = "";
+        error.innerHTML = `<i>Only show results for numbers that start with</i> should start with the leading + sign or the field should be empty.`;
+        return;
+      }
+      if (!/^\+{1}[0-9]*$/.test(startNumber)){
+        error.style.display = "";
+        error.innerHTML = `<i>Only show results for numbers that start with</i> must only contain the leading + sign and numbers, or the field should be empty.`;
+        return;
+      }
     }
 
     progress.style.display = "";
@@ -446,7 +460,7 @@ async function list_numbers(down) {
             pageAll = 1;
           }
           console.log(Pagetoken);
-          page++;
+          page += 1;
 
           json = json.instances.slice();
         }
@@ -457,6 +471,8 @@ async function list_numbers(down) {
 
         for (let i = 0; i < numNumbers; i++) {
           if(!json[i].phoneNumber.startsWith(startNumber)){
+            k += 1;
+            info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that matchs the filter.`;
             continue;
           }
 
@@ -660,9 +676,11 @@ async function list_numbers(down) {
             allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
           }
           allNumbers = allNumbers + "</pre>";
-          info.innerHTML = `loading...processed ${++k} numbers`;
+          k += 1;
+          numCount += 1;
+          info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
 
-          if (k === 200 && down !== 1){
+          if (numCount > 199 && down !== 1){
             allNumbers = allNumbers + '<pre> <b>Results limited to 200 numbers</b>. Not all results displayed. Use the button "Download without listing numbers" for larger requests.</pre>';
             break;
           }
@@ -678,9 +696,15 @@ async function list_numbers(down) {
               <br />Server message is: ${response.message}`;
         return;
       }
+      if (numCount > 199 && down !== 1){
+        break;
+      }
     } // while closed
     progress.innerHTML ='';
     if (down === 1) {
+      if (numCount === 0){
+        allNumbers = "No number found.";
+      }
       allNumbers = allNumbers.replace(/\"/g, "");
       allNumbers = allNumbers.replace(/<pre>/g, "%0D%0A");
       allNumbers = allNumbers.replace(/<\/pre>/g, "");
@@ -692,6 +716,9 @@ async function list_numbers(down) {
       progress.style.display = "none";
       progress.innerHTML = ``;
     } else {
+      if (numCount === 0){
+        allNumbers = "No number found.";
+      }
       allNumbers = allNumbers.replace(/\"/g, "");
       info.innerHTML = `${allNumbers}`;
       progress.style.display = "none";
