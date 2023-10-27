@@ -472,7 +472,7 @@ async function list_numbers(down) {
         for (let i = 0; i < numNumbers; i++) {
           if(!json[i].phoneNumber.startsWith(startNumber)){
             k += 1;
-            info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that matchs the filter.`;
+            info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
             continue;
           }
 
