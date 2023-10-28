@@ -1,6 +1,6 @@
 Instructions
 
-On index.html you will see varios fields and buttons that you can use. 
+On index.html you will see various fields and buttons that you can use. 
 
 The 1st one is to insert the password. This is important as the app will not work without a correct password. 
 To change the password, you need to open your function, click on Environmental Variables and edit the Password variable.
@@ -11,6 +11,8 @@ Because this is a public URL, your account SID is masked by default and you can 
 The next section is to chose which number parameters you want to see. You can click on "Select all" to check all the boxes, in which case all number details will be displayed. 
 
 In the following field, you can insert a subaccount present on the main account that you are working with, in order to show the numbers of that subaccount. Leave this field empty if you want to list the numbers that are present on your main account. 
+
+In the next field you can filter results based on the country code. Use it to show numbers of a specific country or with a specific prefix. 
 
 The next 4 buttons do the following:
 - List numbers - displays in the browser all the numbers on the selected account

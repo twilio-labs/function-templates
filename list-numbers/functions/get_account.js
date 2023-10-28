@@ -1,5 +1,5 @@
 exports.handler = async function (context, event, callback) {
-  let finalData=null;
+  let finalData = null;
   const accountSid = { acc: process.env.ACCOUNT_SID };
   const password = event.pass;
 
