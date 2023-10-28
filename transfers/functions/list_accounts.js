@@ -4,11 +4,11 @@ exports.handler = async function (context, event, callback) {
 
   const accountSid = process.env.ACCOUNT_SID;
   const authToken = process.env.AUTH_TOKEN;
-  const client = require("twilio")(accountSid, authToken);
+  const client = require('twilio')(accountSid, authToken);
   const response = new Twilio.Response();
   const allAccounts = [];
 
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
 
   if (event.pass !== process.env.Password) {
     finalData = { er: 0 };
@@ -20,7 +20,7 @@ exports.handler = async function (context, event, callback) {
       accounts.forEach((a) => {
         allAccounts[i] = a.sid;
         i += 1;
-      }),
+      })
     );
 
     response.setStatusCode(200);
