@@ -18,7 +18,7 @@ const incompleteTests = [
   'sip-quickstart',
   'voicemail',
   'transfers',
-  'listNumbers',
+  'list-numbers',
 ];
 const excludedPaths =
   ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
