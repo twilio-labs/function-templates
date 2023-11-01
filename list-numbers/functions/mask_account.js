@@ -1,5 +1,7 @@
 exports.handler = async function (context, event, callback) {
-  const accountSid = { acc: process.env.ACCOUNT_SID };
+  let masked =
+    ("" + process.env.ACCOUNT_SID).slice(0, 28).replace(/./g, "*") + ("" + process.env.ACCOUNT_SID).slice(-6);
+  const accountSid = { acc: masked };
 
   try {
     return callback(null, accountSid);

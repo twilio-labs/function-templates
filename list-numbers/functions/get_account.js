@@ -1,9 +1,9 @@
 exports.handler = async function (context, event, callback) {
-  let finalData = null;
+  let finalData=null;
   const accountSid = { acc: process.env.ACCOUNT_SID };
-  const password = event.pass;
+  const authHeader = event.request.headers.authorization; 
 
-  if (password !== process.env.Password) {
+  if (authHeader !== process.env.Password) {
     finalData = { er: 0 };
     return callback(null, finalData);
   }

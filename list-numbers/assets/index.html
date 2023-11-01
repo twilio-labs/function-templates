@@ -417,12 +417,10 @@ async function list_numbers(down) {
         pageAll = 1;
         data = {
           subAcc: subaccount,
-          pass: password,
         };
       } else {
         data = {
           subAcc: subaccount,
-          pass: password,
           pageSize: pageSize,
           page: page,
           pageToken: Pagetoken,
@@ -433,6 +431,7 @@ async function list_numbers(down) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": password,
         },
         body: JSON.stringify(data),
       });
@@ -749,13 +748,14 @@ function download() {
 }
 
 function checkAll() {
-  var inputs = document.querySelectorAll(".pl");
+  let inputs = document.querySelectorAll(".pl");
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].checked = true;
   }
 }
 
 async function mask() {
+  let acc= null;
   const response = await fetch("./mask_account", {
     method: "POST",
     headers: {
@@ -763,25 +763,21 @@ async function mask() {
     },
   });
 
-  var acc = await response.json();
-  var masked =
-    ("" + acc.acc).slice(0, 28).replace(/./g, "*") + ("" + acc.acc).slice(-6);
-  masking.innerHTML = masked;
+  acc = await response.json();
+ 
+  masking.innerHTML = acc.acc;
   status_acc.innerHTML = ``;
 }
 
 async function unmask() {
   const password = document.getElementById("password").value;
 
-  const data = {
-    pass: password,
-  };
   const response = await fetch("./get_account", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+      "Authorization": password,
+    }
   });
   var acc = await response.json();
 
