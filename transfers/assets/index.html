@@ -230,7 +230,6 @@ const warning = document.querySelector(".alert-warning");
 async function transfer() {
   let alertConfirm =
     "You requested to transfer a number. If there is a Whatsapp configuration on the number, it will be lost on transfer. If there are opt-outs and/or A2P registrations (US LongCodes only) on the number, those will also be lost. You will need to setup Opt-Outs and re-register the numbers on the new account before they will work. Please find more information in the linked FAQ page. \n\n Do you want to proceed with the transfer?";
-  let password = document.getElementById("password").value;
   let data = null;
   let response = null;
   let json = null;
@@ -240,6 +239,7 @@ async function transfer() {
   const losingAccountSID = document.getElementById("losingaccountSID").value;
   const bundleSID = document.getElementById("bundleSID").value;
   const addressSID = document.getElementById("addressSID").value;
+  const password = document.getElementById("password").value;
 
   if (confirm(alertConfirm) === true) {
     try {
@@ -258,13 +258,13 @@ async function transfer() {
         gaccount: gainingAccountSID,
         bSID: bundleSID,
         aSID: addressSID,
-        pass: password,
       };
 
       response = await fetch("./transfer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": password,
         },
         body: JSON.stringify(data),
       });
@@ -320,16 +320,12 @@ async function number_fetch() {
     warning.style.display = "none";
     status_acc.style.display = "none";
 
-    adata = {
-      pass: password,
-    };
-
     aresponse = await fetch("./list_accounts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-      },
-      body: JSON.stringify(adata),
+        "Authorization": password,
+      }
     });
     console.log("return from Acc function");
     console.log(aresponse);
@@ -354,13 +350,13 @@ async function number_fetch() {
       fdata = {
         phone: phoneNumber,
         sub: ajson[a],
-        pass: password,
       };
 
       fresponse = await fetch("./fetch_sid", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": password,
         },
         body: JSON.stringify(fdata),
       });
@@ -429,8 +425,7 @@ async function number_fetch() {
 }
 
 async function mask() {
-  let acc = null;
-  let masked = null;
+  let acc= null;
   const response = await fetch("./mask_account", {
     method: "POST",
     headers: {
@@ -439,9 +434,8 @@ async function mask() {
   });
 
   acc = await response.json();
-  masked =
-    ("" + acc.acc).slice(0, 28).replace(/./g, "*") + ("" + acc.acc).slice(-6);
-  masking.innerHTML = masked;
+ 
+  masking.innerHTML = acc.acc;
   status_acc.innerHTML = ``;
 }
 
@@ -449,15 +443,12 @@ async function unmask() {
   let acc = null;
   const password = document.getElementById("password").value;
 
-  const data = {
-    pass: password,
-  };
   const response = await fetch("./get_account", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
+      "Authorization": password,
+    }
   });
   acc = await response.json();
 
@@ -478,5 +469,3 @@ async function unmask() {
       </script>
   </body>
 </html>
-
-
