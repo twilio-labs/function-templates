@@ -4,7 +4,7 @@ exports.handler = async function (context, event, callback) {
   const accountSid = process.env.ACCOUNT_SID;
   const authToken = process.env.AUTH_TOKEN;
   const response = new Twilio.Response();
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
 
   if (event.request.headers.authorization !== process.env.Password) {
     finalData = { er: 0 };
@@ -12,12 +12,12 @@ exports.handler = async function (context, event, callback) {
   }
 
   try {
-    const client = require("twilio")(accountSid, authToken, {
+    const client = require('twilio')(accountSid, authToken, {
       accountSid: event.laccount,
     });
 
     resp = await client
-      .incomingPhoneNumbers(event.phone)  // number SID
+      .incomingPhoneNumbers(event.phone) // number SID
       .update({
         accountSid: event.gaccount,
         bundleSid: event.bSID,

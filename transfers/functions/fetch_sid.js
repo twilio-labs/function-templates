@@ -6,13 +6,13 @@ exports.handler = async function (context, event, callback) {
   let addReq = null;
   const accountSid = process.env.ACCOUNT_SID;
   const authToken = process.env.AUTH_TOKEN;
-  const client = require("twilio")(accountSid, authToken, {
+  const client = require('twilio')(accountSid, authToken, {
     accountSid: event.sub,
   });
 
   const response = new Twilio.Response();
 
-  response.appendHeader("Content-Type", "application/json");
+  response.appendHeader('Content-Type', 'application/json');
 
   if (event.request.headers.authorization !== process.env.Password) {
     finalData = { er: 0 };
@@ -28,7 +28,7 @@ exports.handler = async function (context, event, callback) {
           sSid = k.sid;
           numStatus = k.status;
           addReq = k.addressRequirements;
-        }),
+        })
       );
 
     if (pNum !== null) {
@@ -44,7 +44,7 @@ exports.handler = async function (context, event, callback) {
       return callback(null, response);
     }
     response.setStatusCode(200);
-    response.setBody("not here");
+    response.setBody('not here');
     return callback(null, response);
   } catch (error) {
     console.error(error.message);
