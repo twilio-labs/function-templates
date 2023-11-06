@@ -329,6 +329,16 @@
       "id": "experimental-flex-dialpad",
       "name": "Native Flex Dialpad Add-on",
       "description": "Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad "
+    },
+    {
+      "id": "list-numbers",
+      "name": "List Numbers",
+      "description": "Lists all phone numbers in your account"
+    },
+    {
+      "id": "transfers",
+      "name": "Transfers",
+      "description": "Transfers a call to another number"
     }
   ]
 }

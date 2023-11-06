@@ -17,6 +17,8 @@ const incompleteTests = [
   'patient-appointment-management',
   'sip-quickstart',
   'voicemail',
+  'transfers',
+  'list-numbers',
 ];
 const excludedPaths =
   ['node_modules', 'test', 'coverage', 'docs', 'blank'] + skipList;
