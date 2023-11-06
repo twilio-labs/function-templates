@@ -1827,6 +1827,30 @@
         "configurable": true,
         "contentKey": null
       }
+    ],
+    "list-numbers": [
+      {
+        "key": "Password",
+        "required": true,
+        "format": "text",
+        "description": "Set the password that will allow you to use the application",
+        "link": null,
+        "default": "1",
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "transfers": [
+      {
+        "key": "Password",
+        "required": true,
+        "format": "text",
+        "description": "Set the password that will allow you to use the application",
+        "link": null,
+        "default": "1",
+        "configurable": true,
+        "contentKey": null
+      }
     ]
   }
 }
