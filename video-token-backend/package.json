@@ -5,6 +5,6 @@
   "dependencies": {
     "@twilio-labs/runtime-helpers": "^0.1.2",
     "nanoid": "^3.0.0",
-    "twilio": "^3.82.0"
+    "twilio": "^4.0.0"
   }
 }
