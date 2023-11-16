@@ -120,7 +120,6 @@
           - open the Function and click on "Environment Variables" in the bottom
           left corner, and change the value of Password. Click <b>"Deploy All"</b> afterwards in the bottom left corner.
           <br />
-          The default Password is <i><b>1</b></i>.
         </p>
         Password:<input id="password" type="password" name="password" />
         <br />
@@ -304,6 +303,9 @@
               numbers on your main account.
             </p>
             <input id="sAccount" type="text" name="sAccount" />
+            <br />
+            <input type="checkbox" id="allSubaccounts" name="allSubaccounts" value="allSubaccounts">
+            <label for="allSubaccounts">Retrieve numbers for all subaccounts and Main account at the same time</label><br>
             <p>
               Only show results for numbers that start with (filter based on country-code):
             </p>
@@ -325,7 +327,13 @@
                 value="1"
               />
             </div>
-            <br />
+            <div><br /></div>
+           <div>Select the format that will be used when the data is downloaded: <br />
+            <input type="radio" id="fileFormatcsv" name="fileFormatcsv" value="csv">
+            <label for="fileFormatcsv">csv</label><br / >
+            <input type="radio" id="fileFormattxt" name="fileFormatcsv" value="txt" checked>
+            <label for="fileFormattxt">text</label><br />  <br />
+           </div>
             <div><button onclick="list_numbers()">List numbers</button> &nbsp;
                  <button onclick="list_numbers(1)">Download without listing numbers</button>
             </div>
@@ -347,6 +355,7 @@
       <span>We can't wait to see what you build.</span>
     </footer>
     <script type="text/javascript">
+
 const info = document.querySelector(".alert-info");
 const error = document.querySelector(".alert-error");
 
@@ -368,6 +377,10 @@ async function list_numbers(down) {
   let numNumbers = null;
   let k = 0;
   let numCount = 0;
+  let aresponse = null;
+  let ajson = null;
+  let noNumbers = 0;
+  let numberStartsCount = 0;
 
   const subaccount = document.getElementById("sAccount").value;
   const password = document.getElementById("password").value;
@@ -378,8 +391,8 @@ async function list_numbers(down) {
   try {
     status_acc.innerHTML = ``;
     error.innerHTML = ``;
-    info.innerHTML='';
-    
+    info.innerHTML = "";
+
     console.log(pagination);
 
     info.style.display = "none";
@@ -394,14 +407,13 @@ async function list_numbers(down) {
       error.innerHTML = `The amount of numbers returned per page must be between 1 and 1000, and it must be a complete number - no decimals.`;
       return;
     }
-    if(startNumber !== ""){
-      if (!/^\+/.test(startNumber))
-      {
-         error.style.display = "";
+    if (startNumber !== "") {
+      if (!/^\+/.test(startNumber)) {
+        error.style.display = "";
         error.innerHTML = `<i>Only show results for numbers that start with</i> should start with the leading + sign or the field should be empty.`;
         return;
       }
-      if (!/^\+{1}[0-9]*$/.test(startNumber)){
+      if (!/^\+{1}[0-9]*$/.test(startNumber)) {
         error.style.display = "";
         error.innerHTML = `<i>Only show results for numbers that start with</i> must only contain the leading + sign and numbers, or the field should be empty.`;
         return;
@@ -412,310 +424,653 @@ async function list_numbers(down) {
     info.innerHTML = `loading...checked 0 numbers`;
     progress.innerHTML = `In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.`;
 
-    while (pageAll === 0) {
-      if (pagination === "No") {
-        pageAll = 1;
-        data = {
-          subAcc: subaccount,
-        };
-      } else {
-        data = {
-          subAcc: subaccount,
-          pageSize: pageSize,
-          page: page,
-          pageToken: Pagetoken,
-        };
-      }
-
-      response = await fetch("./list_numbers", {
+    if (document.getElementById("allSubaccounts").checked) {
+      aresponse = await fetch("./list_accounts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": password,
+          Authorization: password,
         },
-        body: JSON.stringify(data),
       });
-      console.log("response is");
-      console.log(response);
-      if (response.status === 200) {
-        json = await response.json();
-        console.log(json);
+      console.log("return from Acc function");
 
-        if (json.er == 0) {
+      if (aresponse.status === 200) {
+        ajson = await aresponse.json();
+
+        if (ajson.er === 0) {
           error.style.display = "";
+          status_acc.style.display = "none";
           info.style.display = "none";
-          info.innerHTML='';
+          progress.innerHTML = '';
           progress.style.display = "none";
-          progress.innerHTML = ``;
           error.innerHTML = `Wrong password.`;
-          console.log(response);
           return;
         }
-
-        if (pagination === "Yes") {
-          if (json.nextPageUrl) {
-            Pagetoken = json.nextPageUrl.split("PageToken=")[1];
-          } else {
-            pageAll = 1;
-          }
-          console.log(Pagetoken);
-          page += 1;
-
-          json = json.instances.slice();
-        }
-
-        numNumbers = json.length;
-
-        info.style.display = "";
-
-        for (let i = 0; i < numNumbers; i++) {
-          if(!json[i].phoneNumber.startsWith(startNumber)){
-            k += 1;
-            info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
-            continue;
-          }
-
-          allNumbers = allNumbers + "<pre>";
-
-          if (columnAdded === 0) {
-            //inserts column names
-            if (document.getElementById("accountSid").checked) {
-              allNumbers = allNumbers + "AccountSID;";
-            }
-            if (document.getElementById("addressSid").checked) {
-              allNumbers = allNumbers + "addressSid;";
-            }
-            if (document.getElementById("addressRequirements").checked) {
-              allNumbers = allNumbers + "addressRequirements;";
-            }
-            if (document.getElementById("beta").checked) {
-              allNumbers = allNumbers + "beta;";
-            }
-            if (document.getElementById("bundleSid").checked) {
-              allNumbers = allNumbers + "bundleSid;";
-            }
-            if (document.getElementById("fax").checked) {
-              allNumbers = allNumbers + "fax;";
-            }
-            if (document.getElementById("voice").checked) {
-              allNumbers = allNumbers + "voice;";
-            }
-            if (document.getElementById("sms").checked) {
-              allNumbers = allNumbers + "sms;";
-            }
-            if (document.getElementById("mms").checked) {
-              allNumbers = allNumbers + "mms;";
-            }
-            if (document.getElementById("dateCreated").checked) {
-              allNumbers = allNumbers + "dateCreated;";
-            }
-            if (document.getElementById("dateUpdated").checked) {
-              allNumbers = allNumbers + "dateUpdated;";
-            }
-            if (document.getElementById("friendlyName").checked) {
-              allNumbers = allNumbers + "friendlyName;";
-            }
-            if (document.getElementById("phoneNumber").checked) {
-              allNumbers = allNumbers + "phoneNumber;";
-            }
-            if (document.getElementById("sid").checked) {
-              allNumbers = allNumbers + "sid;";
-            }
-            if (document.getElementById("smsApplicationSid").checked) {
-              allNumbers = allNumbers + "smsApplicationSid;";
-            }
-            if (document.getElementById("smsFallbackMethod").checked) {
-              allNumbers = allNumbers + "smsFallbackMethod;";
-            }
-            if (document.getElementById("smsFallbackUrl").checked) {
-              allNumbers = allNumbers + "smsFallbackUrl;";
-            }
-            if (document.getElementById("smsMethod").checked) {
-              allNumbers = allNumbers + "smsMethod;";
-            }
-            if (document.getElementById("smsUrl").checked) {
-              allNumbers = allNumbers + "smsUrl;";
-            }
-            if (document.getElementById("status").checked) {
-              allNumbers = allNumbers + "status;";
-            }
-            if (document.getElementById("statusCallback").checked) {
-              allNumbers = allNumbers + "statusCallback;";
-            }
-            if (document.getElementById("statusCallbackMethod").checked) {
-              allNumbers = allNumbers + "statusCallbackMethod;";
-            }
-            if (document.getElementById("trunkSid").checked) {
-              allNumbers = allNumbers + "trunkSid;";
-            }
-            if (document.getElementById("uri").checked) {
-              allNumbers = allNumbers + "uri;";
-            }
-            if (document.getElementById("voiceApplicationSid").checked) {
-              allNumbers = allNumbers + "voiceApplicationSid;";
-            }
-            if (document.getElementById("voiceCallerIdLookup").checked) {
-              allNumbers = allNumbers + "voiceCallerIdLookup;";
-            }
-            if (document.getElementById("voiceFallbackMethod").checked) {
-              allNumbers = allNumbers + "voiceFallbackMethod;";
-            }
-            if (document.getElementById("voiceFallbackUrl").checked) {
-              allNumbers = allNumbers + "voiceFallbackUrl;";
-            }
-            if (document.getElementById("voiceMethod").checked) {
-              allNumbers = allNumbers + "voiceMethod;";
-            }
-            if (document.getElementById("voiceUrl").checked) {
-              allNumbers = allNumbers + "voiceUrl;";
-            }
-            if (document.getElementById("emergencyStatus").checked) {
-              allNumbers = allNumbers + "emergencyStatus;";
-            }
-            if (document.getElementById("emergencyAddressSid").checked) {
-              allNumbers = allNumbers + "emergencyAddressSid;";
-            }
-            columnAdded = 1;
-            allNumbers = allNumbers + "</pre><pre>";
-          }
-          if (document.getElementById("accountSid").checked) {
-            allNumbers = allNumbers + json[i].accountSid + ";";
-          }
-          if (document.getElementById("addressSid").checked) {
-            allNumbers = allNumbers + json[i].addressSid + ";";
-          }
-          if (document.getElementById("addressRequirements").checked) {
-            allNumbers = allNumbers + json[i].addressRequirements + ";";
-          }
-          if (document.getElementById("beta").checked) {
-            allNumbers = allNumbers + json[i].beta + ";";
-          }
-          if (document.getElementById("bundleSid").checked) {
-            allNumbers = allNumbers + json[i].bundleSid + ";";
-          }
-          if (document.getElementById("fax").checked) {
-            allNumbers = allNumbers + json[i].capabilities.fax + ";";
-          }
-          if (document.getElementById("voice").checked) {
-            allNumbers = allNumbers + json[i].capabilities.voice + ";";
-          }
-          if (document.getElementById("sms").checked) {
-            allNumbers = allNumbers + json[i].capabilities.sms + ";";
-          }
-          if (document.getElementById("mms").checked) {
-            allNumbers = allNumbers + json[i].capabilities.mms + ";";
-          }
-          if (document.getElementById("dateCreated").checked) {
-            allNumbers = allNumbers + json[i].dateCreated + ";";
-          }
-          if (document.getElementById("dateUpdated").checked) {
-            allNumbers = allNumbers + json[i].dateUpdated + ";";
-          }
-          if (document.getElementById("friendlyName").checked) {
-            allNumbers = allNumbers + json[i].friendlyName + ";";
-          }
-          if (document.getElementById("phoneNumber").checked) {
-            allNumbers = allNumbers + json[i].phoneNumber + ";";
-          }
-          if (document.getElementById("sid").checked) {
-            allNumbers = allNumbers + json[i].sid + ";";
-          }
-          if (document.getElementById("smsApplicationSid").checked) {
-            allNumbers = allNumbers + json[i].smsApplicationSid + ";";
-          }
-          if (document.getElementById("smsFallbackMethod").checked) {
-            allNumbers = allNumbers + json[i].smsFallbackMethod + ";";
-          }
-          if (document.getElementById("smsFallbackUrl").checked) {
-            allNumbers = allNumbers + json[i].smsFallbackUrl + ";";
-          }
-          if (document.getElementById("smsMethod").checked) {
-            allNumbers = allNumbers + json[i].smsMethod + ";";
-          }
-          if (document.getElementById("smsUrl").checked) {
-            allNumbers = allNumbers + json[i].smsUrl + ";";
-          }
-          if (document.getElementById("status").checked) {
-            allNumbers = allNumbers + json[i].status + ";";
-          }
-          if (document.getElementById("statusCallback").checked) {
-            allNumbers = allNumbers + json[i].statusCallback + ";";
-          }
-          if (document.getElementById("statusCallbackMethod").checked) {
-            allNumbers = allNumbers + json[i].statusCallbackMethod + ";";
-          }
-          if (document.getElementById("trunkSid").checked) {
-            allNumbers = allNumbers + json[i].trunkSid + ";";
-          }
-          if (document.getElementById("uri").checked) {
-            allNumbers = allNumbers + json[i].uri + ";";
-          }
-          if (document.getElementById("voiceApplicationSid").checked) {
-            allNumbers = allNumbers + json[i].voiceApplicationSid + ";";
-          }
-          if (document.getElementById("voiceCallerIdLookup").checked) {
-            allNumbers = allNumbers + json[i].voiceCallerIdLookup + ";";
-          }
-          if (document.getElementById("voiceFallbackMethod").checked) {
-            allNumbers = allNumbers + json[i].voiceFallbackMethod + ";";
-          }
-          if (document.getElementById("voiceFallbackUrl").checked) {
-            allNumbers = allNumbers + json[i].voiceFallbackUrl + ";";
-          }
-          if (document.getElementById("voiceMethod").checked) {
-            allNumbers = allNumbers + json[i].voiceMethod + ";";
-          }
-          if (document.getElementById("voiceUrl").checked) {
-            allNumbers = allNumbers + json[i].voiceUrl + ";";
-          }
-          if (document.getElementById("emergencyStatus").checked) {
-            allNumbers = allNumbers + json[i].emergencyStatus + ";";
-          }
-          if (document.getElementById("emergencyAddressSid").checked) {
-            allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
-          }
-          allNumbers = allNumbers + "</pre>";
-          k += 1;
-          numCount += 1;
-          info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
-
-          if (numCount > 199 && down !== 1){
-            allNumbers = allNumbers + '<pre> <b>Results limited to 200 numbers</b>. Not all results displayed. Use the button "Download without listing numbers" for larger requests.</pre>';
-            break;
-          }
-        } // for closed
-      } // if status 200 closed
-      else {
-        console.error(json.error);
+      } else {
         error.style.display = "";
-        info.style.display = "none";
+        progress.innerHTML = '';
         progress.style.display = "none";
-        progress.innerHTML = ``;
-        error.innerHTML = `Something Wrong: ${json.error} <br />Server response status is: ${response.status}
-              <br />Server message is: ${response.message}`;
+        error.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
         return;
       }
-      if (numCount > 199 && down !== 1){
-        break;
-      }
-    } // while closed
-    progress.innerHTML ='';
+console.log (ajson);
+      for (a = 0; a < ajson.length; a++) {
+        numberStartsCount = 0;
+        while (pageAll === 0) {
+          if (pagination === "No") {
+            pageAll = 1;
+            data = {
+              subAcc: ajson[a],
+            };
+          } else {
+            data = {
+              subAcc: ajson[a],
+              pageSize: pageSize,
+              page: page,
+              pageToken: Pagetoken,
+            };
+          }
+
+          response = await fetch("./list_numbers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: password,
+            },
+            body: JSON.stringify(data),
+          });
+          if (response.status === 200) {
+            json = await response.json();
+            console.log(json);
+
+            if (json.er == 0) {
+              error.style.display = "";
+              info.style.display = "none";
+              info.innerHTML = "";
+              progress.style.display = "none";
+              progress.innerHTML = ``;
+              error.innerHTML = `Wrong password.`;
+              console.log(response);
+              return;
+            }
+
+            if (pagination === "Yes") {
+              if (json.nextPageUrl) {
+                Pagetoken = json.nextPageUrl.split("PageToken=")[1];
+              } else {
+                pageAll = 1;
+              }
+              console.log(Pagetoken);
+              page += 1;
+
+              json = json.instances.slice();
+            }
+
+            numNumbers = json.length;
+
+            if (numNumbers === 0){
+              noNumbers=1;
+            }
+
+            info.style.display = "";
+            for (let i = 0; i < numNumbers; i++) {
+              if (!json[i].phoneNumber.startsWith(startNumber)) {
+                k += 1;
+                info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
+                continue;
+              }
+              numberStartsCount = 1;
+              allNumbers = allNumbers + "<pre>";
+
+              if (columnAdded === 0) {
+                //inserts column names
+                if (document.getElementById("accountSid").checked) {
+                  allNumbers = allNumbers + "AccountSID;";
+                }
+                if (document.getElementById("addressSid").checked) {
+                  allNumbers = allNumbers + "addressSid;";
+                }
+                if (document.getElementById("addressRequirements").checked) {
+                  allNumbers = allNumbers + "addressRequirements;";
+                }
+                if (document.getElementById("beta").checked) {
+                  allNumbers = allNumbers + "beta;";
+                }
+                if (document.getElementById("bundleSid").checked) {
+                  allNumbers = allNumbers + "bundleSid;";
+                }
+                if (document.getElementById("fax").checked) {
+                  allNumbers = allNumbers + "fax;";
+                }
+                if (document.getElementById("voice").checked) {
+                  allNumbers = allNumbers + "voice;";
+                }
+                if (document.getElementById("sms").checked) {
+                  allNumbers = allNumbers + "sms;";
+                }
+                if (document.getElementById("mms").checked) {
+                  allNumbers = allNumbers + "mms;";
+                }
+                if (document.getElementById("dateCreated").checked) {
+                  allNumbers = allNumbers + "dateCreated;";
+                }
+                if (document.getElementById("dateUpdated").checked) {
+                  allNumbers = allNumbers + "dateUpdated;";
+                }
+                if (document.getElementById("friendlyName").checked) {
+                  allNumbers = allNumbers + "friendlyName;";
+                }
+                if (document.getElementById("phoneNumber").checked) {
+                  allNumbers = allNumbers + "phoneNumber;";
+                }
+                if (document.getElementById("sid").checked) {
+                  allNumbers = allNumbers + "sid;";
+                }
+                if (document.getElementById("smsApplicationSid").checked) {
+                  allNumbers = allNumbers + "smsApplicationSid;";
+                }
+                if (document.getElementById("smsFallbackMethod").checked) {
+                  allNumbers = allNumbers + "smsFallbackMethod;";
+                }
+                if (document.getElementById("smsFallbackUrl").checked) {
+                  allNumbers = allNumbers + "smsFallbackUrl;";
+                }
+                if (document.getElementById("smsMethod").checked) {
+                  allNumbers = allNumbers + "smsMethod;";
+                }
+                if (document.getElementById("smsUrl").checked) {
+                  allNumbers = allNumbers + "smsUrl;";
+                }
+                if (document.getElementById("status").checked) {
+                  allNumbers = allNumbers + "status;";
+                }
+                if (document.getElementById("statusCallback").checked) {
+                  allNumbers = allNumbers + "statusCallback;";
+                }
+                if (document.getElementById("statusCallbackMethod").checked) {
+                  allNumbers = allNumbers + "statusCallbackMethod;";
+                }
+                if (document.getElementById("trunkSid").checked) {
+                  allNumbers = allNumbers + "trunkSid;";
+                }
+                if (document.getElementById("uri").checked) {
+                  allNumbers = allNumbers + "uri;";
+                }
+                if (document.getElementById("voiceApplicationSid").checked) {
+                  allNumbers = allNumbers + "voiceApplicationSid;";
+                }
+                if (document.getElementById("voiceCallerIdLookup").checked) {
+                  allNumbers = allNumbers + "voiceCallerIdLookup;";
+                }
+                if (document.getElementById("voiceFallbackMethod").checked) {
+                  allNumbers = allNumbers + "voiceFallbackMethod;";
+                }
+                if (document.getElementById("voiceFallbackUrl").checked) {
+                  allNumbers = allNumbers + "voiceFallbackUrl;";
+                }
+                if (document.getElementById("voiceMethod").checked) {
+                  allNumbers = allNumbers + "voiceMethod;";
+                }
+                if (document.getElementById("voiceUrl").checked) {
+                  allNumbers = allNumbers + "voiceUrl;";
+                }
+                if (document.getElementById("emergencyStatus").checked) {
+                  allNumbers = allNumbers + "emergencyStatus;";
+                }
+                if (document.getElementById("emergencyAddressSid").checked) {
+                  allNumbers = allNumbers + "emergencyAddressSid;";
+                }
+                columnAdded = 1;
+                allNumbers = allNumbers + "</pre><pre>";
+              }
+              if (document.getElementById("accountSid").checked) {
+                allNumbers = allNumbers + json[i].accountSid + ";";
+              }
+              if (document.getElementById("addressSid").checked) {
+                allNumbers = allNumbers + json[i].addressSid + ";";
+              }
+              if (document.getElementById("addressRequirements").checked) {
+                allNumbers = allNumbers + json[i].addressRequirements + ";";
+              }
+              if (document.getElementById("beta").checked) {
+                allNumbers = allNumbers + json[i].beta + ";";
+              }
+              if (document.getElementById("bundleSid").checked) {
+                allNumbers = allNumbers + json[i].bundleSid + ";";
+              }
+              if (document.getElementById("fax").checked) {
+                allNumbers = allNumbers + json[i].capabilities.fax + ";";
+              }
+              if (document.getElementById("voice").checked) {
+                allNumbers = allNumbers + json[i].capabilities.voice + ";";
+              }
+              if (document.getElementById("sms").checked) {
+                allNumbers = allNumbers + json[i].capabilities.sms + ";";
+              }
+              if (document.getElementById("mms").checked) {
+                allNumbers = allNumbers + json[i].capabilities.mms + ";";
+              }
+              if (document.getElementById("dateCreated").checked) {
+                allNumbers = allNumbers + json[i].dateCreated + ";";
+              }
+              if (document.getElementById("dateUpdated").checked) {
+                allNumbers = allNumbers + json[i].dateUpdated + ";";
+              }
+              if (document.getElementById("friendlyName").checked) {
+                allNumbers = allNumbers + json[i].friendlyName + ";";
+              }
+              if (document.getElementById("phoneNumber").checked) {
+                allNumbers = allNumbers + json[i].phoneNumber + ";";
+              }
+              if (document.getElementById("sid").checked) {
+                allNumbers = allNumbers + json[i].sid + ";";
+              }
+              if (document.getElementById("smsApplicationSid").checked) {
+                allNumbers = allNumbers + json[i].smsApplicationSid + ";";
+              }
+              if (document.getElementById("smsFallbackMethod").checked) {
+                allNumbers = allNumbers + json[i].smsFallbackMethod + ";";
+              }
+              if (document.getElementById("smsFallbackUrl").checked) {
+                allNumbers = allNumbers + json[i].smsFallbackUrl + ";";
+              }
+              if (document.getElementById("smsMethod").checked) {
+                allNumbers = allNumbers + json[i].smsMethod + ";";
+              }
+              if (document.getElementById("smsUrl").checked) {
+                allNumbers = allNumbers + json[i].smsUrl + ";";
+              }
+              if (document.getElementById("status").checked) {
+                allNumbers = allNumbers + json[i].status + ";";
+              }
+              if (document.getElementById("statusCallback").checked) {
+                allNumbers = allNumbers + json[i].statusCallback + ";";
+              }
+              if (document.getElementById("statusCallbackMethod").checked) {
+                allNumbers = allNumbers + json[i].statusCallbackMethod + ";";
+              }
+              if (document.getElementById("trunkSid").checked) {
+                allNumbers = allNumbers + json[i].trunkSid + ";";
+              }
+              if (document.getElementById("uri").checked) {
+                allNumbers = allNumbers + json[i].uri + ";";
+              }
+              if (document.getElementById("voiceApplicationSid").checked) {
+                allNumbers = allNumbers + json[i].voiceApplicationSid + ";";
+              }
+              if (document.getElementById("voiceCallerIdLookup").checked) {
+                allNumbers = allNumbers + json[i].voiceCallerIdLookup + ";";
+              }
+              if (document.getElementById("voiceFallbackMethod").checked) {
+                allNumbers = allNumbers + json[i].voiceFallbackMethod + ";";
+              }
+              if (document.getElementById("voiceFallbackUrl").checked) {
+                allNumbers = allNumbers + json[i].voiceFallbackUrl + ";";
+              }
+              if (document.getElementById("voiceMethod").checked) {
+                allNumbers = allNumbers + json[i].voiceMethod + ";";
+              }
+              if (document.getElementById("voiceUrl").checked) {
+                allNumbers = allNumbers + json[i].voiceUrl + ";";
+              }
+              if (document.getElementById("emergencyStatus").checked) {
+                allNumbers = allNumbers + json[i].emergencyStatus + ";";
+              }
+              if (document.getElementById("emergencyAddressSid").checked) {
+                allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
+              }
+              allNumbers = allNumbers + "</pre>";
+              k += 1;
+              numCount += 1;
+              info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
+
+              if (numCount > 199 && down !== 1) {
+                allNumbers =
+                  allNumbers +
+                  '<pre> <b>Results limited to 200 numbers</b>. Not all results displayed. Use the button "Download without listing numbers" for larger requests.</pre>';
+                break;
+              }
+            } // for closed
+          } // if status 200 closed
+          else {
+            console.error(json.error);
+            error.style.display = "";
+            info.style.display = "none";
+            progress.style.display = "none";
+            progress.innerHTML = ``;
+            error.innerHTML = `Something Wrong: ${json.error} <br />Server response status is: ${response.status}
+              <br />Server message is: ${response.message}`;
+            return;
+          }
+          if (numCount > 199 && down !== 1) {
+            break;
+          }
+        } // while closed
+        if (noNumbers === 1 || numberStartsCount === 0){
+          allNumbers += "<pre>" + ajson[a] + ";No Number Found;</pre>";
+          noNumbers = 0;
+        }
+        pageAll = 0;
+      } // for closed
+    } // if allSub closed
+    else {
+      while (pageAll === 0) {
+        if (pagination === "No") {
+          pageAll = 1;
+          data = {
+            subAcc: subaccount,
+          };
+        } else {
+          data = {
+            subAcc: subaccount,
+            pageSize: pageSize,
+            page: page,
+            pageToken: Pagetoken,
+          };
+        }
+
+        response = await fetch("./list_numbers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(data),
+        });
+        console.log("response is");
+        console.log(response);
+        if (response.status === 200) {
+          json = await response.json();
+          console.log(json);
+
+          if (json.er == 0) {
+            error.style.display = "";
+            info.style.display = "none";
+            info.innerHTML = "";
+            progress.style.display = "none";
+            progress.innerHTML = ``;
+            error.innerHTML = `Wrong password.`;
+            console.log(response);
+            return;
+          }
+
+          if (pagination === "Yes") {
+            if (json.nextPageUrl) {
+              Pagetoken = json.nextPageUrl.split("PageToken=")[1];
+            } else {
+              pageAll = 1;
+            }
+            console.log(Pagetoken);
+            page += 1;
+
+            json = json.instances.slice();
+          }
+
+          numNumbers = json.length;
+
+          info.style.display = "";
+
+          for (let i = 0; i < numNumbers; i++) {
+            if (!json[i].phoneNumber.startsWith(startNumber)) {
+              k += 1;
+              info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
+              continue;
+            }
+
+            allNumbers = allNumbers + "<pre>";
+
+            if (columnAdded === 0) {
+              //inserts column names
+              if (document.getElementById("accountSid").checked) {
+                allNumbers = allNumbers + "AccountSID;";
+              }
+              if (document.getElementById("addressSid").checked) {
+                allNumbers = allNumbers + "addressSid;";
+              }
+              if (document.getElementById("addressRequirements").checked) {
+                allNumbers = allNumbers + "addressRequirements;";
+              }
+              if (document.getElementById("beta").checked) {
+                allNumbers = allNumbers + "beta;";
+              }
+              if (document.getElementById("bundleSid").checked) {
+                allNumbers = allNumbers + "bundleSid;";
+              }
+              if (document.getElementById("fax").checked) {
+                allNumbers = allNumbers + "fax;";
+              }
+              if (document.getElementById("voice").checked) {
+                allNumbers = allNumbers + "voice;";
+              }
+              if (document.getElementById("sms").checked) {
+                allNumbers = allNumbers + "sms;";
+              }
+              if (document.getElementById("mms").checked) {
+                allNumbers = allNumbers + "mms;";
+              }
+              if (document.getElementById("dateCreated").checked) {
+                allNumbers = allNumbers + "dateCreated;";
+              }
+              if (document.getElementById("dateUpdated").checked) {
+                allNumbers = allNumbers + "dateUpdated;";
+              }
+              if (document.getElementById("friendlyName").checked) {
+                allNumbers = allNumbers + "friendlyName;";
+              }
+              if (document.getElementById("phoneNumber").checked) {
+                allNumbers = allNumbers + "phoneNumber;";
+              }
+              if (document.getElementById("sid").checked) {
+                allNumbers = allNumbers + "sid;";
+              }
+              if (document.getElementById("smsApplicationSid").checked) {
+                allNumbers = allNumbers + "smsApplicationSid;";
+              }
+              if (document.getElementById("smsFallbackMethod").checked) {
+                allNumbers = allNumbers + "smsFallbackMethod;";
+              }
+              if (document.getElementById("smsFallbackUrl").checked) {
+                allNumbers = allNumbers + "smsFallbackUrl;";
+              }
+              if (document.getElementById("smsMethod").checked) {
+                allNumbers = allNumbers + "smsMethod;";
+              }
+              if (document.getElementById("smsUrl").checked) {
+                allNumbers = allNumbers + "smsUrl;";
+              }
+              if (document.getElementById("status").checked) {
+                allNumbers = allNumbers + "status;";
+              }
+              if (document.getElementById("statusCallback").checked) {
+                allNumbers = allNumbers + "statusCallback;";
+              }
+              if (document.getElementById("statusCallbackMethod").checked) {
+                allNumbers = allNumbers + "statusCallbackMethod;";
+              }
+              if (document.getElementById("trunkSid").checked) {
+                allNumbers = allNumbers + "trunkSid;";
+              }
+              if (document.getElementById("uri").checked) {
+                allNumbers = allNumbers + "uri;";
+              }
+              if (document.getElementById("voiceApplicationSid").checked) {
+                allNumbers = allNumbers + "voiceApplicationSid;";
+              }
+              if (document.getElementById("voiceCallerIdLookup").checked) {
+                allNumbers = allNumbers + "voiceCallerIdLookup;";
+              }
+              if (document.getElementById("voiceFallbackMethod").checked) {
+                allNumbers = allNumbers + "voiceFallbackMethod;";
+              }
+              if (document.getElementById("voiceFallbackUrl").checked) {
+                allNumbers = allNumbers + "voiceFallbackUrl;";
+              }
+              if (document.getElementById("voiceMethod").checked) {
+                allNumbers = allNumbers + "voiceMethod;";
+              }
+              if (document.getElementById("voiceUrl").checked) {
+                allNumbers = allNumbers + "voiceUrl;";
+              }
+              if (document.getElementById("emergencyStatus").checked) {
+                allNumbers = allNumbers + "emergencyStatus;";
+              }
+              if (document.getElementById("emergencyAddressSid").checked) {
+                allNumbers = allNumbers + "emergencyAddressSid;";
+              }
+              columnAdded = 1;
+              allNumbers = allNumbers + "</pre><pre>";
+            }
+            if (document.getElementById("accountSid").checked) {
+              allNumbers = allNumbers + json[i].accountSid + ";";
+            }
+            if (document.getElementById("addressSid").checked) {
+              allNumbers = allNumbers + json[i].addressSid + ";";
+            }
+            if (document.getElementById("addressRequirements").checked) {
+              allNumbers = allNumbers + json[i].addressRequirements + ";";
+            }
+            if (document.getElementById("beta").checked) {
+              allNumbers = allNumbers + json[i].beta + ";";
+            }
+            if (document.getElementById("bundleSid").checked) {
+              allNumbers = allNumbers + json[i].bundleSid + ";";
+            }
+            if (document.getElementById("fax").checked) {
+              allNumbers = allNumbers + json[i].capabilities.fax + ";";
+            }
+            if (document.getElementById("voice").checked) {
+              allNumbers = allNumbers + json[i].capabilities.voice + ";";
+            }
+            if (document.getElementById("sms").checked) {
+              allNumbers = allNumbers + json[i].capabilities.sms + ";";
+            }
+            if (document.getElementById("mms").checked) {
+              allNumbers = allNumbers + json[i].capabilities.mms + ";";
+            }
+            if (document.getElementById("dateCreated").checked) {
+              allNumbers = allNumbers + json[i].dateCreated + ";";
+            }
+            if (document.getElementById("dateUpdated").checked) {
+              allNumbers = allNumbers + json[i].dateUpdated + ";";
+            }
+            if (document.getElementById("friendlyName").checked) {
+              allNumbers = allNumbers + json[i].friendlyName + ";";
+            }
+            if (document.getElementById("phoneNumber").checked) {
+              allNumbers = allNumbers + json[i].phoneNumber + ";";
+            }
+            if (document.getElementById("sid").checked) {
+              allNumbers = allNumbers + json[i].sid + ";";
+            }
+            if (document.getElementById("smsApplicationSid").checked) {
+              allNumbers = allNumbers + json[i].smsApplicationSid + ";";
+            }
+            if (document.getElementById("smsFallbackMethod").checked) {
+              allNumbers = allNumbers + json[i].smsFallbackMethod + ";";
+            }
+            if (document.getElementById("smsFallbackUrl").checked) {
+              allNumbers = allNumbers + json[i].smsFallbackUrl + ";";
+            }
+            if (document.getElementById("smsMethod").checked) {
+              allNumbers = allNumbers + json[i].smsMethod + ";";
+            }
+            if (document.getElementById("smsUrl").checked) {
+              allNumbers = allNumbers + json[i].smsUrl + ";";
+            }
+            if (document.getElementById("status").checked) {
+              allNumbers = allNumbers + json[i].status + ";";
+            }
+            if (document.getElementById("statusCallback").checked) {
+              allNumbers = allNumbers + json[i].statusCallback + ";";
+            }
+            if (document.getElementById("statusCallbackMethod").checked) {
+              allNumbers = allNumbers + json[i].statusCallbackMethod + ";";
+            }
+            if (document.getElementById("trunkSid").checked) {
+              allNumbers = allNumbers + json[i].trunkSid + ";";
+            }
+            if (document.getElementById("uri").checked) {
+              allNumbers = allNumbers + json[i].uri + ";";
+            }
+            if (document.getElementById("voiceApplicationSid").checked) {
+              allNumbers = allNumbers + json[i].voiceApplicationSid + ";";
+            }
+            if (document.getElementById("voiceCallerIdLookup").checked) {
+              allNumbers = allNumbers + json[i].voiceCallerIdLookup + ";";
+            }
+            if (document.getElementById("voiceFallbackMethod").checked) {
+              allNumbers = allNumbers + json[i].voiceFallbackMethod + ";";
+            }
+            if (document.getElementById("voiceFallbackUrl").checked) {
+              allNumbers = allNumbers + json[i].voiceFallbackUrl + ";";
+            }
+            if (document.getElementById("voiceMethod").checked) {
+              allNumbers = allNumbers + json[i].voiceMethod + ";";
+            }
+            if (document.getElementById("voiceUrl").checked) {
+              allNumbers = allNumbers + json[i].voiceUrl + ";";
+            }
+            if (document.getElementById("emergencyStatus").checked) {
+              allNumbers = allNumbers + json[i].emergencyStatus + ";";
+            }
+            if (document.getElementById("emergencyAddressSid").checked) {
+              allNumbers = allNumbers + json[i].emergencyAddressSid + ";";
+            }
+            allNumbers = allNumbers + "</pre>";
+            k += 1;
+            numCount += 1;
+            info.innerHTML = `loading...processed ${k} numbers...found ${numCount} numbers that match the filter.`;
+
+            if (numCount > 199 && down !== 1) {
+              allNumbers =
+                allNumbers +
+                '<pre> <b>Results limited to 200 numbers</b>. Not all results displayed. Use the button "Download without listing numbers" for larger requests.</pre>';
+              break;
+            }
+          } // for closed
+        } // if status 200 closed
+        else {
+          console.error(json.error);
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML = ``;
+          error.innerHTML = `Something Wrong: ${json.error} <br />Server response status is: ${response.status}
+              <br />Server message is: ${response.message}`;
+          return;
+        }
+        if (numCount > 199 && down !== 1) {
+          break;
+        }
+      } // while closed
+    } // else allSub closed
+    progress.innerHTML = "";
+
     if (down === 1) {
-      if (numCount === 0){
+      if (numCount === 0) {
         allNumbers = "No number found.";
       }
       allNumbers = allNumbers.replace(/\"/g, "");
-      allNumbers = allNumbers.replace(/<pre>/g, "%0D%0A");
-      allNumbers = allNumbers.replace(/<\/pre>/g, "");
-      var a = document.body.appendChild(document.createElement("a"));
-      a.download = "listNumbers.txt";
-      a.href = "data:text/plain," + allNumbers;
-      a.click(); //Trigger a click on the element
-      info.innerHTML = `done`;
-      progress.style.display = "none";
-      progress.innerHTML = ``;
+      allNumbers = allNumbers.replace(/<\/pre>/g, "%0D%0A");
+      allNumbers = allNumbers.replace(/<pre>/g, "");
+      let a = document.body.appendChild(document.createElement("a"));
+      if (document.getElementById("fileFormatcsv").checked) {
+        a.download = "listNumbers.csv";
+        a.href = "data:text/csv;charset=utf-8," + allNumbers;
+        a.click(); //Trigger a click on the element
+        info.innerHTML = `done`;
+        progress.innerHTML = ``;
+        progress.style.display = "none";
+      } else {
+        a.download = "listNumbers.txt";
+        a.href = "data:text/plain," + allNumbers;
+        a.click(); //Trigger a click on the element
+        info.innerHTML = `done`;
+        progress.innerHTML = ``;
+        progress.style.display = "none";
+      }
     } else {
-      if (numCount === 0){
+      if (numCount === 0) {
         allNumbers = "No number found.";
       }
       allNumbers = allNumbers.replace(/\"/g, "");
@@ -738,13 +1093,21 @@ function download() {
   ) {
     return;
   }
-  var a = document.body.appendChild(document.createElement("a"));
-  var newlines = document.getElementById("info1").innerHTML;
-  a.download = "listNumbers.txt";
-  newlines = newlines.replace(/<pre>/g, "%0D%0A");
-  newlines = newlines.replace(/<\/pre>/g, "");
-  a.href = "data:text/plain," + newlines;
-  a.click(); //Trigger a click on the element
+  let a = document.body.appendChild(document.createElement("a"));
+  let newlines = document.getElementById("info1").innerHTML;
+  if (document.getElementById("fileFormatcsv").checked) {
+    a.download = "listNumbers.csv";
+    newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
+    newlines = newlines.replace(/<pre>/g, "");
+    a.href = "data:text/csv;charset=utf-8," + newlines;
+    a.click(); //Trigger a click on the element
+  } else {
+    a.download = "listNumbers.txt";
+    newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
+    newlines = newlines.replace(/<pre>/g, "");
+    a.href = "data:text/plain," + newlines;
+    a.click(); //Trigger a click on the element
+  }
 }
 
 function checkAll() {
@@ -755,7 +1118,7 @@ function checkAll() {
 }
 
 async function mask() {
-  let acc= null;
+  let acc = null;
   const response = await fetch("./mask_account", {
     method: "POST",
     headers: {
@@ -764,7 +1127,7 @@ async function mask() {
   });
 
   acc = await response.json();
- 
+
   masking.innerHTML = acc.acc;
   status_acc.innerHTML = ``;
 }
@@ -776,14 +1139,14 @@ async function unmask() {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": password,
-    }
+      Authorization: password,
+    },
   });
-  var acc = await response.json();
+  let acc = await response.json();
 
   if (acc.er === 0) {
     status_acc.innerHTML = `Wrong password.`;
-    info.innerHTML='';
+    info.innerHTML = "";
 
     return;
   }
