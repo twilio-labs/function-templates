@@ -95,7 +95,7 @@
         <p>
           Before you start, make sure that the checkbox "Add my Twilio
           Credentials (ACCOUNT_SID) and (AUTH_TOKEN) to ENV" is checked in the
-          "Environmental Variables" of this Function. If it's not checked,
+          "Environmental Variables" section of this Function. If it's not checked,
           enable it and click "Deploy All" at the bottom.
         </p>
         <h2>
@@ -114,27 +114,35 @@
           <a
             target="_blank"
             href="https://console.twilio.com/us1/develop/functions/services"
-            >Function</a>
+            >Function</a
+          >
           - open the Function and click on "Environment Variables" in the bottom
-          left corner, and change the value of Password. Click on "Deploy All" button afterwards in the bottom left corner. <br />The default
-          Password is <i><b>1</b></i>.
+          left corner, and change the value of Password. Click on "Deploy All"
+          button afterwards in the bottom left corner.
         </p>
         Password:<input id="password" type="password" name="password" />
         <br />
         <div><p>You are working with account:</p></div>
         <div id="masking"></div>
         <div><button onclick="unmask()">Show Account</button></div>
-        <div id="status_acc" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;"></div>
+        <div
+          id="status_acc"
+          style="
+            color: #a94442;
+            background-color: #f2dede;
+            border-color: #ebccd1;
+          "
+        ></div>
         <div><h3>Fetch Number SID</h3></div>
         <div>
           <form id="fetchSID" action="javascript:number_fetch()">
             <p>
-              In the below field, enter the number to get the SID that you need to use to transfer
-              it. The search is done on your main account and its
-              subaccounts automatically. <br /><b>Be carefull</b>, if you insert an
-              incomplete number, the system will search for a number on your
-              accounts (main account and subaccounts) that starts with what you
-              inserted. <br />
+              In the below field, enter the number to get the SID that you need
+              to use to transfer it. The search is done on your main account and
+              its subaccounts automatically. <br /><b>Be carefull</b>, if you
+              insert an incomplete number, the system will search for a number
+              on your accounts (main account and subaccounts) that starts with
+              what you inserted. <br />
               For example, if you have a number +123456789, and you insert
               +1234567, the details of the complete number will be returned.
               Make sure you check what is the number in the result.
@@ -164,7 +172,9 @@
                 href="https://support.twilio.com/hc/en-us/articles/223135327-Moving-Twilio-Phone-Numbers-to-another-Twilio-Account"
                 >FAQ page</a
               >. <br />
-              <b>Hosted Numbers should not</b> be transferred with this tool or the API. Contact Twilio Support if you want to transfer a Hosted number.
+              <b>Hosted Numbers should not</b> be transferred with this tool or
+              the API. Contact Twilio Support if you want to transfer a Hosted
+              number.
             </p>
             <p>
               Enter the SID of the phone number you would like to transfer
@@ -202,19 +212,14 @@
               Insert the Address SID (depends on regulatory requirements of the
               number):
             </p>
-            <input
-              id="addressSID"
-              type="text"
-              name="addressSID"
-              value=""
-            />
+            <input id="addressSID" type="text" name="addressSID" value="" />
             <input id="transfer" type="submit" value="Transfer" />
           </form>
           <div class="alert alert-info" style="display: none"></div>
           <div class="alert alert-error" style="display: none"></div>
         </div>
         <div>
-        <!-- EDIT_CODE -->
+          <!-- EDIT_CODE_V2 -->
         </div>
       </div>
     </main>
