@@ -136,165 +136,165 @@
             type="checkbox"
             id="accountSid"
             class="pl"
-            name="accountSid"
+            name="numberProperties"
             checked
           />accountSid
           <input
             type="checkbox"
             id="addressSid"
             class="pl"
-            name="addressSid"
+            name="numberProperties"
           />addressSid
           <input
             type="checkbox"
             id="addressRequirements"
             class="pl"
-            name="addressRequirements"
+            name="numberProperties"
           />addressRequirements
-          <input type="checkbox" id="beta" class="pl" name="beta" />beta
+          <input type="checkbox" id="beta" class="pl" name="numberProperties" />beta
           <input
             type="checkbox"
             id="bundleSid"
             class="pl"
-            name="bundleSid"
+            name="numberProperties"
           />bundleSid
-          <input type="checkbox" id="fax" class="pl" name="fax" />capabilities
+          <input type="checkbox" id="fax" class="pl" name="numberProperties" />capabilities
           fax
           <input
             type="checkbox"
             id="voice"
             class="pl"
-            name="voice"
+            name="numberProperties"
             checked
           />capabilities voice
           <input
             type="checkbox"
             id="sms"
             class="pl"
-            name="vehismscle3"
+            name="numberProperties"
             checked
           />capabilities sms
-          <input type="checkbox" id="mms" class="pl" name="mms" />capabilities
+          <input type="checkbox" id="mms" class="pl" name="numberProperties" />capabilities
           mms
           <input
             type="checkbox"
             id="dateCreated"
             class="pl"
-            name="dateCreated"
+            name="numberProperties"
             checked
           />dateCreated
           <input
             type="checkbox"
             id="dateUpdated"
             class="pl"
-            name="dateUpdated"
+            name="numberProperties"
           />dateUpdated
           <input
             type="checkbox"
             id="friendlyName"
             class="pl"
-            name="friendlyName"
+            name="numberProperties"
             checked
           />friendlyName
           <input
             type="checkbox"
             id="phoneNumber"
             class="pl"
-            name="phoneNumber"
+            name="numberProperties"
             checked
           />phoneNumber
-          <input type="checkbox" id="sid" class="pl" name="sid" checked />sid
+          <input type="checkbox" id="sid" class="pl" name="numberProperties" checked />sid
           <input
             type="checkbox"
             id="smsApplicationSid"
             class="pl"
-            name="smsApplicationSid"
+            name="numberProperties"
           />smsApplicationSid
           <input
             type="checkbox"
             id="smsFallbackMethod"
             class="pl"
-            name="smsFallbackMethod"
+            name="numberProperties"
           />smsFallbackMethod
           <input
             type="checkbox"
             id="smsFallbackUrl"
             class="pl"
-            name="smsFallbackUrl"
+            name="numberProperties"
           />smsFallbackUrl
           <input
             type="checkbox"
             id="smsMethod"
             class="pl"
-            name="smsMethod"
+            name="numberProperties"
           />smsMethod
-          <input type="checkbox" id="smsUrl" class="pl" name="smsUrl" />smsUrl
-          <input type="checkbox" id="status" class="pl" name="status" />status
+          <input type="checkbox" id="smsUrl" class="pl" name="numberProperties" />smsUrl
+          <input type="checkbox" id="status" class="pl" name="numberProperties" />status
           <input
             type="checkbox"
             id="statusCallback"
             class="pl"
-            name="statusCallback"
+            name="numberProperties"
           />statusCallback
           <input
             type="checkbox"
             id="statusCallbackMethod"
             class="pl"
-            name="statusCallbackMethod"
+            name="numberProperties"
           />statusCallbackMethod
           <input
             type="checkbox"
             id="trunkSid"
             class="pl"
-            name="trunkSid"
-          />trunkSid <input type="checkbox" id="uri" class="pl" name="uri" />uri
+            name="numberProperties"
+          />trunkSid <input type="checkbox" id="uri" class="pl" name="numberProperties" />uri
           <input
             type="checkbox"
             id="voiceApplicationSid"
             class="pl"
-            name="voiceApplicationSid"
+            name="numberProperties"
           />voiceApplicationSid
           <input
             type="checkbox"
             id="voiceCallerIdLookup"
             class="pl"
-            name="voiceCallerIdLookup"
+            name="numberProperties"
           />voiceCallerIdLookup
           <input
             type="checkbox"
             id="voiceFallbackMethod"
             class="pl"
-            name="voiceFallbackMethod"
+            name="numberProperties"
           />voiceFallbackMethod
           <input
             type="checkbox"
             id="voiceFallbackUrl"
             class="pl"
-            name="voiceFallbackUrl"
+            name="numberProperties"
           />voiceFallbackUrl
           <input
             type="checkbox"
             id="voiceMethod"
             class="pl"
-            name="voiceMethod"
+            name="numberProperties"
           />voiceMethod
           <input
             type="checkbox"
             id="voiceUrl"
             class="pl"
-            name="smsvoiceUrlUrl"
+            name="numberProperties"
           />voiceUrl
           <input
             type="checkbox"
             id="emergencyStatus"
             class="pl"
-            name="emergencyStatus"
+            name="numberProperties"
           />emergencyStatus
           <input
             type="checkbox"
             id="emergencyAddressSid"
             class="pl"
-            name="emergencyAddressSid"
+            name="numberProperties"
           />emergencyAddressSid
         </div>
         <div>
@@ -381,6 +381,7 @@ async function list_numbers(down) {
   let ajson = null;
   let noNumbers = 0;
   let numberStartsCount = 0;
+  let numberProperties = document.getElementsByName("numberProperties");
 
   const subaccount = document.getElementById("sAccount").value;
   const password = document.getElementById("password").value;
@@ -423,6 +424,10 @@ async function list_numbers(down) {
     progress.style.display = "";
     info.innerHTML = `loading...checked 0 numbers`;
     progress.innerHTML = `In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.`;
+
+    for (m = 0; m < numberProperties.length; m++) {
+        numberProperties[m].disabled = true;
+    }
 
     if (document.getElementById("allSubaccounts").checked) {
       aresponse = await fetch("./list_accounts", {
@@ -499,6 +504,7 @@ console.log (ajson);
                 Pagetoken = json.nextPageUrl.split("PageToken=")[1];
               } else {
                 pageAll = 1;
+                Pagetoken = '';
               }
               console.log(Pagetoken);
               page += 1;
@@ -513,6 +519,107 @@ console.log (ajson);
             }
 
             info.style.display = "";
+            if (columnAdded === 0) {
+              //inserts column names
+              if (document.getElementById("accountSid").checked) {
+                allNumbers = allNumbers + "AccountSID;";
+              }
+              if (document.getElementById("addressSid").checked) {
+                allNumbers = allNumbers + "addressSid;";
+              }
+              if (document.getElementById("addressRequirements").checked) {
+                allNumbers = allNumbers + "addressRequirements;";
+              }
+              if (document.getElementById("beta").checked) {
+                allNumbers = allNumbers + "beta;";
+              }
+              if (document.getElementById("bundleSid").checked) {
+                allNumbers = allNumbers + "bundleSid;";
+              }
+              if (document.getElementById("fax").checked) {
+                allNumbers = allNumbers + "fax;";
+              }
+              if (document.getElementById("voice").checked) {
+                allNumbers = allNumbers + "voice;";
+              }
+              if (document.getElementById("sms").checked) {
+                allNumbers = allNumbers + "sms;";
+              }
+              if (document.getElementById("mms").checked) {
+                allNumbers = allNumbers + "mms;";
+              }
+              if (document.getElementById("dateCreated").checked) {
+                allNumbers = allNumbers + "dateCreated;";
+              }
+              if (document.getElementById("dateUpdated").checked) {
+                allNumbers = allNumbers + "dateUpdated;";
+              }
+              if (document.getElementById("friendlyName").checked) {
+                allNumbers = allNumbers + "friendlyName;";
+              }
+              if (document.getElementById("phoneNumber").checked) {
+                allNumbers = allNumbers + "phoneNumber;";
+              }
+              if (document.getElementById("sid").checked) {
+                allNumbers = allNumbers + "sid;";
+              }
+              if (document.getElementById("smsApplicationSid").checked) {
+                allNumbers = allNumbers + "smsApplicationSid;";
+              }
+              if (document.getElementById("smsFallbackMethod").checked) {
+                allNumbers = allNumbers + "smsFallbackMethod;";
+              }
+              if (document.getElementById("smsFallbackUrl").checked) {
+                allNumbers = allNumbers + "smsFallbackUrl;";
+              }
+              if (document.getElementById("smsMethod").checked) {
+                allNumbers = allNumbers + "smsMethod;";
+              }
+              if (document.getElementById("smsUrl").checked) {
+                allNumbers = allNumbers + "smsUrl;";
+              }
+              if (document.getElementById("status").checked) {
+                allNumbers = allNumbers + "status;";
+              }
+              if (document.getElementById("statusCallback").checked) {
+                allNumbers = allNumbers + "statusCallback;";
+              }
+              if (document.getElementById("statusCallbackMethod").checked) {
+                allNumbers = allNumbers + "statusCallbackMethod;";
+              }
+              if (document.getElementById("trunkSid").checked) {
+                allNumbers = allNumbers + "trunkSid;";
+              }
+              if (document.getElementById("uri").checked) {
+                allNumbers = allNumbers + "uri;";
+              }
+              if (document.getElementById("voiceApplicationSid").checked) {
+                allNumbers = allNumbers + "voiceApplicationSid;";
+              }
+              if (document.getElementById("voiceCallerIdLookup").checked) {
+                allNumbers = allNumbers + "voiceCallerIdLookup;";
+              }
+              if (document.getElementById("voiceFallbackMethod").checked) {
+                allNumbers = allNumbers + "voiceFallbackMethod;";
+              }
+              if (document.getElementById("voiceFallbackUrl").checked) {
+                allNumbers = allNumbers + "voiceFallbackUrl;";
+              }
+              if (document.getElementById("voiceMethod").checked) {
+                allNumbers = allNumbers + "voiceMethod;";
+              }
+              if (document.getElementById("voiceUrl").checked) {
+                allNumbers = allNumbers + "voiceUrl;";
+              }
+              if (document.getElementById("emergencyStatus").checked) {
+                allNumbers = allNumbers + "emergencyStatus;";
+              }
+              if (document.getElementById("emergencyAddressSid").checked) {
+                allNumbers = allNumbers + "emergencyAddressSid;";
+              }
+              columnAdded = 1;
+              allNumbers = allNumbers + "</pre><pre>";
+            }
             for (let i = 0; i < numNumbers; i++) {
               if (!json[i].phoneNumber.startsWith(startNumber)) {
                 k += 1;
@@ -522,107 +629,6 @@ console.log (ajson);
               numberStartsCount = 1;
               allNumbers = allNumbers + "<pre>";
 
-              if (columnAdded === 0) {
-                //inserts column names
-                if (document.getElementById("accountSid").checked) {
-                  allNumbers = allNumbers + "AccountSID;";
-                }
-                if (document.getElementById("addressSid").checked) {
-                  allNumbers = allNumbers + "addressSid;";
-                }
-                if (document.getElementById("addressRequirements").checked) {
-                  allNumbers = allNumbers + "addressRequirements;";
-                }
-                if (document.getElementById("beta").checked) {
-                  allNumbers = allNumbers + "beta;";
-                }
-                if (document.getElementById("bundleSid").checked) {
-                  allNumbers = allNumbers + "bundleSid;";
-                }
-                if (document.getElementById("fax").checked) {
-                  allNumbers = allNumbers + "fax;";
-                }
-                if (document.getElementById("voice").checked) {
-                  allNumbers = allNumbers + "voice;";
-                }
-                if (document.getElementById("sms").checked) {
-                  allNumbers = allNumbers + "sms;";
-                }
-                if (document.getElementById("mms").checked) {
-                  allNumbers = allNumbers + "mms;";
-                }
-                if (document.getElementById("dateCreated").checked) {
-                  allNumbers = allNumbers + "dateCreated;";
-                }
-                if (document.getElementById("dateUpdated").checked) {
-                  allNumbers = allNumbers + "dateUpdated;";
-                }
-                if (document.getElementById("friendlyName").checked) {
-                  allNumbers = allNumbers + "friendlyName;";
-                }
-                if (document.getElementById("phoneNumber").checked) {
-                  allNumbers = allNumbers + "phoneNumber;";
-                }
-                if (document.getElementById("sid").checked) {
-                  allNumbers = allNumbers + "sid;";
-                }
-                if (document.getElementById("smsApplicationSid").checked) {
-                  allNumbers = allNumbers + "smsApplicationSid;";
-                }
-                if (document.getElementById("smsFallbackMethod").checked) {
-                  allNumbers = allNumbers + "smsFallbackMethod;";
-                }
-                if (document.getElementById("smsFallbackUrl").checked) {
-                  allNumbers = allNumbers + "smsFallbackUrl;";
-                }
-                if (document.getElementById("smsMethod").checked) {
-                  allNumbers = allNumbers + "smsMethod;";
-                }
-                if (document.getElementById("smsUrl").checked) {
-                  allNumbers = allNumbers + "smsUrl;";
-                }
-                if (document.getElementById("status").checked) {
-                  allNumbers = allNumbers + "status;";
-                }
-                if (document.getElementById("statusCallback").checked) {
-                  allNumbers = allNumbers + "statusCallback;";
-                }
-                if (document.getElementById("statusCallbackMethod").checked) {
-                  allNumbers = allNumbers + "statusCallbackMethod;";
-                }
-                if (document.getElementById("trunkSid").checked) {
-                  allNumbers = allNumbers + "trunkSid;";
-                }
-                if (document.getElementById("uri").checked) {
-                  allNumbers = allNumbers + "uri;";
-                }
-                if (document.getElementById("voiceApplicationSid").checked) {
-                  allNumbers = allNumbers + "voiceApplicationSid;";
-                }
-                if (document.getElementById("voiceCallerIdLookup").checked) {
-                  allNumbers = allNumbers + "voiceCallerIdLookup;";
-                }
-                if (document.getElementById("voiceFallbackMethod").checked) {
-                  allNumbers = allNumbers + "voiceFallbackMethod;";
-                }
-                if (document.getElementById("voiceFallbackUrl").checked) {
-                  allNumbers = allNumbers + "voiceFallbackUrl;";
-                }
-                if (document.getElementById("voiceMethod").checked) {
-                  allNumbers = allNumbers + "voiceMethod;";
-                }
-                if (document.getElementById("voiceUrl").checked) {
-                  allNumbers = allNumbers + "voiceUrl;";
-                }
-                if (document.getElementById("emergencyStatus").checked) {
-                  allNumbers = allNumbers + "emergencyStatus;";
-                }
-                if (document.getElementById("emergencyAddressSid").checked) {
-                  allNumbers = allNumbers + "emergencyAddressSid;";
-                }
-                columnAdded = 1;
-                allNumbers = allNumbers + "</pre><pre>";
-              }
               if (document.getElementById("accountSid").checked) {
                 allNumbers = allNumbers + json[i].accountSid + ";";
               }
@@ -751,6 +757,7 @@ console.log (ajson);
           noNumbers = 0;
         }
         pageAll = 0;
+        Pagetoken = '';
       } // for closed
     } // if allSub closed
     else {
@@ -799,6 +806,7 @@ console.log (ajson);
               Pagetoken = json.nextPageUrl.split("PageToken=")[1];
             } else {
               pageAll = 1;
+              Pagetoken = "";
             }
             console.log(Pagetoken);
             page += 1;
@@ -1045,6 +1053,10 @@ console.log (ajson);
       } // while closed
     } // else allSub closed
     progress.innerHTML = "";
+    
+    for (m = 0; m < numberProperties.length; m++) {
+        numberProperties[m].disabled = false;
+    }
 
     if (down === 1) {
       if (numCount === 0) {
@@ -1111,6 +1123,12 @@ function download() {
 }
 
 function checkAll() {
+  if (
+    document.getElementById("progress").innerHTML ===
+    "In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop."
+  ) {
+    return;
+  }
   let inputs = document.querySelectorAll(".pl");
   for (var i = 0; i < inputs.length; i++) {
     inputs[i].checked = true;
