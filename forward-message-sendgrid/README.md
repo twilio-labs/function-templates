@@ -1,6 +1,8 @@
-# Forward SMS message as an email (SendGrid)
 
 ### This Repo is redundant. With the release of Node v18, how we use the 'got' dependency has chnaged. If you want to use this repo as a reference, you will need to adjust the source code to work with Node v18 and above. 
+
+
+# Forward SMS message as an email (SendGrid)
 
 The SendGrid Function will forward incoming SMS messages to an email address using the [SendGrid API](https://sendgrid.com/).
 
