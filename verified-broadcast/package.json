@@ -5,6 +5,6 @@
     "@twilio/runtime-handler": "1.2.0",
     "basic-auth": "^2.0.1",
     "tsscmp": "^1.0.6",
-    "twilio": "^3.67.2"
+    "twilio": "^4.19.3"
   }
 }
