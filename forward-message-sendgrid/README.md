@@ -2,7 +2,9 @@
 ### WARNING !!! 
 ### This Repo is now out of date. 
 
-With the release of Node v18, the Node.js ecosystem are migrating over from the old CommonJS (CJS) standard to the newer, ES Modules (ESM) standard. You can read about the differences in far more detail in this [Blog Post.](https://redfin.engineering/node-modules-at-war-why-commonjs-and-es-modules-cant-get-along-9617135eeca1)
+With the release of Node v18, the Node.js ecosystem are migrating over from the old CommonJS (CJS) standard to the newer, ES Modules (ESM) standard. You can read about the differences in far more detail in this [Blog Post.](https://redfin.engineering/node-modules-at-war-why-commonjs-and-es-modules-cant-get-along-9617135eeca1). The following snippets may causes errors. 
+
+
 # Forward SMS message as an email (SendGrid)
 
 The SendGrid Function will forward incoming SMS messages to an email address using the [SendGrid API](https://sendgrid.com/).
