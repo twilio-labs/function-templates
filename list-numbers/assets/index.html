@@ -10,22 +10,7 @@
       rel="icon"
       href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
     />
-    <link
-      rel="stylesheet"
-      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
-    />
     <link rel="stylesheet" href="styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css"
-      integrity="sha256-xpVuhxDPR39wFEQDha4W7kuMx+z9Av3dTS8MbH/RWEU="
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"
-      integrity="sha256-uPbemOnf3P4eaeLHebLwPC71YRbu3WNBvO4ibYeBnGs="
-      crossorigin="anonymous"
-    ></script>
   </head>
   <body onload="mask()">
     <div class="page-top">
@@ -84,7 +69,7 @@
         <p>
           Before you start, make sure that the checkbox "Add my Twilio
           Credentials (ACCOUNT_SID) and (AUTH_TOKEN) to ENV" is checked in the
-          "Environmental Variables" section of this Function. If it's not checked,
+          "Environmental Variables" of this Function. If it's not checked,
           enable it and click "Deploy All" at the bottom.
         </p>
         <h2>List Active numbers on your main accounts or subaccount</h2>
@@ -418,7 +403,6 @@
               <div class="alert alert-error" style="display: none"></div>
             </div>
           </div>
-          <!-- EDIT_CODE_V2 -->
         </div>
       </div>
     </main>
@@ -426,6 +410,7 @@
       <span>We can't wait to see what you build.</span>
     </footer>
   <script type="text/javascript">
+
 const info = document.querySelector(".alert-info");
 const error = document.querySelector(".alert-error");
 
@@ -518,6 +503,9 @@ async function list_numbers(down) {
           info.style.display = "none";
           progress.innerHTML = '';
           progress.style.display = "none";
+          for (m = 0; m < numberProperties.length; m++) {
+            numberProperties[m].disabled = false;
+          }
           error.innerHTML = `Wrong password.`;
           return;
         }
@@ -525,6 +513,9 @@ async function list_numbers(down) {
         error.style.display = "";
         progress.innerHTML = '';
         progress.style.display = "none";
+        for (m = 0; m < numberProperties.length; m++) {
+          numberProperties[m].disabled = false;
+        }
         error.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
         return;
       }
@@ -564,6 +555,9 @@ console.log (ajson);
               info.innerHTML = "";
               progress.style.display = "none";
               progress.innerHTML = ``;
+              for (m = 0; m < numberProperties.length; m++) {
+                numberProperties[m].disabled = false;
+              }
               error.innerHTML = `Wrong password.`;
               console.log(response);
               return;
@@ -814,6 +808,9 @@ console.log (ajson);
             info.style.display = "none";
             progress.style.display = "none";
             progress.innerHTML = ``;
+            for (m = 0; m < numberProperties.length; m++) {
+              numberProperties[m].disabled = false;
+            }
             error.innerHTML = `Something Wrong: ${json.error} <br />Server response status is: ${response.status}
               <br />Server message is: ${response.message}`;
             return;
@@ -866,6 +863,9 @@ console.log (ajson);
             info.innerHTML = "";
             progress.style.display = "none";
             progress.innerHTML = ``;
+            for (m = 0; m < numberProperties.length; m++) {
+              numberProperties[m].disabled = false;
+           }
             error.innerHTML = `Wrong password.`;
             console.log(response);
             return;
@@ -1113,6 +1113,9 @@ console.log (ajson);
           info.style.display = "none";
           progress.style.display = "none";
           progress.innerHTML = ``;
+          for (m = 0; m < numberProperties.length; m++) {
+            numberProperties[m].disabled = false;
+          }
           error.innerHTML = `Something Wrong: ${json.error} <br />Server response status is: ${response.status}
               <br />Server message is: ${response.message}`;
           return;
@@ -1164,6 +1167,11 @@ console.log (ajson);
     //console.log (err);
     error.style.display = "";
     info.style.display = "none";
+    progress.style.display = "none";
+    progress.innerHTML = ``;
+    for (m = 0; m < numberProperties.length; m++) {
+        numberProperties[m].disabled = false;
+    }
     error.innerHTML = `Something went wrong: ${err} - if you receive a JSON error, check if the inserted Account SID is correct and that it exists under the Main account you are using.`;
   }
 }
@@ -1213,7 +1221,9 @@ async function mask() {
       "Content-Type": "application/json",
     },
   });
+
   acc = await response.json();
+
   masking.innerHTML = acc.acc;
   status_acc.innerHTML = ``;
 }
