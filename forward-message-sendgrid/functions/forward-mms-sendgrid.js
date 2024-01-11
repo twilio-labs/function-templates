@@ -19,7 +19,7 @@ exports.handler = function(context, event, callback) {
         const msg = {
             personalizations: [{ to: [{ email: context.TO_EMAIL_ADDRESS }] }],
             from: { email: context.FROM_EMAIL_ADDRESS },
-            subject: `New SMS message from: ${event.From}`,
+            subject: `New MMS message from: ${event.From}`,
             content: [
               {
                 type: 'text/plain',
