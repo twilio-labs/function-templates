@@ -18,7 +18,7 @@ If this is your first time contributing to an open-source project, [check out ou
 
 Under the hood, every CodeExchange Quick Deploy app is powered by a Function Template.
 
-See Quick Deploy apps here: <https://www.twilio.com/code-exchange?q=&f=serverless>
+See Quick Deploy apps here: [https://www.twilio.com/code-exchange?q=&f=serverless](https://www.twilio.com/code-exchange?q=&f=serverless)
 
 ## Setting up your local environment
 
