@@ -4,7 +4,7 @@
   "private": true,
   "description": "A set of useful Twilio Functions.",
   "scripts": {
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest-cli/bin/jest.js",
     "new-template": "node _helpers/add-template.js",
     "import-template": "node _helpers/import-template.js",
     "add-dependency": "npm install $npm_config_package --no-package-lock -w $npm_config_template",
@@ -61,9 +61,9 @@
       "/_helpers/",
       "/node_modules/",
       "cypress/"
-    ]
+    ],
+    "transform": {}
   },
-  "dependencies": {},
   "turbo": {
     "baseBranch": "origin/main",
     "pipeline": {
@@ -139,5 +139,9 @@
     "voicemail",
     "verify-sna",
     "flex-dialpad"
-  ]
+  ],
+  "dependencies": {
+    "@jest/globals": "29.7.0"
+  },
+  "type": "module"
 }

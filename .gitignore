@@ -10,3 +10,4 @@ cypress/videos/
 **/cypress/screenshots/
 **/cypress/videos/
 **/.twiliodeployinfo
+.idea

@@ -1,30 +1,28 @@
-const helpers = require('../../test/test-helper');
-const saveSms = require('../functions/save-sms.protected').handler;
-const Twilio = require('twilio');
+import helpers from '../../test/test-helper';
+import saveSms from '../functions/save-sms.protected';
+import Twilio from 'twilio';
+import { afterAll, beforeAll, jest } from '@jest/globals';
 
 const event = {};
 
-const mockAirtableTable = {
-  create: jest.fn(() =>
-    Promise.resolve({
-      err: 'This is an error message',
-    })
-  ),
-};
-
-const mockAirtableBase = {
-  table: jest.fn().mockImplementation(() => {
-    return mockAirtableTable;
-  }),
-};
-
-const mockAirtableClient = {
-  base: jest.fn().mockImplementation(() => {
-    return mockAirtableBase;
-  }),
-};
-
 jest.mock('airtable', () => {
+  const mockAirtableTable = {
+    create: jest.fn(() =>
+      Promise.resolve({
+        err: 'This is an error message',
+      })
+    ),
+  };
+  const mockAirtableBase = {
+    table: jest.fn().mockImplementation(() => {
+      return mockAirtableTable;
+    }),
+  };
+  const mockAirtableClient = {
+    base: jest.fn().mockImplementation(() => {
+      return mockAirtableBase;
+    }),
+  };
   return jest.fn().mockImplementation(() => {
     return mockAirtableClient;
   });
