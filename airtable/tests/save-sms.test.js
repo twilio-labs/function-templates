@@ -1,11 +1,6 @@
-import helpers from '../../test/test-helper';
-import saveSms from '../functions/save-sms.protected';
-import Twilio from 'twilio';
 import { afterAll, beforeAll, jest } from '@jest/globals';
 
-const event = {};
-
-jest.mock('airtable', () => {
+jest.unstable_mockModule('airtable', () => {
   const mockAirtableTable = {
     create: jest.fn(() =>
       Promise.resolve({
@@ -27,6 +22,12 @@ jest.mock('airtable', () => {
     return mockAirtableClient;
   });
 });
+import Airtable from 'airtable';
+import helpers from '../../test/test-helper';
+import saveSms from '../functions/save-sms.protected';
+import Twilio from 'twilio';
+
+const event = {};
 
 const context = {
   AIRTABLE_API_KEY: 'keyAbcD12efG3HijK',
