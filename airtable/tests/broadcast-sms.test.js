@@ -1,6 +1,5 @@
-const helpers = require('../../test/test-helper');
-const broadcastSms = require('../functions/broadcast-sms').handler;
-const Twilio = require('twilio');
+import { afterAll, beforeAll, jest } from '@jest/globals';
+import helpers from '../../test/test-helper';
 
 const event = {};
 
@@ -36,6 +35,8 @@ jest.mock('airtable', () => {
     return mockAirtableClient;
   });
 });
+
+const broadcastSms = (await import('../functions/broadcast-sms')).default;
 
 const shouldFail = false;
 const mockClient = {

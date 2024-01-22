@@ -1,7 +1,6 @@
-exports.handler = function (context, event, callback) {
+import Airtable from 'airtable';
+export default function handler(context, event, callback) {
   const response = new Twilio.Response();
-
-  const Airtable = require('airtable');
   const base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
     context.AIRTABLE_BASE_ID
   );
@@ -34,4 +33,4 @@ exports.handler = function (context, event, callback) {
     .catch((err) => {
       callback(err);
     });
-};
+}

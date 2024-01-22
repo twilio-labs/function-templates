@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import Twilio from 'twilio';
+const fs = require('fs');
+const path = require('path');
+const Twilio = require('twilio');
 
 class MockRuntime {
   constructor(context) {
@@ -94,12 +94,10 @@ const restoreEnv = (backupEnv) => {
   }
 };
 
-const exports = {
+module.exports = {
   setup,
   teardown,
   MockRuntime,
   backupEnv,
   restoreEnv,
 };
-
-export default exports;
