@@ -1,5 +1,6 @@
 import Airtable from 'airtable';
 
+//eslint-disable-import/no-unused-modules
 export default function handler(context, event, callback) {
   const twiml = new Twilio.twiml.MessagingResponse();
 

@@ -1,4 +1,6 @@
 import Airtable from 'airtable';
+
+//eslint-disable-import/no-unused-modules
 export default function handler(context, event, callback) {
   const response = new Twilio.Response();
   const base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
