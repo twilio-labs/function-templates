@@ -339,6 +339,11 @@
       "id": "transfers",
       "name": "Transfers",
       "description": "Transfers a call to another number"
+    },
+    {
+      "id": "passkey-backend",
+      "name": "Backend for passkey app",
+      "description": "Connect appliactions with the passkey service"
     }
   ]
 }
