@@ -4,7 +4,6 @@
 
 [Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
 
-### WARNING !!! 
 ### This Repo is now out of date. 
 
 With the release of Node v18, the Node.js ecosystem is migrating over from the old CommonJS (CJS) standard to the newer, ES Modules (ESM) standard. You can read about the differences in far more detail in this [blog Post.](https://redfin.engineering/node-modules-at-war-why-commonjs-and-es-modules-cant-get-along-9617135eeca1). The following snippets may causes errors. 
