@@ -74,6 +74,6 @@ exports.handler = async (context, event, callback) => {
     } else {
       console.log(error);
     }
-    return callback('Something went wrong');
+    return callback(null, error);
   }
 };

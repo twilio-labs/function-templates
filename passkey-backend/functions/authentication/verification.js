@@ -5,6 +5,7 @@ const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
+  const { API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } = context;
   const missingParams = detectMissingParams(
     [
       'id',
@@ -35,7 +36,7 @@ exports.handler = async (context, event, callback) => {
     },
   };
 
-  const verifyChallengeURL = `${context.API_URL}Services/${context.SERVICE_SID}/Challenges/Verify`;
+  const verifyChallengeURL = `${API_URL}Services/${SERVICE_SID}/Challenges/Verify`;
 
   try {
     const response = await axios.post(verifyChallengeURL, requestBody, {
@@ -55,6 +56,6 @@ exports.handler = async (context, event, callback) => {
     } else {
       console.log(error);
     }
-    return callback('Something went wrong');
+    return callback(null, error);
   }
 };
