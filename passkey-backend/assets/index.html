@@ -246,18 +246,6 @@
                         const { id, rawId, response, type, authenticatorAttachment } = publicKeyCredential
                         const { authenticatorData, clientDataJSON, signature, userHandle } = response
 
-                        console.log(publicKeyCredential)
-
-                        console.log("data", {
-                                id: id,
-                                rawId: ArrayBufferToBase64(rawId),
-                                type: type,
-                                clientDataJson: ArrayBufferToBase64(clientDataJSON),
-                                authenticatorData: ArrayBufferToBase64(authenticatorData),
-                                signature: ArrayBufferToBase64(signature),
-                                userHandle: ArrayBufferToBase64(userHandle)
-                            });
-
                         const authentication = await fetch('./authentication/verification', {
                             method: "POST",
                             headers: {
@@ -336,8 +324,6 @@
                 const rawIdString = ArrayBufferToBase64(rawId);
                 const attestationObjectString = ArrayBufferToBase64(attestationObject);
                 const clientDataJSONString = ArrayBufferToBase64(clientDataJSON);
-
-                console.log(credential)
 
                 const verificationResponse = await fetch(`./registration/verification`, {
                     method: "POST",
