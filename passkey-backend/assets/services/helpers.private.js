@@ -17,4 +17,5 @@ const errorLogger = (error) => {
 
 module.exports = {
   detectMissingParams,
+  errorLogger,
 };

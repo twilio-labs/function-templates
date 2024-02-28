@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Get started with your Twilio Functions!</title>
+        <title>Passkey Demo</title>
 
         <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
         <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
@@ -172,11 +172,11 @@
         const loadApp = (username) => {
             document.getElementById("welcome").innerHTML = `Welcome ${username}`
             document.getElementById("modal").classList.add("invisible");
+            document.getElementById("container").classList.add("invisible");
             document.getElementById("app").classList.remove("invisible");
         }
 
         if (sessionUsername) {
-            document.getElementById("container").classList.add("invisible");
             loadApp(sessionUsername)
         }
         
@@ -221,6 +221,12 @@
             return buffer;
         }
 
+        function stringToArrayBuffer(str) {
+            const encoder = new TextEncoder();
+            const uint8Array = encoder.encode(str);
+            return uint8Array.buffer;
+        }
+
         const login = () => {
             const authenticationCard = document.getElementById("container");
             const passkeyCard = document.getElementById("modal");
@@ -232,13 +238,12 @@
             try {
                 const response = await fetch(`./authentication/start`);
                 const responseJSON = await response.json();
-
-                const { challenge, rpId, allowCredentials, timeout, useVerification } = responseJSON.publicKey
+                const { challenge, rpId, allowCredentials, timeout, userVerification } = responseJSON.publicKey
                 const publicKey = {
-                    challenge: strToArrayBuffer(challenge),
+                    challenge: Uint8Array.from(atob(challenge), c => c.charCodeAt(0)),
                     rpId,
                     allowCredentials,
-                    useVerification
+                    userVerification
                 }
                 
                 navigator.credentials.get({ publicKey })
@@ -265,6 +270,7 @@
                         const authenticationJSON = await authentication.json();
                         const {status, identity} = authenticationJSON
                         if(status === "approved") {
+                            sessionStorage.setItem('session', identity);
                             loadApp(identity);
                         } else {
                             console.log(status);
@@ -304,14 +310,20 @@
                             id: rp.id
                         },
                         user: {
-                            id: new Uint8Array(16),
+                            id: strToArrayBuffer(user.id),
                             name: user.name,
                             displayName: user.displayName
                         },
                         pubKeyCredParams: [{ type: "public-key", alg: -7 }],
                         attestation: "none",
                         timeout: 600000,
-                        challenge: strToArrayBuffer(challenge)
+                        challenge: strToArrayBuffer(challenge),
+                        authenticatorSelection: {
+                            residentKey: "preferred"
+                        },
+                        extensions: {
+                            credProps: true,
+                        }
                     }
                 }
                 
