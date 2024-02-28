@@ -1,22 +1,11 @@
 const axios = require('axios');
 
 const assets = Runtime.getAssets();
-const { detectMissingParams } = require(assets['/services/helpers.js'].path);
+const { detectMissingParams, errorLogger } = require(assets[
+  '/services/helpers.js'
+].path);
 
 exports.handler = async (context, event, callback) => {
-  /*
-   * Constants set as enviroment varibales
-   * -------------------------------------
-   * Constants from the twilio account:
-   * SERVICE_SID,
-   * ACCOUNT_SID,
-   * SERVICE_SID,
-   * AUTH_TOKEN
-   *
-   * Constanst get by services:
-   * API_URL: passkey verify URL
-   * RELYING_PARTY: self URL of twilio function
-   */
   const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
     context;
 
@@ -65,15 +54,12 @@ exports.handler = async (context, event, callback) => {
         password: AUTH_TOKEN,
       },
     });
-    return callback(null, response.data.config.creation_request);
+    return callback(null, {
+      ...response.data.config.creation_request,
+      factor_sid: response.data.sid,
+    });
   } catch (error) {
-    if (error.response) {
-      console.log('Client has given an error', error);
-    } else if (error.request) {
-      console.log('Runtime error', error);
-    } else {
-      console.log(error);
-    }
+    errorLogger(error);
     return callback(null, error);
   }
 };

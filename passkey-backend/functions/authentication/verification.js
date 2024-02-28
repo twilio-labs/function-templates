@@ -1,7 +1,9 @@
 const axios = require('axios');
 
 const assets = Runtime.getAssets();
-const { detectMissingParams } = require(assets['/services/helpers.js'].path);
+const { detectMissingParams, errorLogger } = require(assets[
+  '/services/helpers.js'
+].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
@@ -27,7 +29,7 @@ exports.handler = async (context, event, callback) => {
     rawId: event.rawId,
     id: event.id,
     authenticatorAttachment: 'platform',
-    type: 'public-key',
+    type: event.type,
     response: {
       clientDataJSON: event.clientDataJson,
       authenticatorData: event.authenticatorData,
@@ -47,15 +49,10 @@ exports.handler = async (context, event, callback) => {
     });
     return callback(null, {
       status: response.data.status,
+      identity: response.data.entity_identity,
     });
   } catch (error) {
-    if (error.response) {
-      console.log('Client has given an error', error);
-    } else if (error.request) {
-      console.log('Runtime error', error);
-    } else {
-      console.log(error);
-    }
+    errorLogger(error);
     return callback(null, error);
   }
 };
