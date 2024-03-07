@@ -1,6 +1,6 @@
-# passkey-backend
+# passkeys-backend
 
-Connect appliactions with the passkey service
+Verify enables developers to easily add Passkeys into their existing authentication flows, similar to Verify TOTP and Push. The Verify API supports passkey registration, public key storage, and auth flows. On the client-side, developers can optionally embed an open-source library (SDK) that handles interactions with operating systems and customizable UI widgets that maximize conversion.
 
 ## Pre-requisites
 
@@ -20,6 +20,23 @@ In your `.env` file, set the following values:
 | ACCOUNT_SID | Twilio account where the service belong | yes |
 | AUTH_TOKEN | Authentication token for twilio account | yes |
 
+### Service customization
+
+Besides the enviroment variables files, the project also contain two files called `assetlink.json` and `apple-app-site-association` inside `./assets/.well-know/`, that is a public file that contains the identificators for the apps that will be connecting the service.
+
+`apple-app-site-association` contains identificator hash for the origin app in iOS:
+
+| Variable | Description | Required |
+| :------- | :---------- | :------- |
+| ORIGIN_IOS_APP_HASH | Replace it with the identificator of the iOS app | yes |
+
+`assetlink.json` contains identificator hash for the origin apps in android and web:
+
+| Variable | Description | Required |
+| :------- | :---------- | :------- |
+| RELYING_PARTY | Replace it with the value of the relaying party | yes |
+| FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
+
 
 ### Function Parameters
 
@@ -36,7 +53,6 @@ In your `.env` file, set the following values:
 | :-------- | :---------- | :------- |
 | id | A base64url encoded representation of `rawId`. | yes |
 | rawId | The globally unique identifier for this `PublicKeyCredential`. | yes |
-| type | `public-key` | yes |
 | attestationObject | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | clientDataJson | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | transports | An Array with the transport methods given by the `AuthenticatorAttestationResponse` | yes |
@@ -44,13 +60,12 @@ In your `.env` file, set the following values:
 
 `/authentication/start` a GET request, does not expect parameters
 
-`/registration/verification` expects the following parameters:
+`/authentication/verification` expects the following parameters:
 
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |
 | id | A base64url encoded representation of `rawId`. | yes |
 | rawId | The globally unique identifier for this `PublicKeyCredential`. | yes |
-| type | `public-key` | yes |
 | authenticatorData | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | clientDataJson | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |

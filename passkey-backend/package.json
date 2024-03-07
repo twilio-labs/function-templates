@@ -1,5 +1,5 @@
 {
-  "name": "passkey-backend",
+  "name": "passkeys-backend",
   "version": "1.0.0",
   "private": true,
   "dependencies": {

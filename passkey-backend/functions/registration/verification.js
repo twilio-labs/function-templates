@@ -10,14 +10,7 @@ exports.handler = async (context, event, callback) => {
   const { API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } = context;
 
   const missingParams = detectMissingParams(
-    [
-      'id',
-      'attestationObject',
-      'rawId',
-      'type',
-      'clientDataJson',
-      'transports',
-    ],
+    ['id', 'attestationObject', 'rawId', 'clientDataJson', 'transports'],
     event
   );
   if (missingParams)
@@ -29,7 +22,7 @@ exports.handler = async (context, event, callback) => {
     id: event.id,
     rawId: event.rawId,
     authenticatorAttachment: 'platform',
-    type: event.type,
+    type: 'public-key',
     response: {
       attestationObject: event.attestationObject,
       clientDataJSON: event.clientDataJson,

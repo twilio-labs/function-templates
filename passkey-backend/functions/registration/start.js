@@ -16,7 +16,7 @@ exports.handler = async (context, event, callback) => {
       `Missing parameters; please provide: '${missingParams.join(', ')}'.`
     );
 
-  // Request body sent to passkey verify URL call
+  // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
   const requestBody = {
     friendly_name: 'TouchID',
@@ -43,10 +43,10 @@ exports.handler = async (context, event, callback) => {
     },
   };
 
-  // Factor URL of the passkey service
+  // Factor URL of the passkeys service
   const factorURL = `${API_URL}Services/${SERVICE_SID}/Factors`;
 
-  // Call made to the passkey service
+  // Call made to the passkeys service
   try {
     const response = await axios.post(factorURL, requestBody, {
       auth: {

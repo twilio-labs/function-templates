@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Passkey Demo</title>
+        <title>Passkeys Demo</title>
 
         <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
         <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
@@ -259,7 +259,6 @@
                             body: JSON.stringify({
                                 id: id,
                                 rawId: ArrayBufferToBase64(rawId),
-                                type: type,
                                 clientDataJson: ArrayBufferToBase64(clientDataJSON),
                                 authenticatorData: ArrayBufferToBase64(authenticatorData),
                                 signature: ArrayBufferToBase64(signature),
@@ -346,7 +345,6 @@
                         id: id,
                         attestationObject: attestationObjectString,
                         rawId: rawIdString,
-                        type: type,
                         clientDataJson: clientDataJSONString,
                         transports: ["internal"]
                     })

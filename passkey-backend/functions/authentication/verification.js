@@ -12,7 +12,6 @@ exports.handler = async (context, event, callback) => {
     [
       'id',
       'rawId',
-      'type',
       'clientDataJson',
       'authenticatorData',
       'signature',
@@ -29,7 +28,7 @@ exports.handler = async (context, event, callback) => {
     rawId: event.rawId,
     id: event.id,
     authenticatorAttachment: 'platform',
-    type: event.type,
+    type: 'public-key',
     response: {
       clientDataJSON: event.clientDataJson,
       authenticatorData: event.authenticatorData,

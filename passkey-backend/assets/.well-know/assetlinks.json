@@ -6,7 +6,7 @@
     ],
     "target": {
       "namespace": "web",
-      "site": "https://6dcc8b2b3620.ngrok.app"
+      "site": "{RELYING_PARTY}"
     }
   },
   {
@@ -17,35 +17,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.twilio.passkeys.android",
-      "sha256_cert_fingerprints": [
-        "AF:E0:6F:5F:BF:5A:C4:E2:A0:89:22:95:B8:1C:05:4B:29:5C:80:7A:3B:69:4B:B1:0A:7B:A6:CF:1E:17:4F:A1"
-      ]
-    }
-  },
-  {
-    "relation": [
-      "delegate_permission/common.handle_all_urls",
-      "delegate_permission/common.get_login_creds"
-    ],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.twilio.passkeys.android",
-      "sha256_cert_fingerprints": [
-        "50:5C:D6:3D:A5:1F:19:8F:3F:B1:C2:95:0B:6B:46:B6:06:FE:C4:13:57:4B:96:7F:3D:86:A3:CF:73:FE:05:53"
-      ]
-    }
-  },
-  {
-    "relation": [
-      "delegate_permission/common.handle_all_urls",
-      "delegate_permission/common.get_login_creds"
-    ],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.twilio.passkeys.android",
-      "sha256_cert_fingerprints": [
-        "E1:1B:1C:EA:3B:D8:22:EE:73:3A:26:CF:54:AF:66:0E:08:2B:CF:9A:49:7C:34:6B:D8:02:0B:6A:BA:8D:16:EF"
-      ]
+      "sha256_cert_fingerprints": ["{FINGERPRINT_CERTIFICATION_HASH}"]
     }
   },
   {
@@ -56,9 +28,7 @@
     "target": {
       "namespace": "android_app",
       "package_name": "com.twilio.passkey_manager",
-      "sha256_cert_fingerprints": [
-        "AF:E0:6F:5F:BF:5A:C4:E2:A0:89:22:95:B8:1C:05:4B:29:5C:80:7A:3B:69:4B:B1:0A:7B:A6:CF:1E:17:4F:A1"
-      ]
+      "sha256_cert_fingerprints": ["{FINGERPRINT_CERTIFICATION_HASH}"]
     }
   }
 ]
