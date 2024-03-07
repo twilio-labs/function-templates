@@ -139,6 +139,6 @@
     "voicemail",
     "verify-sna",
     "flex-dialpad",
-    "passkey-backend"
+    "passkeys-backend"
   ]
 }

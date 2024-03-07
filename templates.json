@@ -341,9 +341,9 @@
       "description": "Transfers a call to another number"
     },
     {
-      "id": "passkey-backend",
-      "name": "Backend for passkey app",
-      "description": "Connect appliactions with the passkey service"
+      "id": "passkeys-backend",
+      "name": "Backend for passkeys app",
+      "description": "Connect appliactions with the passkeys service"
     }
   ]
 }
