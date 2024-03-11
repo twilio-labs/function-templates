@@ -19,16 +19,5 @@
       "package_name": "com.twilio.passkeys.android",
       "sha256_cert_fingerprints": ["{FINGERPRINT_CERTIFICATION_HASH}"]
     }
-  },
-  {
-    "relation": [
-      "delegate_permission/common.handle_all_urls",
-      "delegate_permission/common.get_login_creds"
-    ],
-    "target": {
-      "namespace": "android_app",
-      "package_name": "com.twilio.passkey_manager",
-      "sha256_cert_fingerprints": ["{FINGERPRINT_CERTIFICATION_HASH}"]
-    }
   }
 ]
