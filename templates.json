@@ -343,7 +343,7 @@
     {
       "id": "passkeys-backend",
       "name": "Backend for passkeys app",
-      "description": "Connect appliactions with the passkeys service"
+      "description": "Connect applications with the passkeys service"
     }
   ]
 }

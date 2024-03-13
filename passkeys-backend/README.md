@@ -2,6 +2,14 @@
 
 Verify enables developers to easily add Passkeys into their existing authentication flows, similar to Verify TOTP and Push. The Verify API supports passkey registration, public key storage, and auth flows. On the client-side, developers can optionally embed an open-source library (SDK) that handles interactions with operating systems and customizable UI widgets that maximize conversion.
 
+## How to use the template
+
+The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
+
+Make sure befores you use the template you have to set up your enviroment variables and 
+customize the associated files with your client applications origins you can find this 
+customization [here](#service-customization).
+
 ## Pre-requisites
 
 ### Environment variables
@@ -14,7 +22,7 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| API_URL | Passkey API to point at | yes |
+| API_URL | Passkeys API to point at | yes |
 | SERVICE_SID | Service used to call twilio services | yes |
 | RELYING_PARTY | Customer app or client | yes
 | ACCOUNT_SID | Twilio account where the service belong | yes |
@@ -71,6 +79,12 @@ Besides the enviroment variables files, the project also contain two files calle
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | userHandle | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 
-## Test this project locally
+## Deploying
 
-Follow the steps in the [Twilio CLI Test](https://github.com/AuthyApps/twilio-cli-test) repository
+Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
+
+With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
+
+```
+twilio serverless:deploy
+```
