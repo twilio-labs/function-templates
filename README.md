@@ -6,7 +6,7 @@
 
 ### Warning
 
-With the release of Node v18, the Node.js ecosystem is migrating over from the old CommonJS (CJS) standard to the newer, ES Modules (ESM) standard. You can read about the differences in far more detail in this [blog Post.](https://redfin.engineering/node-modules-at-war-why-commonjs-and-es-modules-cant-get-along-9617135eeca1). The following snippets may causes errors. 
+With the release of Node v18, the Node.js ecosystem is migrating over from the old CommonJS (CJS) standard to the newer, ES Modules (ESM) standard. Using ESM modules in CJS code is not possible. You can read about the differences in far more detail in this [blog Post.](https://redfin.engineering/node-modules-at-war-why-commonjs-and-es-modules-cant-get-along-9617135eeca1). The following snippets may causes errors. 
 
 These templates are also available through `twilio-run new` inside the [`twilio-run`](https://npm.im/twilio-run) CLI.
 
