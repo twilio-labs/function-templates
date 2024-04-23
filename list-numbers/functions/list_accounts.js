@@ -28,10 +28,10 @@ exports.handler = async function (context, event, callback) {
             allAccounts[i] = accounts.instances[a].sid;
             i += 1;
           }
-          if (accounts.nextPageUrl !== undefined) {
-            allAccounts[i] = accounts.nextPageUrl.split('PageToken=')[1];
-          } else {
+          if (accounts.nextPageUrl === undefined) {
             allAccounts[i] = 'end';
+          } else {
+            allAccounts[i] = accounts.nextPageUrl.split('PageToken=')[1];
           }
         });
       response.setStatusCode(200);
