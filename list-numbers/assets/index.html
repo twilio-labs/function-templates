@@ -11,6 +11,7 @@
       href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
     />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css" />
   </head>
   <body onload="mask()">
     <div class="page-top">
@@ -423,17 +424,22 @@ async function list_numbers(down) {
   }
   let allNumbers = "";
   let page = 0;
+  let subPage = 0;
   let Pagetoken = "";
+  let subPageToken = '';
   let pageAll = 0;
+  let subPageAll = 0;
   let columnAdded = 0;
   let data = null;
+  let subData = null;
   let response = null;
   let json = null;
   let numNumbers = null;
   let k = 0;
   let numCount = 0;
   let aresponse = null;
-  let ajson = null;
+  let ajson = [];
+  let aPageJson = null;
   let noNumbers = 0;
   let numberStartsCount = 0;
   let numberProperties = document.getElementsByName("numberProperties");
@@ -485,41 +491,64 @@ async function list_numbers(down) {
     }
 
     if (document.getElementById("allSubaccounts").checked) {
-      aresponse = await fetch("./list_accounts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: password,
-        },
-      });
-      console.log("return from Acc function");
+    
+      while (subPageAll === 0) {
+             
+        subData = {
+          pageSize: 20,
+          page: subPage,
+          pageToken: decodeURIComponent(subPageToken),
+        };
+        aresponse = await fetch("./list_accounts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(subData),
+        });
+        console.log("return from Acc function");
+        if (aresponse.status === 200) {
+          aPageJson = await aresponse.json();
+          if (aPageJson.er === 0) {
+            error.style.display = "";
+            status_acc.style.display = "none";
+            info.style.display = "none";
+            progress.innerHTML = '';
+            progress.style.display = "none";
+            for (m = 0; m < numberProperties.length; m++) {
+              numberProperties[m].disabled = false;
+            }
+            error.innerHTML = `Wrong password.`;
+            return;
+          }
+          if (aPageJson[aPageJson.length-1] !== "end") {
+            subPageToken = aPageJson[aPageJson.length-1];
+            console.log(subPageToken);
+          } else {
+            subPageAll = 1;
+            subPageToken = '';
+          }
+          subPage += 1;
+          aPageJson.pop();
+          console.log(aPageJson);
+          for(let z in aPageJson){
+            ajson.push(aPageJson[z]);
+          }
+          console.log(ajson);
 
-      if (aresponse.status === 200) {
-        ajson = await aresponse.json();
-
-        if (ajson.er === 0) {
+        } else {
           error.style.display = "";
-          status_acc.style.display = "none";
-          info.style.display = "none";
           progress.innerHTML = '';
           progress.style.display = "none";
           for (m = 0; m < numberProperties.length; m++) {
             numberProperties[m].disabled = false;
           }
-          error.innerHTML = `Wrong password.`;
+          error.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
           return;
         }
-      } else {
-        error.style.display = "";
-        progress.innerHTML = '';
-        progress.style.display = "none";
-        for (m = 0; m < numberProperties.length; m++) {
-          numberProperties[m].disabled = false;
-        }
-        error.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
-        return;
       }
-console.log (ajson);
+      console.log (ajson);
       for (a = 0; a < ajson.length; a++) {
         numberStartsCount = 0;
         while (pageAll === 0) {
@@ -581,7 +610,7 @@ console.log (ajson);
             if (numNumbers === 0){
               noNumbers=1;
             }
-
+            allNumbers = allNumbers + "<pre>";
             info.style.display = "";
             if (columnAdded === 0) {
               //inserts column names
@@ -1138,6 +1167,8 @@ console.log (ajson);
       allNumbers = allNumbers.replace(/\"/g, "");
       allNumbers = allNumbers.replace(/<\/pre>/g, "%0D%0A");
       allNumbers = allNumbers.replace(/<pre>/g, "");
+      allNumbers = encodeURIComponent(allNumbers).replaceAll("%250D%250A", "%0D%0A");
+      
       let a = document.body.appendChild(document.createElement("a"));
       if (document.getElementById("fileFormatcsv").checked) {
         a.download = "listNumbers.csv";
@@ -1185,16 +1216,15 @@ function download() {
   }
   let a = document.body.appendChild(document.createElement("a"));
   let newlines = document.getElementById("info1").innerHTML;
+  newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
+  newlines = newlines.replace(/<pre>/g, "");
+  newlines = encodeURIComponent(newlines).replaceAll("%250D%250A", "%0D%0A");
   if (document.getElementById("fileFormatcsv").checked) {
     a.download = "listNumbers.csv";
-    newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
-    newlines = newlines.replace(/<pre>/g, "");
     a.href = "data:text/csv;charset=utf-8," + newlines;
     a.click(); //Trigger a click on the element
   } else {
     a.download = "listNumbers.txt";
-    newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
-    newlines = newlines.replace(/<pre>/g, "");
     a.href = "data:text/plain," + newlines;
     a.click(); //Trigger a click on the element
   }
@@ -1243,6 +1273,7 @@ async function unmask() {
   if (acc.er === 0) {
     status_acc.innerHTML = `Wrong password.`;
     info.innerHTML = "";
+    status_acc.style.display = "";
 
     return;
   }
@@ -1262,4 +1293,4 @@ async function clear_list() {
 }
     </script>
   </body>
-</html>
+</html> 
