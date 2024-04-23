@@ -16,16 +16,38 @@ exports.handler = async function (context, event, callback) {
   }
 
   try {
-    sub = await client.api.v2010.accounts.list().then((accounts) =>
-      accounts.forEach((a) => {
-        allAccounts[i] = a.sid;
-        i += 1;
-      })
-    );
-
-    response.setStatusCode(200);
-    response.setBody(allAccounts);
-    return callback(null, response);
+    if (event.pageSize > 0) {
+      sub = await client.api.v2010.accounts
+        .page({
+          pageSize: event.pageSize,
+          Page: event.page,
+          pageToken: event.pageToken,
+        })
+        .then((accounts) => {
+          for (a = 0; a < accounts.instances.length; a++) {
+            allAccounts[i] = accounts.instances[a].sid;
+            i += 1;
+          }
+          if (accounts.nextPageUrl !== undefined) {
+            allAccounts[i] = accounts.nextPageUrl.split('PageToken=')[1];
+          } else {
+            allAccounts[i] = 'end';
+          }
+        });
+      response.setStatusCode(200);
+      response.setBody(allAccounts);
+      return callback(null, response);
+    } else {
+      sub = await client.api.v2010.accounts.list().then((accounts) =>
+        accounts.forEach((a) => {
+          allAccounts[i] = a.sid;
+          i += 1;
+        })
+      );
+      response.setStatusCode(200);
+      response.setBody(allAccounts);
+      return callback(null, response);
+    }
   } catch (error) {
     console.error(error.message);
     response.setStatusCode(error.status || 400);
