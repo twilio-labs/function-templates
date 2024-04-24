@@ -28,15 +28,14 @@ exports.handler = async function (context, event, callback) {
             allAccounts[i] = accounts.instances[a].sid;
             i += 1;
           }
-          if (accounts.nextPageUrl !== undefined) {
-            allAccounts[i] = accounts.nextPageUrl.split('PageToken=')[1];
-          } else {
+          if (accounts.nextPageUrl === undefined) {
             allAccounts[i] = 'end';
+          } else {
+            allAccounts[i] = accounts.nextPageUrl.split('PageToken=')[1];
           }
         });
       response.setStatusCode(200);
       response.setBody(allAccounts);
-      return callback(null, response);
     } else {
       sub = await client.api.v2010.accounts.list().then((accounts) =>
         accounts.forEach((a) => {
@@ -46,8 +45,8 @@ exports.handler = async function (context, event, callback) {
       );
       response.setStatusCode(200);
       response.setBody(allAccounts);
-      return callback(null, response);
     }
+    return callback(null, response);
   } catch (error) {
     console.error(error.message);
     response.setStatusCode(error.status || 400);
