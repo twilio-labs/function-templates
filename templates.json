@@ -344,6 +344,11 @@
       "id": "reminder-message",
       "name": "Send scheduled reminder messages",
       "description": "Schedule a reminder message to be sent a specified time after the initial message"
+    },
+    {
+      "id": "verify-prefill",
+      "name": "Twilio Verify Pre-Fill Sample App",
+      "description": "Showcases the new Twilio Lookup Pre-Fill API"
     }
   ]
 }

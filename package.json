@@ -141,6 +141,7 @@
     "voicemail",
     "verify-sna",
     "reminder-message",
-    "flex-dialpad"
+    "flex-dialpad",
+    "verify-prefill"
   ]
 }
