@@ -1,6 +1,7 @@
-const Airtable = require('airtable');
+import Airtable from 'airtable';
 
-exports.handler = function (context, event, callback) {
+//eslint-disable-import/no-unused-modules
+export default function handler(context, event, callback) {
   const twiml = new Twilio.twiml.MessagingResponse();
 
   const base = new Airtable({ apiKey: context.AIRTABLE_API_KEY }).base(
@@ -22,4 +23,4 @@ exports.handler = function (context, event, callback) {
       console.log(err);
       callback(err);
     });
-};
+}
