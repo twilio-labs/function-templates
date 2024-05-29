@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 exports.handler = async function (context, event, callback) {
   const phoneNumber = event.phoneNumber;
   const serviceSid = context.VERIFY_SERVICE_SID;
