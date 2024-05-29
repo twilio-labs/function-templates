@@ -30,7 +30,6 @@ A few technical aspects to keep in mind:
 
 - Use of this product requires the use of the Twilio Verify product. Customers using custom code implementations for verification are not eligible for the pilot.
 
-
 ### Environment variables
 
 This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
@@ -51,13 +50,11 @@ In your `.env` file, set the following values:
 | :---------- | :----------------- | :------- |
 | phoneNumber | E.160 Phone Number | True     |
 
-
 `/verify-otp` expects the following parameters:
 
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |
 | Code      | Verify Code | True     |
-
 
 `/fetch-user-data` expects the following parameters:
 
@@ -86,7 +83,7 @@ twilio serverless:init example --template=verify-prefill && cd verify-prefill
 twilio serverless:start
 ```
 
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+5. Open the web page at <https://localhost:3000/index.html> and enter your phone number to test
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
