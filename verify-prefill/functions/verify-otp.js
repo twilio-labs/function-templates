@@ -22,12 +22,12 @@ exports.handler = async function (context, event, callback) {
         success: true,
         verificationSid: verificationCheck.sid,
       });
-    } else {
-      return callback(null, {
-        success: false,
-        message: `Verification failed. Status: ${verificationCheck.status}`,
-      });
     }
+
+    return callback(null, {
+      success: false,
+      message: `Verification failed. Status: ${verificationCheck.status}`,
+    });
   } catch (error) {
     console.error('Error verifying OTP:', error);
     return callback(null, { success: false, message: error.message });
