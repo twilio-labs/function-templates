@@ -1,6 +1,6 @@
 exports.handler = async function (context, event, callback) {
-  const phoneNumber = event.phoneNumber;
-  const verificationSid = event.verificationSid;
+  const { phoneNumber } = event;
+  const { verificationSid } = event;
   const lookupApiKey = context.LOOKUP_API_KEY;
   const lookupApiSecret = context.LOOKUP_API_SECRET;
 

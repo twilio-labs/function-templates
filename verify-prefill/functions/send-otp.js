@@ -1,13 +1,13 @@
 exports.handler = async function (context, event, callback) {
-  const phoneNumber = event.phoneNumber;
-  const serviceSid = context.VERIFY_SERVICE_SID;
+  const { phoneNumber } = event;
+  const { VERIFY_SERVICE_SID: serviceSid } = context;
 
+  // Ensure the Twilio client is initialized
   const client = context.getTwilioClient();
 
   if (!serviceSid) {
     console.error('Missing VERIFY_SERVICE_SID');
-    callback('Missing VERIFY_SERVICE_SID');
-    return;
+    return callback('Missing VERIFY_SERVICE_SID');
   }
 
   try {
@@ -15,6 +15,7 @@ exports.handler = async function (context, event, callback) {
     const lookupResponse = await client.lookups.v2
       .phoneNumbers(phoneNumber)
       .fetch();
+
     if (!lookupResponse.valid) {
       const message =
         'Invalid phone number. Please enter a valid number in E.164 format.';
@@ -29,12 +30,12 @@ exports.handler = async function (context, event, callback) {
 
     console.log('Verification response:', verification);
 
-    callback(null, {
+    return callback(null, {
       success: true,
       message: `Verification sent to ${phoneNumber}`,
     });
   } catch (error) {
     console.error('Error sending OTP:', error);
-    callback(null, { success: false, message: error.message });
+    return callback(null, { success: false, message: error.message });
   }
 };
