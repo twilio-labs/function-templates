@@ -339,6 +339,11 @@
       "id": "transfers",
       "name": "Transfers",
       "description": "Transfers a call to another number"
+    },
+    {
+      "id": "reminder-message",
+      "name": "Send scheduled reminder messages",
+      "description": "Schedule a reminder message to be sent a specified time after the initial message"
     }
   ]
 }
