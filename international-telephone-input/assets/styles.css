@@ -10,9 +10,11 @@ body {
 }
 
 #phone,
-.btn {
+.btn,
+input {
   padding-top: 6px;
   padding-bottom: 6px;
+  margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }

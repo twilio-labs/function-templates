@@ -187,7 +187,7 @@ npm install twilio-video -w=video-token
 
 ### Adding environment variables
 
-Function templates can use environment variables for deploy-specific secrets by adding them to the `.env` file in the root of your template. These are the fields that the user will be able to pre-set on the CodeExchange web app. `Step 2` visually shows the env vars that are set in `.env`: <https://www.twilio.com/code-exchange/simple-sms-forwarding>
+Function templates can use environment variables for deploy-specific secrets by adding them to the `.env` file in the root of your template. These are the fields that the user will be able to pre-set on the CodeExchange web app. `Step 2` visually shows the env vars that are set in `.env`: [https://www.twilio.com/code-exchange/simple-sms-forwarding](https://www.twilio.com/code-exchange/simple-sms-forwarding)
 
 Any variable you want the user to have to set should be added to the `.env.example` file in your template directory and should include a commented line before that explaining what the variable is about. Example:
 

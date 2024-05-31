@@ -24,11 +24,11 @@ const { detectMissingParams, VerificationException } = require(assets[
 
 async function getLineType(client, to) {
   try {
-    const response = await client.lookups.v1
+    const response = await client.lookups.v2
       .phoneNumbers(to)
-      .fetch({ type: ['carrier'] });
+      .fetch({ fields: 'line_type_intelligence' });
 
-    return response.carrier.type;
+    return response.lineTypeIntelligence.type;
   } catch (error) {
     throw new VerificationException(
       error.status,

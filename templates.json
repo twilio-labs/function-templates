@@ -326,6 +326,21 @@
       "description": "Backend to communicate with Verify API. This backend starts and validates login requests against the Verify API by using the SNA channel functionality. The results will be presented on the UI dashboard."
     },
     {
+      "id": "experimental-flex-dialpad",
+      "name": "Native Flex Dialpad Add-on",
+      "description": "Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad "
+    },
+    {
+      "id": "list-numbers",
+      "name": "List Numbers",
+      "description": "Lists all phone numbers in your account"
+    },
+    {
+      "id": "transfers",
+      "name": "Transfers",
+      "description": "Transfers a call to another number"
+    },
+    {
       "id": "reminder-message",
       "name": "Send scheduled reminder messages",
       "description": "Schedule a reminder message to be sent a specified time after the initial message"

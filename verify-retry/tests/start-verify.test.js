@@ -10,7 +10,9 @@ const mockService = {
 };
 
 const mockLookups = {
-  fetch: jest.fn().mockResolvedValue({ carrier: { type: 'mobile' } }),
+  fetch: jest
+    .fn()
+    .mockResolvedValue({ lineTypeIntelligence: { type: 'mobile' } }),
 };
 
 const mockClient = {
@@ -18,7 +20,7 @@ const mockClient = {
     services: jest.fn(() => mockService),
   },
   lookups: {
-    v1: {
+    v2: {
       phoneNumbers: jest.fn(() => mockLookups),
     },
   },
@@ -81,7 +83,7 @@ describe('verify-retry/start-verify', () => {
     const callback = (err, result) => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
-      expect(mockClient.lookups.v1.phoneNumbers).toHaveBeenCalledWith(
+      expect(mockClient.lookups.v2.phoneNumbers).toHaveBeenCalledWith(
         '+17341234567'
       );
       done();
@@ -92,7 +94,9 @@ describe('verify-retry/start-verify', () => {
 
   test('uses call parameter if it detects a landline', (done) => {
     const mockLandlineLookup = {
-      fetch: jest.fn().mockResolvedValue({ carrier: { type: 'landline' } }),
+      fetch: jest
+        .fn()
+        .mockResolvedValue({ lineTypeIntelligence: { type: 'landline' } }),
     };
 
     const mockLandlineClient = {
@@ -100,7 +104,7 @@ describe('verify-retry/start-verify', () => {
         services: jest.fn(() => mockService),
       },
       lookups: {
-        v1: {
+        v2: {
           phoneNumbers: jest.fn(() => mockLandlineLookup),
         },
       },
@@ -157,7 +161,7 @@ describe('verify-retry/start-verify', () => {
 
     const mockLookupError = {
       lookups: {
-        v1: {
+        v2: {
           phoneNumbers: jest.fn(() => mockFetchError),
         },
       },

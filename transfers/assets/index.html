@@ -1,0 +1,498 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Phone number Transfer</title>
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+  <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .success {
+        border-color: #bce8f1;
+        color: #31708f;
+        background-color: #d9edf7;
+      }
+      .warning {
+        color: #c21e1e;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+      }
+    </style>
+  </head>
+  <body onload="mask()">
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg
+              class="logo"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 60 60"
+            >
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <span>Your Twilio application</span>
+          <aside>
+            <svg
+              class="icon"
+              role="img"
+              aria-hidden="true"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="NewIcon-1577"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+              ></path>
+            </svg>
+            Live
+          </aside>
+        </nav>
+      </header>
+    </div>
+    <main>
+      <div class="content">
+        <h1>
+          <img
+            src="https://twilio-labs.github.io/function-templates/static/v1/success.svg"
+          />
+          <div>
+            <p>Welcome!</p>
+            <p>Your live application with Twilio is ready to use!</p>
+          </div>
+        </h1>
+        <p>
+          Before you start, make sure that the checkbox "Add my Twilio
+          Credentials (ACCOUNT_SID) and (AUTH_TOKEN) to ENV" is checked in the
+          "Environmental Variables" of this Function. If it's not checked,
+          enable it and click "Deploy All" at the bottom.
+        </p>
+        <h2>
+          Phone number Transfer between subaccounts of the same Main account
+        </h2>
+        <p>
+          This tool allows transfers of numbers: <br />
+          - between subaccouts present under the same Main account <br />
+          - from Main account to its subaccounts <br />
+          - from subaccounts to their Main account <br />
+        </p>
+        <p>
+          Because this is a publicly accessible URL that automatically uses your
+          Account SID and auth_token, to limit it's access, please set a
+          password in your
+          <a
+            target="_blank"
+            href="https://console.twilio.com/us1/develop/functions/services"
+            >Function</a>
+          - open the Function and click on "Environment Variables" in the bottom
+          left corner, and change the value of Password. Click on "Deploy All" button afterwards in the bottom left corner. <br />The default
+          Password is <i><b>1</b></i>.
+        </p>
+        Password:<input id="password" type="password" name="password" />
+        <br />
+        <div><p>You are working with account:</p></div>
+        <div id="masking"></div>
+        <div><button onclick="unmask()">Show Account</button></div>
+        <div id="status_acc" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;"></div>
+        <div><h3>Fetch Number SID</h3></div>
+        <div>
+          <form id="fetchSID" action="javascript:number_fetch()">
+            <p>
+              In the below field, enter the number to get the SID that you need to use to transfer
+              it. The search is done on your main account and its
+              subaccounts automatically. <br /><b>Be carefull</b>, if you insert an
+              incomplete number, the system will search for a number on your
+              accounts (main account and subaccounts) that starts with what you
+              inserted. <br />
+              For example, if you have a number +123456789, and you insert
+              +1234567, the details of the complete number will be returned.
+              Make sure you check what is the number in the result.
+            </p>
+            <input id="fphone" type="text" name="fphone"  oninput="checkFormat()"  />
+            <br />
+            <input id="tbutton" type="submit" value="Fetch" />
+          </form>
+          <div class="success">
+            <div class="alert alert-success" style="display: none"></div>
+          </div>
+          <div class="warning">
+            <div class="alert alert-warning" style="display: none"></div>
+          </div>
+        </div>
+        <div><h3>Transfer the Number</h3></div>
+        <div>
+          <form id="transfer" action="javascript:transfer()">
+            <p>
+              <b>Be careful</b> - if your number has a Whastapp configuration
+              and you want to preserve it in the transfer, please do NOT use
+              this tool and instead contact Twilio Support. If you have A2P
+              registrations on the number, those will be lost in the transfer.
+              Please find more information on our
+              <a
+                target="_blank"
+                href="https://support.twilio.com/hc/en-us/articles/223135327-Moving-Twilio-Phone-Numbers-to-another-Twilio-Account"
+                >FAQ page</a
+              >. <br />
+              <b>Hosted Numbers should not</b> be transferred with this tool or the API. Contact Twilio Support if you want to transfer a Hosted number.
+            </p>
+            <p>
+              Enter the SID of the phone number you would like to transfer
+              (mandatory field):
+            </p>
+            <input id="phone" type="text" name="phone" required />
+            <p>
+              Losing Account - Enter the Account SID from where you want the
+              number transferred (mandatory field):
+            </p>
+            <input
+              id="losingaccountSID"
+              type="text"
+              name="accountSID"
+              value=""
+              required
+            />
+            <p>
+              Gaining Account - Enter the Account SID where you want the number
+              transferred (mandatory field):
+            </p>
+            <input
+              id="gainingaccountSID"
+              type="text"
+              name="accountSID"
+              value=""
+              required
+            />
+            <p>
+              Insert the Bundle SID (depends on regulatory requirements of the
+              number):
+            </p>
+            <input id="bundleSID" type="text" name="bundleSID" value="" />
+            <p>
+              Insert the Address SID (depends on regulatory requirements of the
+              number):
+            </p>
+            <input
+              id="addressSID"
+              type="text"
+              name="addressSID"
+              value=""
+            />
+            <input id="transfer" type="submit" value="Transfer" />
+          </form>
+          <div class="alert alert-info" style="display: none"></div>
+          <div class="alert alert-error" style="display: none"></div>
+        </div>
+        <div>
+        <!-- EDIT_CODE -->
+        </div>
+      </div>
+    </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
+    <script type="text/javascript">
+const info = document.querySelector(".alert-info");
+const error = document.querySelector(".alert-error");
+const success = document.querySelector(".alert-success");
+const warning = document.querySelector(".alert-warning");
+
+
+async function checkFormat(){
+    if(!/^\+\d+$/.test(document.getElementById("fphone").value)){
+      document.getElementById("fphone").style.background = "Tomato";
+    }
+    else {
+      document.getElementById("fphone").style.background = "";
+    }
+}
+
+async function transfer() {
+  let alertConfirm =
+    "You requested to transfer a number. If there is a Whatsapp configuration on the number, it will be lost on transfer. If there are opt-outs and/or A2P registrations (US LongCodes only) on the number, those will also be lost. You will need to setup Opt-Outs and re-register the numbers on the new account before they will work. Please find more information in the linked FAQ page. \n\n Do you want to proceed with the transfer?";
+  let data = null;
+  let response = null;
+  let json = null;
+
+  const phoneSID = document.getElementById("phone").value;
+  const gainingAccountSID = document.getElementById("gainingaccountSID").value;
+  const losingAccountSID = document.getElementById("losingaccountSID").value;
+  const bundleSID = document.getElementById("bundleSID").value;
+  const addressSID = document.getElementById("addressSID").value;
+  const password = document.getElementById("password").value;
+
+  if (confirm(alertConfirm) === true) {
+    try {
+      console.log(phoneSID);
+      console.log(gainingAccountSID);
+      console.log(losingAccountSID);
+      console.log(bundleSID);
+      console.log(addressSID);
+      info.style.display = "none";
+      error.style.display = "none";
+      status_acc.style.display = "none";
+
+      data = {
+        phone: phoneSID,
+        laccount: losingAccountSID,
+        gaccount: gainingAccountSID,
+        bSID: bundleSID,
+        aSID: addressSID,
+      };
+
+      response = await fetch("./transfer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": password,
+        },
+        body: JSON.stringify(data),
+      });
+
+      json = await response.json();
+
+      if (json.er === 0) {
+        error.style.display = "";
+        info.style.display = "none";
+        error.innerHTML = `Wrong password.`;
+        console.log(response);
+        return;
+      }
+
+      if (response.status === 200) {
+        info.style.display = "";
+        info.innerHTML = `<pre>Success :<br />${JSON.stringify(
+          json,
+          null,
+          2,
+        )}</pre>`;
+      } else {
+        console.error(json.error);
+        error.style.display = "";
+        error.innerHTML = `Something Wrong: ${json.error} <br />If you see the error "An internal server error has occurred", check that the Bundle SID is correct, present on the gaining account and approved for the number type you are transferring`;
+      }
+    } catch (err) {
+      //console.log (err);
+      error.style.display = "";
+      error.innerHTML = `Something went wrong: ${err}`;
+    }
+  }
+}
+
+async function number_fetch() {
+  let adata = null;
+  let fdata = null;
+  let aresponse = null;
+  let fresponse = null;
+  let json2 = null;
+  let ajson = [];
+  let sid = null;
+  let asid = null;
+  let phoneNumber = document.getElementById("fphone").value;
+  let numStatus = null;
+  let addReq = null;
+  let insertedNumber = phoneNumber;
+  let subPage = 0;
+  let subPageToken = '';
+  let subPageAll = 0;
+  let subData = null;
+  let aPageJson = null;
+
+  const password = document.getElementById("password").value;
+
+  try {
+    success.style.display = "none";
+    warning.style.display = "none";
+    status_acc.style.display = "none";
+
+      while (subPageAll === 0) {
+             
+        subData = {
+          pageSize: 20,
+          page: subPage,
+          pageToken: decodeURIComponent(subPageToken),
+        };
+        aresponse = await fetch("./list_accounts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(subData),
+        });
+        console.log("return from Acc function");
+        if (aresponse.status === 200) {
+          aPageJson = await aresponse.json();
+          if (aPageJson.er === 0) {
+            warning.style.display = "";
+            status_acc.style.display="none";
+            success.style.display = "none";
+            warning.innerHTML = `Wrong password.`;
+            return;
+          }
+          if (aPageJson[aPageJson.length-1] !== "end") {
+            subPageToken = aPageJson[aPageJson.length-1];
+            console.log(subPageToken);
+          } else {
+            subPageAll = 1;
+            subPageToken = '';
+          }
+          subPage += 1;
+          aPageJson.pop();
+          console.log(aPageJson);
+          for(let z in aPageJson){
+            ajson.push(aPageJson[z]);
+          }
+          console.log(ajson);
+            } else {
+              warning.style.display = "";
+              warning.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
+              return;
+            }
+      }
+
+    for (a = 0; a < ajson.length; a++) {
+      fdata = {
+        phone: phoneNumber,
+        sub: ajson[a],
+      };
+
+      fresponse = await fetch("./fetch_sid", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": password,
+        },
+        body: JSON.stringify(fdata),
+      });
+      console.log("return from function");
+      json2 = await fresponse.json();
+      success.style.display = "";
+      success.innerHTML = `<pre>Checked ${a} accounts.</pre>`;
+
+      if (json2.er === 0) {
+        warning.style.display = "";
+        success.style.display = "none";
+        status_acc.style.display="none";
+        warning.innerHTML = `Wrong password.`;
+        return;
+      }
+      if (json2 !== "not here") {
+        console.log(json2);
+        sid = json2.SID;
+        console.log(sid);
+        asid = json2.Acc;
+        phoneNumber = json2.pnumber;
+        numStatus = json2.status;
+        addReq = json2.addressReq;
+        break;
+      } else if (json2 === "not here") {
+        json2 = "number not found";
+      }
+    }
+
+    if (json2 === "number not found") {
+      warning.style.display = "";
+      success.style.display = "none";
+      warning.innerHTML = `<pre> ${JSON.stringify(json2, null, 2)}</pre>`;
+    } else {
+      if (fresponse.status === 200) {
+        if (insertedNumber !== phoneNumber.substring(0, insertedNumber.length,)){
+          warning.style.display = "";
+          success.style.display = "none";
+          warning.innerHTML = `Number not found.`;
+          return;
+        }
+        success.style.display = "";
+        success.innerHTML = `<pre>Number ${JSON.stringify(
+          phoneNumber,
+          null,
+          2,
+        )} <br>Number SID ${JSON.stringify(
+          sid,
+          null,
+          2,
+        )} <br>Account SID ${JSON.stringify(
+          asid,
+          null,
+          2,
+        )} <br>Number Status ${JSON.stringify(
+          numStatus,
+          null,
+          2,
+        )} <br>Address Requirements ${JSON.stringify(addReq, null, 2)} </pre>`;
+      } else {
+        console.error(json2.error);
+        warning.style.display = "";
+        success.style.display = "none";
+        warning.innerHTML = `Something Wrong: ${json2.error}`;
+      }
+    }
+  } catch (err) {
+    //console.log (err);
+    warning.style.display = "";
+    warning.innerHTML = `Something went wrong: ${err}`;
+  }
+}
+
+async function mask() {
+  let acc= null;
+  const response = await fetch("./mask_account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  acc = await response.json();
+ 
+  masking.innerHTML = acc.acc;
+  status_acc.innerHTML = ``;
+}
+
+async function unmask() {
+  let acc = null;
+  const password = document.getElementById("password").value;
+
+  const response = await fetch("./get_account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": password,
+    }
+  });
+  acc = await response.json();
+
+  if (acc.er === 0) {
+    status_acc.style.display = "";
+    warning.style.display="none";
+    warning.innerHTML="";
+    status_acc.innerHTML = `Wrong password.`;
+
+    return;
+  }
+  status_acc.style.display = "none";
+  warning.style.display="none";
+  warning.innerHTML="";
+  masking.innerHTML = acc.acc;
+  status_acc.innerHTML = ``;
+}
+      </script>
+  </body>
+</html> 

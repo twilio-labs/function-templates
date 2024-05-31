@@ -1,9 +1,11 @@
 # Frontline Serverless Quickstart
 
-## What is this?
-This is the code that we use for the [Frontline Serverless Quickstart](https://www.twilio.com/docs/frontline/serverless-quickstart). It's intended to be deployed to [Twilio Functions](https://www.twilio.com/docs/runtime/functions), whereit ceates one function for each callback needed to setup Frontline features. 
+***NOTE: Effective February 9, 2023***, Twilio Frontline is limited to existing Frontline accounts only. New and existing Twilio customers without previous access to Frontline will not be able to get Frontline through Twilio's Console nor access developer documentation.   For more information, please check out the Twilio [Frontline](https://support.twilio.com/hc/en-us/articles/12427869273627-Twilio-Frontline-Limitation-of-New-Sales-Notice-and-Information) Support documentation.
 
-This is intended to be used as the [Integration Service of a Frontline instance](https://www.twilio.com/docs/frontline/frontline-integration-service).
+## What is this?
+This is intended to be deployed to [Twilio Functions](https://www.twilio.com/docs/runtime/functions), where it ceates one function for each callback needed to setup Frontline features.
+
+This is intended to be used as the Integration Service of a Frontline instance.
 
 ## Pre-requisites
 
