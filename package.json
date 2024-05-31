@@ -138,7 +138,12 @@
     "voice-javascript-sdk",
     "voicemail",
     "verify-sna",
+<<<<<<< verify-prefill
     "flex-dialpad",
     "verify-prefill"
+=======
+    "reminder-message",
+    "flex-dialpad"
+>>>>>>> main
   ]
 }
