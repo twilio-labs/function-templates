@@ -1,6 +1,7 @@
 const assets = Runtime.getAssets();
-const { checkAuthorization, createToken } = require(assets['/admin/shared.js']
-  .path);
+const { checkAuthorization, createToken } = require(
+  assets['/admin/shared.js'].path
+);
 
 // eslint-disable-next-line consistent-return
 exports.handler = function (context, event, callback) {

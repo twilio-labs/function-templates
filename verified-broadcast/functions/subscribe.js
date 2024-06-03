@@ -20,8 +20,9 @@ function sendSubscribedNotification(notifyService, identity) {
 }
 
 exports.handler = async (context, event, callback) => {
-  const { setupResourcesIfRequired } = require(Runtime.getAssets()['/setup.js']
-    .path);
+  const { setupResourcesIfRequired } = require(
+    Runtime.getAssets()['/setup.js'].path
+  );
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 

@@ -1,13 +1,10 @@
 exports.handler = async function (context, event, callback) {
-  const { setupProject, isConfigured } = require(Runtime.getAssets()[
-    '/helpers/setup.js'
-  ].path);
-  const {
-    uploadFlexPlugin,
-    Status,
-    getStatus,
-    deployPlugin,
-  } = require(Runtime.getAssets()['/helpers/flex-plugins.js'].path);
+  const { setupProject, isConfigured } = require(
+    Runtime.getAssets()['/helpers/setup.js'].path
+  );
+  const { uploadFlexPlugin, Status, getStatus, deployPlugin } = require(
+    Runtime.getAssets()['/helpers/flex-plugins.js'].path
+  );
   try {
     const pluginName = 'flex-dialpad-addon';
     const version = '1.0.0';

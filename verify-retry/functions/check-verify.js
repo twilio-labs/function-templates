@@ -16,9 +16,9 @@
  *  }
  */
 const assets = Runtime.getAssets();
-const { detectMissingParams, VerificationException } = require(assets[
-  '/utils.js'
-].path);
+const { detectMissingParams, VerificationException } = require(
+  assets['/utils.js'].path
+);
 
 async function checkVerification(client, service, to, code) {
   const check = await client.verify

@@ -253,9 +253,8 @@ exports.uploadFlexPlugin = async (
     serverlessClient
   );
 
-  const currentEnvironment = await helpers.environment.getCurrentEnvironment(
-    context
-  );
+  const currentEnvironment =
+    await helpers.environment.getCurrentEnvironment(context);
   await helpers.environment.setEnvironmentVariable(
     context,
     currentEnvironment,

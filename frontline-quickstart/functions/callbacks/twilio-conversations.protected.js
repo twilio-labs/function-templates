@@ -30,8 +30,9 @@ const setCustomerParticipantProperties = async (
 // eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const assets = Runtime.getAssets();
-  const { getCustomerByNumber } = require(assets['/providers/customers.js']
-    .path);
+  const { getCustomerByNumber } = require(
+    assets['/providers/customers.js'].path
+  );
 
   console.log('[ Outgoing Conversations Callback ]');
 

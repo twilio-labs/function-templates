@@ -21,9 +21,8 @@ async function getWorkspaceSid(twilioClient) {
 
 exports.setupProject = async (context) => {
   const twilioClient = context.getTwilioClient();
-  const currentEnvironment = await helpers.environment.getCurrentEnvironment(
-    context
-  );
+  const currentEnvironment =
+    await helpers.environment.getCurrentEnvironment(context);
   if (!currentEnvironment) {
     console.error('Could not find enviroment');
     return { setupDone: false };

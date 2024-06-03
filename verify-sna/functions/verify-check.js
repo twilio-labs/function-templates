@@ -30,8 +30,9 @@
  */
 
 const assets = Runtime.getAssets();
-const { checkVerification } = require(assets['/services/verifications.js']
-  .path);
+const { checkVerification } = require(
+  assets['/services/verifications.js'].path
+);
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 const {
