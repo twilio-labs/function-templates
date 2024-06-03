@@ -29,7 +29,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('GetTemplatesByCustomerId: returns templates', async (done) => {
+test('GetTemplatesByCustomerId: returns templates', async () => {
   const event = {
     CustomerId: 1,
     Location: 'GetTemplatesByCustomerId',
@@ -39,13 +39,12 @@ test('GetTemplatesByCustomerId: returns templates', async (done) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
     expect(result.length).toBeTruthy();
-    done();
   };
 
   templatesCallback(context, event, callback);
 });
 
-test('GetTemplatesByCustomerId: fails on unknown location', async (done) => {
+test('GetTemplatesByCustomerId: fails on unknown location', async () => {
   const event = {
     CustomerId: 1,
   };
@@ -54,7 +53,6 @@ test('GetTemplatesByCustomerId: fails on unknown location', async (done) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(422);
-    done();
   };
 
   templatesCallback(context, event, callback);

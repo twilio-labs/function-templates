@@ -23,7 +23,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('get customer details by customer ID', async (done) => {
+test('get customer details by customer ID', async () => {
   const event = {
     CustomerId: '1',
     Location: 'GetCustomerDetailsByCustomerId',
@@ -32,13 +32,12 @@ test('get customer details by customer ID', async (done) => {
   const callback = (_err, result) => {
     expect(result).toBeDefined();
     expect(result.objects.customer).toBeDefined();
-    done();
   };
 
   CRMCallback(context, event, callback);
 });
 
-test('get customers list for worker', async (done) => {
+test('get customers list for worker', async () => {
   const event = {
     Worker: TEST_SSO_USERNAME,
     Location: 'GetCustomersList',
@@ -48,19 +47,16 @@ test('get customers list for worker', async (done) => {
     expect(result).toBeDefined();
     expect(result.objects.customers).toBeDefined();
     expect(result.objects.customers.length).toEqual(2);
-    done();
   };
 
   CRMCallback(context, event, callback);
 });
-test('returns 422 for unknown location', async (done) => {
+test('returns 422 for unknown location', async () => {
   const event = {};
 
   const callback = (_err, result) => {
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(422);
-
-    done();
   };
 
   CRMCallback(context, event, callback);

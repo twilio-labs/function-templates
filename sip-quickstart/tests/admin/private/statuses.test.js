@@ -428,7 +428,7 @@ describe('sip-quickstart/admin/private/statuses', () => {
     // Assert
     expect(status).toBeDefined();
     expect(status.valid).toBeTruthy();
-    expect(status.description).toContain(extensions.length);
+    expect(status.description).toContain(extensions.length.toString());
   });
 
   test('getIncomingNumberStatus is invalid when not set in environment', async () => {
