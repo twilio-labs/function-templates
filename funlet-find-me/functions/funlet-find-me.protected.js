@@ -318,7 +318,7 @@ function findMeStage1(
   otherForwardingNumbers.forEach(
     (forwardingNumber, idx) =>
       (actionUrl += `&${encodeURIComponent(
-        `PhoneNumbers[${idx}]`
+        `PhoneNumbers[${idx}]` // eslint-disable-line sonarjs/no-nested-template-literals
       )}=${encodeURIComponent(forwardingNumber)}`)
   );
 

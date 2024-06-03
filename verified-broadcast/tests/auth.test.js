@@ -4,6 +4,7 @@ const getAuthedEvent = (username, password) => ({
   request: {
     headers: {
       authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
+        // eslint-disable-line sonarjs/no-nested-template-literals
         'base64'
       )}`,
     },
