@@ -1,4 +1,4 @@
-name: Node CI
+name: Node.js CI
 
 on: [pull_request]
 
@@ -8,12 +8,12 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [14, 16]
+        node-version: [current, lts/*]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
       # - name: Cache node modules
@@ -34,9 +34,9 @@ jobs:
       #       ${{ matrix.os }}-${{ matrix.node-version }}-cypress-${{ env.cache-name }}-
       #       ${{ matrix.os }}-${{ matrix.node-version }}-cypress-
       #       ${{ matrix.os }}-${{ matrix.node-version }}-
-      - name: install npm v8
+      - name: install latest npm
         run: |
-          npm install -g npm@8
+          npm install -g npm@latest
       - name: npm install, build, and test
         run: |
           npm install
