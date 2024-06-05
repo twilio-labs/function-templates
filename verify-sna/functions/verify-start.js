@@ -30,8 +30,9 @@
  */
 
 const assets = Runtime.getAssets();
-const { createVerification } = require(assets['/services/verifications.js']
-  .path);
+const { createVerification } = require(
+  assets['/services/verifications.js'].path
+);
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 const { PHONE_NUMBER_FIELD } = require(assets['/services/constants.js'].path);

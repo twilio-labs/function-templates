@@ -7,9 +7,9 @@ const {
   createNewVerification,
   deleteVerification,
 } = require(assets['/data/operations.js'].path);
-const { RESOURCE_NOT_FOUND_ERROR_CODE, PENDING_STATUS } = require(assets[
-  '/services/constants.js'
-].path);
+const { RESOURCE_NOT_FOUND_ERROR_CODE, PENDING_STATUS } = require(
+  assets['/services/constants.js'].path
+);
 
 const getVerifications = async (context) => {
   return new Promise(async (resolve, reject) => {

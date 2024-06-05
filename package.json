@@ -22,25 +22,28 @@
   "license": "MIT",
   "devDependencies": {
     "@twilio-labs/runtime-helpers": "^0.1.2",
-    "@twilio-labs/serverless-api": "^5.4.3",
-    "@twilio/runtime-handler": "1.2.0",
-    "common-tags": "^1.8.0",
+    "@twilio-labs/serverless-api": "^5.5.2",
+    "@twilio/runtime-handler": "2.0.2",
+    "common-tags": "^1.8.2",
     "configure-env": "^2.0.0-1",
     "copy-template-dir": "^1.4.0",
-    "cypress": "^9.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-twilio": "^1.34.2",
-    "get-port": "^6.0.0",
-    "got": "^6.7.1",
-    "husky": "^6.0.0",
-    "inquirer": "^7.0.4",
-    "jest-cli": "^26.6.3",
+    "cypress": "^13.10.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-twilio": "^2.0.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "get-port": "^7.1.0",
+    "got": "^14.3.0",
+    "husky": "^9.0.11",
+    "inquirer": "^9.2.23",
+    "jest-cli": "^29.7.0",
+    "jsdom": "^24.1.0",
     "listr": "^0.14.3",
-    "log-symbols": "^3.0.0",
-    "prettier": "^2.3.0",
-    "pretty-quick": "^3.1.0",
-    "turbo": "^1.0.24",
-    "validator": "^13.7.0"
+    "log-symbols": "^6.0.0",
+    "prettier": "^3.3.0",
+    "pretty-quick": "^4.0.0",
+    "turbo": "^1.13.3",
+    "validator": "^13.12.0"
   },
   "jest": {
     "testEnvironment": "node",
@@ -63,7 +66,6 @@
       "cypress/"
     ]
   },
-  "dependencies": {},
   "turbo": {
     "baseBranch": "origin/main",
     "pipeline": {

@@ -3,6 +3,7 @@ const { isAuthenticated } = require('../assets/auth.private');
 const getAuthedEvent = (username, password) => ({
   request: {
     headers: {
+      // eslint-disable-next-line sonarjs/no-nested-template-literals
       authorization: `Basic ${Buffer.from(`${username}:${password}`).toString(
         'base64'
       )}`,

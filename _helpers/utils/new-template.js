@@ -223,9 +223,9 @@ async function generateEnvExampleFromRealEnv(projectPath, targetPath) {
       # description: ${variable.description}
       # format: ${variable.format}
       # required: ${variable.required}${
-        variable.link ? `\n# link: ${variable.link}` : ''
+        variable.link ? `\n# link: ${variable.link}` : '' // eslint-disable-line sonarjs/no-nested-template-literals
       }${variable.configurable ? '' : '\n# configurable: false'}${
-        variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : ''
+        variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : '' // eslint-disable-line sonarjs/no-nested-template-literals
       }
       ${variable.key}=
     `;
