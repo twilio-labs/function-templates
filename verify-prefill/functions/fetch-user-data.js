@@ -12,6 +12,7 @@ exports.handler = async function (context, event, callback) {
     const lookupResponse = await fetch(lookupUrl, {
       headers: {
         Authorization: `Basic ${Buffer.from(
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
           `${lookupApiKey}:${lookupApiSecret}`
         ).toString('base64')}`,
       },
