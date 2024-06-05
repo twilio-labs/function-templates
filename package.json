@@ -140,6 +140,7 @@
     "voice-javascript-sdk",
     "voicemail",
     "verify-sna",
+    "flex-dialpad",
     "verify-prefill",
     "reminder-message"
   ]
