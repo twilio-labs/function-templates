@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Prefill Demo</title>
+</head>
+<body>
+  <h1>Phone Number Verification</h1>
+  <form id="verification-form">
+    <label for="phone-number">Phone Number - E.164:</label>
+    <input type="tel" id="phone-number" name="phone-number" required>
+    <button type="button" onclick="sendOTP()">Send OTP</button>
+    <br><br>
+    <label for="otp-code">OTP Code:</label>
+    <input type="text" id="otp-code" name="otp-code" required>
+    <button type="button" onclick="verifyOTP()">Verify OTP</button>
+  </form>
+  <br>
+  <h2>Identity Lookup Results Below</h2>
+  <br>
+  <div id="user-data" style="display:none;">
+    <h2>User Data: Results</h2>
+    <p>First Name: <span id="first-name"></span></p>
+    <p>Last Name: <span id="last-name"></span></p>
+    <p>Address Line: <span id="address-line"></span></p>
+    <p>Country Code: <span id="country-code"></span></p>
+    <p>State: <span id="state"></span></p>
+    <p>Postal Code: <span id="postal-code"></span></p>
+  </div>
+
+  <script>
+    async function sendOTP() {
+      const phoneNumber = document.getElementById('phone-number').value;
+      const response = await fetch('/send-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber })
+      });
+      const result = await response.json();
+      alert(result.message);
+    }
+
+    async function verifyOTP() {
+      const phoneNumber = document.getElementById('phone-number').value;
+      const code = document.getElementById('otp-code').value;
+      const response = await fetch('/verify-otp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber, code })
+      });
+      const result = await response.json();
+      if (result.success) {
+        alert('Verification successful. Fetching user data in 90 seconds...');
+        setTimeout(() => fetchUserData(phoneNumber, result.verificationSid), 90000); // 90 seconds delay
+      } else {
+        alert('Verification failed: ' + result.message);
+      }
+    }
+
+    async function fetchUserData(phoneNumber, verificationSid) {
+      const response = await fetch('/fetch-user-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ phoneNumber, verificationSid })
+      });
+      const result = await response.json();
+      if (result.success) {
+        displayUserData(result.prefillData);
+      } else {
+        alert('Fetching user data failed: ' + result.message);
+      }
+    }
+
+    function displayUserData(data) {
+      document.getElementById('first-name').innerText = data.first_name;
+      document.getElementById('last-name').innerText = data.last_name;
+      document.getElementById('address-line').innerText = data.address_line;
+      document.getElementById('country-code').innerText = data.country_code;
+      document.getElementById('state').innerText = data.state;
+      document.getElementById('postal-code').innerText = data.postal_code;
+      document.getElementById('user-data').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
