@@ -25,7 +25,7 @@ async function run(args) {
 
   if (!(await isServerlessProject(fullExistingProjectPath))) {
     throw new Error(
-      `${error} Invalid project structure. The path you specfied does not match what a Twilio Serverless project should look like. Please point the tool at the root of a project created with "twilio serverless:init".`
+      `Invalid project structure. The path you specfied does not match what a Twilio Serverless project should look like. Please point the tool at the root of a project created with "twilio serverless:init".`
     );
   }
 
@@ -86,7 +86,7 @@ async function run(args) {
 
   const successMessage = `
 
-  ${success} Template created
+    Template created
 
     You can find your template in the directory ${targetPath}.
 
@@ -100,7 +100,7 @@ async function run(args) {
 run(process.argv).catch((err) => {
   if (err.code && err.code === 'EEXIST') {
     console.error(
-      `${error} The name you specified already exists. Please pick a name that is not currently a directory name in this project`
+      `The name you specified already exists. Please pick a name that is not currently a directory name in this project`
     );
   } else {
     console.error(err.message);
