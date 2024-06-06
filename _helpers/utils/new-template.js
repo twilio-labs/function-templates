@@ -5,7 +5,6 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 const { stat, readdir, copyFile, mkdir, rename } = require('fs/promises');
-const { error, success } = require('log-symbols');
 const { parser } = require('configure-env');
 const { createOutput } = require('configure-env/dist/output');
 const { stripIndents } = require('common-tags');
