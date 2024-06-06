@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "format:changed": "pretty-quick --staged",
     "format:check": "prettier --check .",
-    "prepare": "husky install",
+    "prepare": "husky",
     "e2e": "turbo run e2e --parallel"
   },
   "author": "Twilio <open-source@twilio.com>",
