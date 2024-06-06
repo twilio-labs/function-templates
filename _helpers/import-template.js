@@ -2,7 +2,6 @@ const Listr = require('listr');
 const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
-const { error, success } = require('log-symbols');
 const inquirer = require('inquirer');
 
 const mkdir = promisify(fs.mkdir);
