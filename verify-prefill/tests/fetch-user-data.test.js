@@ -28,7 +28,7 @@ describe('verify-prefill/fetch-user-data', () => {
     const lookupResponse = Promise.resolve({
       json: () =>
         Promise.resolve({
-          pre_fill: 'mydata',
+          pre_fill: 'mydata', // eslint-disable-line camelcase
         }),
     });
     fetch.mockImplementation(() => lookupResponse);
