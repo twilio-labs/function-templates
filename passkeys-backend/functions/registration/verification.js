@@ -30,6 +30,9 @@ exports.handler = async (context, event, callback) => {
     },
   };
 
+  console.log('requestBody', requestBody);
+  console.log('response object', requestBody.response);
+
   const verifyFactorURL = `${API_URL}Services/${SERVICE_SID}/Factors/Verify`;
 
   try {
@@ -43,7 +46,14 @@ exports.handler = async (context, event, callback) => {
       status: response.data.status,
     });
   } catch (error) {
-    errorLogger(error);
+    if (error.response) {
+      console.log(error.response.data);
+      console.log('Client has given an error', error);
+    } else if (error.request) {
+      console.log('Runtime error', error);
+    } else {
+      console.log(error);
+    }
     return callback(null, error);
   }
 };

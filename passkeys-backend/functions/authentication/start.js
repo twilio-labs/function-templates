@@ -1,10 +1,9 @@
 const axios = require('axios');
 
 const assets = Runtime.getAssets();
-const { errorLogger } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
-exports.handler = async (context, _, callback) => {
+exports.handler = async (context, event, callback) => {
   const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
     context;
 
@@ -25,7 +24,13 @@ exports.handler = async (context, _, callback) => {
     });
     return callback(null, response.data.details);
   } catch (error) {
-    errorLogger(error);
+    if (error.response) {
+      console.log('Client has given an error', error);
+    } else if (error.request) {
+      console.log('Runtime error', error);
+    } else {
+      console.log(error);
+    }
     return callback('Something went wrong');
   }
 };

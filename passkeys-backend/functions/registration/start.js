@@ -1,9 +1,7 @@
 const axios = require('axios');
 
 const assets = Runtime.getAssets();
-const { detectMissingParams, errorLogger } = require(assets[
-  '/services/helpers.js'
-].path);
+const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
   const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
@@ -33,6 +31,8 @@ exports.handler = async (context, event, callback) => {
           `https://${RELYING_PARTY}`,
           'android:apk-key-hash:r-BvX79axOKgiSKVuBwFSylcgHo7aUuxCnumzx4XT6E',
           'android:apk-key-hash:UFzWPaUfGY8_scKVC2tGtgb-xBNXS5Z_PYajz3P-BVM',
+          'android:apk-key-hash:V9oDo6qGAoQG3r3vk7JJBAFBVrpSPvsp-QTlyttftAw',
+          'android:apk-key-hash:yOXmgJgVThpM_CUPlnaG4fEiFA0PpR1MCa-FbWfeiDM',
         ],
       },
       authenticator_criteria: {
@@ -59,7 +59,14 @@ exports.handler = async (context, event, callback) => {
       factor_sid: response.data.sid,
     });
   } catch (error) {
-    errorLogger(error);
+    if (error.response) {
+      console.log(error.response.data);
+      console.log('Client has given an error', error);
+    } else if (error.request) {
+      console.log('Runtime error', error);
+    } else {
+      console.log(error);
+    }
     return callback(null, error);
   }
 };
