@@ -2,8 +2,8 @@ const fetch = require('node-fetch');
 
 exports.handler = async function (context, event, callback) {
   const { phoneNumber, verificationSid } = event;
-  const lookupApiKey = context.LOOKUP_API_KEY;
-  const lookupApiSecret = context.LOOKUP_API_SECRET;
+  const lookupApiKey = context.ACCOUNT_SID;
+  const lookupApiSecret = context.AUTH_TOKEN;
 
   try {
     const lookupUrl = `https://lookups.twilio.com/v2/PhoneNumbers/${phoneNumber}?Fields=pre_fill&VerificationSid=${verificationSid}`;
