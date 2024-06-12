@@ -2,25 +2,24 @@ exports.handler = async function (context, event, callback) {
   const { phoneNumber } = event;
   const { VERIFY_SERVICE_SID: serviceSid } = context;
 
-  // Ensure the Twilio client is initialized
-  const client = context.getTwilioClient();
-
-  if (!serviceSid) {
-    console.error('Missing VERIFY_SERVICE_SID');
-    return callback('Missing VERIFY_SERVICE_SID');
-  }
-
   try {
+    // Ensure the Twilio client is initialized
+    const client = context.getTwilioClient();
+
+    if (!serviceSid) {
+      throw new Error('Missing VERIFY_SERVICE_SID');
+    }
+
     // Validate phone number using Twilio Lookup API with Node.js library
     const lookupResponse = await client.lookups.v2
       .phoneNumbers(phoneNumber)
       .fetch();
 
     if (!lookupResponse.valid) {
-      const message =
-        'Invalid phone number. Please enter a valid number in E.164 format.';
-      console.error(message, lookupResponse);
-      return callback(null, { success: false, message });
+      console.error(lookupResponse);
+      throw new Error(
+        'Invalid phone number. Please enter a valid number in E.164 format.'
+      );
     }
 
     // Start verification if the phone number is valid
