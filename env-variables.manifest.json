@@ -1862,26 +1862,6 @@
         "default": null,
         "configurable": true,
         "contentKey": null
-      },
-      {
-        "key": "LOOKUP_API_KEY",
-        "required": true,
-        "format": "sid",
-        "description": "Your Lookup API Key. Can be created in the Console.",
-        "link": null,
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "LOOKUP_API_SECRET",
-        "required": true,
-        "format": "secret",
-        "description": "Your Lookup API Secret. Can be created in the Console.",
-        "link": null,
-        "default": null,
-        "configurable": true,
-        "contentKey": null
       }
     ],
     "reminder-message": [
