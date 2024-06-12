@@ -42,8 +42,6 @@ In your `.env` file, set the following values:
 | Variable             | Description | Required |
 | :------------------- | :---------- | :------- |
 | `VERIFY_SERVICE_SID` | Verify SID  | True     |
-| `LOOKUP_API_KEY`     | ApiKey      | True     |
-| `LOOKUP_API_SECRET`  | ApiSecret   | True     |
 
 ### Function Parameters
 
@@ -51,13 +49,14 @@ In your `.env` file, set the following values:
 
 | Parameter   | Description        | Required |
 | :---------- | :----------------- | :------- |
-| phoneNumber | E.160 Phone Number | True     |
+| phoneNumber | E.164 Phone Number | True     |
 
 `/verify-otp` expects the following parameters:
 
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-| Code      | Verify Code | True     |
+| Parameter   | Description        | Required |
+| :---------- | :----------------- | :------- |
+| phoneNumber | E.164 Phone Number | True     |
+| code        | Verify Code        | True     |
 
 `/fetch-user-data` expects the following parameters:
 
