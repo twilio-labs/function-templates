@@ -4,16 +4,16 @@ const assets = Runtime.getAssets();
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
-  const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
-    context;
+  const { RELYING_PARTY, API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
 
   const requestBody = {
-    details: {
-      rpId: RELYING_PARTY,
+    content: {
+      // eslint-disable-next-line camelcase
+      rp_id: RELYING_PARTY,
     },
   };
 
-  const challengeURL = `${API_URL}Services/${SERVICE_SID}/Challenges`;
+  const challengeURL = `${API_URL}/Verifications`;
 
   try {
     const response = await axios.post(challengeURL, requestBody, {
@@ -22,7 +22,7 @@ exports.handler = async (context, event, callback) => {
         password: AUTH_TOKEN,
       },
     });
-    return callback(null, response.data.details);
+    return callback(null, response.data.next_step);
   } catch (error) {
     if (error.response) {
       console.log('Client has given an error', error);

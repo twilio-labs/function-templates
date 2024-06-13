@@ -5,7 +5,7 @@ const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
-  const { API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } = context;
+  const { API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
   const missingParams = detectMissingParams(
     [
       'id',
@@ -24,20 +24,22 @@ exports.handler = async (context, event, callback) => {
     );
 
   const requestBody = {
-    rawId: event.rawId,
-    id: event.id,
-    authenticatorAttachment: 'platform',
-    // type: event.type,
-    type: 'public-key',
-    response: {
-      clientDataJSON: event.clientDataJson,
-      authenticatorData: event.authenticatorData,
-      signature: event.signature,
-      userHandle: event.userHandle,
+    content: {
+      rawId: event.rawId,
+      id: event.id,
+      authenticatorAttachment: 'platform',
+      // type: event.type,
+      type: 'public-key',
+      response: {
+        clientDataJSON: event.clientDataJson,
+        authenticatorData: event.authenticatorData,
+        signature: event.signature,
+        userHandle: event.userHandle,
+      },
     },
   };
 
-  const verifyChallengeURL = `${API_URL}Services/${SERVICE_SID}/Challenges/Verify`;
+  const verifyChallengeURL = `${API_URL}/Verifications/Check`;
 
   try {
     const response = await axios.post(verifyChallengeURL, requestBody, {
@@ -48,7 +50,7 @@ exports.handler = async (context, event, callback) => {
     });
     return callback(null, {
       status: response.data.status,
-      identity: response.data.entity_identity,
+      identity: response.data.to.user_identifier,
     });
   } catch (error) {
     if (error.response) {

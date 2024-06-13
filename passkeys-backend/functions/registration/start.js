@@ -4,8 +4,7 @@ const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
-    context;
+  const { RELYING_PARTY, API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
 
   // Verify request comes with username
   const missingParams = detectMissingParams(['username'], event);
@@ -18,12 +17,10 @@ exports.handler = async (context, event, callback) => {
   /* eslint-disable camelcase */
   const requestBody = {
     friendly_name: 'TouchID',
-    factory_type: 'passkeys',
-    entity: {
-      identity: event.username,
-      display_name: event.username,
+    to: {
+      user_identifier: event.username,
     },
-    config: {
+    content: {
       relying_party: {
         id: RELYING_PARTY,
         name: 'PasskeySample',
@@ -44,7 +41,7 @@ exports.handler = async (context, event, callback) => {
   };
 
   // Factor URL of the passkeys service
-  const factorURL = `${API_URL}Services/${SERVICE_SID}/Factors`;
+  const factorURL = `${API_URL}/Factors`;
 
   // Call made to the passkeys service
   try {
@@ -54,10 +51,7 @@ exports.handler = async (context, event, callback) => {
         password: AUTH_TOKEN,
       },
     });
-    return callback(null, {
-      ...response.data.config.creation_request,
-      factor_sid: response.data.sid,
-    });
+    return callback(null, response.data.next_step);
   } catch (error) {
     if (error.response) {
       console.log(error.response.data);

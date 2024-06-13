@@ -7,7 +7,7 @@ const { detectMissingParams, errorLogger } = require(assets[
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
-  const { API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } = context;
+  const { API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
 
   const missingParams = detectMissingParams(
     ['id', 'attestationObject', 'rawId', 'clientDataJson', 'transports'],
@@ -19,21 +19,23 @@ exports.handler = async (context, event, callback) => {
     );
 
   const requestBody = {
-    id: event.id,
-    rawId: event.rawId,
-    authenticatorAttachment: 'platform',
-    type: 'public-key',
-    response: {
-      attestationObject: event.attestationObject,
-      clientDataJSON: event.clientDataJson,
-      transports: event.transports,
+    content: {
+      id: event.id,
+      rawId: event.rawId,
+      authenticatorAttachment: 'platform',
+      type: 'public-key',
+      response: {
+        attestationObject: event.attestationObject,
+        clientDataJSON: event.clientDataJson,
+        transports: event.transports,
+      },
     },
   };
 
   console.log('requestBody', requestBody);
   console.log('response object', requestBody.response);
 
-  const verifyFactorURL = `${API_URL}Services/${SERVICE_SID}/Factors/Verify`;
+  const verifyFactorURL = `${API_URL}/Factors/Approve`;
 
   try {
     const response = await axios.post(verifyFactorURL, requestBody, {
@@ -43,7 +45,8 @@ exports.handler = async (context, event, callback) => {
       },
     });
     return callback(null, {
-      status: response.data.status,
+      status:
+        response.data.status === 'approved' ? 'verified' : response.data.status,
     });
   } catch (error) {
     if (error.response) {
