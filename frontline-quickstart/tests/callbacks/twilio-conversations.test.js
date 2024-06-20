@@ -48,7 +48,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('Conversations API Webhooks: creates a new conversation with the message’s sender as a participant', async (done) => {
+test('Conversations API Webhooks: creates a new conversation with the message’s sender as a participant', async () => {
   const INCOMING_NUMBER = '+000000';
   let event = {
     EventType: 'onConversationAdd',
@@ -65,7 +65,6 @@ test('Conversations API Webhooks: creates a new conversation with the message’
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
     expect(result).toEqual(expected);
-    done();
   };
 
   ConversationsAPIWebhooks(context, event, callback);
@@ -80,7 +79,6 @@ test('Conversations API Webhooks: creates a new conversation with the message’
   callback = (_err, result) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
-    done();
   };
 
   ConversationsAPIWebhooks(context, event, callback);

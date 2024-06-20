@@ -22,3 +22,507 @@ pre {
   background-color: #f2dede;
   border-color: #ebccd1;
 }
+
+body {
+  margin: 0;
+  font-family:
+    'Inter var experimental',
+    'Inter var',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen-Sans,
+    Ubuntu,
+    Cantarell,
+    'Helvetica Neue',
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5rem;
+  color: rgb(18, 28, 45);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+a {
+  color: rgb(2, 99, 224);
+}
+
+a:visited {
+  color: rgb(2, 99, 224);
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+ol.steps {
+  counter-reset: step;
+  list-style-type: none;
+}
+
+ol.steps > li::before {
+  counter-increment: step;
+  content: 'Step ' counter(step) ': ';
+  font-weight: 700;
+}
+
+header {
+  display: flex;
+  color: white;
+  background: rgb(6, 3, 58);
+  width: 100%;
+  box-shadow: 0px 2px 6px 0px rgba(75, 86, 113, 0.2);
+  align-content: center;
+}
+
+header > nav {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+header > nav span {
+  font-weight: 400;
+}
+
+header > nav aside {
+  color: rgb(200, 175, 240);
+  font-size: 0.75rem;
+}
+
+header > nav svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+div.page-top {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+div.content {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+}
+
+footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: #94979b;
+  background: rgb(6, 3, 58);
+  box-shadow: 0px 2px 6px 0px rgba(75, 86, 113, 0.2);
+  padding: 50px 0;
+  margin-top: 2rem;
+}
+
+footer .statement {
+  font-size: 45px;
+  font-style: italic;
+  line-height: 1.2;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  margin-bottom: 0.5em;
+  padding: 0.5rem 0;
+}
+
+label {
+  font-weight: 600;
+}
+
+input[type='text'],
+input[type='password'] {
+  font: inherit;
+  border-radius: 4px;
+  border: 1px solid rgb(136, 145, 170);
+  padding: 0.5rem;
+  width: 50%;
+}
+
+input[type='tel'] {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+input[readonly='true'] {
+  background-color: rgb(244, 244, 246);
+}
+
+input[type='submit'] {
+  cursor: pointer;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border: 1px solid;
+  border-radius: 4px;
+  margin-top: 1em;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+input.phone-number {
+  width: 15rem;
+}
+
+#twilio-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#twilio-logo > a {
+  display: block;
+  width: 50px;
+  height: 50px;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+#success-alert {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: rgb(235, 244, 255);
+  border-bottom: 2px solid rgb(2, 99, 224);
+  padding: 1em;
+  margin-top: 3em;
+  width: 75%;
+  align-self: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-bottom: 0;
+}
+
+h1 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+h1 > img {
+  margin: 2rem;
+}
+
+.alert-title {
+  font-weight: 700;
+}
+
+svg.icon {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: -0.125rem;
+}
+
+svg.information {
+  color: rgb(96, 107, 133);
+}
+
+svg.close {
+  color: rgb(102, 106, 109);
+}
+
+svg.logo {
+  fill: white;
+}
+
+.button-primary {
+  box-sizing: border-box;
+  width: auto;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-block;
+  border: none;
+  outline: none;
+  -webkit-transition:
+    background-color 100ms ease-in,
+    box-shadow 100ms ease-in,
+    color 100ms ease-in;
+  transition:
+    background-color 100ms ease-in,
+    box-shadow 100ms ease-in,
+    color 100ms ease-in;
+  font-family:
+    'Inter var experimental',
+    'Inter var',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen-Sans,
+    Ubuntu,
+    Cantarell,
+    'Helvetica Neue',
+    sans-serif;
+  font-weight: 600;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  background-color: rgb(2, 99, 224);
+  box-shadow: 0 0 0 1px #0263e0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.button-primary:hover,
+.button-primary:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  background-color: rgb(3, 11, 93);
+  box-shadow: 0 0 0 1px #030b5d;
+}
+
+.button-destructive {
+  box-sizing: border-box;
+  width: auto;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: none;
+  background-color: rgba(0, 0, 0, 0);
+  display: inline-block;
+  border: none;
+  outline: none;
+  -webkit-transition:
+    background-color 100ms ease-in,
+    box-shadow 100ms ease-in,
+    color 100ms ease-in;
+  transition:
+    background-color 100ms ease-in,
+    box-shadow 100ms ease-in,
+    color 100ms ease-in;
+  font-family:
+    'Inter var experimental',
+    'Inter var',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen-Sans,
+    Ubuntu,
+    Cantarell,
+    'Helvetica Neue',
+    sans-serif;
+  font-weight: 600;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  position: relative;
+  margin: 0;
+  cursor: pointer;
+  color: rgb(255, 255, 255);
+  background-color: rgba(214, 31, 31, 1);
+  box-shadow: 0 0 0 1px rgba(214, 31, 31, 1);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.button-destructive:hover,
+.button-destructive:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  background-color: rgb(156, 23, 23);
+  box-shadow: 0 0 0 1px rgb(156, 23, 23);
+}
+
+/*
+ * From the Inter font CSS declaration file
+ */
+
+/* -------------------------------------------------------
+Variable font.
+Usage:
+
+  html { font-family: 'Inter', sans-serif; }
+  @supports (font-variation-settings: normal) {
+    html { font-family: 'Inter var', sans-serif; }
+  }
+*/
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  font-named-instance: 'Regular';
+  src: url('Inter-roman.var.woff2?v=3.15') format('woff2');
+}
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: italic;
+  font-named-instance: 'Italic';
+  src: url('Inter-italic.var.woff2?v=3.15') format('woff2');
+}
+
+/* --------------------------------------------------------------------------
+[EXPERIMENTAL] Multi-axis, single variable font.
+
+Slant axis is not yet widely supported (as of February 2019) and thus this
+multi-axis single variable font is opt-in rather than the default.
+
+When using this, you will probably need to set font-variation-settings
+explicitly, e.g.
+
+  * { font-variation-settings: "slnt" 0deg }
+  .italic { font-variation-settings: "slnt" 10deg }
+
+*/
+@font-face {
+  font-family: 'Inter var experimental';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: oblique 0deg 10deg;
+  src: url('Inter.var.woff2?v=3.15') format('woff2');
+}
+
+/*
+* Input Copy to Clipboard feature
+*/
+.copy-input-wrapper {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  background-color: rgb(244, 244, 246);
+  -webkit-box-shadow: rgb(136, 145, 170) 0px 0px 0px 1px;
+  box-shadow: rgb(136, 145, 170) 0px 0px 0px 1px;
+  border-radius: 4px;
+  -webkit-transition: -webkit-box-shadow 100ms ease-in 0s;
+  transition: -webkit-box-shadow 100ms ease-in 0s;
+  -o-transition: box-shadow 100ms ease-in 0s;
+  transition: box-shadow 100ms ease-in 0s;
+  transition:
+    box-shadow 100ms ease-in 0s,
+    -webkit-box-shadow 100ms ease-in 0s;
+  cursor: text;
+}
+
+.copy-input-wrapper input {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px 0px 0px 4px;
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  margin: 0px;
+  outline: none;
+  padding: 0.25rem 0.75rem;
+  resize: none;
+  width: 100%;
+  border-right: 1px solid rgb(225, 227, 234);
+}
+
+.copy-input-wrapper button {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: auto;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: rgba(0, 0, 0, 0) none repeat scroll 0% 0%;
+  border: none;
+  outline: currentcolor none medium;
+  margin: 0px;
+  cursor: pointer;
+  color: rgb(2, 99, 224);
+  padding: 0.6rem;
+  border-radius: 4px;
+}
+
+.copy-input-wrapper button:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.copy-input-wrapper button:hover:before {
+  content: 'Copy';
+  position: absolute;
+  top: -35px;
+  left: -5px;
+  padding: 6px 10px 7px;
+  color: white;
+  background-color: #141f2d;
+  border-radius: 4px;
+}
+
+.copy-input-wrapper button:hover:after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 15px;
+  display: block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 5px 0 5px;
+  border-color: #141f2d transparent transparent;
+}
+
+.copy-input-wrapper.copied button:hover:before {
+  content: 'Copied!';
+}
+
+.copy-input-wrapper svg {
+  width: 22px;
+  height: 22px;
+}

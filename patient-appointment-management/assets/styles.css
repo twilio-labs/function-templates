@@ -221,7 +221,7 @@ tr.table-placeholder td {
 
 .form-group {
   border: 1px solid gray;
-  // width: 400px;
+  /* width: 400px; */
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 40px;
@@ -233,13 +233,13 @@ tr.table-placeholder td {
 }
 
 .form-group label {
-  //  position: relative;
+  /* position: relative; */
   width: 140px;
   display: inline-block;
 }
 
 .simulate {
-  // width: 200px;
+  /* width: 200px; */
   display: inline-block;
 
   line-height: 2em;

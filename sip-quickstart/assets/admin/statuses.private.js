@@ -1,9 +1,9 @@
 const { stripIndents } = require('common-tags');
 
 const assets = Runtime.getAssets();
-const { getCurrentEnvironment, urlForSiblingPage } = require(assets[
-  '/admin/shared.js'
-].path);
+const { getCurrentEnvironment, urlForSiblingPage } = require(
+  assets['/admin/shared.js'].path
+);
 const extensions = require(assets['/extensions.js'].path);
 
 async function checkEnvironmentInitialization(context) {
@@ -172,8 +172,8 @@ async function getCredentialListStatus(context) {
           Your default credential list [${
             credentialList.friendlyName
           }](https://www.twilio.com/console/voice/sip/cls/${
-          credentialList.sid
-        }) is missing the following accounts:
+            credentialList.sid
+          }) is missing the following accounts:
 
           ${missing.join(', ')}
         `;

@@ -42,7 +42,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('routing callback', async (done) => {
+test('routing callback', async () => {
   const event = {
     ConversationSid: 'CH12345',
     'MessagingBinding.Address': context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER,
@@ -51,13 +51,12 @@ test('routing callback', async (done) => {
   const callback = (_err, result) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
-    done();
   };
 
   handler(context, event, callback);
 });
 
-test('routeConversation: finds worker', async (done) => {
+test('routeConversation: finds worker', async () => {
   const conversationSid = 'CH12345';
   const customerNumber = context.EXAMPLE_CUSTOMER_1_PHONE_NUMBER;
 
@@ -68,11 +67,9 @@ test('routeConversation: finds worker', async (done) => {
   );
   expect(workerIdentity).toBeDefined();
   expect(workerIdentity).toEqual(TEST_SSO_USERNAME);
-
-  done();
 });
 
-test('routeConversation: finds worker for customer 2', async (done) => {
+test('routeConversation: finds worker for customer 2', async () => {
   const conversationSid = 'CH12345';
   const customerNumber = context.EXAMPLE_CUSTOMER_2_PHONE_NUMBER;
 
@@ -83,10 +80,9 @@ test('routeConversation: finds worker for customer 2', async (done) => {
   );
   expect(workerIdentity).toBeDefined();
   expect(workerIdentity).toEqual(TEST_SSO_USERNAME);
-  done();
 });
 
-test('routeConversation: no assigned worker, assigns a random', async (done) => {
+test('routeConversation: no assigned worker, assigns a random', async () => {
   const conversationSid = 'CH12345';
   const customerNumber = '+000000';
 
@@ -97,10 +93,9 @@ test('routeConversation: no assigned worker, assigns a random', async (done) => 
   );
   expect(workerIdentity).toBeDefined();
   expect(workerIdentity).toEqual(TEST_SSO_USERNAME);
-  done();
 });
 
-test('routeConversation: fails when not worker is assigned', async (done) => {
+test('routeConversation: fails when not worker is assigned', async () => {
   const conversationSid = 'CH12345';
   const customerNumber = '+000000';
   const context = {
@@ -115,10 +110,9 @@ test('routeConversation: fails when not worker is assigned', async (done) => {
   await expect(
     routeConversation(context, conversationSid, customerNumber)
   ).rejects.toThrow();
-  done();
 });
 
-test('routeConversationToWorker', async (done) => {
+test('routeConversationToWorker', async () => {
   const conversationSid = 'CH12345';
   const workerIdentity = TEST_SSO_USERNAME;
 
@@ -128,10 +122,9 @@ test('routeConversationToWorker', async (done) => {
     workerIdentity
   );
   expect(conversation).toBeDefined();
-  done();
 });
 
-test('routeConversationToWorker: fails if no Twilio client present', async (done) => {
+test('routeConversationToWorker: fails if no Twilio client present', async () => {
   const conversationSid = 'CH12345';
   const workerIdentity = TEST_SSO_USERNAME;
 
@@ -142,5 +135,4 @@ test('routeConversationToWorker: fails if no Twilio client present', async (done
       workerIdentity
     )
   ).rejects.toThrow();
-  done();
 });

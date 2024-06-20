@@ -207,9 +207,8 @@ describe('voice-client-javascript/admin/private/statuses', () => {
     process.env.APP_NAME = 'My Amazing App';
 
     // Act
-    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(
-      CONTEXT
-    );
+    const result =
+      await statusFunctions.getAPIKeyAndSecretFromEnvStatus(CONTEXT);
 
     // Assert
     expect(result).toBeDefined();
@@ -229,9 +228,8 @@ describe('voice-client-javascript/admin/private/statuses', () => {
     });
 
     // Act
-    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(
-      CONTEXT
-    );
+    const result =
+      await statusFunctions.getAPIKeyAndSecretFromEnvStatus(CONTEXT);
 
     // Assert
     expect(mockKeys.fetch).toHaveBeenCalled();
@@ -255,9 +253,8 @@ describe('voice-client-javascript/admin/private/statuses', () => {
     );
 
     // Act
-    const result = await statusFunctions.getAPIKeyAndSecretFromEnvStatus(
-      CONTEXT
-    );
+    const result =
+      await statusFunctions.getAPIKeyAndSecretFromEnvStatus(CONTEXT);
 
     // Assert
     expect(mockKeys.fetch).toHaveBeenCalled();

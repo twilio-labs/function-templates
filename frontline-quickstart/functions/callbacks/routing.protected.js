@@ -1,8 +1,8 @@
 const routeConversation = async (context, conversationSid, customerNumber) => {
   const assets = Runtime.getAssets();
-  const { findWorkerForCustomer, findRandomWorker } = require(assets[
-    '/providers/customers.js'
-  ].path);
+  const { findWorkerForCustomer, findRandomWorker } = require(
+    assets['/providers/customers.js'].path
+  );
   let workerIdentity = await findWorkerForCustomer(context, customerNumber);
   if (!workerIdentity) {
     // Customer doesn't have a worker

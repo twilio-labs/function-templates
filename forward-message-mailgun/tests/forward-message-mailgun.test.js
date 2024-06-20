@@ -36,11 +36,10 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('returns an TwiML MessagingResponse', async (done) => {
+test('returns an TwiML MessagingResponse', async () => {
   const callback = (err, result) => {
     expect(result).toBeInstanceOf(Twilio.twiml.MessagingResponse);
     expect(err).toBeFalsy();
-    done();
   };
 
   forwardMessageToMailgun(context, event, callback);

@@ -2,7 +2,6 @@ const Listr = require('listr');
 const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
-const { error, success } = require('log-symbols');
 
 const mkdir = promisify(fs.mkdir);
 
@@ -45,7 +44,7 @@ async function run() {
 
   const successMessage = `
 
-${success} Template created
+  Template created
 
   You can find your template in the directory ${targetPath}.
 
@@ -59,7 +58,7 @@ ${success} Template created
 run().catch((err) => {
   if (err.code && err.code === 'EEXIST') {
     console.error(
-      `${error} The name you specified already exists. Please pick a name that is not currently a directory name in this project`
+      `The name you specified already exists. Please pick a name that is not currently a directory name in this project`
     );
   } else {
     console.error(err.message);

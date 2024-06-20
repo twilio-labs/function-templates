@@ -1,4 +1,4 @@
-name: Node CI
+name: Build, Test, Lint, Format (Node.js)
 
 on: [pull_request]
 
@@ -8,50 +8,34 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [14, 16]
+        node-version: [current, lts/*]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      # - name: Cache node modules
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: node_modules
-      #     key: ${{ matrix.os }}-${{ matrix.node-version }}-build-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ matrix.os }}-${{ matrix.node-version }}-build-${{ env.cache-name }}-
-      #       ${{ matrix.os }}-${{ matrix.node-version }}-build-
-      #       ${{ matrix.os }}-${{ matrix.node-version }}-
-      # - name: Cache Cypress
-      #   uses: actions/cache@v1
-      #   with:
-      #     path: /home/runner/.cache/Cypress
-      #     key: ${{ matrix.os }}-${{ matrix.node-version }}-cypress-${{ hashFiles('**/package-lock.json') }}
-      #     restore-keys: |
-      #       ${{ matrix.os }}-${{ matrix.node-version }}-cypress-${{ env.cache-name }}-
-      #       ${{ matrix.os }}-${{ matrix.node-version }}-cypress-
-      #       ${{ matrix.os }}-${{ matrix.node-version }}-
-      - name: install npm v8
-        run: |
-          npm install -g npm@8
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm test
+      - name: install latest npm
+        run: npm install -g npm@latest
+      - name: npm install
+        run: npm install
         env:
           CI: true
-      - name: check formatting
-        if: always()
+      - name: npm run build --if-present
+        run: npm run build --if-present
+        env:
+          CI: true
+      - name: npm test
+        run: npm test
+        env:
+          CI: true
+      - name: npm run format:check
         run: npm run format:check
         env:
           CI: true
           NODE_ENV: test
-      - name: lint
-        if: always()
+      - name: npm run lint
         run: npm run lint
         env:
           CI: true

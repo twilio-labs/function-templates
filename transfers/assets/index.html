@@ -10,22 +10,8 @@
       rel="icon"
       href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
     />
-    <link
-      rel="stylesheet"
-      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
-    />
+  <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css" />
     <link rel="stylesheet" href="styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/css/intlTelInput.min.css"
-      integrity="sha256-xpVuhxDPR39wFEQDha4W7kuMx+z9Av3dTS8MbH/RWEU="
-      crossorigin="anonymous"
-    />
-    <script
-      src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/intlTelInput.min.js"
-      integrity="sha256-uPbemOnf3P4eaeLHebLwPC71YRbu3WNBvO4ibYeBnGs="
-      crossorigin="anonymous"
-    ></script>
     <style>
       .success {
         border-color: #bce8f1;
@@ -139,7 +125,7 @@
               +1234567, the details of the complete number will be returned.
               Make sure you check what is the number in the result.
             </p>
-            <input id="fphone" type="text" name="fphone" />
+            <input id="fphone" type="text" name="fphone"  oninput="checkFormat()"  />
             <br />
             <input id="tbutton" type="submit" value="Fetch" />
           </form>
@@ -227,6 +213,16 @@ const error = document.querySelector(".alert-error");
 const success = document.querySelector(".alert-success");
 const warning = document.querySelector(".alert-warning");
 
+
+async function checkFormat(){
+    if(!/^\+\d+$/.test(document.getElementById("fphone").value)){
+      document.getElementById("fphone").style.background = "Tomato";
+    }
+    else {
+      document.getElementById("fphone").style.background = "";
+    }
+}
+
 async function transfer() {
   let alertConfirm =
     "You requested to transfer a number. If there is a Whatsapp configuration on the number, it will be lost on transfer. If there are opt-outs and/or A2P registrations (US LongCodes only) on the number, those will also be lost. You will need to setup Opt-Outs and re-register the numbers on the new account before they will work. Please find more information in the linked FAQ page. \n\n Do you want to proceed with the transfer?";
@@ -305,46 +301,71 @@ async function number_fetch() {
   let aresponse = null;
   let fresponse = null;
   let json2 = null;
-  let ajson = null;
+  let ajson = [];
   let sid = null;
   let asid = null;
-  let phoneNumber = null;
+  let phoneNumber = document.getElementById("fphone").value;
   let numStatus = null;
   let addReq = null;
+  let insertedNumber = phoneNumber;
+  let subPage = 0;
+  let subPageToken = '';
+  let subPageAll = 0;
+  let subData = null;
+  let aPageJson = null;
 
   const password = document.getElementById("password").value;
-  phoneNumber = document.getElementById("fphone").value;
 
   try {
     success.style.display = "none";
     warning.style.display = "none";
     status_acc.style.display = "none";
 
-    aresponse = await fetch("./list_accounts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": password,
+      while (subPageAll === 0) {
+             
+        subData = {
+          pageSize: 20,
+          page: subPage,
+          pageToken: decodeURIComponent(subPageToken),
+        };
+        aresponse = await fetch("./list_accounts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(subData),
+        });
+        console.log("return from Acc function");
+        if (aresponse.status === 200) {
+          aPageJson = await aresponse.json();
+          if (aPageJson.er === 0) {
+            warning.style.display = "";
+            status_acc.style.display="none";
+            success.style.display = "none";
+            warning.innerHTML = `Wrong password.`;
+            return;
+          }
+          if (aPageJson[aPageJson.length-1] !== "end") {
+            subPageToken = aPageJson[aPageJson.length-1];
+            console.log(subPageToken);
+          } else {
+            subPageAll = 1;
+            subPageToken = '';
+          }
+          subPage += 1;
+          aPageJson.pop();
+          console.log(aPageJson);
+          for(let z in aPageJson){
+            ajson.push(aPageJson[z]);
+          }
+          console.log(ajson);
+            } else {
+              warning.style.display = "";
+              warning.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
+              return;
+            }
       }
-    });
-    console.log("return from Acc function");
-    console.log(aresponse);
-    if (aresponse.status === 200) {
-      ajson = await aresponse.json();
-      console.log(ajson);
-
-      if (ajson.er === 0) {
-        warning.style.display = "";
-        status_acc.style.display="none";
-        success.style.display = "none";
-        warning.innerHTML = `Wrong password.`;
-        return;
-      }
-    } else {
-      warning.style.display = "";
-      warning.innerHTML = `Something went wrong with getting the list of accounts:<br /> Server error is ${aresponse.message}<br /> Server status is ${aresponse.status}`;
-      return;
-    }
 
     for (a = 0; a < ajson.length; a++) {
       fdata = {
@@ -392,6 +413,12 @@ async function number_fetch() {
       warning.innerHTML = `<pre> ${JSON.stringify(json2, null, 2)}</pre>`;
     } else {
       if (fresponse.status === 200) {
+        if (insertedNumber !== phoneNumber.substring(0, insertedNumber.length,)){
+          warning.style.display = "";
+          success.style.display = "none";
+          warning.innerHTML = `Number not found.`;
+          return;
+        }
         success.style.display = "";
         success.innerHTML = `<pre>Number ${JSON.stringify(
           phoneNumber,
@@ -468,4 +495,4 @@ async function unmask() {
 }
       </script>
   </body>
-</html>
+</html> 

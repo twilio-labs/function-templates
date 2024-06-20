@@ -18,9 +18,9 @@
  */
 
 const assets = Runtime.getAssets();
-const { detectMissingParams, VerificationException } = require(assets[
-  '/utils.js'
-].path);
+const { detectMissingParams, VerificationException } = require(
+  assets['/utils.js'].path
+);
 
 async function getLineType(client, to) {
   try {

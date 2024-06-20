@@ -35,14 +35,13 @@ test('getCustomerByNumber', () => {
   expect(customer).toBeDefined();
 });
 
-test('getCustomersList', async (done) => {
+test('getCustomersList', async () => {
   const customers = await getCustomersList(context, TEST_SSO_USERNAME);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
-  done();
 });
 
-test('getCustomersList: pageSize splits the list', async (done) => {
+test('getCustomersList: pageSize splits the list', async () => {
   let customers = await getCustomersList(context, TEST_SSO_USERNAME, 1);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(1);
@@ -54,10 +53,9 @@ test('getCustomersList: pageSize splits the list', async (done) => {
   customers = await getCustomersList(context, TEST_SSO_USERNAME);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
-  done();
 });
 
-test('getCustomersList: pagination returns the right contacts', async (done) => {
+test('getCustomersList: pagination returns the right contacts', async () => {
   let customers = await getCustomersList(context, TEST_SSO_USERNAME, 2, 0);
   expect(customers).toBeDefined();
   expect(customers[0].customer_id).toEqual(1);
@@ -65,10 +63,9 @@ test('getCustomersList: pagination returns the right contacts', async (done) => 
   customers = await getCustomersList(context, TEST_SSO_USERNAME, 2, 1);
   expect(customers).toBeDefined();
   expect(customers[0].customer_id).toEqual(2);
-
-  done();
 });
-test('getCustomersList: pageSize splits the list', async (done) => {
+
+test('getCustomersList: pageSize splits the list', async () => {
   let customers = await getCustomersList(context, TEST_SSO_USERNAME, 1);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(1);
@@ -80,10 +77,9 @@ test('getCustomersList: pageSize splits the list', async (done) => {
   customers = await getCustomersList(context, TEST_SSO_USERNAME);
   expect(customers).toBeDefined();
   expect(customers.length).toEqual(2);
-  done();
 });
 
-test('findWorkerForCustomer', async (done) => {
+test('findWorkerForCustomer', async () => {
   let assignedWorker = await findWorkerForCustomer(context, CUSTOMER_1_NUMBER);
   expect(assignedWorker).toBeDefined();
 
@@ -92,13 +88,9 @@ test('findWorkerForCustomer', async (done) => {
 
   assignedWorker = await findWorkerForCustomer(context);
   expect(assignedWorker).toBeFalsy();
-
-  done();
 });
 
-test('findRandomWorker', async (done) => {
+test('findRandomWorker', async () => {
   const assignedWorker = await findRandomWorker(context);
   expect(assignedWorker).toBeDefined();
-
-  done();
 });

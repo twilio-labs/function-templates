@@ -21,7 +21,7 @@ afterAll(() => {
   helpers.teardown();
 });
 
-test('Outgoing conversation: resolves', async (done) => {
+test('Outgoing conversation: resolves', async () => {
   const event = {
     Location: 'GetProxyAddress',
     ChannelType: 'sms',
@@ -31,13 +31,12 @@ test('Outgoing conversation: resolves', async (done) => {
     console.log(result);
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
-    done();
   };
 
   outgoingConversation(context, event, callback);
 });
 
-test('Outgoing conversation: fails on missing Location', async (done) => {
+test('Outgoing conversation: fails on missing Location', async () => {
   const event = {
     ChannelType: 'sms',
   };
@@ -47,13 +46,12 @@ test('Outgoing conversation: fails on missing Location', async (done) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(422);
-    done();
   };
 
   outgoingConversation(context, event, callback);
 });
 
-test('Outgoing conversation: resolves for SMS channel', async (done) => {
+test('Outgoing conversation: resolves for SMS channel', async () => {
   const event = {
     Location: 'GetProxyAddress',
     ChannelType: 'sms',
@@ -63,13 +61,12 @@ test('Outgoing conversation: resolves for SMS channel', async (done) => {
     console.log(result);
     expect(_err).toBeFalsy();
     expect(result).toEqual({ proxy_address: context.TWILIO_PHONE_NUMBER });
-    done();
   };
 
   outgoingConversation(context, event, callback);
 });
 
-test('Outgoing conversation: fails on unknown channelType', async (done) => {
+test('Outgoing conversation: fails on unknown channelType', async () => {
   const event = {
     Location: 'GetProxyAddress',
     ChannelType: 'notexistentchanneltype',
@@ -80,14 +77,12 @@ test('Outgoing conversation: fails on unknown channelType', async (done) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(403);
-
-    done();
   };
 
   outgoingConversation(context, event, callback);
 });
 
-test('Outgoing conversation: fails on missing channelType', async (done) => {
+test('Outgoing conversation: fails on missing channelType', async () => {
   const event = {
     Location: 'GetProxyAddress',
   };
@@ -98,7 +93,6 @@ test('Outgoing conversation: fails on missing channelType', async (done) => {
     expect(_err).toBeFalsy();
     expect(result).toBeDefined();
     expect(result._statusCode).toEqual(403);
-    done();
   };
 
   outgoingConversation(context, event, callback);

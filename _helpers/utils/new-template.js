@@ -5,7 +5,6 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 const { stat, readdir, copyFile, mkdir, rename } = require('fs/promises');
-const { error, success } = require('log-symbols');
 const { parser } = require('configure-env');
 const { createOutput } = require('configure-env/dist/output');
 const { stripIndents } = require('common-tags');
@@ -223,9 +222,9 @@ async function generateEnvExampleFromRealEnv(projectPath, targetPath) {
       # description: ${variable.description}
       # format: ${variable.format}
       # required: ${variable.required}${
-        variable.link ? `\n# link: ${variable.link}` : ''
+        variable.link ? `\n# link: ${variable.link}` : '' // eslint-disable-line sonarjs/no-nested-template-literals
       }${variable.configurable ? '' : '\n# configurable: false'}${
-        variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : ''
+        variable.contentKey ? `\n# contentKey: ${variable.contentKey}` : '' // eslint-disable-line sonarjs/no-nested-template-literals
       }
       ${variable.key}=
     `;

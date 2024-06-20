@@ -45,9 +45,8 @@ function showSessionData() {
   if (identity === null) {
     hide(document.getElementById('validate-code'));
   } else {
-    document.getElementById(
-      'session-data'
-    ).textContent = `Demo is running for username '${friendlyName}' with identity '${identity}'.`;
+    document.getElementById('session-data').textContent =
+      `Demo is running for username '${friendlyName}' with identity '${identity}'.`;
     document.getElementById('validate-code').style.display = 'inline';
   }
 }

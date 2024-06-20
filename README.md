@@ -4,9 +4,11 @@
 
 [Twilio Functions](https://www.twilio.com/functions) are a serverless environment to build and run Twilio applications so you can get to production faster. You provide the Node.js code to perform the task you need and Twilio runs it. You can read [more about Twilio Functions and how to use them in the introductory blog post](https://www.twilio.com/blog/2017/05/introducing-twilio-functions.html).
 
-## This repo
+### Attention
 
-This repo is intended to be a collection of useful Twilio Functions that are tested and documented. The intention is that you can take any of these Functions and drop them into a project, confident they will work, whether you are a developer looking for a particular building block or a builder who just needs a particular Function. These templates are also available through `twilio-run new` inside the [`twilio-run`](https://npm.im/twilio-run) CLI.
+With the release of Node v18, the Node.js ecosystem is migrating over from the old CommonJS (CJS) standard to the newer, ES Modules (ESM) standard. Using ESM modules in CJS code is not possible. You can read about the differences in far more detail in this [blog Post.](https://redfin.engineering/node-modules-at-war-why-commonjs-and-es-modules-cant-get-along-9617135eeca1). The following snippets may causes errors. 
+
+These templates are also available through `twilio-run new` inside the [`twilio-run`](https://npm.im/twilio-run) CLI.
 
 ## Usage
 
