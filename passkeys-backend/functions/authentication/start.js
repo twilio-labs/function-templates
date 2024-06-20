@@ -1,7 +1,5 @@
 const axios = require('axios');
 
-const assets = Runtime.getAssets();
-
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, _, callback) => {
   const { RELYING_PARTY, API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
