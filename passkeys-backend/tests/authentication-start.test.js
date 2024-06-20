@@ -3,7 +3,7 @@ const helpers = require('../../test/test-helper');
 
 jest.mock('axios');
 
-describe('registration/start', () => {
+describe('authentication/start', () => {
   beforeAll(() => {
     jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
@@ -12,7 +12,7 @@ describe('registration/start', () => {
       '../assets/services/helpers.private.js'
     );
     helpers.setup({}, runtime);
-    handlerFunction = require('../functions/registration/start').handler;
+    handlerFunction = require('../functions/authentication/start').handler;
   });
   afterAll(() => {
     helpers.teardown();
@@ -20,17 +20,6 @@ describe('registration/start', () => {
   beforeEach(() => {
     jest.resetModules();
     axios.post.mockClear();
-  });
-
-  it('returns an error response indicating the missing parameters', (done) => {
-    const callback = (_, { _body, _statusCode }) => {
-      expect(_statusCode).toBeDefined();
-      expect(_body).toBeDefined();
-      expect(_statusCode).toEqual(400);
-      expect(_body).toEqual(`Missing parameters; please provide: 'username'.`);
-      done();
-    };
-    handlerFunction({}, {}, callback);
   });
 
   it('returns error with unsuccesfull request', (done) => {
@@ -44,12 +33,6 @@ describe('registration/start', () => {
       done();
     };
 
-    handlerFunction(
-      {},
-      {
-        username: 'test-username',
-      },
-      callback
-    );
+    handlerFunction({}, {}, callback);
   });
 });

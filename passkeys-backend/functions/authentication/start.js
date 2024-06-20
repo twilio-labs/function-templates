@@ -3,8 +3,11 @@ const axios = require('axios');
 const assets = Runtime.getAssets();
 
 // eslint-disable-next-line consistent-return
-exports.handler = async (context, event, callback) => {
+exports.handler = async (context, _, callback) => {
   const { RELYING_PARTY, API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
+
+  const response = new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
 
   const requestBody = {
     content: {
@@ -16,21 +19,20 @@ exports.handler = async (context, event, callback) => {
   const challengeURL = `${API_URL}/Verifications`;
 
   try {
-    const response = await axios.post(challengeURL, requestBody, {
+    const APIResponse = await axios.post(challengeURL, requestBody, {
       auth: {
         username: ACCOUNT_SID,
         password: AUTH_TOKEN,
       },
     });
-    return callback(null, response.data.next_step);
+
+    response.setStatusCode(200);
+    response.setBody(APIResponse.data.next_step);
   } catch (error) {
-    if (error.response) {
-      console.log('Client has given an error', error);
-    } else if (error.request) {
-      console.log('Runtime error', error);
-    } else {
-      console.log(error);
-    }
-    return callback('Something went wrong');
+    const statusCode = error.status || 400;
+    response.setStatusCode(statusCode);
+    response.setBody(error.message);
   }
+
+  return callback(null, response);
 };

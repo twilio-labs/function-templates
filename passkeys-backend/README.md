@@ -23,7 +23,6 @@ In your `.env` file, set the following values:
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
 | API_URL | Passkeys API to point at | yes |
-| SERVICE_SID | Service used to call twilio services | yes |
 | RELYING_PARTY | Customer app or client | yes
 | ACCOUNT_SID | Twilio account where the service belong | yes |
 | AUTH_TOKEN | Authentication token for twilio account | yes |

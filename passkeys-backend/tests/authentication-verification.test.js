@@ -6,7 +6,6 @@ jest.mock('axios');
 const testEvent = {
   id: '12345',
   rawId: 'randomRawId',
-  type: 'test-type',
   clientDataJson: {},
   authenticatorData: {},
   signature: 'test-signature',
@@ -35,10 +34,12 @@ describe('authentication/verification', () => {
 
   describe('when multiple required parameters are missing', () => {
     it('returns an error indicating multiple missing parameters', (done) => {
-      const callback = (_err) => {
-        expect(_err).toBeDefined();
-        expect(_err).toEqual(
-          `Missing parameters; please provide: 'id, rawId, type, clientDataJson, authenticatorData, signature, userHandle'.`
+      const callback = (_, { _body, _statusCode }) => {
+        expect(_statusCode).toBeDefined();
+        expect(_body).toBeDefined();
+        expect(_statusCode).toEqual(400);
+        expect(_body).toEqual(
+          `Missing parameters; please provide: 'id, rawId, clientDataJson, authenticatorData, signature, userHandle'.`
         );
         done();
       };
@@ -46,10 +47,12 @@ describe('authentication/verification', () => {
     });
 
     it('returns an error indicating specific missing parameters', (done) => {
-      const callback = (_err) => {
-        expect(_err).toBeDefined();
-        expect(_err).toEqual(
-          `Missing parameters; please provide: 'type, clientDataJson, authenticatorData, signature, userHandle'.`
+      const callback = (_, { _body, _statusCode }) => {
+        expect(_statusCode).toBeDefined();
+        expect(_body).toBeDefined();
+        expect(_statusCode).toEqual(400);
+        expect(_body).toEqual(
+          `Missing parameters; please provide: 'clientDataJson, authenticatorData, signature, userHandle'.`
         );
         done();
       };
@@ -69,10 +72,10 @@ describe('authentication/verification', () => {
       const expectedError = new Error('something bad happened');
       axios.post = jest.fn(() => Promise.reject(expectedError));
 
-      const callback = (_err, result) => {
-        expect(result).toBeDefined();
+      const callback = (_, { _body }) => {
+        expect(_body).toBeDefined();
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(expectedError);
+        expect(_body).toEqual(expectedError.message);
         done();
       };
 

@@ -7,7 +7,6 @@ const testEvent = {
   id: '12345',
   attestationObject: {},
   rawId: 'randomRawId',
-  type: 'test-type',
   clientDataJson: {},
   transports: 'test-transport',
 };
@@ -33,10 +32,12 @@ describe('registration/verification', () => {
 
   describe('when multiple required parameters are missing', () => {
     it('returns an error indicating multiple missing parameters', (done) => {
-      const callback = (_err) => {
-        expect(_err).toBeDefined();
-        expect(_err).toEqual(
-          `Missing parameters; please provide: 'id, attestationObject, rawId, type, clientDataJson, transports'.`
+      const callback = (_, { _body, _statusCode }) => {
+        expect(_statusCode).toBeDefined();
+        expect(_body).toBeDefined();
+        expect(_statusCode).toEqual(400);
+        expect(_body).toEqual(
+          `Missing parameters; please provide: 'id, attestationObject, rawId, clientDataJson, transports'.`
         );
         done();
       };
@@ -44,10 +45,12 @@ describe('registration/verification', () => {
     });
 
     it('returns an error indicating specific missing parameters', (done) => {
-      const callback = (_err) => {
-        expect(_err).toBeDefined();
-        expect(_err).toEqual(
-          `Missing parameters; please provide: 'attestationObject, type, clientDataJson, transports'.`
+      const callback = (_, { _body, _statusCode }) => {
+        expect(_statusCode).toBeDefined();
+        expect(_body).toBeDefined();
+        expect(_statusCode).toEqual(400);
+        expect(_body).toEqual(
+          `Missing parameters; please provide: 'attestationObject, clientDataJson, transports'.`
         );
         done();
       };
@@ -67,10 +70,10 @@ describe('registration/verification', () => {
       const expectedError = new Error('something bad happened');
       axios.post = jest.fn(() => Promise.reject(expectedError));
 
-      const callback = (_err, result) => {
-        expect(result).toBeDefined();
+      const callback = (_, { _body }) => {
+        expect(_body).toBeDefined();
         expect(axios.post).toHaveBeenCalledTimes(1);
-        expect(result).toEqual(expectedError);
+        expect(_body).toEqual(expectedError.message);
         done();
       };
 

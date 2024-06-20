@@ -3,14 +3,16 @@ const axios = require('axios');
 const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
-// eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
   const { API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
+
+  const response = new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
+
   const missingParams = detectMissingParams(
     [
       'id',
       'rawId',
-      // 'type',
       'clientDataJson',
       'authenticatorData',
       'signature',
@@ -18,17 +20,21 @@ exports.handler = async (context, event, callback) => {
     ],
     event
   );
-  if (missingParams)
-    return callback(
+
+  if (missingParams) {
+    response.setStatusCode(400);
+    response.setBody(
       `Missing parameters; please provide: '${missingParams.join(', ')}'.`
     );
+
+    return callback(null, response);
+  }
 
   const requestBody = {
     content: {
       rawId: event.rawId,
       id: event.id,
       authenticatorAttachment: 'platform',
-      // type: event.type,
       type: 'public-key',
       response: {
         clientDataJSON: event.clientDataJson,
@@ -42,24 +48,23 @@ exports.handler = async (context, event, callback) => {
   const verifyChallengeURL = `${API_URL}/Verifications/Check`;
 
   try {
-    const response = await axios.post(verifyChallengeURL, requestBody, {
+    const APIresponse = await axios.post(verifyChallengeURL, requestBody, {
       auth: {
         username: ACCOUNT_SID,
         password: AUTH_TOKEN,
       },
     });
-    return callback(null, {
-      status: response.data.status,
-      identity: response.data.to.user_identifier,
+
+    response.setStatusCode(200);
+    response.setBody({
+      status: APIresponse.data.status,
+      identity: APIresponse.data.to.user_identifier,
     });
   } catch (error) {
-    if (error.response) {
-      console.log('Client has given an error', error);
-    } else if (error.request) {
-      console.log('Runtime error', error);
-    } else {
-      console.log(error);
-    }
-    return callback(null, error);
+    const statusCode = error.status || 400;
+    response.setStatusCode(statusCode);
+    response.setBody(error.message);
   }
+
+  return callback(null, response);
 };
