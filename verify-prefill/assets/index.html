@@ -3,90 +3,151 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verify Prefill Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Twilio Verify Identity Prefill Demo</title>
 </head>
-<body>
-  <h1>Phone Number Verification</h1>
-  <form id="verification-form">
-    <label for="phone-number">Phone Number - E.164:</label>
-    <input type="tel" id="phone-number" name="phone-number" required>
-    <button type="button" onclick="sendOTP()">Send OTP</button>
-    <br><br>
-    <label for="otp-code">OTP Code:</label>
-    <input type="text" id="otp-code" name="otp-code" required>
-    <button type="button" onclick="verifyOTP()">Verify OTP</button>
-  </form>
-  <br>
-  <h2>Identity Lookup Results Below</h2>
-  <br>
-  <div id="user-data" style="display:none;">
-    <h2>User Data: Results</h2>
-    <p>First Name: <span id="first-name"></span></p>
-    <p>Last Name: <span id="last-name"></span></p>
-    <p>Address Line: <span id="address-line"></span></p>
-    <p>Country Code: <span id="country-code"></span></p>
-    <p>State: <span id="state"></span></p>
-    <p>Postal Code: <span id="postal-code"></span></p>
+<body class="bg-gray-200 dark:bg-gray-900">
+  <div class="container mx-auto p-4 mt-5">
+    <div class="p-6 m-4">
+      <h1 class="mb-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Twilio Verify Identity Prefill</h1>
+      <p class="text-gray-900 dark:text-white">Identity Prefill is a new pilot preview capability in the Twilio Lookup API that provides the first name, last name, and address of end-users after verifying their phone number possession using Twilio Verify. This data helps pre-populate forms, making the user experience smoother and faster by reducing manual input efforts.</p>
+    </div>
+    <div class="flex">
+      <div class="max-w-md p-6 m-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <h2 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Phone Number Verification</h2>
+        <form id="verification-form">
+          <div class="grid gap-6 mb-6 md:grid-cols-2">
+            <div>
+                <label for="phone-number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number - E.164</label>
+                <input type="tel" id="phone-number" name="phone-number" class="h-14 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="+14251234567" required />
+            </div>
+          </div>
+          <button type="button" onclick="sendOTP()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Send OTP</button>
+          <hr class="h-px my-5 border-0 bg-gray-200 dark:bg-gray-700" />
+          <div class="mb-6">
+            <label for="otp-code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">OTP Code</label>
+            <div id="otp-form" class="flex items-center justify-center gap-3 mb-2">
+                <input
+                    type="text"
+                    class="otp-digit w-14 h-14 text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    pattern="\d*" maxlength="1" />
+                <input
+                    type="text"
+                    class="otp-digit w-14 h-14 text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    maxlength="1" />
+                <input
+                    type="text"
+                    class="otp-digit w-14 h-14 text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    maxlength="1" />
+                <input
+                    type="text"
+                    class="otp-digit w-14 h-14 text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    maxlength="1" />
+                <input
+                    type="text"
+                    class="otp-digit w-14 h-14 text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    maxlength="1" />
+                <input
+                    type="text"
+                    class="otp-digit w-14 h-14 text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    maxlength="1" />
+              </div>
+            </div> 
+            <button id="submit-otp" type="button" onclick="verifyOTP()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Verify OTP & Check Address</button>
+        </form>
+      </div>
+      <div class="relative grow overflow-x-auto m-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+        <h2 class="m-6 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Identity Lookup Results</h2>
+        <table id="user-data" class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                  <th scope="col" class="px-6 py-3">
+                      Attribute
+                  </th>
+                  <th scope="col" class="px-6 py-3">
+                      Results
+                  </th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      First Name
+                  </th>
+                  <td class="px-6 py-4">
+                    <span id="first-name">
+                      <div role="status" class="loading-bar max-w-sm animate-pulse" style="display: none;">
+                        <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-24 mb-4"></div>
+                      </div>
+                    </span>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                      Last Name
+                  </th>
+                  <td class="px-6 py-4">
+                    <span id="last-name">
+                      <div role="status" class="loading-bar max-w-sm animate-pulse" style="display: none;">
+                        <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-36 mb-4"></div>
+                      </div>
+                    </span>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    Address Line
+                  </th>
+                  <td class="px-6 py-4">
+                    <span id="address-line">
+                      <div role="status" class="loading-bar max-w-sm animate-pulse" style="display: none;">
+                        <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-64 mb-4"></div>
+                      </div>
+                    </span>
+                  </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  State
+                </th>
+                <td class="px-6 py-4">
+                  <span id="state">
+                    <div role="status" class="loading-bar max-w-sm animate-pulse" style="display: none;">
+                      <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-16 mb-4"></div>
+                    </div>
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  Country
+                </th>
+                <td class="px-6 py-4">
+                  <span id="country-code">
+                    <div role="status" class="loading-bar max-w-sm animate-pulse" style="display: none;">
+                      <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-16 mb-4"></div>
+                    </div>
+                  </span>
+                </td>
+              </tr>
+              <tr class="bg-white dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  Postal Code
+                </th>
+                <td class="px-6 py-4">
+                  <span id="postal-code">
+                    <div role="status" class="loading-bar max-w-sm animate-pulse" style="display: none;">
+                      <div class="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-24 mb-4"></div>
+                    </div>
+                  </span>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br>  
   </div>
-
-  <script>
-    async function sendOTP() {
-      const phoneNumber = document.getElementById('phone-number').value;
-      const response = await fetch('/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ phoneNumber })
-      });
-      const result = await response.json();
-      alert(result.message);
-    }
-
-    async function verifyOTP() {
-      const phoneNumber = document.getElementById('phone-number').value;
-      const code = document.getElementById('otp-code').value;
-      const response = await fetch('/verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ phoneNumber, code })
-      });
-      const result = await response.json();
-      if (result.success) {
-        alert('Verification successful. Fetching user data in 90 seconds...');
-        setTimeout(() => fetchUserData(phoneNumber, result.verificationSid), 90000); // 90 seconds delay
-      } else {
-        alert('Verification failed: ' + result.message);
-      }
-    }
-
-    async function fetchUserData(phoneNumber, verificationSid) {
-      const response = await fetch('/fetch-user-data', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ phoneNumber, verificationSid })
-      });
-      const result = await response.json();
-      if (result.success) {
-        displayUserData(result.prefillData);
-      } else {
-        alert('Fetching user data failed: ' + result.message);
-      }
-    }
-
-    function displayUserData(data) {
-      document.getElementById('first-name').innerText = data.first_name;
-      document.getElementById('last-name').innerText = data.last_name;
-      document.getElementById('address-line').innerText = data.address_line;
-      document.getElementById('country-code').innerText = data.country_code;
-      document.getElementById('state').innerText = data.state;
-      document.getElementById('postal-code').innerText = data.postal_code;
-      document.getElementById('user-data').style.display = 'block';
-    }
-  </script>
+  <script type="text/javascript" src="./script.js"></script>
 </body>
 </html>

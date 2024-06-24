@@ -17,6 +17,7 @@ exports.handler = async function (context, event, callback) {
     });
 
     const lookupData = await lookupResponse.json();
+    console.log({lookupData});
     return callback(null, { success: true, prefillData: lookupData.pre_fill });
   } catch (error) {
     console.error('Error fetching user data:', error);
