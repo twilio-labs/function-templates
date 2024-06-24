@@ -10,6 +10,7 @@
         <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.3/build/css/intlTelInput.css">
         <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.3/build/js/intlTelInput.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@github/webauthn-json@2.1.1/dist/browser-global/webauthn-json.browser-global.min.js"></script>
         <style>
             body {
                 margin: 0;
@@ -238,15 +239,9 @@
             try {
                 const response = await fetch(`./authentication/start`);
                 const responseJSON = await response.json();
-                const { challenge, rpId, allowCredentials, timeout, userVerification } = responseJSON.publicKey
-                const publicKey = {
-                    challenge: Uint8Array.from(atob(challenge), c => c.charCodeAt(0)),
-                    rpId,
-                    allowCredentials,
-                    userVerification
-                }
-                
-                navigator.credentials.get({ publicKey })
+
+
+                window.webauthnJSON.get(responseJSON)
                     .then(async (publicKeyCredential) => {
                         const { id, rawId, response, type, authenticatorAttachment } = publicKeyCredential
                         const { authenticatorData, clientDataJSON, signature, userHandle } = response
@@ -258,11 +253,11 @@
                             },
                             body: JSON.stringify({
                                 id: id,
-                                rawId: ArrayBufferToBase64(rawId),
-                                clientDataJson: ArrayBufferToBase64(clientDataJSON),
-                                authenticatorData: ArrayBufferToBase64(authenticatorData),
-                                signature: ArrayBufferToBase64(signature),
-                                userHandle: ArrayBufferToBase64(userHandle)
+                                rawId: rawId,
+                                clientDataJson: clientDataJSON,
+                                authenticatorData: authenticatorData,
+                                signature: signature,
+                                userHandle: userHandle
                             })
                         });
 
@@ -300,41 +295,12 @@
                 });
 
                 const responseJSON = await response.json();
-                const { challenge, rp, user, pubKeyCredParams, factor_sid } = responseJSON;
-
-                const createCredentialDefaultArgs = {
-                    publicKey: {
-                        rp: {
-                            name: rp.name,
-                            id: rp.id
-                        },
-                        user: {
-                            id: strToArrayBuffer(user.id),
-                            name: user.name,
-                            displayName: user.displayName
-                        },
-                        pubKeyCredParams: [{ type: "public-key", alg: -7 }],
-                        attestation: "none",
-                        timeout: 600000,
-                        challenge: strToArrayBuffer(challenge),
-                        authenticatorSelection: {
-                            residentKey: "preferred"
-                        },
-                        extensions: {
-                            credProps: true,
-                        }
-                    }
-                }
                 
-                let credential = await navigator.credentials.create(createCredentialDefaultArgs);
+                let credential = await window.webauthnJSON.create({publicKey: responseJSON});
 
 
                 const { id, rawId, authenticatorAttachment, response: pubKeyCredResponse, type } = credential;
-                const { attestationObject, clientDataJSON } = pubKeyCredResponse;
-                
-                const rawIdString = ArrayBufferToBase64(rawId);
-                const attestationObjectString = ArrayBufferToBase64(attestationObject);
-                const clientDataJSONString = ArrayBufferToBase64(clientDataJSON);
+                const { attestationObject, clientDataJSON, transports } = pubKeyCredResponse;
 
                 const verificationResponse = await fetch(`./registration/verification`, {
                     method: "POST",
@@ -343,10 +309,10 @@
                     },
                     body: JSON.stringify({
                         id: id,
-                        attestationObject: attestationObjectString,
-                        rawId: rawIdString,
-                        clientDataJson: clientDataJSONString,
-                        transports: ["internal"]
+                        attestationObject: attestationObject,
+                        rawId: rawId,
+                        clientDataJson: clientDataJSON,
+                        transports: transports
                     })
                 });
 
