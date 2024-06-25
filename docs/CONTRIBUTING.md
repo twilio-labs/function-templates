@@ -6,7 +6,7 @@ We welcome any kind of contributions. From filing issues, to fixing typos and bu
 
 Please be aware though that pull requests that only reword sentences that might already convey the content correctly, might not be merged.
 
-If this is your first time contributing to an open-source project, [check out our TwilioQuest tutorial](https://www.twilio.com/quest/learn/open-source) that will teach you in a fun way how to contribute to a project.
+If this is your first time contributing to an open-source project, [check out this resource](https://opensource.guide/how-to-contribute/).
 
 ## Requirements
 
