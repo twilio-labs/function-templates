@@ -4,7 +4,7 @@ const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { RELYING_PARTY, API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
+  const { RELYING_PARTY, API_URL, ANDROID_APP_KEYS } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -20,6 +20,8 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const { username, password } = context.getTwilioClient();
+
   // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
   const requestBody = {
@@ -31,13 +33,7 @@ exports.handler = async (context, event, callback) => {
       relying_party: {
         id: RELYING_PARTY,
         name: 'PasskeySample',
-        origins: [
-          `https://${RELYING_PARTY}`,
-          'android:apk-key-hash:r-BvX79axOKgiSKVuBwFSylcgHo7aUuxCnumzx4XT6E',
-          'android:apk-key-hash:UFzWPaUfGY8_scKVC2tGtgb-xBNXS5Z_PYajz3P-BVM',
-          'android:apk-key-hash:V9oDo6qGAoQG3r3vk7JJBAFBVrpSPvsp-QTlyttftAw',
-          'android:apk-key-hash:yOXmgJgVThpM_CUPlnaG4fEiFA0PpR1MCa-FbWfeiDM',
-        ],
+        origins: [`https://${RELYING_PARTY}`, ...ANDROID_APP_KEYS.split(',')],
       },
       authenticator_criteria: {
         authenticator_attachment: 'platform',
@@ -54,8 +50,8 @@ exports.handler = async (context, event, callback) => {
   try {
     const APIResponse = await axios.post(factorURL, requestBody, {
       auth: {
-        username: ACCOUNT_SID,
-        password: AUTH_TOKEN,
+        username,
+        password,
       },
     });
 

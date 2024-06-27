@@ -3,10 +3,17 @@ const helpers = require('../../test/test-helper');
 
 jest.mock('axios');
 
+const mockContext = {
+  getTwilioClient: () => ({
+    username: 'mockUsername',
+    password: 'mockPassword',
+  }),
+};
+
 const testEvent = {
   id: '12345',
   rawId: 'randomRawId',
-  clientDataJson: {},
+  clientDataJSON: {},
   authenticatorData: {},
   signature: 'test-signature',
   userHandle: {},
@@ -39,11 +46,11 @@ describe('authentication/verification', () => {
         expect(_body).toBeDefined();
         expect(_statusCode).toEqual(400);
         expect(_body).toEqual(
-          `Missing parameters; please provide: 'id, rawId, clientDataJson, authenticatorData, signature, userHandle'.`
+          `Missing parameters; please provide: 'id, rawId, clientDataJSON, authenticatorData, signature, userHandle'.`
         );
         done();
       };
-      handlerFunction({}, {}, callback);
+      handlerFunction(mockContext, {}, callback);
     });
 
     it('returns an error indicating specific missing parameters', (done) => {
@@ -52,12 +59,12 @@ describe('authentication/verification', () => {
         expect(_body).toBeDefined();
         expect(_statusCode).toEqual(400);
         expect(_body).toEqual(
-          `Missing parameters; please provide: 'clientDataJson, authenticatorData, signature, userHandle'.`
+          `Missing parameters; please provide: 'clientDataJSON, authenticatorData, signature, userHandle'.`
         );
         done();
       };
       handlerFunction(
-        {},
+        mockContext,
         {
           id: '123',
           rawId: '123',
@@ -79,7 +86,7 @@ describe('authentication/verification', () => {
         done();
       };
 
-      handlerFunction({}, testEvent, callback);
+      handlerFunction(mockContext, testEvent, callback);
     });
   });
 });

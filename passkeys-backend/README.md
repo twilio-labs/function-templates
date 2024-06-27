@@ -16,6 +16,8 @@ customization [here](#service-customization).
 
 This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
+- Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
+
 You can find a `.env.example` file to copy for creating your own `.env` file
 
 In your `.env` file, set the following values:
@@ -24,6 +26,7 @@ In your `.env` file, set the following values:
 | :------- | :---------- | :------- |
 | API_URL | Passkeys API to point at | yes |
 | RELYING_PARTY | Customer app or client | yes
+| ANDROID_APP_KEYS | The domain of the adroid identity providers hash | yes |
 | ACCOUNT_SID | Twilio account where the service belong | yes |
 | AUTH_TOKEN | Authentication token for twilio account | yes |
 
@@ -61,7 +64,7 @@ Besides the enviroment variables files, the project also contain two files calle
 | id | A base64url encoded representation of `rawId`. | yes |
 | rawId | The globally unique identifier for this `PublicKeyCredential`. | yes |
 | attestationObject | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
-| clientDataJson | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
+| clientDataJSON | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | transports | An Array with the transport methods given by the `AuthenticatorAttestationResponse` | yes |
 
 
@@ -74,7 +77,7 @@ Besides the enviroment variables files, the project also contain two files calle
 | id | A base64url encoded representation of `rawId`. | yes |
 | rawId | The globally unique identifier for this `PublicKeyCredential`. | yes |
 | authenticatorData | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
-| clientDataJson | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
+| clientDataJSON | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | userHandle | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 

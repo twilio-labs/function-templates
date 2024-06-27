@@ -7,8 +7,15 @@ const testEvent = {
   id: '12345',
   attestationObject: {},
   rawId: 'randomRawId',
-  clientDataJson: {},
+  clientDataJSON: {},
   transports: 'test-transport',
+};
+
+const mockContext = {
+  getTwilioClient: () => ({
+    username: 'mockUsername',
+    password: 'mockPassword',
+  }),
 };
 
 describe('registration/verification', () => {
@@ -37,11 +44,11 @@ describe('registration/verification', () => {
         expect(_body).toBeDefined();
         expect(_statusCode).toEqual(400);
         expect(_body).toEqual(
-          `Missing parameters; please provide: 'id, attestationObject, rawId, clientDataJson, transports'.`
+          `Missing parameters; please provide: 'id, attestationObject, rawId, clientDataJSON, transports'.`
         );
         done();
       };
-      handlerFunction({}, {}, callback);
+      handlerFunction(mockContext, {}, callback);
     });
 
     it('returns an error indicating specific missing parameters', (done) => {
@@ -50,12 +57,12 @@ describe('registration/verification', () => {
         expect(_body).toBeDefined();
         expect(_statusCode).toEqual(400);
         expect(_body).toEqual(
-          `Missing parameters; please provide: 'attestationObject, clientDataJson, transports'.`
+          `Missing parameters; please provide: 'attestationObject, clientDataJSON, transports'.`
         );
         done();
       };
       handlerFunction(
-        {},
+        mockContext,
         {
           id: '123',
           rawId: '123',
@@ -77,7 +84,7 @@ describe('registration/verification', () => {
         done();
       };
 
-      handlerFunction({}, testEvent, callback);
+      handlerFunction(mockContext, testEvent, callback);
     });
   });
 });

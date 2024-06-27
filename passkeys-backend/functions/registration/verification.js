@@ -5,13 +5,13 @@ const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
-  const { API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
+  const { API_URL } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
   const missingParams = detectMissingParams(
-    ['id', 'attestationObject', 'rawId', 'clientDataJson', 'transports'],
+    ['id', 'attestationObject', 'rawId', 'clientDataJSON', 'transports'],
     event
   );
   if (missingParams) {
@@ -23,6 +23,8 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const { username, password } = context.getTwilioClient();
+
   const requestBody = {
     content: {
       id: event.id,
@@ -31,7 +33,7 @@ exports.handler = async (context, event, callback) => {
       type: 'public-key',
       response: {
         attestationObject: event.attestationObject,
-        clientDataJSON: event.clientDataJson,
+        clientDataJSON: event.clientDataJSON,
         transports: event.transports,
       },
     },
@@ -42,8 +44,8 @@ exports.handler = async (context, event, callback) => {
   try {
     const APIResponse = await axios.post(verifyFactorURL, requestBody, {
       auth: {
-        username: ACCOUNT_SID,
-        password: AUTH_TOKEN,
+        username,
+        password,
       },
     });
     response.setStatusCode(200);

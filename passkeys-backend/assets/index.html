@@ -201,33 +201,6 @@
             }
         }
 
-        function ArrayBufferToBase64(buffer) {
-            // Convert ArrayBuffer to base64 string
-            const binary = String.fromCharCode.apply(null, new Uint8Array(buffer));
-            let base64String = btoa(binary);
-
-            // Replace characters not allowed in base64url with their corresponding URL-safe alternatives
-            base64String = base64String.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-
-            return base64String;
-        }
-
-        const strToArrayBuffer = (str) => {
-            const decodedString = atob(str);
-
-            const buffer = new Uint8Array(decodedString.length);
-            for (let i = 0; i < buffer.length; i++) {
-                buffer[i] = decodedString.charCodeAt(i);
-            }
-            return buffer;
-        }
-
-        function stringToArrayBuffer(str) {
-            const encoder = new TextEncoder();
-            const uint8Array = encoder.encode(str);
-            return uint8Array.buffer;
-        }
-
         const login = () => {
             const authenticationCard = document.getElementById("container");
             const passkeyCard = document.getElementById("modal");
@@ -240,11 +213,8 @@
                 const response = await fetch(`./authentication/start`);
                 const responseJSON = await response.json();
 
-
                 window.webauthnJSON.get(responseJSON)
                     .then(async (publicKeyCredential) => {
-                        const { id, rawId, response, type, authenticatorAttachment } = publicKeyCredential
-                        const { authenticatorData, clientDataJSON, signature, userHandle } = response
 
                         const authentication = await fetch('./authentication/verification', {
                             method: "POST",
@@ -252,17 +222,13 @@
                                 "Content-Type": "application/json"
                             },
                             body: JSON.stringify({
-                                id: id,
-                                rawId: rawId,
-                                clientDataJson: clientDataJSON,
-                                authenticatorData: authenticatorData,
-                                signature: signature,
-                                userHandle: userHandle
+                                id: publicKeyCredential.id,
+                                rawId: publicKeyCredential.rawId,
+                                ...publicKeyCredential.response
                             })
                         });
 
-                        const authenticationJSON = await authentication.json();
-                        const {status, identity} = authenticationJSON
+                        const { status, identity } = await authentication.json();
                         if(status === "approved") {
                             sessionStorage.setItem('session', identity);
                             loadApp(identity);
@@ -289,18 +255,12 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        username: username
-                    })
+                    body: JSON.stringify({ username })
                 });
 
                 const responseJSON = await response.json();
                 
                 let credential = await window.webauthnJSON.create({publicKey: responseJSON});
-
-
-                const { id, rawId, authenticatorAttachment, response: pubKeyCredResponse, type } = credential;
-                const { attestationObject, clientDataJSON, transports } = pubKeyCredResponse;
 
                 const verificationResponse = await fetch(`./registration/verification`, {
                     method: "POST",
@@ -308,16 +268,13 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        id: id,
-                        attestationObject: attestationObject,
-                        rawId: rawId,
-                        clientDataJson: clientDataJSON,
-                        transports: transports
+                        id: credential.id,
+                        rawId: credential.rawId,
+                        ...credential.response
                     })
                 });
 
-                const verRespJSON = await verificationResponse.json();
-                const { status } = verRespJSON
+                const { status } = await verificationResponse.json();
                 if (status === 'verified') {
                     sessionStorage.setItem('session', username);
                     loadApp(username);

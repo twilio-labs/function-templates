@@ -2,10 +2,12 @@ const axios = require('axios');
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, _, callback) => {
-  const { RELYING_PARTY, API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
+  const { RELYING_PARTY, API_URL } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+
+  const { username, password } = context.getTwilioClient();
 
   const requestBody = {
     content: {
@@ -19,8 +21,8 @@ exports.handler = async (context, _, callback) => {
   try {
     const APIResponse = await axios.post(challengeURL, requestBody, {
       auth: {
-        username: ACCOUNT_SID,
-        password: AUTH_TOKEN,
+        username,
+        password,
       },
     });
 

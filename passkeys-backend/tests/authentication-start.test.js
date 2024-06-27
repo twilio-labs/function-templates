@@ -3,6 +3,13 @@ const helpers = require('../../test/test-helper');
 
 jest.mock('axios');
 
+const mockContext = {
+  getTwilioClient: () => ({
+    username: 'mockUsername',
+    password: 'mockPassword',
+  }),
+};
+
 describe('authentication/start', () => {
   beforeAll(() => {
     jest.clearAllMocks();
@@ -33,6 +40,6 @@ describe('authentication/start', () => {
       done();
     };
 
-    handlerFunction({}, {}, callback);
+    handlerFunction(mockContext, {}, callback);
   });
 });

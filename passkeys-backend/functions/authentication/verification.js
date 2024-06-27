@@ -4,7 +4,7 @@ const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { API_URL, ACCOUNT_SID, AUTH_TOKEN } = context;
+  const { API_URL } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -13,7 +13,7 @@ exports.handler = async (context, event, callback) => {
     [
       'id',
       'rawId',
-      'clientDataJson',
+      'clientDataJSON',
       'authenticatorData',
       'signature',
       'userHandle',
@@ -30,6 +30,8 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
+  const { username, password } = context.getTwilioClient();
+
   const requestBody = {
     content: {
       rawId: event.rawId,
@@ -37,7 +39,7 @@ exports.handler = async (context, event, callback) => {
       authenticatorAttachment: 'platform',
       type: 'public-key',
       response: {
-        clientDataJSON: event.clientDataJson,
+        clientDataJSON: event.clientDataJSON,
         authenticatorData: event.authenticatorData,
         signature: event.signature,
         userHandle: event.userHandle,
@@ -50,8 +52,8 @@ exports.handler = async (context, event, callback) => {
   try {
     const APIresponse = await axios.post(verifyChallengeURL, requestBody, {
       auth: {
-        username: ACCOUNT_SID,
-        password: AUTH_TOKEN,
+        username,
+        password,
       },
     });
 
