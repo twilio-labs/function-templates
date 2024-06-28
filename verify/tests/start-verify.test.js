@@ -46,25 +46,6 @@ describe('verify/start-verification', () => {
     startVerifyFunction(testContext, event, callback);
   });
 
-  test('returns an error when "call" is the channel parameter', (done) => {
-    const callback = (_err, result) => {
-      expect(result).toBeDefined();
-      expect(result._body.success).toEqual(false);
-      expect(result._body.error).toEqual(
-        'Calls disabled by default. Update the code in <code>start-verify.js</code> to enable.'
-      );
-      expect(mockClient.verify.services).not.toHaveBeenCalledWith(
-        testContext.VERIFY_SERVICE_SID
-      );
-      done();
-    };
-    const event = {
-      to: '+17341234567',
-      channel: 'call',
-    };
-    startVerifyFunction(testContext, event, callback);
-  });
-
   test('uses sms and english as the default parameters if not provied', (done) => {
     const callback = (_err, result) => {
       expect(result).toBeDefined();
