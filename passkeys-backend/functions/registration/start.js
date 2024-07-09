@@ -25,7 +25,7 @@ exports.handler = async (context, event, callback) => {
   // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
   const requestBody = {
-    friendly_name: 'TouchID',
+    friendly_name: 'Passkey Example',
     to: {
       user_identifier: event.username,
     },
@@ -33,7 +33,10 @@ exports.handler = async (context, event, callback) => {
       relying_party: {
         id: RELYING_PARTY,
         name: 'PasskeySample',
-        origins: [`https://${RELYING_PARTY}`, ...ANDROID_APP_KEYS.split(',')],
+        origins: [
+          `https://${RELYING_PARTY}`,
+          ...(ANDROID_APP_KEYS.split(',') || []),
+        ],
       },
       authenticator_criteria: {
         authenticator_attachment: 'platform',

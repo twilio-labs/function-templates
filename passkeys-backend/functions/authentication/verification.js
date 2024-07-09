@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const assets = Runtime.getAssets();
-const { detectMissingParams } = require(assets['/services/helpers.js'].path);
+const { isEmpty } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
   const { API_URL } = context;
@@ -9,24 +9,11 @@ exports.handler = async (context, event, callback) => {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  const missingParams = detectMissingParams(
-    [
-      'id',
-      'rawId',
-      'clientDataJSON',
-      'authenticatorData',
-      'signature',
-      'userHandle',
-    ],
-    event
-  );
-
-  if (missingParams) {
+  if (isEmpty(event)) {
     response.setStatusCode(400);
     response.setBody(
-      `Missing parameters; please provide: '${missingParams.join(', ')}'.`
+      `Something is wrong with the request. Please check the parameters.`
     );
-
     return callback(null, response);
   }
 
@@ -36,14 +23,9 @@ exports.handler = async (context, event, callback) => {
     content: {
       rawId: event.rawId,
       id: event.id,
-      authenticatorAttachment: 'platform',
-      type: 'public-key',
-      response: {
-        clientDataJSON: event.clientDataJSON,
-        authenticatorData: event.authenticatorData,
-        signature: event.signature,
-        userHandle: event.userHandle,
-      },
+      authenticatorAttachment: event.authenticatorAttachment,
+      type: event.type,
+      response: event.response,
     },
   };
 

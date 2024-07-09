@@ -13,10 +13,12 @@ const mockContext = {
 const testEvent = {
   id: '12345',
   rawId: 'randomRawId',
-  clientDataJSON: {},
-  authenticatorData: {},
-  signature: 'test-signature',
-  userHandle: {},
+  response: {
+    clientDataJSON: {},
+    authenticatorData: {},
+    signature: 'test-signature',
+    userHandle: {},
+  },
 };
 
 describe('authentication/verification', () => {
@@ -46,31 +48,11 @@ describe('authentication/verification', () => {
         expect(_body).toBeDefined();
         expect(_statusCode).toEqual(400);
         expect(_body).toEqual(
-          `Missing parameters; please provide: 'id, rawId, clientDataJSON, authenticatorData, signature, userHandle'.`
+          `Something is wrong with the request. Please check the parameters.`
         );
         done();
       };
       handlerFunction(mockContext, {}, callback);
-    });
-
-    it('returns an error indicating specific missing parameters', (done) => {
-      const callback = (_, { _body, _statusCode }) => {
-        expect(_statusCode).toBeDefined();
-        expect(_body).toBeDefined();
-        expect(_statusCode).toEqual(400);
-        expect(_body).toEqual(
-          `Missing parameters; please provide: 'clientDataJSON, authenticatorData, signature, userHandle'.`
-        );
-        done();
-      };
-      handlerFunction(
-        mockContext,
-        {
-          id: '123',
-          rawId: '123',
-        },
-        callback
-      );
     });
   });
 

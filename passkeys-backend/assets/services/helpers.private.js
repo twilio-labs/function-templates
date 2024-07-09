@@ -5,6 +5,11 @@ const detectMissingParams = (paramNames, event) => {
   return missingParams.length > 0 ? missingParams : null;
 };
 
+const isEmpty = (requestBody) => {
+  return Object.keys(requestBody).length === 0;
+};
+
 module.exports = {
   detectMissingParams,
+  isEmpty,
 };

@@ -5,10 +5,12 @@ jest.mock('axios');
 
 const testEvent = {
   id: '12345',
-  attestationObject: {},
   rawId: 'randomRawId',
-  clientDataJSON: {},
-  transports: 'test-transport',
+  response: {
+    attestationObject: {},
+    clientDataJSON: {},
+    transports: 'test-transport',
+  },
 };
 
 const mockContext = {
@@ -44,31 +46,11 @@ describe('registration/verification', () => {
         expect(_body).toBeDefined();
         expect(_statusCode).toEqual(400);
         expect(_body).toEqual(
-          `Missing parameters; please provide: 'id, attestationObject, rawId, clientDataJSON, transports'.`
+          `Something is wrong with the request. Please check the parameters.`
         );
         done();
       };
       handlerFunction(mockContext, {}, callback);
-    });
-
-    it('returns an error indicating specific missing parameters', (done) => {
-      const callback = (_, { _body, _statusCode }) => {
-        expect(_statusCode).toBeDefined();
-        expect(_body).toBeDefined();
-        expect(_statusCode).toEqual(400);
-        expect(_body).toEqual(
-          `Missing parameters; please provide: 'attestationObject, clientDataJSON, transports'.`
-        );
-        done();
-      };
-      handlerFunction(
-        mockContext,
-        {
-          id: '123',
-          rawId: '123',
-        },
-        callback
-      );
     });
   });
 
