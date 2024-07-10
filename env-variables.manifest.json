@@ -1895,6 +1895,38 @@
         "configurable": false,
         "contentKey": null
       }
+    ],
+    "passkeys-backend": [
+      {
+        "key": "API_URL",
+        "required": true,
+        "format": "url",
+        "description": "The URL of the comms API for passkeys",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "RELYING_PARTY",
+        "required": true,
+        "format": "url",
+        "description": "The domain of the relying party",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ANDROID_APP_KEYS",
+        "required": false,
+        "format": "list(text)",
+        "description": "The domain of the adroid identity provider",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
     ]
   }
 }
