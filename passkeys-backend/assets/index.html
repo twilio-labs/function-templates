@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Passkeys Demo</title>
+
+        <link rel="icon" href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico">
+        <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.3/build/css/intlTelInput.css">
+        <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.3/build/js/intlTelInput.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@github/webauthn-json@2.1.1/dist/browser-global/webauthn-json.browser-global.min.js"></script>
+        <style>
+            body {
+                margin: 0;
+                display: flex;
+                place-items: center;
+                min-width: 320px;
+                min-height: 100vh;
+                flex-direction: unset;
+                background-color: rgb(237, 242, 247);
+            }
+
+            #container, #modal, #app {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 4rem;
+                text-align: center;
+                border-radius: 10px;
+                background-color: #FFFFFF;
+                box-shadow: 100px 100px 69px -29px rgba(0, 0, 0, 0.07);
+            }
+
+            .title {
+                margin: 25px 0;
+                font-size: 20px;
+                justify-content: center;
+                font-weight: 500;
+            }
+
+            #usr_input {
+                width: 250px;
+                padding: 0.8rem !important;
+                border: 1px solid rgb(136, 145, 170);
+                border-radius: 4px;
+                padding: 0.8rem;
+                font-size: 16px;
+            }
+
+            .invisible {
+                display: none;
+            }
+
+            .iti {
+                display: flex;
+                gap: 10px
+            }
+
+            .iti__arrow {
+                display: none;
+            }
+
+            .iti__flag-container {
+                position: relative;
+                border: 1px solid rgb(136, 145, 170);
+                border-radius: 4px;
+                padding: 0.8rem;
+            }
+
+            .input_container .iti__selected-flag {
+                background-color: #FFFFFF;
+            }
+
+            .input_container {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .modal_input {
+                margin: 40px 0;
+            }
+
+            .input_component {
+                display: flex;
+                flex-direction: column;
+                text-align: left;
+                margin: 10px 0;
+            }
+
+            .input_component > span {
+                font-size: 14px;
+                color: #D04848;
+            }
+
+            .hide {
+                visibility: hidden;
+            }
+
+
+            .btn {
+                padding: 15px 0;
+                border-radius: 50px;
+                font-weight: 600;
+                font-size: 16px;
+            }
+
+            .continue_btn {
+                border-width: 0;
+                color: #FFFFFF;
+                background-color: rgb(205, 210, 216);
+            }
+
+            .enable {
+                background-color:rgb(2, 99, 224);
+            }
+
+            .skip_btn {
+                margin: 20px 0 0 0;
+            }
+
+            a, button {
+                cursor: pointer;
+            }
+
+            .separator {
+                color: #7F8487;
+                font-size: 10px;
+            }
+
+            .passkey_btn {
+                border-width: 1px;
+                border-color: rgb(2, 99, 224);
+                color: rgb(2, 99, 224);
+                background-color: #FFFFFF;
+                border-style: solid;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="container">
+            <h1 class="title">Sign up or sign in</h1>
+            <div class="input_container">
+                <div class="input_component">
+                    <input type="tel" name="username_input" id="usr_input" oninput="checkAvalibility()">
+                </div>
+                <button type="button" class="btn continue_btn" id="continue" onclick="login()" disabled>Continue</button>
+                <span class="separator">&#8213; or &#8213;</span>
+                <button type="button" class="btn passkey_btn" onclick="signIn()">Sign in with passkey</button>
+            </div>
+        </div>
+        <div id="modal" class="invisible">
+            <h1 class="title">Sign-in with your face,<br> fingerprint or PIN</h1>
+            <p>Harness your device capabilities for a fast<br> passkey login with maximun security.</p>
+            <a>Learn more &rarr;</a>
+            <div class="input_container modal_input">
+                <button class="btn continue_btn enable" onclick="signUp()">Continue</button>
+                <a class="skip_btn">Skip</a>
+            </div>
+        </div>
+        <div id="app" class="invisible">
+            <h1 class="title" id="welcome"></h1>
+            <div class="input_container">
+                <button class="btn continue_btn enable" onclick="logOut()">Log out</button>
+            </div>
+        </div>
+    </body>
+    <script>
+
+        let sessionUsername = sessionStorage.getItem("session");
+
+        const loadApp = (username) => {
+            document.getElementById("welcome").innerHTML = `Welcome ${username}`
+            document.getElementById("modal").classList.add("invisible");
+            document.getElementById("container").classList.add("invisible");
+            document.getElementById("app").classList.remove("invisible");
+        }
+
+        if (sessionUsername) {
+            loadApp(sessionUsername)
+        }
+        
+        const usernameElement = document.getElementById("usr_input");
+        const errorElement = document.getElementById("error");
+        const continueButton = document.getElementById("continue");
+        window.intlTelInput(usernameElement, {
+            initialCountry: "us",
+            showSelectedDialCode: true,
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.3/build/js/utils.js",
+        });
+
+        const checkAvalibility = () => {
+            const username = usernameElement.value
+            if(username) {
+                continueButton.classList.add("enable");
+                continueButton.disabled = false;
+            } else {
+                continueButton.classList.remove("enable");
+                continueButton.disabled = true;
+            }
+        }
+
+        const login = () => {
+            const authenticationCard = document.getElementById("container");
+            const passkeyCard = document.getElementById("modal");
+            authenticationCard.classList.add("invisible");
+            passkeyCard.classList.remove("invisible");
+        }
+
+        const signIn = async () => {
+            try {
+                const response = await fetch(`./authentication/start`);
+                const responseJSON = await response.json();
+
+                window.webauthnJSON.get(responseJSON)
+                    .then(async (publicKeyCredential) => {
+
+                        const authentication = await fetch('./authentication/verification', {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(publicKeyCredential)
+                        });
+
+                        const { status, identity } = await authentication.json();
+                        if(status === "approved") {
+                            sessionStorage.setItem('session', identity);
+                            loadApp(identity);
+                        } else {
+                            console.log(status);
+                        }
+                    })
+                    .catch((err) => {
+                        if(err) {
+                            console.error("Something goes wrong or maybe you dont have a passkey for this application yet");
+                        }
+                    });
+            } catch (error) {
+                console.log(err);
+            }
+        }
+ 
+        const signUp = async () => {
+            const username = usernameElement.value
+
+            try {
+                const response = await fetch(`./registration/start`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username })
+                });
+
+                const responseJSON = await response.json();
+                
+                let credential = await window.webauthnJSON.create({publicKey: responseJSON});
+
+                const verificationResponse = await fetch(`./registration/verification`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(credential)
+                });
+
+                const { status } = await verificationResponse.json();
+                if (status === 'verified') {
+                    sessionStorage.setItem('session', username);
+                    loadApp(username);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        const logOut = () => {
+            sessionStorage.removeItem("session");
+            document.getElementById("app").classList.add("invisible");
+            document.getElementById("container").classList.remove("invisible");
+        }
+    </script>
+</html>

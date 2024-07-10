@@ -141,6 +141,7 @@
     "verify-sna",
     "flex-dialpad",
     "verify-prefill",
-    "reminder-message"
+    "reminder-message",
+    "passkeys-backend"
   ]
 }

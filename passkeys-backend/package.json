@@ -1,0 +1,9 @@
+{
+  "name": "passkeys-backend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@twilio-labs/runtime-helpers": "^0.1.2",
+    "twilio": "^3.61.0"
+  }
+}

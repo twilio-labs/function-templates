@@ -1,0 +1,7 @@
+{
+    "webcredentials": {
+        "apps": [
+            "{ORIGIN_IOS_APP_HASH}"
+        ]
+    }
+}
