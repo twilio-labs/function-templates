@@ -1,7 +1,8 @@
 /**
  *  Start Verification
  *
- *  This Function shows you how to send a verification token for Twilio Verify.
+ *  Sends a verification token to the provided phone number or email.
+ *  Wraps the /verification endpoint: https://www.twilio.com/docs/verify/api/verification
  *
  *  Pre-requisites
  *  - Create a Verify Service (https://www.twilio.com/console/verify/services)

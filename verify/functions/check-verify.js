@@ -1,10 +1,12 @@
 /**
  *  Check Verification
  *
- *  This Function shows you how to check a verification token for Twilio Verify.
+ *  Accepts a user-provided code and checks it against the verification token sent to the user.
+ *  Wraps the /verification-check endpoint: https://www.twilio.com/docs/verify/api/verification-check
  *
  *  Pre-requisites
  *  - Create a Verify Service (https://www.twilio.com/console/verify/services)
+ *  - Send an OTP to the user via the /start-verify function
  *
  *  Returns JSON:
  *  {
