@@ -1,13 +1,12 @@
 /**
  *  Check Verification
  *
- *  This Function shows you how to check a verification token for Twilio Verify.
+ *  Accepts a user-provided code and checks it against the verification token sent to the user.
+ *  Wraps the /verification-check endpoint: https://www.twilio.com/docs/verify/api/verification-check
  *
  *  Pre-requisites
  *  - Create a Verify Service (https://www.twilio.com/console/verify/services)
- *  - Add VERIFY_SERVICE_SID from above to your Environment Variables (https://www.twilio.com/console/functions/configure)
- *  - Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
- *
+ *  - Send an OTP to the user via the /start-verify function
  *
  *  Returns JSON:
  *  {
@@ -19,24 +18,17 @@ exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
-
   try {
     if (typeof event.to === 'undefined' || typeof event.code === 'undefined') {
       throw new Error('Missing parameter.');
     }
 
     const client = context.getTwilioClient();
-    const service = context.VERIFY_SERVICE_SID;
+    const { VERIFY_SERVICE_SID } = context;
     const { to, code } = event;
 
     const check = await client.verify
-      .services(service)
+      .services(VERIFY_SERVICE_SID)
       .verificationChecks.create({ to, code });
 
     if (check.status === 'approved') {
@@ -46,10 +38,9 @@ exports.handler = async function (context, event, callback) {
         message: 'Verification success.',
       });
       return callback(null, response);
-      // eslint-disable-next-line no-else-return
-    } else {
-      throw new Error('Incorrect token.');
     }
+
+    throw new Error('Incorrect token.');
   } catch (error) {
     console.error(error.message);
     response.setBody({
