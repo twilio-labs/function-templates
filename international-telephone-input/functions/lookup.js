@@ -17,13 +17,6 @@ exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
-
   try {
     if (event.phone === '' || typeof event.phone === 'undefined') {
       throw new Error('Missing parameter; please provide a phone number.');
@@ -43,11 +36,11 @@ exports.handler = async function (context, event, callback) {
     response.setBody({ success });
     return callback(null, response);
   } catch (error) {
+    response.setStatusCode(error.status || 400);
     response.setBody({
       success: false,
       error: error.message,
     });
-    response.setStatusCode(error.status || 400);
     return callback(null, response);
   }
 };
