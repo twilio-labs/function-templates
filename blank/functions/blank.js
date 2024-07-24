@@ -1,23 +1,23 @@
 /* [Comments intro section: replace or remove all bracketed text]
-* [Title of File]
-* Description: [Brief description of what file does]
-* 
-* Contents:
-* [Insert Table of Contents (ToC) as a numbered list]
-* [List should correspond to the order and grouping of]
-* [code in the area below. It will include]
-* [#]. Main Handler
-* [at a minimum]
-* [END of intro section]
-*/
+ * [Title of File]
+ * Description: [Brief description of what file does]
+ *
+ * Contents:
+ * [Insert Table of Contents (ToC) as a numbered list]
+ * [List should correspond to the order and grouping of]
+ * [code in the area below. It will include]
+ * [#]. Main Handler
+ * [at a minimum]
+ * [END of intro section]
+ */
 
 /* [Comments for each function should be placed above the functions]
-* [Explain the purpose of the function]
-* [Add JSDoc comments]
-*/
+ * [Explain the purpose of the function]
+ * [Add JSDoc comments]
+ */
 
 /* [Comment section for main handler]
-* [# in ToC.] Main Handler
+ * [# in ToC.] Main Handler
  *
  * [Describe in detail what this handler will do. For example:]
  * ["This is the entry point to your Twilio Function,]
