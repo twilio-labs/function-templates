@@ -1,4 +1,5 @@
-/* [Comments intro section: replace or remove all bracketed text]
+/*
+ *[Comments intro section: replace or remove all bracketed text]
  * [Title of File]
  * Description: [Brief description of what file does]
  *
@@ -11,12 +12,14 @@
  * [END of intro section]
  */
 
-/* [Comments for each function should be placed above the functions]
+/*
+ *[Comments for each function should be placed above the functions]
  * [Explain the purpose of the function]
  * [Add JSDoc comments]
  */
 
-/* [Comment section for main handler]
+/*
+ *[Comment section for main handler]
  * [# in ToC.] Main Handler
  *
  * [Describe in detail what this handler will do. For example:]
