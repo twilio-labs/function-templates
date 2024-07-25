@@ -1,46 +1,59 @@
+// pulls nested error codes from response data
+function getErrorLinks(data) {
+  const hasErrorCode = (value) =>
+    value !== null &&
+    typeof value !== 'undefined' &&
+    value.hasOwnProperty('error_code') &&
+    value.error_code !== null;
+
+  const errors = Object.entries(data)
+    .filter(([_, v]) => hasErrorCode(v))
+    .map(([k, v]) => [k, v.error_code]);
+
+  return errors.map(([k, errorCode]) => {
+    return `${k} error: <a href="https://www.twilio.com/docs/api/errors/${errorCode}" target="_blank">${errorCode}</a>`;
+  });
+}
+
+exports.getErrorLinks = getErrorLinks;
+
 /**
  *  Lookup - validate a phone number
  *
  *  This function will tell you whether or not a phone number is valid using Twilio's Lookup API
+ *  It will also provide additional information about the phone number depending on which data packages are requested
  *
  *  Parameters:
  *  "phone" - string - phone number in E.164 format (https://www.twilio.com/docs/glossary/what-e164)
+ *  "fields" - array - optional - list of fields to return from the Lookup API
  */
-
-// eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
 
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
-
   try {
-    if (event.phone === '' || typeof event.phone === 'undefined') {
+    const client = context.getTwilioClient();
+
+    const { phone, fields } = event;
+    if (phone === '' || typeof phone === 'undefined') {
       throw new Error('Missing parameter; please provide a phone number.');
     }
 
-    const types = typeof event.types === 'object' ? event.types : [event.types];
-    const client = context.getTwilioClient();
-
-    const resp = await client.lookups
+    const lookups = await client.lookups.v2
       .phoneNumbers(event.phone)
-      .fetch({ type: types });
+      .fetch({ fields: fields.join(',') });
 
-    if (types.includes('lti')) {
-      const { lineTypeIntelligence } = await client.lookups.v2
-        .phoneNumbers(event.phone)
-        .fetch({ fields: 'line_type_intelligence' });
+    if (!lookups.valid) {
+      throw new Error(`Invalid phone number: ${lookups.validationErrors}.`);
+    }
 
-      resp.lineTypeIntelligence = lineTypeIntelligence;
+    const errors = getErrorLinks(lookups);
+    if (errors.length > 0) {
+      throw new Error(`${errors.join('<br/>')}`);
     }
 
     response.setStatusCode(200);
-    response.setBody(resp);
+    response.setBody(lookups);
     return callback(null, response);
   } catch (error) {
     console.error(error.message);
