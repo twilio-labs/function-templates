@@ -148,6 +148,20 @@
             <div>
               <input
                 type="checkbox"
+                id="smsPumpingRisk"
+                name="fields"
+                value="sms_pumping_risk"
+              />
+              <label for="smsPumpingRisk">
+                <a
+                  href="https://www.twilio.com/docs/lookup/v2-api/sms-pumping-risk"
+                  >SMS Pumping Risk</a
+                ></label
+              ><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
                 id="simSwap"
                 name="fields"
                 value="sim_swap"
@@ -207,24 +221,37 @@
                 >Submit this form to request access.</a
               >
             </p>
-            <p>
-              The
-              <strong
-                ><a
-                  href="https://www.twilio.com/docs/lookup/v2-api/identity-match"
-                  >Identity Match</a
-                ></strong
-              >
-              package is also available but requires additional details in the
-              request.
-              <a
-                href="https://www.twilio.com/en-us/blog/confirm-phone-number-ownership-lookup-identity-match"
-                >Learn more in this blog post.</a
-              >
-            </p>
           </form>
           <div class="alert" style="display: none"></div>
-          <!-- EDIT_CODE_V2 -->
+          <h3>Additional Lookup Data Packages</h3>
+          <p>
+            👀
+            <strong
+              ><a
+                href="https://www.twilio.com/docs/lookup/v2-api/identity-match"
+                >Identity Match</a
+              ></strong
+            >
+            package requires additional details in the request.
+            <a
+              href="https://www.twilio.com/en-us/blog/confirm-phone-number-ownership-lookup-identity-match"
+              >Learn more in this blog post.</a
+            >
+          </p>
+          <p>
+            ✏️
+            <strong
+              ><a
+                href="https://www.twilio.com/docs/lookup/v2-api/identity-match"
+                >Identity Pre-fill</a
+              ></strong
+            >
+            combines Verify and Lookup for a seamless onboarding experience.
+            <a
+              href="https://www.twilio.com/code-exchange/verify-lookup-identity-prefill"
+              >Learn more in this Code Exchange project.</a
+            >
+          </p>
         </div>
       </div>
     </main>
