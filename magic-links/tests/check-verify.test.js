@@ -1,19 +1,19 @@
 const checkVerifyFunction = require('../functions/check-verify').handler;
 const helpers = require('../../test/test-helper');
 
-const mockService = {
-  verificationChecks: {
-    create: jest.fn(() =>
-      Promise.resolve({
-        status: 'approved',
-      })
-    ),
-  },
-};
-
 const mockClient = {
   verify: {
-    services: jest.fn(() => mockService),
+    v2: {
+      services: jest.fn(() => ({
+        verificationChecks: {
+          create: jest.fn(() =>
+            Promise.resolve({
+              status: 'approved',
+            })
+          ),
+        },
+      })),
+    },
   },
 };
 
@@ -30,44 +30,37 @@ describe('verify/check-verification', () => {
     helpers.teardown();
   });
 
-  test('returns an error response when required to parameter is missing', (done) => {
+  test('returns an error response when required "to" parameter is missing', (done) => {
     const callback = (_err, result) => {
-      expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
-      expect(mockClient.verify.services).not.toHaveBeenCalledWith(
+      expect(result._body.message).toEqual(`Missing parameter.`);
+      expect(mockClient.verify.v2.services).not.toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
       done();
     };
     const event = {
-      // eslint-disable-next-line camelcase
-      verification_code: '123456',
+      code: '123456',
     };
     checkVerifyFunction(testContext, event, callback);
   });
 
-  test('returns an error response when required verification_code parameter is missing', (done) => {
+  test('returns an error response when required "code" parameter is missing', (done) => {
     const callback = (_err, result) => {
-      expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
-      expect(mockClient.verify.services).not.toHaveBeenCalledWith(
-        testContext.VERIFY_SERVICE_SID
-      );
+      expect(result._body.message).toEqual(`Missing parameter.`);
       done();
     };
     const event = {
-      to: 'hello@example.com',
+      to: 'foo@bar.com',
     };
     checkVerifyFunction(testContext, event, callback);
   });
 
-  test('returns an error response when required parameters are missing', (done) => {
+  test('returns an error response when both required parameters are missing', (done) => {
     const callback = (_err, result) => {
-      expect(result).toBeDefined();
       expect(result._body.success).toEqual(false);
-      expect(mockClient.verify.services).not.toHaveBeenCalledWith(
-        testContext.VERIFY_SERVICE_SID
-      );
+      expect(result._body.message).toEqual('Missing parameter.');
       done();
     };
     const event = {};
@@ -76,17 +69,56 @@ describe('verify/check-verification', () => {
 
   test('returns success with valid request', (done) => {
     const callback = (_err, result) => {
-      expect(result).toBeDefined();
       expect(result._body.success).toEqual(true);
-      expect(mockClient.verify.services).toHaveBeenCalledWith(
+      expect(result._body.message).toEqual('Verification success.');
+      expect(mockClient.verify.v2.services).toHaveBeenCalledWith(
         testContext.VERIFY_SERVICE_SID
       );
       done();
     };
     const event = {
       to: 'hello@example.com',
-      // eslint-disable-next-line camelcase
-      verification_code: '123456',
+      code: '123456',
+    };
+    checkVerifyFunction(testContext, event, callback);
+  });
+
+  test('returns error when verification fails', (done) => {
+    mockClient.verify.v2.services = jest.fn(() => ({
+      verificationChecks: {
+        create: jest.fn(() =>
+          Promise.resolve({
+            status: 'pending',
+          })
+        ),
+      },
+    }));
+
+    const callback = (_err, result) => {
+      expect(result._body.success).toEqual(false);
+      expect(result._body.message).toEqual('Incorrect token.');
+      done();
+    };
+    const event = {
+      to: 'hello@example.com',
+      code: '00000',
+    };
+    checkVerifyFunction(testContext, event, callback);
+  });
+
+  test('returns a 500 error when an unexpected error occurs', (done) => {
+    mockClient.verify.v2.services = jest.fn(() => {
+      throw new Error('Test error');
+    });
+
+    const callback = (_err, result) => {
+      expect(result._body.success).toEqual(false);
+      expect(result._statusCode).toEqual(500);
+      done();
+    };
+    const event = {
+      to: 'hello@example.com',
+      code: '123456',
     };
     checkVerifyFunction(testContext, event, callback);
   });
