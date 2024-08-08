@@ -2,6 +2,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "moment": "^2.24.0"
+    "moment": "^2.30.1"
   }
 }
