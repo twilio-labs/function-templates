@@ -1,17 +1,54 @@
-// pulls nested error codes from response data
+/**
+ * Helper function to pull nested error codes from response data
+ *
+ * @param {object} data - response data from Twilio Lookup API
+ * @returns {array} - array of error messages with links to Twilio's error code documentation
+ * @example
+ * const data = {
+ *  identityMatch: null,
+ *  callerName: {
+ *    caller_type: "BUSINESS",
+ *    error_code: null,
+ *  },
+ *  simSwap: {
+ *    error_code: 60008,
+ *  },
+ *  callForwarding: {
+ *    error_code: 60607,
+ *  }
+ * };
+ *
+ * getErrorLinks(data);
+ * // returns ['simSwap error: <a href="https://www.twilio.com/docs/api/errors/60008" target="_blank">60008</a>', 'callForwarding error: <a href="https://www.twilio.com/docs/api/errors/60607">60607</a>']
+ */
 function getErrorLinks(data) {
+  /*
+   * Find a nested error code
+   * In the example above, this identifies error codes
+   * in simSwap and callForwarding
+   */
   const hasErrorCode = (value) =>
     value !== null &&
     typeof value !== 'undefined' &&
     value.hasOwnProperty('error_code') &&
     value.error_code !== null;
 
+  /*
+   * Filter out fields that do not have an error code
+   * and transform the remaining fields to an array.
+   * In the example above this would return:
+   * [['simSwap', 60008], ['callForwarding', 60607]]
+   */
   const errors = Object.entries(data)
-    .filter(([_, v]) => hasErrorCode(v))
-    .map(([k, v]) => [k, v.error_code]);
+    .filter(([_, fieldDetails]) => hasErrorCode(fieldDetails))
+    .map(([fieldName, fieldDetails]) => [fieldName, fieldDetails.error_code]);
 
-  return errors.map(([k, errorCode]) => {
-    return `${k} error: <a href="https://www.twilio.com/docs/api/errors/${errorCode}" target="_blank">${errorCode}</a>`;
+  /*
+   * Format the error codes in a human-readable way
+   * with links to Twilio's error code documentation
+   */
+  return errors.map(([fieldName, errorCode]) => {
+    return `${fieldName} error: <a href="https://www.twilio.com/docs/api/errors/${errorCode}">${errorCode}</a>`;
   });
 }
 

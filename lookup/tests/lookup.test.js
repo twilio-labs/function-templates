@@ -108,8 +108,8 @@ describe('lookup', () => {
     };
 
     const expected = [
-      'simSwap error: <a href="https://www.twilio.com/docs/api/errors/60008" target="_blank">60008</a>',
-      'callForwarding error: <a href="https://www.twilio.com/docs/api/errors/60607" target="_blank">60607</a>',
+      'simSwap error: <a href="https://www.twilio.com/docs/api/errors/60008">60008</a>',
+      'callForwarding error: <a href="https://www.twilio.com/docs/api/errors/60607">60607</a>',
     ];
 
     const result = getErrorLinks(data);
@@ -154,7 +154,7 @@ describe('lookup', () => {
       expect(result._statusCode).toEqual(400);
       expect(result._body).toEqual({
         error:
-          'simSwap error: <a href="https://www.twilio.com/docs/api/errors/60008" target="_blank">60008</a><br/>callForwarding error: <a href="https://www.twilio.com/docs/api/errors/60607" target="_blank">60607</a>',
+          'simSwap error: <a href="https://www.twilio.com/docs/api/errors/60008">60008</a><br/>callForwarding error: <a href="https://www.twilio.com/docs/api/errors/60607">60607</a>',
       });
       done();
     };
