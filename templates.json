@@ -354,6 +354,11 @@
       "id": "passkeys-backend",
       "name": "Backend for passkeys app",
       "description": "Connect applications with the passkeys service"
+    },
+    {
+      "id": "ai-assistants-samples",
+      "name": "AI Assistants Samples",
+      "description": "Functions to connect AI Assistants to various Channels and Tools"
     }
   ]
 }
