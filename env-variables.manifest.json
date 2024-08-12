@@ -1930,28 +1930,8 @@
     ],
     "ai-assistants-samples": [
       {
-        "key": "ACCOUNT_SID",
-        "required": true,
-        "format": "sid",
-        "description": "SID of your Twilio Account or Subaccount",
-        "link": "https://www.twilio.com/console",
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "AUTH_TOKEN",
-        "required": true,
-        "format": "text",
-        "description": "Auth Token of your Twilio Account or Subaacount",
-        "link": "https://www.twilio.com/console",
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
         "key": "ASSISTANT_SID",
-        "required": true,
+        "required": false,
         "format": "text",
         "description": "The ID of your AI Assistant (starts with ai_asst_)",
         "link": null,
@@ -1961,7 +1941,7 @@
       },
       {
         "key": "GOOGLE_MAPS_API_KEY",
-        "required": true,
+        "required": false,
         "format": "text",
         "description": "API key for Google Maps service",
         "link": null,
@@ -1976,12 +1956,12 @@
         "description": "API key for OpenAI used in Internet Search tool",
         "link": null,
         "default": null,
-        "configurable": true,
+        "configurable": false,
         "contentKey": null
       },
       {
         "key": "EXA_API_KEY",
-        "required": true,
+        "required": false,
         "format": "text",
         "description": "API key for Exa used in Internet Search tool",
         "link": null,
@@ -1991,7 +1971,7 @@
       },
       {
         "key": "FLEX_WORKFLOW_SID",
-        "required": true,
+        "required": false,
         "format": "text",
         "description": "Flex Workflow SID used for Flex Handoffs",
         "link": null,
@@ -2001,7 +1981,7 @@
       },
       {
         "key": "FLEX_WORKSPACE_SID",
-        "required": true,
+        "required": false,
         "format": "text",
         "description": "Flex Workspace SID used for Flex Handoffs",
         "link": null,
