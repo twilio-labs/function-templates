@@ -1,7 +1,7 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "dependencies": {
-    "twilio": "^3.61.0"
+    "twilio": "^5.2.2"
   }
 }
