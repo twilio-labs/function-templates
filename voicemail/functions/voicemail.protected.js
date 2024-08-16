@@ -2,9 +2,9 @@
  * Call Forwarding with Voicemail
  *
  * Description:
- * This file contains the main Twilio Function that forwards 
- * incoming calls to a specific phone number during a set work 
- * hours and records voicemail for calls that are unanswered or 
+ * This file contains the main Twilio Function that forwards
+ * incoming calls to a specific phone number during a set work
+ * hours and records voicemail for calls that are unanswered or
  * outside of the work hours.
  *
  * Contents:
@@ -29,10 +29,10 @@ const url = require('url');
  * Contains greeting messages which is spoken when a call
  * is received out of work hours. Here you can change the default
  * greetings, voice types, and add addional greetings for specified languages.
- * 
+ *
  * The function chooses the greeting based on the FromCountry parameter provided
  * by Twilio when the call request is sent to the function.
- * 
+ *
  * You can also change the default UTC time offset, work hours
  * start and end times, start and end days of the work week.
  * These values are only used if they arent specified in /.env.
@@ -71,9 +71,9 @@ const DEFAULT_WORK_HOUR_END = 18; // 18:59, 6:59PM
 /*
  * 2. Helper Function
  *
- * Helper function to parse string values to integers. 
+ * Helper function to parse string values to integers.
  * Returns default value if string cannot parsed to an integer.
- * 
+ *
  * stringValue - value to be converted into an integer
  * defaultValue - default value to return if stringValue
  * can't be parse into integer
@@ -98,7 +98,7 @@ function parseInteger(stringValue, defaultValue) {
  * If the call is placed outside work hours, the Voice Response
  * will respond to the caller with a greeting and will record a voicemail
  * which will be forwarded to the recording function in recording.js.
- * 
+ *
  * The callback will be used to return from your function
  * with the Twiml Voice Response you defined earlier.
  * In the callback in non-error situations, the first
@@ -107,7 +107,7 @@ function parseInteger(stringValue, defaultValue) {
  */
 
 exports.handler = function (context, event, callback) {
-   // parse the environment variables and get the work hours and timezone 
+  // parse the environment variables and get the work hours and timezone
   const phoneNumberToForwardTo = context.MY_PHONE_NUMBER;
   const timezone = parseInteger(context.TIMEZONE_OFFSET, DEFAULT_UTC_OFFSET);
   const workWeek = {
