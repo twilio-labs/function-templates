@@ -46,7 +46,7 @@ twilio serverless:init sample --template=voicemail && cd sample
 twilio serverless:start --ngrok
 ```
 
-5. Set your incoming call webhook URL for the phone number you want to configure to `https://<your-ngrok-code>.ngrok.io/voicemail
+5. Set your incoming call webhook URL for the phone number you want to configure to `https://<your-ngrok-code>.ngrok.io/voicemail`
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
