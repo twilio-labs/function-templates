@@ -74,7 +74,7 @@ const DEFAULT_WORK_HOUR_END = 18; // 18:59, 6:59PM
  * can't be parse into integer
  */
 
-function getInteger(stringValue, defaultValue) {
+function parseInteger(stringValue, defaultValue) {
   const parsedNumber = parseInt(stringValue, 10);
   if (isNaN(parsedNumber)) {
     return defaultValue;
@@ -104,14 +104,14 @@ function getInteger(stringValue, defaultValue) {
 exports.handler = function (context, event, callback) {
    // parse the environment variables and get the work hours and timezone 
   const phoneNumberToForwardTo = context.MY_PHONE_NUMBER;
-  const timezone = getInteger(context.TIMEZONE_OFFSET, DEFAULT_UTC_OFFSET);
+  const timezone = parseInteger(context.TIMEZONE_OFFSET, DEFAULT_UTC_OFFSET);
   const workWeek = {
-    start: getInteger(context.WORK_WEEK_START, DEFAULT_WORK_WEEK_START),
-    end: getInteger(context.WORK_WEEK_END, DEFAULT_WORK_WEEK_END),
+    start: parseInteger(context.WORK_WEEK_START, DEFAULT_WORK_WEEK_START),
+    end: parseInteger(context.WORK_WEEK_END, DEFAULT_WORK_WEEK_END),
   };
   const workHour = {
-    start: getInteger(context.WORK_HOUR_START, DEFAULT_WORK_HOUR_START),
-    end: getInteger(context.WORK_HOUR_END, DEFAULT_WORK_HOUR_END),
+    start: parseInteger(context.WORK_HOUR_START, DEFAULT_WORK_HOUR_START),
+    end: parseInteger(context.WORK_HOUR_END, DEFAULT_WORK_HOUR_END),
   };
 
   // calculate the current day and time according to the timezone
