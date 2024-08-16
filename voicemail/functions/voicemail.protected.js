@@ -35,6 +35,7 @@ const url = require('url');
  * 
  * You can also change the default UTC time offset, work hours
  * start and end times, start and end days of the work week.
+ * These values are only used if they arent specified in /.env.
  *
  */
 
@@ -57,6 +58,10 @@ const GREETINGS = {
   },
 };
 
+/*
+ * default values to be used if they aren't provided as environment variables
+ * in /.env.
+ */
 const DEFAULT_UTC_OFFSET = 0;
 const DEFAULT_WORK_WEEK_START = 1; // Monday
 const DEFAULT_WORK_WEEK_END = 5; // Friday
