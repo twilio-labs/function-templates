@@ -142,6 +142,7 @@
     "flex-dialpad",
     "verify-prefill",
     "reminder-message",
-    "passkeys-backend"
+    "passkeys-backend",
+    "block-spam-calls"
   ]
 }

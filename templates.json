@@ -354,6 +354,11 @@
       "id": "passkeys-backend",
       "name": "Backend for passkeys app",
       "description": "Connect applications with the passkeys service"
+    },
+    {
+      "id": "block-spam-calls",
+      "name": "Block Spam Calls",
+      "description": "Uses Twilio Add-ons to block unwanted calls by checking the spam ratings of incoming phone numbers."
     }
   ]
 }
