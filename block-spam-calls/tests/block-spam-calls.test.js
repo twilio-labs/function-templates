@@ -1,5 +1,6 @@
 const helpers = require('../../test/test-helper');
-const blockSpamCalls = require('../functions/block-spam-calls.protected').handler;
+const blockSpamCalls =
+  require('../functions/block-spam-calls.protected').handler;
 const Twilio = require('twilio');
 
 let context = {};
@@ -28,12 +29,11 @@ test('returns a VoiceResponse', (done) => {
 });
 
 describe('call flagged as spam and rejected', () => {
-
   const nomoroboSpamEvent = {
-    'AddOns': JSON.stringify(require('./spam-filter-results/spam-nomorobo.json'))
+    AddOns: JSON.stringify(require('./spam-filter-results/spam-nomorobo.json')),
   };
   const marchexSpamEvent = {
-    'AddOns': JSON.stringify(require('./spam-filter-results/spam-marchex.json'))
+    AddOns: JSON.stringify(require('./spam-filter-results/spam-marchex.json')),
   };
 
   beforeAll(() => {
@@ -62,15 +62,18 @@ describe('call flagged as spam and rejected', () => {
 });
 
 describe('call not flagged as spam', () => {
-
   const failedNomoroboEvent = {
-    'AddOns': JSON.stringify(require('./spam-filter-results/failed-nomorobo.json'))
+    AddOns: JSON.stringify(
+      require('./spam-filter-results/failed-nomorobo.json')
+    ),
   };
   const cleanNomoroboEvent = {
-    'AddOns': JSON.stringify(require('./spam-filter-results/clean-nomorobo.json'))
+    AddOns: JSON.stringify(
+      require('./spam-filter-results/clean-nomorobo.json')
+    ),
   };
   const cleanMarchexEvent = {
-    'AddOns': JSON.stringify(require('./spam-filter-results/clean-marchex.json'))
+    AddOns: JSON.stringify(require('./spam-filter-results/clean-marchex.json')),
   };
   const noAddonsEvent = {};
 
