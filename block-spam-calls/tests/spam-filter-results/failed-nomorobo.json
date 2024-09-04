@@ -1,0 +1,14 @@
+{
+  "status": "successful",
+  "message": null,
+  "code": null,
+  "results": {
+    "nomorobo_spamscore": {
+      "request_sid": "XRxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": "failed",
+      "message": "Vendor could not complete request",
+      "code": 61002,
+      "result": { }
+    }
+  }
+}

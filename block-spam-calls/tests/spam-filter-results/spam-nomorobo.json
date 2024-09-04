@@ -1,0 +1,18 @@
+{
+  "status": "successful",
+  "message": null,
+  "code": null,
+  "results": {
+    "nomorobo_spamscore": {
+      "request_sid": "XRxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "status": "successful",
+      "message": null,
+      "code": null,
+      "result": {
+        "status": "success",
+        "message": "success",
+        "score": 1
+      }
+    }
+  }
+}
