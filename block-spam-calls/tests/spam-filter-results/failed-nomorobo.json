@@ -8,7 +8,7 @@
       "status": "failed",
       "message": "Vendor could not complete request",
       "code": 61002,
-      "result": { }
+      "result": {}
     }
   }
 }

@@ -11,6 +11,7 @@ Uses Twilio Add-ons to block unwanted calls by checking the spam ratings of inco
 ### Install Add-Ons
 
 The following guide will help you to [install Add-ons](https://www.twilio.com/docs/add-ons/install). You can access the Add-ons in the Twilio console [here](https://www.twilio.com/console/add-ons). The Spam Filtering Add-ons that are used on this application are:
+
 - [Marchex Clean Call](https://www.twilio.com/console/add-ons/XBac2c99d9c684a765ced0b18cf0e5e1c7)
 - [Nomorobo Spam Score](https://www.twilio.com/console/add-ons/XB06d5274893cc9af4198667d2f7d74d09)
 
@@ -40,7 +41,6 @@ twilio serverless:start --ngrok
 
 ℹ️ Check the developer console and terminal for any errors
 
-
 ## Deploying
 
 Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
@@ -50,4 +50,5 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
+
 Make sure to update your incoming voice URL to your newly deployed Function URL.
