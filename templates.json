@@ -356,6 +356,11 @@
       "description": "Connect applications with the passkeys service"
     },
     {
+      "id": "block-spam-calls",
+      "name": "Block Spam Calls",
+      "description": "Uses Twilio Add-ons to block unwanted calls by checking the spam ratings of incoming phone numbers."
+    },
+    {
       "id": "ai-assistants-samples",
       "name": "AI Assistants Samples",
       "description": "Functions to connect AI Assistants to various Channels and Tools"
