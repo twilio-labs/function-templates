@@ -1927,6 +1927,68 @@
         "configurable": true,
         "contentKey": null
       }
+    ],
+    "ai-assistants-samples": [
+      {
+        "key": "ASSISTANT_SID",
+        "required": false,
+        "format": "text",
+        "description": "The ID of your AI Assistant (starts with ai_asst_)",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "GOOGLE_MAPS_API_KEY",
+        "required": false,
+        "format": "text",
+        "description": "API key for Google Maps service",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "OPENAI_API_KEY",
+        "required": false,
+        "format": "secret",
+        "description": "API key for OpenAI used in Internet Search tool",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "EXA_API_KEY",
+        "required": false,
+        "format": "text",
+        "description": "API key for Exa used in Internet Search tool",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "FLEX_WORKFLOW_SID",
+        "required": false,
+        "format": "text",
+        "description": "Flex Workflow SID used for Flex Handoffs",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "FLEX_WORKSPACE_SID",
+        "required": false,
+        "format": "text",
+        "description": "Flex Workspace SID used for Flex Handoffs",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      }
     ]
   }
 }

@@ -70,15 +70,6 @@
     </div>
     <main>
       <div class="content">
-        <h1>
-          <img
-            src="https://twilio-labs.github.io/function-templates/static/v1/success.svg"
-          />
-          <div>
-            <p>Welcome!</p>
-            <p>Your live application with Twilio is ready to use!</p>
-          </div>
-        </h1>
         <h2>Phone number lookup</h2>
         <p>
           This example shows how to process and parse international phone
@@ -86,57 +77,174 @@
           <a href="https://github.com/jackocnr/intl-tel-input">
             <code>intl-tel-input</code>
           </a>
-          library and detect invalid phone numbers, carrier information, and
-          caller name with the
+          library and detect invalid phone numbers, line type, carrier
+          information, caller name, and more with the
           <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>.
         </p>
-        <p>
-          New data like enhanced Line Type Intelligence and SIM Swap detection
-          available in V2.
-          <a href="https://www.twilio.com/docs/lookup/v2-api"> Learn more. </a>
-        </p>
+        <ul>
+          <li>
+            💰
+            <a
+              href="https://www.twilio.com/en-us/user-authentication-identity/pricing/lookup"
+              >Pricing by package and country.</a
+            >
+          </li>
+          <li>
+            📖
+            <a href="https://www.twilio.com/docs/lookup/v2-api#data-packages"
+              >Package descriptions and availability</a
+            >
+          </li>
+        </ul>
         <div>
           <form id="lookup">
-            <p>Enter your phone number:</p>
+            <p>Enter your phone number</p>
             <input id="phone" type="tel" name="phone" />
-            <p>Request type:</p>
+            <p>
+              Select your data packages
+              <a href="https://www.twilio.com/docs/lookup/v2-api#data-packages"
+                >[learn more]</a
+              >
+            </p>
             <div>
-              <input type="checkbox" checked disabled />
-              <label>Formatting [free]</label><br />
-            </div>
-            <div>
-              <input type="checkbox" id="lti" name="types" value="lti" />
-              <label for="lti"
-                >Line Type Intelligence <strong>(beta)</strong> [$0.008 /
-                request]</label
+              <input
+                type="checkbox"
+                id="validation"
+                name="fields"
+                value="validation"
+                checked
+                disabled
+              />
+              <label for="validation">Validation and Formatting [free]</label
               ><br />
             </div>
             <div>
               <input
                 type="checkbox"
-                id="carrier"
-                name="types"
-                value="carrier"
+                id="lti"
+                name="fields"
+                value="line_type_intelligence"
               />
-              <label for="carrier">Carrier [$0.005 / request]</label><br />
+              <label for="lti"
+                ><a
+                  href="https://www.twilio.com/docs/lookup/v2-api/line-type-intelligence"
+                  >Line Type Intelligence</a
+                ></label
+              ><br />
             </div>
             <div>
               <input
                 type="checkbox"
-                id="caller-name"
-                name="types"
-                value="caller-name"
+                id="callerName"
+                name="fields"
+                value="caller_name"
               />
-              <label for="caller-name">
-                Caller name [USA Only; $0.01 / request]
-              </label>
-              <br />
+              <label for="callerName">
+                <a href="https://www.twilio.com/docs/lookup/v2-api/caller-name"
+                  >Caller Name</a
+                > </label
+              ><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="smsPumpingRisk"
+                name="fields"
+                value="sms_pumping_risk"
+              />
+              <label for="smsPumpingRisk">
+                <a
+                  href="https://www.twilio.com/docs/lookup/v2-api/sms-pumping-risk"
+                  >SMS Pumping Risk</a
+                ></label
+              ><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="simSwap"
+                name="fields"
+                value="sim_swap"
+              />
+              <label for="simSwap">
+                <a href="https://www.twilio.com/docs/lookup/v2-api/sim-swap"
+                  >SIM Swap</a
+                >*</label
+              ><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="callForwarding"
+                name="fields"
+                value="call_forwarding"
+              />
+              <label for="callForwarding">
+                <a
+                  href="https://www.twilio.com/docs/lookup/v2-api/call-forwarding"
+                  >Call Forwarding</a
+                >*</label
+              ><br />
+            </div>
+            <div>
+              <input
+                type="checkbox"
+                id="lineStatus"
+                name="fields"
+                value="line_status"
+              />
+              <label for="lineStatus">
+                <a href="https://www.twilio.com/docs/lookup/v2-api/line-status"
+                  >Line Status</a
+                >*</label
+              ><br />
             </div>
             <input type="submit" class="btn" value="Lookup" />
+            <p>
+              * Additional carrier approval required prior to use.
+              <a
+                href="https://twlo.my.salesforce-sites.com/countrycarrier/SN_CarrierRegistration_VFP"
+                >Submit this form to request access.</a
+              >
+            </p>
           </form>
-          <div class="alert alert-info" style="display: none"></div>
-          <div class="alert alert-error" style="display: none"></div>
-          <!-- EDIT_CODE_V2 -->
+          <div class="alert" style="display: none"></div>
+          <h3>Additional Lookup Data Packages</h3>
+          <p>
+            👀
+            <strong
+              ><a
+                href="https://www.twilio.com/docs/lookup/v2-api/identity-match"
+                >Identity Match</a
+              ></strong
+            >
+            and
+            <strong
+              ><a
+                href="https://www.twilio.com/docs/lookup/v2-api/reassigned-number"
+                >Reassigned Number</a
+              ></strong
+            >
+            packages require additional details in the request.
+            <a
+              href="https://www.twilio.com/en-us/blog/confirm-phone-number-ownership-lookup-identity-match"
+              >Learn more about Identity Match in this blog post.</a
+            >
+          </p>
+          <p>
+            ✏️
+            <strong
+              ><a
+                href="https://www.twilio.com/docs/lookup/v2-api/identity-match"
+                >Identity Pre-fill</a
+              ></strong
+            >
+            combines Verify and Lookup for a seamless onboarding experience.
+            <a
+              href="https://www.twilio.com/code-exchange/verify-lookup-identity-prefill"
+              >Learn more in this Code Exchange project.</a
+            >
+          </p>
         </div>
       </div>
     </main>
@@ -146,58 +254,60 @@
     <script>
       // Handle international prefixes, format phone input field
       // Uses intl-tel-input plugin
-      const phoneInputField = document.querySelector('#phone');
+      const phoneInputField = document.querySelector("#phone");
       const phoneInput = window.intlTelInput(phoneInputField, {
         // https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
-        preferredCountries: ['us', 'co', 'in', 'de'],
+        preferredCountries: ["us", "co", "in", "de"],
         utilsScript:
-          'https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js',
+          "https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.13/build/js/utils.js",
       });
 
-      const info = document.querySelector('.alert-info');
-      const error = document.querySelector('.alert-error');
+      const alert = document.querySelector(".alert");
+      function displayAlert(message, type) {
+        let replace = type === "error" ? "info" : "error";
+        alert.style.display = "";
+        alert.classList.replace(replace, type) || alert.classList.add(type);
+        alert.innerHTML = message;
+      }
 
       async function lookup(event) {
         event.preventDefault();
+        alert.style.display = "none";
 
         try {
           const phoneNumber = phoneInput.getNumber();
 
-          info.style.display = 'none';
-          error.style.display = 'none';
-
           const data = {
             phone: phoneNumber,
-            types: Array.from(
-              document.querySelectorAll('input[name=types]:checked')
+            fields: Array.from(
+              document.querySelectorAll("input[name=fields]:checked")
             ).map((t) => t.value),
           };
 
-          const response = await fetch('./lookup', {
-            method: 'POST',
+          const response = await fetch("./lookup", {
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
+              "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
           });
 
           const json = await response.json();
+          alert.style.display = "";
           if (response.status === 200) {
-            info.style.display = '';
-            info.innerHTML = `<pre>${JSON.stringify(json, null, 2)}</pre>`;
+            displayAlert(`<pre>${JSON.stringify(json, null, 2)}</pre>`, "info");
           } else {
             console.error(json.error);
-            error.style.display = '';
-            error.innerHTML = `Invalid phone number.`;
+            displayAlert(json.error, "error");
           }
         } catch (err) {
-          error.style.display = '';
-          error.innerHTML = `Something went wrong: ${err}`;
+          console.error(err);
+          displayAlert("Something went wrong.", "error");
         }
       }
 
-      const form = document.getElementById('lookup');
-      form.addEventListener('submit', (event) => lookup(event));
+      const form = document.getElementById("lookup");
+      form.addEventListener("submit", (event) => lookup(event));
     </script>
   </body>
 </html>

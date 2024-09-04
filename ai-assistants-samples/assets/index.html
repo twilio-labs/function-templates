@@ -1,0 +1,846 @@
+<!-- THIS FILE IS ONLY A SETUP HELP AND IS NOT REQUIRED OTHERWISE. IF YOU WANT YOU CAN DELETE THIS FILE -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Get started with your Twilio AI Assistants!</title>
+
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+    <link
+      rel="stylesheet"
+      href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css"
+    />
+    <script
+      src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js"
+      defer
+    ></script>
+    <style>
+      .channel {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .channel svg {
+        margin-right: 0.5rem;
+        color: #f22f46;
+        width: 2rem;
+        height: 2rem;
+      }
+
+      .channel h3 {
+        margin-top: 0;
+      }
+
+      details summary::after {
+        font-size: 0.875em;
+        line-height: 1.5em;
+        height: 1.125em;
+        vertical-align: middle;
+        color: gray;
+        margin-left: 1rem;
+        content: "Click to view..."
+      }
+
+      details[open] summary::after {
+        content: "Click to collapse..."
+      }
+
+      ul.base {
+        list-style: initial;
+        padding-left: 2rem;
+      }
+
+      ul.tool-config {
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        padding: 1rem;
+        border: 1px solid lightgray;
+        border-radius: 8px;
+        width: fit-content;
+      }
+
+      code {
+        background-color: #fafafa;
+        border: 1px solid gray;
+        padding: 0.3em 0.5em;
+        box-sizing: border-box;
+        font-size: 0.875em;
+        border-radius: 4px;
+      }
+    </style>
+    <script>
+      let assistantIdPlaceholder =
+        localStorage.getItem("AI_ASSISTANT_ID") || "$ASSISTANT_ID";
+
+      function updateAiAssistantId(newId) {
+        if (newId.length === 0 || !newId) {
+          newId = "$ASSISTANT_ID";
+        }
+
+        const functionRoots = document.querySelectorAll("input.function-root");
+
+        functionRoots.forEach((element) => {
+          const baseUrl = new URL(location.href);
+          let url = `${baseUrl.protocol}//${baseUrl.host}${element.dataset.path}`;
+          url = url.replace("$ASSISTANT_ID", newId);
+          element.value = url.replace(assistantIdPlaceholder, newId);
+        });
+
+        const assistantIdPlaceholderElements = document.querySelectorAll(
+          "code.assistant-placeholder"
+        );
+        if (assistantIdPlaceholderElements) {
+          assistantIdPlaceholderElements.forEach((element) => {
+            element.innerText = element.dataset.pattern.replace(
+              "$ASSISTANT_ID",
+              newId
+            );
+          });
+        }
+
+        assistantIdPlaceholder = newId;
+        localStorage.setItem("AI_ASSISTANT_ID", assistantIdPlaceholder);
+      }
+
+      window.addEventListener("DOMContentLoaded", (_event) => {
+        handleCopyToClipboard();
+        updateAiAssistantId(assistantIdPlaceholder);
+
+        if (assistantIdPlaceholder !== "$ASSISTANT_ID") {
+          document.getElementById("assistant-id").value =
+            assistantIdPlaceholder;
+        }
+
+        document
+          .getElementById("assistant-id")
+          .addEventListener("change", (event) => {
+            updateAiAssistantId(event.target.value);
+          });
+        document.querySelector("form").addEventListener("submit", (event) => {
+          event.preventDefault();
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a
+            href="https://www.twilioalpha.com/ai-assistants"
+            target="_blank"
+            rel="noopener"
+          >
+            <svg
+              width="45"
+              height="45"
+              viewBox="0 0 20 20"
+              color="#ffffff"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <title>Twilio AI Assistants Logo</title>
+              <path
+                d="M12.3253 3.49529C12.3253 3.76901 12.1037 3.99059 11.83 3.99059C11.5563 3.99059 11.3347 3.76901 11.3347 3.49529C11.3347 3.22158 11.5563 3 11.83 3C12.1037 3 12.3253 3.22158 12.3253 3.49529Z"
+                fill="currentColor"
+              />
+              <path
+                d="M16.6343 4.73874C16.6343 5.10514 16.3373 5.40217 15.9709 5.40217C15.6045 5.40217 15.3075 5.10514 15.3075 4.73874C15.3075 4.37234 15.6045 4.07531 15.9709 4.07531C16.3373 4.07531 16.6343 4.37234 16.6343 4.73874Z"
+                fill="currentColor"
+              />
+              <path
+                d="M18.3372 7.21C17.9713 7.21035 17.6744 7.50739 17.6744 7.87343C17.6744 7.89917 17.6777 7.92329 17.681 7.94771L17.6836 7.96728L15.7689 9.13643C15.7689 9.13643 15.765 9.13121 15.7623 9.12861C15.2658 8.63201 14.4602 8.63201 13.9637 9.12861C13.4671 9.6252 13.4671 10.4307 13.9637 10.9273C14.4602 11.4239 15.2658 11.4239 15.7623 10.9273C16.1286 10.561 16.2238 10.0293 16.0504 9.57567L17.9534 8.41304C18.0616 8.48994 18.1932 8.53686 18.3366 8.53686C18.7028 8.53686 19 8.23969 19 7.87343C19 7.50739 18.7032 7.21035 18.3372 7.21Z"
+                fill="currentColor"
+              />
+              <path
+                d="M13.9063 15.0956L13.252 13.4103C13.3132 13.3673 13.3719 13.3204 13.4253 13.2669C13.9219 12.7703 13.9219 11.9648 13.4253 11.4682C12.9287 10.9716 12.1232 10.9716 11.6266 11.4682C11.13 11.9648 11.13 12.7703 11.6266 13.2669C11.9382 13.5784 12.3696 13.6944 12.771 13.6162L13.4188 15.2846C13.2963 15.4045 13.2194 15.5726 13.2194 15.7577C13.2194 16.124 13.5166 16.4211 13.8828 16.4211C14.2491 16.4211 14.5463 16.124 14.5463 15.7577C14.5463 15.3915 14.2621 15.1099 13.9063 15.0969V15.0956Z"
+                fill="currentColor"
+              />
+              <path
+                d="M9.27921 17.4756C9.66865 17.4756 9.98435 17.1599 9.98435 16.7705C9.98435 16.381 9.66865 16.0653 9.27921 16.0653C8.88977 16.0653 8.57407 16.381 8.57407 16.7705C8.57407 17.1599 8.88977 17.4756 9.27921 17.4756Z"
+                fill="currentColor"
+              />
+              <path
+                d="M9.27922 13.5823C9.27922 13.3243 9.48776 13.1157 9.74584 13.1157C10.0039 13.1157 10.2125 13.3243 10.2125 13.5823C10.2125 13.8404 10.0039 14.0489 9.74584 14.0489C9.48776 14.0489 9.27922 13.8404 9.27922 13.5823Z"
+                fill="currentColor"
+              />
+              <path
+                d="M17.4038 13.7441C17.7654 13.6854 18.011 13.3446 17.9523 12.9829C17.8936 12.6213 17.5528 12.3757 17.1912 12.4344C16.8295 12.4931 16.5839 12.8339 16.6426 13.1955C16.7013 13.5572 17.0421 13.8028 17.4038 13.7441Z"
+                fill="currentColor"
+              />
+              <path
+                d="M5.82252 4.52895C6.0816 4.78803 6.0816 5.20809 5.82252 5.46718C5.56343 5.72627 5.14337 5.72627 4.88428 5.46718C4.62519 5.20809 4.62519 4.78803 4.88428 4.52895C5.14337 4.26986 5.56343 4.26986 5.82252 4.52895Z"
+                fill="currentColor"
+              />
+              <path
+                d="M6.56297 13.5086C7.09193 13.3838 7.41952 12.8538 7.29468 12.3248C7.16983 11.7959 6.63982 11.4683 6.11087 11.5931C5.58192 11.718 5.25432 12.248 5.37917 12.7769C5.50401 13.3059 6.03402 13.6335 6.56297 13.5086Z"
+                fill="currentColor"
+              />
+              <path
+                d="M11.0883 9.12861C10.8094 8.84968 10.4327 8.72716 10.0678 8.76236C10.0151 8.60486 9.95877 8.43599 9.90053 8.26126L9.89984 8.2592C9.84165 8.08464 9.78152 7.90425 9.72107 7.72354L9.36263 6.65345C9.64678 6.46706 9.83446 6.14643 9.83446 5.78147C9.83446 5.20537 9.36785 4.73875 8.79174 4.73875C8.21564 4.73875 7.74902 5.20537 7.74902 5.78147C7.74902 6.35758 8.21564 6.8242 8.79174 6.8242C8.80952 6.8242 8.8273 6.82298 8.84467 6.8218L8.86864 6.82029C9.06415 7.40291 9.32353 8.17843 9.56987 8.91746C9.46951 8.97351 9.37436 9.04259 9.28834 9.12861C9.2336 9.18336 9.18667 9.24201 9.14366 9.30327L3.08544 7.747C3.08544 7.1722 2.61883 6.70559 2.04272 6.70559C1.46662 6.70559 1 7.1722 1 7.74831C1 8.32441 1.46662 8.79103 2.04272 8.79103C2.43635 8.79103 2.77784 8.57336 2.9551 8.25142L8.93772 9.78813C8.86213 10.1883 8.97813 10.6171 9.28704 10.9273C9.78363 11.4239 10.5891 11.4239 11.0857 10.9273C11.5823 10.4307 11.5823 9.62521 11.0857 9.12861H11.0883Z"
+                fill="currentColor"
+              />
+              <path
+                d="M13.4266 6.79028C13.9232 7.28688 13.9232 8.09238 13.4266 8.58898C12.93 9.08558 12.1245 9.08558 11.6279 8.58898C11.1314 8.09238 11.1314 7.28688 11.6279 6.79028C12.1245 6.29369 12.93 6.29369 13.4266 6.79028Z"
+                fill="currentColor"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <span>AI Assistants</span>
+          <aside>
+            <svg
+              class="icon"
+              role="img"
+              aria-hidden="true"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="NewIcon-1577"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+              ></path>
+            </svg>
+            Live
+          </aside>
+        </nav>
+      </header>
+    </div>
+    <main>
+      <div class="content">
+        <h1>
+          <img
+            src="https://twilio-labs.github.io/function-templates/static/v1/success.svg"
+          />
+          <div>
+            <p>Welcome!</p>
+            <p>Let's get your AI Assistant connected to the world!</p>
+          </div>
+        </h1>
+        <section>
+          <h2>Get started with your AI Assistant</h2>
+          <p>
+            Follow these steps to connect your AI Assistant to new Channels and
+            Tools:
+          </p>
+          <ol class="steps">
+            <li>Bookmark this page so it's easier to come back to it later.</li>
+            <li>
+              If you don't have an AI Assistant yet,
+              <a
+                href="https://console.twilio.com/us1/develop/ai-assistants/assistants"
+                target="_blank"
+                rel="noopener noreferrer"
+                >go into the Twilio Console and create your AI Assistant.</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://www.twilio.com/docs/alpha/ai-assistants/quickstart"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Configure your AI Assistant</a
+              >
+              and start debugging using the
+              <a
+                href="https://www.twilio.com/docs/alpha/ai-assistants#simulator"
+                target="_blank"
+                >Simulator</a
+              >.
+            </li>
+            <li>
+              Copy your AI Assistant's ID and paste it into the input below.
+            </li>
+            <li>
+              Follow the steps of the individual Tools and channels below.
+            </li>
+          </ol>
+          <form>
+            <label for="assistant-id">Assistant ID</label>
+            <input
+              type="text"
+              id="assistant-id"
+              class=""
+              placeholder="aia_asst_11111111-1111-1111-1111-111111111111"
+            />
+          </form>
+        </section>
+        <section>
+          <h2>Channels</h2>
+          <p>
+            For a more in-depth guide of connecting AI Assistants to any of
+            these channels, check out the
+            <a href="https://www.twilio.com/docs/alpha/ai-assistants#channels-and-apis"
+              >Twilio Docs</a
+            >.
+          </p>
+          <ul class="base">
+            <li><a href="#conversations">Twilio Conversations</a></li>
+            <li><a href="#sms">SMS</a></li>
+            <li><a href="#whatsapp">WhatsApp</a></li>
+            <li><a href="#flex-webchat">Flex Webchat</a></li>
+            <li><a href="#voice">Voice</a></li>
+          </ul>
+          <details>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="ProductConversationsIcon-:R58pacd9aqalm:"
+            >
+              <title id="ProductConversationsIcon-:R58pacd9aqalm:">
+                Conversations Icon
+              </title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M5.885 18A.864.864 0 015 17.125v-2.152H3.25c-.69 0-1.25-.557-1.25-1.243V6.275c0-.687.56-1.243 1.25-1.243H6a3.75 3.75 0 013.5 2.306l1.935 4.926A2.79 2.79 0 0014 13.979h2.75a.25.25 0 00.25-.249V6.275a.25.25 0 00-.25-.249H14V3.153l-3.17 2.749a.502.502 0 01-.689-.059.495.495 0 01.029-.687l3.375-2.937a.88.88 0 01.944-.14.87.87 0 01.511.8v2.153h1.75c.69 0 1.25.556 1.25 1.243v7.455c0 .686-.56 1.243-1.25 1.243H14a3.8 3.8 0 01-3.5-2.336L8.57 7.71a2.755 2.755 0 00-2.54-1.685H3.25a.25.25 0 00-.25.249v7.455a.25.25 0 00.25.249h2.775v2.873l3.165-2.749a.502.502 0 01.838.268.495.495 0 01-.178.478l-3.395 2.937a.883.883 0 01-.57.214z"
+              ></path>
+            </svg>
+            <h3 id="conversations">
+              Twilio Conversations (Web Chat, iOS, Android, SMS, WhatsApp)
+            </h3>
+          </summary>
+          <p>
+            <a href="https://www.twilio.com/docs/conversations"
+              >Twilio Conversations</a
+            >
+            is the recommended way to connect AI Assistants to most channels. By
+            onboarding with Twilio Conversations you can connect your AI
+            Assistant to most Twilio channels, use our
+            <a
+              href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/react"
+              target="_blank"
+              rel="noopener noreferrer"
+              >AI Assistants React and JavaScript SDKs</a
+            >, and handoff conversations to
+            <a
+              href="https://www.twilio.com/flex"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Twilio Flex</a
+            >
+            and
+            <a
+              href="https://www.twilio.com/studio"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Twilio Studio</a
+            >.
+          </p>
+          <p>
+            If you are only interested in SMS and WhatsApp without any handoff
+            capabilities, you can also check out the separate instructions
+            below.
+          </p>
+          <p>
+            To connect your AI Assistant to Twilio Conversations follow these
+            steps:
+          </p>
+          <ol class="steps">
+            <li>
+              Onboard with Twilio Conversations by
+              <a href="https://www.twilio.com/docs/conversations/overview" target="_blank" rel="noopener noreferrer"
+                >checking out their documentation</a
+              >.
+            </li>
+            <li>
+              Find your
+              <a
+                href="https://twilio.com/console/conversations/services"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Conversations Service</a
+              >
+            </li>
+            <li>
+              Navigate to the "Webhooks" section of your Conversations Service.
+            </li>
+            <li>Set the "On Message Added" webhook to the URL below.</li>
+            <li>
+              Create a new Conversation using your preferred channel or use our
+              <a
+                href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/react"
+                target="_blank"
+                rel="noopener noreferrer"
+                >React SDK</a
+              >
+            </li>
+          </ol>
+          <label for="onmessage-webhook">"On Message Added" Webhook URL</label>
+          <div class="copy-input-wrapper">
+            <input
+              type="text"
+              id="onmessage-webhook"
+              class="function-root"
+              readonly="true"
+              data-path="/channels/conversations/messageAdded?AssistantId=$ASSISTANT_ID"
+            />
+          </div>
+          <p>
+            <a
+              href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/channel-conversations"
+              target="_blank"
+              rel="noopener"
+              >Check out our documentation for more detailed instructions</a
+            >.
+          </p>
+          </details>
+          <details>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              fill="none"
+              aria-labelledby="SMSIcon-:R599acd9aqalm:"
+            >
+              <title id="SMSIcon-:R599acd9aqalm:">SMS Icon</title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M8.693 2.693A2.367 2.367 0 0110.367 2h5.263A2.37 2.37 0 0118 4.367v1.866a2.37 2.37 0 01-.697 1.674c-.258.259-.588.403-.896.484a3.6 3.6 0 01-.907.109h-.261l-2.388 2.356A.5.5 0 0112 10.5v-2h-1.633c-.548 0-1.186-.105-1.674-.593A2.367 2.367 0 018 6.233V4.367c0-.628.25-1.23.693-1.674zM10.367 3A1.367 1.367 0 009 4.367v1.866c0 .363.144.71.4.967.212.212.525.3.967.3H12.5a.5.5 0 01.5.5v1.304l1.682-1.66a.5.5 0 01.351-.144h.467c.218 0 .448-.022.651-.075.207-.055.354-.134.445-.225A1.37 1.37 0 0017 6.233V4.367A1.37 1.37 0 0015.63 3h-5.263zM6.2 3h.3a.5.5 0 010 1h-.3c-.373 0-.654.093-.846.285A1.203 1.203 0 005 5.134V14.8A1.203 1.203 0 006.2 16h3.567c.328 0 .661-.133.88-.351.226-.226.353-.532.353-.849V13a.5.5 0 011 0v1.8c0 .585-.235 1.144-.646 1.556A2.275 2.275 0 019.767 17H6.2A2.202 2.202 0 014 14.8V5.134c0-.585.235-1.144.646-1.556C5.092 3.132 5.672 3 6.2 3zm1.3 11a.5.5 0 000 1h1a.5.5 0 000-1h-1z"
+              ></path>
+            </svg>
+            <h3 id="sms">SMS</h3>
+          </summary>
+          <p>
+            If you just want to connect your AI Assistant to a Twilio phone
+            number, this is the fastest way to get started.
+          </p>
+          <ol class="steps">
+            <li>
+              Get an
+              <a
+                href="https://www.twilio.com/console/phone-numbers/incoming"
+                target="_blank"
+                rel="noopener noreferrer"
+                >SMS-compatible Twilio phone number</a
+              >
+            </li>
+            <li>
+              Open up the configuration screen of your phone number or your
+              <a
+                href="https://www.twilio.com/console/sms/services"
+                target="_blank"
+                rel="noopener"
+                >Messaging Service</a
+              >
+              if you are using one.
+            </li>
+            <li>
+              Configure the "When a message comes in" webhook to match the URL
+              below.
+            </li>
+            <li>Save your configuration</li>
+            <li>
+              Send a message to your phone number and see if you get a response
+              from your AI Assistant.
+            </li>
+          </ol>
+          <label for="sms-webhook">"When a message comes in" Webhook URL</label>
+          <div class="copy-input-wrapper">
+            <input
+              type="text"
+              id="sms-webhook"
+              class="function-root"
+              readonly="true"
+              data-path="/channels/messaging/incoming?AssistantId=$ASSISTANT_ID"
+            />
+          </div>
+          <p>
+            <a
+              href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/channel-messaging"
+              target="_blank"
+              rel="noopener"
+              >Check out our documentation for more detailed instructions</a
+            >.
+          </p>
+          </details>
+          <details>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="ProductMessagingIcon-:R9ja59l9ail6aran6:"
+            >
+              <title id="ProductMessagingIcon-:R9ja59l9ail6aran6:">
+                WhatsApp Icon
+              </title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M5.885 17A.867.867 0 015 16.123v-2.158H3.25c-.69 0-1.25-.557-1.25-1.245V5.246C2 4.558 2.56 4 3.25 4h13.5c.69 0 1.25.558 1.25 1.246v7.474c0 .688-.56 1.245-1.25 1.245H9.69l-3.235 2.82a.882.882 0 01-.57.215zM3.25 4.997a.25.25 0 00-.25.249v7.474c0 .137.112.249.25.249H5.5a.497.497 0 01.5.498v2.377l3.165-2.756a.501.501 0 01.335-.12h7.25a.25.25 0 00.25-.248V5.246a.25.25 0 00-.25-.25H3.25z"
+              ></path>
+            </svg>
+            <h3 id="whatsapp">WhatsApp</h3>
+          </summary>
+          <p>
+            If you just want to connect your AI Assistant to WhatsApp without
+            any handoff capabilities, this is the fastest way to get started.
+          </p>
+          <ol class="steps">
+            <li>
+              <a
+                href="https://www.twilio.com/docs/whatsapp/self-sign-up"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Request to register your WhatsApp phone number</a
+              >
+            </li>
+            <li>
+              While you are waiting for your WhatsApp number you can use the
+              <a
+                href="https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn?frameUrl=%2Fconsole%2Fsms%2Fwhatsapp%2Flearn%3Fx-target-region%3Dus1"
+                target="_blank"
+                rel="noopener"
+                >WhatsApp Sandbox</a
+              >.
+            </li>
+            <li>
+              Configure your WhatsApp number's "When a message comes in" webhook
+              to be the URL below.
+            </li>
+            <li>
+              Message your WhatsApp number and see if you receive a message back
+              from your AI Assistant.
+            </li>
+          </ol>
+          <label for="whatsapp-webhook"
+            >"When a message comes in" Webhook URL</label
+          >
+          <div class="copy-input-wrapper">
+            <input
+              type="text"
+              id="whatsapp-webhook"
+              class="function-root"
+              readonly="true"
+              data-path="/channels/messaging/incoming?AssistantId=$ASSISTANT_ID"
+            />
+          </div>
+          <p>
+            <a
+              href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/channel-messaging"
+              target="_blank"
+              rel="noopener"
+              >Check out our documentation for more detailed instructions</a
+            >.
+          </p>
+          </details>
+          <details>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="ProductFlexIcon-:R2cqlbl9ail6aran6:"
+            >
+              <title id="ProductFlexIcon-:R2cqlbl9ail6aran6:">
+                Twilio Flex
+              </title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M2.31 8.167a.5.5 0 01.54.105l4.302 4.316c.1.09.154.218.15.351v4.566a.502.502 0 01-.85.351L2.15 13.541A.457.457 0 012 13.19V8.624c.003-.201.125-.38.31-.457zM13.205 2a.54.54 0 01.35.15l4.302 4.316a.503.503 0 01-.35.853H7.853a.501.501 0 000 1.004h2.8a.455.455 0 01.351.15l4.302 4.366a.503.503 0 01-.35.853H9.854a.455.455 0 01-.35-.15L2.15 6.164A.457.457 0 012 5.814V2.502A.541.541 0 012.5 2z"
+              ></path>
+            </svg>
+            <h3 id="flex-webchat">Flex Webchat</h3>
+          </summary>
+          <p>
+            If you are using the existing Flex Webchat and Studio Flow but want
+            to have AI Assistants handle your conversation before handing it off
+            to an agent follow this setup.
+          </p>
+          <ol class="steps">
+            <li>
+              Find your "Chat Flow"
+              <a
+                href="https://console.twilio.com/us1/develop/studio/flows?frameUrl=%2Fconsole%2Fstudio%2Fflows%3Fx-target-region%3Dus1"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Studio Flow</a
+              >.
+            </li>
+            <li>Create a new Run Function widget</li>
+            <li>
+              Select the "ai-assistants-samples" service and pick the
+              <code>/channels/conversations/flex-webchat</code> Function.
+            </li>
+            <li>Add the following Function Parameters</li>
+            <ul class="tool-config">
+              <li>
+                <strong>AssistantId: </strong
+                ><code
+                  class="assistant-placeholder"
+                  data-pattern="$ASSISTANT_ID"
+                ></code>
+              </li>
+              <li>
+                <strong>Data: </strong>
+                <code>{{trigger.conversation | to_json}}</code>
+              </li>
+            </ul>
+            <li>
+              Name your widget with a recognizable name like
+              "SendtoAIAssistant".
+            </li>
+            <li>
+              Connect your "SendtoAIAssistant" widget to the "Incoming
+              Conversation" trigger.
+            </li>
+          </ol>
+          <label for="whatsapp-webhook">Function URL for Studio Widget</label>
+          <div class="copy-input-wrapper">
+            <input
+              type="text"
+              id="whatsapp-webhook"
+              class="function-root"
+              readonly="true"
+              data-path="/channels/conversations/flex-webchat"
+            />
+          </div>
+          </details>
+          <details open>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="ProductVoiceIcon-:r1:"
+            >
+              <title id="ProductVoiceIcon-:r1:">Twilio Voice</title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M14.55 18c-.239 0-.473-.065-.678-.187a34.61 34.61 0 01-4.01-2.791A35.318 35.318 0 017.3 12.726c-.72-.72-1.504-1.6-2.4-2.668a33.233 33.233 0 01-2.726-3.945 1.34 1.34 0 01.208-1.601l2.134-2.135a1.365 1.365 0 011.883 0l2.597 2.6c.519.52.519 1.363 0 1.883l-.715.71a26.959 26.959 0 002 2.22c.676.68 1.389 1.32 2.134 1.922l.715-.71c.52-.519 1.362-.519 1.882 0l2.598 2.6c.519.52.519 1.363 0 1.884l-2.134 2.135a1.338 1.338 0 01-.928.379zM5.481 3.033a.267.267 0 00-.186.08L3.162 5.248a.272.272 0 00-.043.326 31.99 31.99 0 002.614 3.795 33.798 33.798 0 002.33 2.594 32.988 32.988 0 006.358 4.921.277.277 0 00.326-.042l2.133-2.135a.267.267 0 000-.38l-2.592-2.599a.272.272 0 00-.379 0l-1.066 1.068a.533.533 0 01-.71.037l-.373-.299a27.742 27.742 0 01-2.219-1.996 28.139 28.139 0 01-2.053-2.333l-.299-.373a.534.534 0 01.043-.71l1.066-1.068a.267.267 0 000-.379L5.664 3.113a.272.272 0 00-.182-.08z"
+              ></path>
+            </svg>
+            <h3 id="voice">Voice</h3>
+          </summary>
+          <p>Coming soon...</p>
+          </details>
+        </section>
+        <section>
+          <h2>Tools</h2>
+          <details>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="ProductStudioIcon-:rd:"
+            >
+              <title id="ProductStudioIcon-:rd:">Twilio Studio</title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M4 6h13.5a.5.5 0 00.5-.5v-3a.5.5 0 00-.5-.5h-6a.5.5 0 00-.5.5V5H4a2 2 0 100 4h2v2.5a.5.5 0 00.5.5H16a1 1 0 010 2H2.5a.5.5 0 00-.5.5v3a.5.5 0 00.5.5h6a.5.5 0 00.5-.5V15h7a2 2 0 100-4h-2V8.5a.5.5 0 00-.5-.5H4a1 1 0 110-2zm8-3h5v2h-5V3zM8 17H3v-2h5v2zm5-6H7V9h6v2z"
+              ></path>
+            </svg>
+            <h3>Hand over to Studio</h3>
+          </summary>
+          <p>
+            Tool to hand over a conversation that the Assistant is handling to a
+            Studio flow. While there is an example <code>Description</code> for
+            the Tool you want to update this to match your handover criteria.
+          </p>
+          <p>
+            This Tool rewires the conversation from your Assistant to Studio but
+            does not forward the last message to the Studio flow. Instead the
+            Tool will by default respond with "Conversation handed over" which
+            might prompt the Assistant to say something like "I handed this
+            conversation over". If you want to manipulate this message you can
+            pass a different message into the Tool URL using the
+            <code>successMessage</code> query parameter.
+          </p>
+          <ol class="steps">
+            <li>
+              Create a
+              <a
+                href="https://console.twilio.com/us1/develop/studio/overview?frameUrl=%2Fconsole%2Fstudio%2Fdashboard%3Fx-target-region%3Dus1"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Studio Flow</a
+              >
+            </li>
+            <li>
+              Connect your Flow to trigger for "Incoming Conversations" and
+              deploy your Flow.
+            </li>
+            <li>Copy your Flow SID starting with <code>FW</code></li>
+            <li>
+              Create a new Tool with the following configuration:
+              <ul class="tool-config">
+                <li><strong>Name: </strong>Studio Handover</li>
+                <li>
+                  <strong>Description: </strong> You MUST use this if a customer
+                  is asking for a refund.
+                </li>
+                <li><strong>Input: </strong><code>{}</code></li>
+                <li><strong>Method: </strong> POST</li>
+                <li>
+                  <strong>URL:</strong>
+                  <i
+                    >Use the URL below and replace <code>$FLOW_SID</code> with
+                    your Flow SID</i
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>
+              Send a message to your Assistant that triggers this tool and see
+              if you get a notification that you got transferred. Afterwards
+              write another message to trigger the Studio flow.
+            </li>
+          </ol>
+          <label for="studio-handoff-tool">Tool URL</label>
+          <div class="copy-input-wrapper">
+            <input
+              type="text"
+              id="studio-handoff-tool"
+              class="function-root"
+              readonly="true"
+              data-path="/tools/studio-handover?FlowSid=$FLOW_SID"
+            />
+          </div>
+          <p>
+            <a
+              href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/transition-studio"
+              target="_blank"
+              rel="noopener"
+              >Check out our documentation for more detailed instructions</a
+            >.
+          </p>
+        </details><details>
+          <summary class="channel">
+            <svg
+              role="img"
+              aria-hidden="false"
+              xmlns="http://www.w3.org/2000/svg"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="ProductFlexIcon-:R2cqlbl9ail6aran6:"
+            >
+              <title id="ProductFlexIcon-:R2cqlbl9ail6aran6:">
+                Twilio Flex
+              </title>
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M2.31 8.167a.5.5 0 01.54.105l4.302 4.316c.1.09.154.218.15.351v4.566a.502.502 0 01-.85.351L2.15 13.541A.457.457 0 012 13.19V8.624c.003-.201.125-.38.31-.457zM13.205 2a.54.54 0 01.35.15l4.302 4.316a.503.503 0 01-.35.853H7.853a.501.501 0 000 1.004h2.8a.455.455 0 01.351.15l4.302 4.366a.503.503 0 01-.35.853H9.854a.455.455 0 01-.35-.15L2.15 6.164A.457.457 0 012 5.814V2.502A.541.541 0 012.5 2z"
+              ></path>
+            </svg>
+            <h3>Hand over to Flex</h3>
+          </summary>
+          <p>
+            Tool for your AI Assistant to hand over a conversation to a human agent.
+          </p>
+          <ol class="steps">
+            <li>Make sure you are in a Flex enabled account by visiting <a href="https://console.twilio.com/us1/develop/flex/overview" target="_blank" rel="noopener noreferrer">Flex in the Console</a>.</li>
+            <li>
+              Find your Workspace SID and Workflow SID for your handover by visiting <a href=https://console.twilio.com/us1/develop/taskrouter/workspaces" target="_blank" rel="noopener noreferrer">TaskRouter</a> and note them down.
+            </li>
+            <li>
+              Create a new Tool with the following configuration:
+              <ul class="tool-config">
+                <li><strong>Name: </strong>Flex Handover</li>
+                <li>
+                  <strong>Description: </strong>You MUST use this if you don't know how to fulfill the request to let another customer service agent handle the conversation.
+                </li>
+                <li><strong>Input: </strong><code>{}</code></li>
+                <li><strong>Method: </strong> POST</li>
+                <li>
+                  <strong>URL:</strong>
+                  <i
+                    >Use the URL below and replace <code>$FLEX_WORKSPACE_SID</code> and <code>$FLEX_WORKFLOW_SID</code> with
+                    your respective values from Step 2.</i
+                  >
+                </li>
+              </ul>
+            </li>
+            <li>Make sure you have your Channel of choice is appropriately connected to an AI Assistant by following the steps above." --> "Make sure your Channel of choice is appropriately connected to an AI Assistant by following the steps above.</li>
+            <li>
+              Send a message to your Assistant through one of those channels and ask it to connect you to a customer agent.
+            </li>
+            <li>Check your Flex UI to see if you got a new task assigned.</li>
+          </ol>
+          <label for="flex-handoff-tool">Tool URL</label>
+          <div class="copy-input-wrapper">
+            <input
+              type="text"
+              id="flex-handoff-tool"
+              class="function-root"
+              readonly="true"
+              data-path="/tools/flex-handover?FlexWorkspaceSid=$FLEX_WORKSPACE_SID&FlexWorkflowSid=$FLEX_WORKFLOW_SID"
+            />
+          </div>
+          <p>
+            <a
+              href="https://www.twilio.com/docs/alpha/ai-assistants/code-samples/transition-flex"
+              target="_blank"
+              rel="noopener"
+              >Check out our documentation for more detailed instructions</a
+            >.
+          </p>
+        </details>
+        </section>
+        <section>
+          <!-- EDIT_CODE -->
+        </section>
+        <section>
+          <h2>Troubleshooting</h2>
+          <ul class="base">
+            <li>Verify that your channel webhook is configured correctly.</li>
+            <li>
+              Check the
+              <a
+                href="https://console.twilio.com/us1/monitor/logs/debugger/errors"
+                target="_blank"
+                >Error logs</a
+              >
+              in the Twilio Console to see if you have any errors.
+            </li>
+            <li>
+              Open the Twilio Functions project by clicking "Edit This
+              Code" above, enable "Live Logs" and retry the scenario
+              that's failing.
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+    <footer>
+      <span class="statement">We can't wait to see what you build.</span>
+    </footer>
+  </body>
+</html>

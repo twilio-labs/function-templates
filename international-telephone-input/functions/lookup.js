@@ -13,17 +13,9 @@
  *  }
  */
 
-// eslint-disable-next-line consistent-return
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
 
   try {
     if (event.phone === '' || typeof event.phone === 'undefined') {
@@ -32,23 +24,23 @@ exports.handler = async function (context, event, callback) {
 
     const client = context.getTwilioClient();
     const lookup = await client.lookups.v2.phoneNumbers(event.phone).fetch();
-
     const success = lookup.valid;
-    if (success) {
-      response.setStatusCode(200);
-      response.setBody({ success });
-      return callback(null, response);
+
+    if (!success) {
+      throw new Error(
+        `Invalid phone number ${event.phone}: ${lookup.validationErrors}`
+      );
     }
 
-    throw new Error(
-      `Invalid phone number ${event.phone}: ${lookup.validationErrors}`
-    );
+    response.setStatusCode(200);
+    response.setBody({ success });
+    return callback(null, response);
   } catch (error) {
+    response.setStatusCode(error.status || 400);
     response.setBody({
       success: false,
       error: error.message,
     });
-    response.setStatusCode(error.status || 400);
     return callback(null, response);
   }
 };
