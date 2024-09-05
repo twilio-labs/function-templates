@@ -89,7 +89,6 @@
     "forward-call",
     "forward-message",
     "forward-message-mailgun",
-    "forward-message-multiple",
     "forward-message-sendgrid",
     "forward-message-sparkpost",
     "frontline-quickstart",

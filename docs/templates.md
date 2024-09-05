@@ -7,8 +7,7 @@ This is the list of Functions available in this repo:
 * [Hello Messaging](https://github.com/twilio-labs/function-templates/blob/main/hello-messaging): Function to get you started with Twilio Prog. Messaging
 * [Never gonna give you up](https://github.com/twilio-labs/function-templates/blob/main/never-gonna-give-you-up): Never gonna let you down. Plays a song to a phone call
 * [Forward Call](https://github.com/twilio-labs/function-templates/blob/main/forward-call): Forwards an incoming call to another number
-* [Forward Message](https://github.com/twilio-labs/function-templates/blob/main/forward-message): Forwards incoming messages to another number
-* [Forward Message to Multiple Numbers](https://github.com/twilio-labs/function-templates/blob/main/forward-message-multiple): Forwards incoming messages to a set of numbers
+* [Forward Message](https://github.com/twilio-labs/function-templates/blob/main/forward-message): Forwards incoming messages to another number or to a set of numbers
 * [Forward Message to Email via SendGrid](https://github.com/twilio-labs/function-templates/blob/main/forward-message-sendgrid): Uses SendGrid to forward incoming messages via email
 * [Voicemail](https://github.com/twilio-labs/function-templates/blob/main/voicemail): Forwards calls during business hours. Records messages otherwise.
 * [Forward Message to Email via Sparkpost](https://github.com/twilio-labs/function-templates/blob/main/forward-message-sparkpost): Uses Sparkpost to forward incoming messages via email
