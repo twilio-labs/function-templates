@@ -1,0 +1,8 @@
+{
+  "name": "masked-number",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
