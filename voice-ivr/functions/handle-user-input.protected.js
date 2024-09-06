@@ -24,19 +24,11 @@
 
 function sendMessage(context, event) {
   const client = context.getTwilioClient();
-  return client.messages
-    .create({
+  return client.messages.create({
       from: event.To,
       to: event.From,
       body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
-    })
-    .then(
-      (resp) => resp,
-      (err) => {
-        console.log(err);
-        return Promise.resolve();
-      }
-    );
+    });
 }
 
 /**
@@ -59,8 +51,8 @@ function sendMessage(context, event) {
  * the call to the voice-ivr Function.
  * 
  */
-// eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+
+exports.handler = async function (context, event, callback) {
   let UserInput = event.Digits || event.SpeechResult;
   const twiml = new Twilio.twiml.VoiceResponse();
 
@@ -101,16 +93,12 @@ exports.handler = function (context, event, callback) {
       twiml.redirect('voice-ivr');
   }
 
-  let request = Promise.resolve();
-  if (UserInput === '3') {
-    request = sendMessage(context, event);
+  try {
+    if (UserInput === '3') await sendMessage(context, event);
   }
+  catch(err) {
+    return callback(err);
+  }
+  return callback(null, twiml);
 
-  request
-    .then(() => {
-      return callback(null, twiml);
-    })
-    .catch((err) => {
-      return callback(err);
-    });
 };
