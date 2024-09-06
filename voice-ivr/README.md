@@ -1,8 +1,11 @@
 # Voice IVR
 
-Navigate a IVR (phone tree) using keys or speech-to-text
+This application allows users to navigate an IVR (phone tree) using keys or speech-to-text via a Twilio number. When a user calls the number, they are presented with three options: Talk to Sales, Hours of Operation, or Address. Selecting the first option forwards the call to a given phone number. The second provides an immediate voice response with relevant information. Choosing the third option triggers an SMS with the requested details. The application is fully customizable, allowing you to edit the available options and responses.
 
 ## Pre-requisites
+
+- A Twilio account - [sign up here](https://www.twilio.com/try-twilio)
+- A Twilio phone number
 
 ### Environment variables
 
@@ -10,19 +13,15 @@ This project requires some environment variables to be set. To keep your tokens 
 
 In your `.env` file, set the following values:
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-MY_PHONE_NUMBER Your phone number true
+| Variable          | Meaning                                                  | Required |
+| :---------------- | :------------------------------------------------------- | :------- |
+| `MY_PHONE_NUMBER` | The phone number that you want calls to be forwarded to. | yes      |
 
 ### Function Parameters
 
-`/voice-ivr` is protected and requires a valid Twilio signature as well as the following parameters:
+`/voice-ivr` is protected and requires a valid Twilio signature.
 
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/handle-user-input` is protected and requires a valid Twilio signature as well as the following parameters:
+`/handle-user-input` is protected and requires a valid Twilio signature and expects the following parameters:
 
 | Parameter      | Description                      | Required |
 | :------------- | :------------------------------- | :------- |

@@ -1,7 +1,25 @@
 /**
- * Returns TwiML that prompts the users to make a choice.
- * If the user enters something it will trigger the handle-user-input Function and otherwise go in a loop.
+ * Voice IVR
+ *
+ * Description:
+ * This file contains the entry point to the Voice IVR function template
+ * which will prompt the user with an IVR phone tree with three options.
+ *
+ *
+ * Contents:
+ * 1. Main Handler
  */
+
+/**
+ * 1. Main Handler
+ *
+ * This is the entry point to your Twilio Function, which will create
+ * and return a TwiML Voice Response that will prompt the user with
+ * three options: Talk to Sales, Hours of Operation, or Address.
+ * If the user enters something it will trigger the handle-user-input Function and otherwise go in a loop.
+ *
+ */
+
 exports.handler = function (context, event, callback) {
   const twiml = new Twilio.twiml.VoiceResponse();
   const gather = twiml.gather({

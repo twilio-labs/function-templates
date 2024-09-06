@@ -1,25 +1,58 @@
-function sendMessage(context, event) {
+/**
+ * handle-user-input Function
+ *
+ * Description:
+ * This file contains the input handler to the Voice IVR Function template.
+ * The incoming phone call will be transferred from the voice-ivr Function
+ * to this function using the Gather TwiML verb which will also pass in the
+ * users input. This Function will read the users input and respond
+ * back depending on the users selection.
+ *
+ *
+ * Contents:
+ * 1. SMS Handler
+ * 2. Main Handler
+ */
+
+/**
+ * 1. SMS Handler
+ *
+ * This function will send an SMS of the address to the caller
+ * if the address option was chosen.
+ *
+ */
+
+async function sendMessage(context, event) {
   const client = context.getTwilioClient();
-  return client.messages
-    .create({
-      from: event.To,
-      to: event.From,
-      body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
-    })
-    .then(
-      (resp) => resp,
-      (err) => {
-        console.log(err);
-        return Promise.resolve();
-      }
-    );
+  return client.messages.create({
+    from: event.To,
+    to: event.From,
+    body: 'Here is our address: 375 Beale St #300, San Francisco, CA 94105, USA',
+  });
 }
 
 /**
- * Handles the user input gathered in the voice-ivr Function
+ * 1. Main Handler
+ *
+ * This Twilio Function will create a new Voice Response using Twiml
+ * based on the users input from the voice-ivr Function.
+ *
+ * The function will fetch the user inputs by reading the Digits or
+ * SpeechResult variables from the incoming request parameters. If the
+ * user input was given by speech-to-text, it will convert it to its digit
+ * counterpart.
+ *
+ * If option 1 (sales) was chosen, the function will forward the call
+ * and dial the MY_PHONE_NUMBER specified in /.env. If option 2
+ * (opening hours) was chosen, the Voice Response will respond to the
+ * caller with the opening hours. If option 3 (address) was chosen,
+ * the SMS handler will be executed and text the address to the caller.
+ * If any other input was chosen, the call will go in a loop and redirect
+ * the call to the voice-ivr Function.
+ *
  */
-// eslint-disable-next-line consistent-return
-exports.handler = function (context, event, callback) {
+
+exports.handler = async function (context, event, callback) {
   let UserInput = event.Digits || event.SpeechResult;
   const twiml = new Twilio.twiml.VoiceResponse();
 
@@ -60,16 +93,10 @@ exports.handler = function (context, event, callback) {
       twiml.redirect('voice-ivr');
   }
 
-  let request = Promise.resolve();
-  if (UserInput === '3') {
-    request = sendMessage(context, event);
+  try {
+    if (UserInput === '3') await sendMessage(context, event);
+  } catch (err) {
+    console.log(err);
   }
-
-  request
-    .then(() => {
-      return callback(null, twiml);
-    })
-    .catch((err) => {
-      return callback(err);
-    });
+  return callback(null, twiml);
 };
