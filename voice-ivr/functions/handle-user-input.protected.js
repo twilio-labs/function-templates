@@ -22,7 +22,7 @@
  *
  */
 
-function sendMessage(context, event) {
+async function sendMessage(context, event) {
   const client = context.getTwilioClient();
   return client.messages.create({
     from: event.To,
@@ -96,7 +96,7 @@ exports.handler = async function (context, event, callback) {
   try {
     if (UserInput === '3') await sendMessage(context, event);
   } catch (err) {
-    return callback(err);
+    console.log(err);
   }
   return callback(null, twiml);
 };
