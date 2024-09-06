@@ -96,7 +96,7 @@ exports.handler = async function (context, event, callback) {
   try {
     if (UserInput === '3') await sendMessage(context, event);
   } catch (err) {
-      console.log(err);
+    console.log(err);
   }
   return callback(null, twiml);
 };
