@@ -27,6 +27,10 @@ const baseEvent = {
   Body: '+16667778888: test message',
 };
 
+// Define your constant error messages here
+const ERROR_MESSAGE = 'There was an issue with the phone number you entered; please verify it is correct and try again.';
+const NO_RECIPIENT_ERROR = 'You need to specify a recipient number and a ":" before the message. For example, "+12223334444: message".';
+
 beforeAll(() => {
   helpers.setup(context);
 });
@@ -41,16 +45,14 @@ beforeEach(() => {
 });
 
 describe('masked-number function template', () => {
-  it('should send a message to a given phone number', (done) => {
+  it('should send a message to a given phone number', async () => {
     const event = { ...baseEvent };
     const callback = (err, _result) => {
       expect(err).toBeFalsy();
       expect(mockTwilioClient.messages.create).toHaveBeenCalled();
-
-      done();
     };
 
-    relaySms(context, event, callback);
+    await relaySms(context, event, callback);
   });
 
   it('should relay messages from other phone numbers', (done) => {
@@ -74,7 +76,7 @@ describe('masked-number function template', () => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
       expect(twiml).toMatch(
-        `<Message>You need to specify a recipient number and a ":" before the message. For example, "+12223334444: message".</Message>`
+        `<Message>${NO_RECIPIENT_ERROR}</Message>`
       );
 
       done();
@@ -90,7 +92,7 @@ describe('masked-number function template', () => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
       expect(twiml).toMatch(
-        `<Message>There was an issue with the phone number you entered; please verify it is correct and try again.</Message>`
+        `<Message>${ERROR_MESSAGE}</Message>`
       );
 
       done();
