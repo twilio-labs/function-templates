@@ -1,4 +1,4 @@
-exports.handler = function(context, event, callback) {
+exports.handler = function (context, event, callback) {
   const assets = Runtime.getAssets();
   const privateMessageAsset = assets['/message.js'];
   const privateMessagePath = privateMessageAsset.path;
