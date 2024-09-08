@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>Hello Twilio Serverless!</title>
+  </head>
+  <body>
+    <header><h1>Hello Twilio Serverless!</h1></header>
+
+    <main>
+      <p>
+        <strong>Congratulations</strong> you just started a new Twilio
+        Serverless project.
+      </p>
+
+      <h2>Assets</h2>
+      <p>
+        Assets are static files, like HTML, CSS, JavaScript, images or audio
+        files.
+      </p>
+
+      <p>
+        This HTML page is an example of a <strong>public</strong> asset, you can
+        access this by loading it in the browser. The HTML also refers to
+        another public asset for CSS styles.
+      </p>
+      <p>
+        You can also have <strong>private</strong> assets, there is an example
+        private asset called <code>message.private.js</code> in the
+        <code>/assets</code> directory. This file cannot be loaded in the
+        browser, but you can load it as part of a function by finding its path
+        using <code>Runtime.getAssets()</code> and then requiring the file.
+        There is an example of this in
+        <code>/functions/private-message.js</code>.
+      </p>
+
+      <h2>Functions</h2>
+      <p>
+        Functions are JavaScript files that will respond to incoming HTTP
+        requests. There are <strong>public</strong> and
+        <strong>protected</strong> functions.
+      </p>
+
+      <p>
+        <strong>Public</strong> functions respond to all HTTP requests. There is
+        an example of a public function in
+        <code>/functions/hello-world.js</code>.
+      </p>
+
+      <p>
+        <strong>Protected</strong> functions will only respond to HTTP requests
+        with a valid Twilio signature in the header. You can read more about
+        <a href="https://www.twilio.com/docs/usage/security#validating-requests"
+          >validating requests from Twilio in the documentation</a
+        >. There is an example of a protected function in
+        <code>/functions/sms/reply.protected.js</code>
+      </p>
+
+      <h2>twilio-run</h2>
+
+      <p>
+        Functions and assets are served, deployed and debugged using
+        <a href="https://github.com/twilio-labs/twilio-run"
+          ><code>twilio-run</code></a
+        >. You can serve the project locally with the command
+        <code>npm start</code> which is really running
+        <code>twilio-run --env</code> under the hood. If you want to see what
+        else you can do with <code>twilio-run</code> enter
+        <code>npx twilio-run --help</code> on the command line or check out
+        <a href="https://github.com/twilio-labs/twilio-run"
+          >the project documentation on GitHub</a
+        >.
+      </p>
+    </main>
+
+    <footer>
+      <p>
+        Made with 💖 by your friends at
+        <a href="https://www.twilio.com">Twilio</a>
+      </p>
+    </footer>
+  </body>
+</html>
