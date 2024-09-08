@@ -28,8 +28,10 @@ const baseEvent = {
 };
 
 // Define your constant error messages here
-const ERROR_MESSAGE = 'There was an issue with the phone number you entered; please verify it is correct and try again.';
-const NO_RECIPIENT_ERROR = 'You need to specify a recipient number and a ":" before the message. For example, "+12223334444: message".';
+const ERROR_MESSAGE =
+  'There was an issue with the phone number you entered; please verify it is correct and try again.';
+const NO_RECIPIENT_ERROR =
+  'You need to specify a recipient number and a ":" before the message. For example, "+12223334444: message".';
 
 beforeAll(() => {
   helpers.setup(context);
@@ -75,9 +77,7 @@ describe('masked-number function template', () => {
     const callback = (err, result) => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
-      expect(twiml).toMatch(
-        `<Message>${NO_RECIPIENT_ERROR}</Message>`
-      );
+      expect(twiml).toMatch(`<Message>${NO_RECIPIENT_ERROR}</Message>`);
 
       done();
     };
@@ -91,9 +91,7 @@ describe('masked-number function template', () => {
     const callback = (err, result) => {
       expect(err).toBeFalsy();
       const twiml = result.toString();
-      expect(twiml).toMatch(
-        `<Message>${ERROR_MESSAGE}</Message>`
-      );
+      expect(twiml).toMatch(`<Message>${ERROR_MESSAGE}</Message>`);
 
       done();
     };
