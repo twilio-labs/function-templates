@@ -1,6 +1,6 @@
 /*
  * hello-voice.protected.js
- * This file contains an AWS Lambda function handler that generates a Twilio Voice Response. When triggered, it creates a TwiML response that instructs Twilio to speak "Hello World" to the caller. 
+ * This file contains an AWS Lambda function handler that generates a Twilio Voice Response. When triggered, it creates a TwiML response that instructs Twilio to speak "Hello World" to the caller.
  */
 
 // This is an AWS Lambda function handler for a Twilio Voice Response
