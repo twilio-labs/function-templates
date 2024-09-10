@@ -20,12 +20,13 @@ exports.handler = async function (context, event, callback) {
 
   const token = await signRequest(context, event);
   const body = {
-    Body: event.Body,
-    Identity: event.From.startsWith('whatsapp:')
+    body: event.Body,
+    identity: event.From.startsWith('whatsapp:')
       ? event.From
       : `phone:${event.From}`,
-    SessionId: sessionId,
-    Webhook: `https://${context.DOMAIN_NAME}/channels/messaging/response?_token=${token}`,
+    // eslint-disable-next-line camelcase
+    session_id: sessionId,
+    webhook: `https://${context.DOMAIN_NAME}/channels/messaging/response?_token=${token}`,
   };
 
   const response = new Twilio.Response();
