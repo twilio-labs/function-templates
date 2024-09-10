@@ -66,11 +66,12 @@ exports.handler = async function (context, event, callback) {
     params.append('_assistantIdentity', AssistantIdentity);
   }
   const body = {
-    Body,
-    Identity: identity,
-    SessionId: `conversations__${ChatServiceSid}/${ConversationSid}`,
+    body: Body,
+    identity,
+    // eslint-disable-next-line camelcase
+    session_id: `conversations__${ChatServiceSid}/${ConversationSid}`,
     // using a callback to handle AI Assistant responding
-    Webhook: `https://${
+    webhook: `https://${
       context.DOMAIN_NAME
     }/channels/conversations/response?${params.toString()}`,
   };

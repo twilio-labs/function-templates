@@ -13,9 +13,8 @@ async function sendMessageToAssistant(context, assistantSid, body) {
     : context.TWILIO_REGION?.startsWith('dev')
       ? '.dev'
       : '';
-  const url = `https://assistants${environmentPrefix}.twilio.com/v1/${assistantSid}/Messages`;
+  const url = `https://assistants${environmentPrefix}.twilio.com/v1/Assistants/${assistantSid}/Messages`;
 
-  // Attention! There's explicitly no "await" since we want to do a "fire & forget"
   const response = await fetch(url, {
     method: 'POST',
     body: JSON.stringify(body),
