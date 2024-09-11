@@ -35,8 +35,11 @@ exports.handler = async (context, event, callback) => {
         name: 'PasskeySample',
         origins: [
           `https://${RELYING_PARTY}`,
-          ...(ANDROID_APP_KEYS.split(',') || []),
+          ...(ANDROID_APP_KEYS?.split(',') ?? []),
         ],
+      },
+      user: {
+        display_name: event.username,
       },
       authenticator_criteria: {
         authenticator_attachment: 'platform',
