@@ -1,3 +1,4 @@
+
 # Forward SMS message as an email (SendGrid)
 
 The SendGrid Function will forward incoming SMS messages to an email address using the [SendGrid API](https://sendgrid.com/).
