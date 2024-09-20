@@ -2,7 +2,7 @@ const axios = require('axios');
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, _, callback) => {
-  const { RELYING_PARTY, API_URL } = context;
+  const { DOMAIN_NAME, API_URL } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -12,7 +12,7 @@ exports.handler = async (context, _, callback) => {
   const requestBody = {
     content: {
       // eslint-disable-next-line camelcase
-      rp_id: RELYING_PARTY,
+      rp_id: DOMAIN_NAME,
     },
   };
 
