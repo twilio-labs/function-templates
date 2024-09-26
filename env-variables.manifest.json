@@ -68,7 +68,7 @@
         "format": "list(phone_number)",
         "description": "A list of numbers in E.164 format you want to forward incoming messages to, separated by commas",
         "link": "https://www.twilio.com/docs/glossary/what-e164",
-        "default": "+12223334444,+12223335555",
+        "default": "+12223334444,+491761234567",
         "configurable": true,
         "contentKey": null
       },
@@ -450,7 +450,7 @@
         "format": "phone_number",
         "description": "A comma separated list of numbers in E.164 format that you want to dial in order",
         "link": null,
-        "default": "+12223334444,+12223335555",
+        "default": "+12223334444,+491761234567",
         "configurable": true,
         "contentKey": null
       },
@@ -1266,7 +1266,7 @@
         "format": "phone_number",
         "description": "A comma separated list of numbers in E.164 format that are allowed to trigger a broadcast",
         "link": null,
-        "default": "+12223334444,+12223335555",
+        "default": "+12223334444,+491761234567",
         "configurable": true,
         "contentKey": null
       },
