@@ -4,6 +4,6 @@
   "private": true,
   "dependencies": {
     "@twilio-labs/runtime-helpers": "^0.1.2",
-    "twilio": "^3.61.0"
+    "twilio": "^5.3.2"
   }
 }

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "twilio": "^5.0.4",
+    "twilio": "^5.3.2",
     "node-fetch": "^2.7.0"
   }
 }
