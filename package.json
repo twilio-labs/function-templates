@@ -33,7 +33,7 @@
     "eslint-config-twilio": "^2.0.0",
     "eslint-plugin-prettier": "^5.1.3",
     "get-port": "^7.1.0",
-    "got": "^14.3.0",
+    "got": "^11.8.5",
     "husky": "^9.0.11",
     "inquirer": "^8.2.4",
     "jest-cli": "^29.7.0",

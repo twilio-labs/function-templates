@@ -5,6 +5,6 @@
   "dependencies": {
     "@google-cloud/dialogflow": "^4.1.0",
     "crypto": "^1.0.1",
-    "twilio": "^3.64.0"
+    "twilio": "^5.3.2"
   }
 }
