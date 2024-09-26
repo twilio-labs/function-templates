@@ -7,7 +7,7 @@ jest.mock('axios');
 
 const mockContext = {
   API_URL: 'https://api.com',
-  RELYING_PARTY: 'example.com',
+  DOMAIN_NAME: 'example.com',
   ANDROID_APP_KEYS: 'key1,key2,key3',
   getTwilioClient: () => ({
     username: 'mockUsername',
@@ -93,7 +93,7 @@ describe('registration/start', () => {
 
     const mockContextWithoutAndroidKeys = {
       API_URL: 'https://api.com',
-      RELYING_PARTY: 'example.com',
+      DOMAIN_NAME: 'example.com',
       getTwilioClient: () => ({
         username: 'mockUsername',
         password: 'mockPassword',

@@ -4,7 +4,7 @@ const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { RELYING_PARTY, API_URL, ANDROID_APP_KEYS } = context;
+  const { DOMAIN_NAME, API_URL, ANDROID_APP_KEYS } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -31,10 +31,10 @@ exports.handler = async (context, event, callback) => {
     },
     content: {
       relying_party: {
-        id: RELYING_PARTY,
+        id: DOMAIN_NAME,
         name: 'PasskeySample',
         origins: [
-          `https://${RELYING_PARTY}`,
+          `https://${DOMAIN_NAME}`,
           ...(ANDROID_APP_KEYS?.split(',') ?? []),
         ],
       },
