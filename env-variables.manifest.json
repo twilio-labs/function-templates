@@ -1908,16 +1908,6 @@
         "contentKey": null
       },
       {
-        "key": "RELYING_PARTY",
-        "required": true,
-        "format": "url",
-        "description": "The domain of the relying party",
-        "link": null,
-        "default": null,
-        "configurable": true,
-        "contentKey": null
-      },
-      {
         "key": "ANDROID_APP_KEYS",
         "required": false,
         "format": "list(text)",
