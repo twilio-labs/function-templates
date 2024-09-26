@@ -33,12 +33,7 @@
     {
       "id": "forward-message",
       "name": "Forward Message",
-      "description": "Forwards incoming messages to another number"
-    },
-    {
-      "id": "forward-message-multiple",
-      "name": "Forward Message to Multiple Numbers",
-      "description": "Forwards incoming messages to a set of numbers"
+      "description": "Forwards incoming messages to another number or set of numbers"
     },
     {
       "id": "forward-message-sendgrid",
