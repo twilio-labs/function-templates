@@ -1,4 +1,4 @@
-# passkeys-backend
+# Verify Passkeys
 
 Verify enables developers to easily add Passkeys into their existing authentication flows, similar to Verify TOTP and Push. The Verify API supports passkey registration, public key storage, and auth flows. On the client-side, developers can optionally embed an open-source library (SDK) that handles interactions with operating systems and customizable UI widgets that maximize conversion.
 
@@ -6,11 +6,9 @@ Verify enables developers to easily add Passkeys into their existing authenticat
 
 The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
 
-Make sure befores you use the template you have to set up your enviroment variables and 
-customize the associated files with your client applications origins you can find this 
-customization [here](#service-customization).
-
 ## Pre-requisites
+
+Verify Passkeys is currently in Pilot. [Request access]()
 
 ### Environment variables
 
@@ -24,11 +22,57 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| API_URL | Passkeys API to point at | yes |
-| RELYING_PARTY | Customer app or client | yes
-| ANDROID_APP_KEYS | The domain of the adroid identity providers hash | yes |
-| ACCOUNT_SID | Twilio account where the service belong | yes |
-| AUTH_TOKEN | Authentication token for twilio account | yes |
+| `API_URL`            | Passkeys API to point at                              | Yes |
+| `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
+| `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
+| `ANDROID_APP_KEYS`   | The domain of the Android identity providers hash     | No  |
+
+## Create a new project with the template
+
+1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
+
+```shell
+twilio plugins:install @twilio-labs/plugin-serverless
+```
+
+3. Initiate a new project
+
+```
+twilio serverless:init passkeys-sample --template=passkeys-backend && cd passkeys-sample
+```
+
+4. Add your environment variables to `.env`:
+
+Make sure variables are populated in your `.env` file. See [Environment variables](#environment-variables).
+
+5. Start the server :
+
+```
+npm start
+```
+
+5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+
+ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
+
+6. [optional] Configure email verification
+
+[Follow the instructions in the docs](https://www.twilio.com/docs/verify/email) to set up email verification.
+
+## Deploying
+
+Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
+
+With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
+
+```
+twilio serverless:deploy
+```
+
+## Working with this project
+
+The following describes customization options and more details for understanding how this application works.
 
 ### Service customization
 
@@ -46,7 +90,6 @@ Besides the enviroment variables files, the project also contain two files calle
 | :------- | :---------- | :------- |
 | RELYING_PARTY | Replace it with the value of the relaying party | yes |
 | FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
-
 
 ### Function Parameters
 
@@ -81,12 +124,3 @@ Besides the enviroment variables files, the project also contain two files calle
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | userHandle | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 
-## Deploying
-
-Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
-
-With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:deploy
-```
