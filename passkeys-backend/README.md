@@ -8,8 +8,6 @@ The best way to use the Function templates is through the Twilio CLI as describe
 
 ## Pre-requisites
 
-Verify Passkeys is currently in Pilot. [Request access]()
-
 ### Environment variables
 
 This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
