@@ -1879,9 +1879,9 @@
         "key": "API_URL",
         "required": true,
         "format": "url",
-        "description": "The URL of the comms API for passkeys",
+        "description": "The URL of the API for passkeys",
         "link": null,
-        "default": null,
+        "default": "https://comms.twilio.com/preview",
         "configurable": true,
         "contentKey": null
       },
