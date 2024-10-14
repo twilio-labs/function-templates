@@ -1889,7 +1889,7 @@
         "key": "ANDROID_APP_KEYS",
         "required": false,
         "format": "list(text)",
-        "description": "The domain of the adroid identity provider",
+        "description": "[Optional] Comma separated domains for Android application",
         "link": null,
         "default": null,
         "configurable": true,
