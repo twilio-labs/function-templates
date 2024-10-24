@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "twilio": "^3.67.2",
+    "twilio": "^5.3.5",
     "uuid": "^8.3.2"
   }
 }
