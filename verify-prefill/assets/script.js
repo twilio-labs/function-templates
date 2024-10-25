@@ -87,7 +87,7 @@ function displayUserData(data) {
   document.getElementById('postal-code').innerText = data.postal_code;
 }
 
-async function fetchUserData(phoneNumber, verificationSid, waitTime = 15000) {
+async function fetchUserData(phoneNumber, verificationSid, waitTime) {
   try {
     await wait(waitTime);
     console.log('Attempting fetch...');
@@ -109,7 +109,7 @@ async function fetchUserData(phoneNumber, verificationSid, waitTime = 15000) {
       console.log(`Fetching user data failed: ${result.message}`);
       // Resursively call until we get a result...
       if (maxCalls < 50) {
-        fetchUserData(phoneNumber, verificationSid, 3000);
+        fetchUserData(phoneNumber, verificationSid, 1000);
         maxCalls += 1;
       } else {
         // eslint-disable-next-line no-alert
@@ -166,11 +166,11 @@ async function verifyOTP() {
 
   if (result.success) {
     console.log(
-      'Verification successful. Fetching user data every 15 seconds...'
+      'Verification successful. Fetching user data every 1 second...'
     );
     console.log(result.verificationSid);
     displayLoadingSkeleton();
-    fetchUserData(phoneNumber, result.verificationSid);
+    fetchUserData(phoneNumber, result.verificationSid, 1000);
   } else {
     // eslint-disable-next-line no-alert
     alert(`Verification failed: ${result.message}`);
