@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "twilio": "^5.3.3",
+    "twilio": "^5.3.5",
     "axios": "^1.7.7"
   }
 }
