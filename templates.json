@@ -36,19 +36,9 @@
       "description": "Forwards incoming messages to another number or set of numbers"
     },
     {
-      "id": "forward-message-sendgrid",
-      "name": "Forward Message to Email via SendGrid",
-      "description": "Uses SendGrid to forward incoming messages via email"
-    },
-    {
       "id": "voicemail",
       "name": "Voicemail",
       "description": "Forwards calls during business hours. Records messages otherwise."
-    },
-    {
-      "id": "forward-message-sparkpost",
-      "name": "Forward Message to Email via Sparkpost",
-      "description": "Uses Sparkpost to forward incoming messages via email"
     },
     {
       "id": "airtable",
