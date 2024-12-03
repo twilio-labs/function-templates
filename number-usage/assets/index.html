@@ -1,0 +1,2472 @@
+ <!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Check To/From Usage</title>
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+<link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
+<script src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .success {
+        border-color: #bce8f1;
+        color: #31708f;
+        background-color: #d9edf7;
+      }
+      .warning {
+        color: #c21e1e;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+      }
+    </style>
+  </head>
+  <body onload="mask()">
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg
+              class="logo"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 60 60"
+            >
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <span>Your Twilio application</span>
+          <aside>
+            <svg
+              class="icon"
+              role="img"
+              aria-hidden="true"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="NewIcon-1577"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+              ></path>
+            </svg>
+            Live
+          </aside>
+        </nav>
+      </header>
+    </div>
+    <main>
+      <div class="content">
+        <h1>
+          <img
+            src="https://twilio-labs.github.io/function-templates/static/v1/success.svg"
+          />
+          <div>
+            <p>Welcome!</p>
+            <p>Your live application with Twilio is ready to use!</p>
+          </div>
+        </h1>
+
+        <p>
+          Before you start, make sure that the checkbox "Add my Twilio
+          Credentials (ACCOUNT_SID) and (AUTH_TOKEN) to ENV" is checked in the
+          "Environmental Variables" of this Function. If it's not checked,
+          enable it and click "Deploy All" at the bottom.
+        </p>
+        <h2>Check usage per To and From on main account or subaccounts</h2>
+
+        <p>
+          This page allows you to check how many messages and calls are associated with the To and From used to send/receive messages or calls. <br />
+          The reults include alpha senders, SIP trunking, outbound replies to inbound messages etc... The data is divided based on the "Direction" of the message and call. Check the <a href="https://www.twilio.com/docs/messaging/api/message-resource" target="_blank">Message Resource</a> and 
+          <a href="https://www.twilio.com/docs/voice/api/call-resource" target="_blank">Call Resource</a> to see all possible message/call "Direction" and what they mean. <br />
+      If in the results "From" is shown as "null", it means that this is an inbound message/call and the "To" column needs to be looked at. Same applies if "To" is "null", in which case "From" needs to be looked at as it's an outbound message/call. <br />
+      The Segments column applies to Messages, while the Minutes column applies to Calls. The column Assets shows the related To or From with the difference that the number is extracted from the Whastapp log and from the SIP Trunking log. Assets can be used to filter the results regardless of traffic type and direction. 
+          <br /><br />
+          Because the Messaging API only displays messages that were sent in the
+          last 400 days, make sure that the selected From Date is within the
+          last 400 days. An error will be returned if it's not.
+          <br /><br />
+          The section "Group based on Country?" allows you to check from where the inbound messages/calls came from, and where your outbound messages/calls were sent to. For inbound traffic the country of the From is checked, while for outbound the country of the To is checked. <br />
+          The Country is checked based on the "Country list" section. You are free to add and change the prefixes and country name as you see fit. The format must be "+prefix countryName". The countryName must start with a letter and it can only contain letters, - sign, and _ sign. 
+          <br />
+          The prefix search is done from longest to shortest. For example, if an inbound message is received from the number "+15556789", and in the country list you have the prefixes "+1 US-CA" and "+1555 US-movies", in the results the country will be marked as "US-movies" because the longer prefix +1555 was detected for the number "+15556789".  
+<br />If the prefix of a number is not on the country list, in the results those messages/calls will be marked with country 'Other'. Similarly, if you received inbound messages from alpha senders or short codes, they will be marked as "Alpha" and "ShortCode" respectively. For calls where the country is not detected, it will be marked as "TwilioClient" or "Other". <br /> <br />Because there could be many prefixes to check, the app might be slower if you are grouping by country. In order to speed up the app, delete the prefixes/countries you don't need. The default +1 prefix is marked as "United_States-Canada". <br /> <br /> 
+
+          <b>Be careful</b>, if you deleted your Message and/or Call logs, or
+          they are deleted automatically for your account, those messages/calls will
+          not be part of the results with this report. Only messages/calls which are part of the 2 mentioned APIs will be included in the results. Same applies to the price/cost of the message/call - if there are costs associated with the message/call that are not part of the API, those costs will not be included in the results. <br /><br />
+          If you used many different numbers to send/receive messages, many alpha senders and similar, use the
+          "<i>Check Usage and 
+          Download Without Listing Data</i>" button, which will download the
+          results directly without listing them on this page.<br />
+
+          If you are experiencing timeouts, adjust the "<i>Maximum # of messages/calls per page</i>" field. Regarless which number you input, all message and call logs will be checked.
+
+          <br /><br />
+          While the number usage is being checked, a progress log will be displayed at the bottom. 
+        </p>
+
+        <p>
+          Because this is a publicly accessible URL that automatically uses your
+          Account SID and auth_token, to limit it's access, please set a
+          password in your
+          <a href="https://console.twilio.com/us1/develop/functions/services"
+            >Function</a>
+          - open the Function and click on "Environment Variables" in the bottom
+          left corner, and change the value of Password. Click
+          <b>"Deploy All"</b> afterwards in the bottom left corner.
+          <br />
+        </p>
+        Password:<div><input id="password" type="password" name="password" /></div>
+        <br />
+        <p>You are working with account:</p>
+        <div id="masking"></div>
+        <div><button onclick="unmask()">Show Account</button></div>
+        <div id="status_acc" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;"></div>
+        <div>
+        <p>
+          Enter the subaccount SID. Leave empty if you want to check usage
+          on your main account.
+        </p>
+        </div>
+        <div><input id="sAccount" type="text" name="sAccount" /></div>
+        <div>
+          From Date:<input
+            type="date"
+            id="startdate"
+            name="startdate"
+            required
+            value="2023-06-25"
+          />
+          To Date (before):<input
+            type="date"
+            id="enddate"
+            name="enddate"
+            required
+            value="2023-10-30"
+          />
+          Maximum # of messages/calls per page (1-1000):<input
+                type="number"
+                id="pageSize"
+                name="pageSize"
+                min="1"
+                max="1000"
+                value="100"
+                required
+              />
+        </div>
+
+      <div>Include traffic type: 
+        <input type="checkbox" id="Messages" name="Messages" value="Messages" checked>
+        <label for="Messages">Messages</label>&nbsp;
+        <input type="checkbox" id="Calls" name="Calls" value="Calls" checked>
+        <label for="Calls">Calls</label><br>
+        </div>
+
+         <div>Group based on Country?
+         <input type="checkbox" id="CountryYes" name="CountryYes" value="CountryYes">
+        <label for="CountryYes">Group by Country</label><br />
+          Country list: <br />
+       <textarea id="Country" name="Country" oninput="check_format()" style="width: 480px; height: 237px;">
++1264 Anguilla
++1268 Antigua_and_Barbuda
++297 Aruba
++247 Ascension
++1242 Bahamas
++1246 Barbados
++501 Belize
++1441 Bermuda
++1 United_States-Canada
++1345 Cayman_Islands
++506 Costa_Rica
++53 Cuba
++599 Curacao_and_Caribbean_Netherlands_Bonaire-_Sint_Eustatius-_Sint_Maarten-_Saba
++1767 Dominica
++1809 Dominican_Republic
++1809201 Dominican_Republic
++1849 Dominican_Republic
++1829 Dominican_Republic
++503 El_Salvador
++299 Greenland
++1473 Grenada
++590 Guadeloupe
++502 Guatemala
++509 Haiti
++504 Honduras
++1876 Jamaica
++596 Martinique
++52 Mexico
++1664 Montserrat
++505 Nicaragua
++507 Panama
++1787 Puerto_Rico
++1869 St_Kitts_and_Nevis
++1758 St_Lucia
++508 St_Pierre_and_Miquelon
++1784 St_Vincent_Grenadines
++1868 Trinidad_and_Tobago
++1649 Turks_and_Caicos_Islands
++1284 Virgin_Islands-_British
++1340 Virgin_Islands-_US
++93 Afghanistan
++374 Armenia
++994 Azerbaijan
++973 Bahrain
++880 Bangladesh
++975 Bhutan
++673 Brunei
++855 Cambodia
++86 China
++670 East_Timor
++995 Georgia
++852 Hong_Kong
++91 India
++62 Indonesia
++98 Iran
++964 Iraq
++972 Israel
++81 Japan
++962 Jordan
++850 Korea_Dem_Peoples_Rep
++82 Korea_Republic_of
++965 Kuwait
++996 Kyrgyzstan
++856 Laos_PDR
++961 Lebanon
++853 Macau
++60 Malaysia
++960 Maldives
++976 Mongolia
++95 Myanmar
++977 Nepal
++968 Oman
++92 Pakistan
++970 Palestinian_Territory
++63 Philippines
++974 Qatar
++7 Russia-Kazakhstan
++966 Saudi_Arabia
++65 Singapore
++94 Sri_Lanka
++963 Syria
++886 Taiwan
++992 Tajikistan
++66 Thailand
++90 Turkiye
++993 Turkmenistan
++971 United_Arab_Emirates
++998 Uzbekistan
++84 Vietnam
++967 Yemen
++355 Albania
++376 Andorra
++43 Austria
++375 Belarus
++32 Belgium
++387 Bosnia_and_Herzegovina
++359 Bulgaria
++3491 Canary_Islands
++385 Croatia
++357 Cyprus
++420 Czech_Republic
++45 Denmark
++372 Estonia
++298 Faroe_Islands
++358 Finland-Aland_Islands
++33 France
++49 Germany
++350 Gibraltar
++30 Greece
++36 Hungary
++354 Iceland
++353 Ireland
++39 Italy
++383 Kosovo
++371 Latvia
++423 Liechtenstein
++370 Lithuania
++352 Luxembourg
++356 Malta
++373 Moldova
++377 Monaco
++382 Montenegro
++31 Netherlands
++47 Norway
++48 Poland
++351 Portugal
++389 Republic_of_North_Macedonia
++40 Romania
++378 San_Marino
++381 Serbia
++421 Slovakia
++386 Slovenia
++34 Spain
++46 Sweden
++41 Switzerland
++380 Ukraine
++44 United_Kingdom
++379 Vatican_City
++54 Argentina
++591 Bolivia
++55 Brazil
++56 Chile
++57 Colombia
++593 Ecuador
++500 Falkland_Islands
++594 French_Guiana
++592 Guyana
++595 Paraguay
++51 Peru
++597 Suriname
++598 Uruguay
++58 Venezuela
++213 Algeria
++244 Angola
++229 Benin
++267 Botswana
++226 Burkina_Faso
++257 Burundi
++237 Cameroon
++238 Cape_Verde
++236 Central_Africa
++235 Chad
++269 Comoros
++242 Congo
++243 Congo-_Dem_Rep
++253 Djibouti
++20 Egypt
++240 Equatorial_Guinea
++291 Eritrea
++251 Ethiopia
++241 Gabon
++220 Gambia
++233 Ghana
++224 Guinea
++245 Guinea-Bissau
++225 Ivory_Coast
++254 Kenya
++266 Lesotho
++231 Liberia
++218 Libya
++261 Madagascar
++265 Malawi
++223 Mali
++222 Mauritania
++230 Mauritius
++212 Morocco-Western_Sahara
++258 Mozambique
++264 Namibia
++227 Niger
++234 Nigeria
++262 Reunion-Mayotte
++250 Rwanda
++239 Sao_Tome_and_Principe
++221 Senegal
++248 Seychelles
++232 Sierra_Leone
++252 Somalia
++27 South_Africa
++211 South_Sudan
++249 Sudan
++268 Swaziland
++255 Tanzania
++228 Togo
++216 Tunisia
++256 Uganda
++260 Zambia
++263 Zimbabwe
++1684 American_Samoa
++61 Australia-Cocos-Christmas_Island
++682 Cook_Islands
++679 Fiji
++689 French_Polynesia
++1671 Guam
++686 Kiribati
++692 Marshall_Islands
++691 Micronesia
++687 New_Caledonia
++64 New_Zealand
++683 Niue
++672 Norfolk_Island
++1670 Northern_Mariana_Islands
++680 Palau
++675 Papua_New_Guinea
++685 Samoa
++677 Solomon_Islands
++676 Tonga
++688 Tuvalu
++678 Vanuatu
++681 Wallis_and_Futuna</textarea>
+        </div>
+        <div id="countryCheck"></div>
+
+        <div><br /></div>
+        <div>Select the format that will be used when the data is downloaded: <br />
+          <input type="radio" id="fileFormatcsv" name="fileFormatcsv" value="csv">
+          <label for="fileFormatcsv">csv</label><br / >
+          <input type="radio" id="fileFormattxt" name="fileFormatcsv" value="txt" checked>
+          <label for="fileFormattxt">text</label><br />  <br />
+        </div>
+        <div><button onclick="checkUsage()">Check and List Usage</button>
+        <button onclick="checkUsage(1)">Check Usage and Download Without Listing Data</button></div>
+        <div><br /></div>
+
+        <div>
+          <button onclick="clear_list()">Clear list</button>
+          <button onclick="download()">Download listed data</button>
+        </div>
+        <pre></pre>
+        <div id="progress" style="color: #a94442; background-color: #16e85c; border-color: #16e85c;"></div>
+        <div id="info1" class="alert alert-info" style="display: none"></div>
+        <div class="alert alert-error" style="display: none"></div>
+      </div>
+      <div>
+        <!-- EDIT_CODE -->
+      </div>
+    </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
+<script type="text/javascript">
+const info = document.querySelector(".alert-info");
+const error = document.querySelector(".alert-error");
+
+document.getElementById("Country").value = document.getElementById("Country").value.replace(/^\s+/gm, "");
+check_format();
+
+async function check_format(event) {
+  let countryList = document.getElementById("Country").value;
+  let valuesSoFar = Object.create(null);
+  let value = "";
+  let position = Country.selectionStart;
+  Country.selectionEnd = position;
+
+  if (countryList === "") {
+    countryCheck.innerHTML = "";
+    return;
+  }
+  countryList = countryList.split(/[\n\r\n]/g);
+  for (let c in countryList) {
+    if (!/^\+\d+\s[a-zA-z][a-zA-z\-\_]+$/.test(countryList[c])) {
+      countryCheck.innerHTML = `Invalid format at row ${Number(c) + 1}`;
+      return;
+    } else {
+      countryCheck.innerHTML = "";
+    }
+  }
+  countryList = document.getElementById("Country").value.split(/\s/g);
+
+  for (let i = 0; i < countryList.length; i += 2) {
+    value = countryList[i];
+    if (value in valuesSoFar) {
+      countryCheck.innerHTML = `Duplicate prefix found at row ${Math.ceil(
+        (Number(i) + 1) / 2,
+      )}`;
+      return;
+    }
+    valuesSoFar[value] = true;
+  }
+}
+
+async function checkUsage(down) {
+  if (
+    document.getElementById("progress").innerHTML ===
+    "In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop."
+  ) {
+    return;
+  }
+
+  let allNumbers = "";
+  let page = 0;
+  let Pagetoken = "";
+  let pageAll = 0;
+  let pageAllCalls = 0;
+  let columnAdded = 0;
+  let data = null;
+  let response = null;
+  let usageResponse = null;
+  let json = null;
+  let numNumbers = null;
+  let k = 0;
+  let today = new Date();
+  let from = null;
+  let to = null;
+  let cost = 0;
+  let price = 0;
+  let segments = 0;
+  let minutes = 0;
+  let asset = null;
+  let assetCountry = "";
+  let entity = 0;
+  let countryPrefix = {};
+  let country = "";
+  let numSegments = 0;
+  let unknownC = 0;
+  let unknownS = 0;
+
+  let finalData = null;
+  let outboundApi = {};
+  let inboundApi = {};
+  let outboundCall = {};
+  let outboundReply = {};
+  let unknownSMS = {};
+
+  let finalDataCalls = null;
+  let outboundApiCalls = {};
+  let inboundApiCalls = {};
+  let outboundDiallCalls = {};
+  let trunkingTerminatingCalls = {};
+  let trunkingOriginatingCalls = {};
+  let unknownCall = {};
+
+  const subaccount = document.getElementById("sAccount").value;
+  const password = document.getElementById("password").value;
+  const startDate = document.getElementById("startdate").value;
+  const endDate = document.getElementById("enddate").value;
+  const pageSize = document.getElementById("pageSize").value;
+  const countryList = document.getElementById("Country").value;
+  const pagination = "Yes";
+  const diffDays = Math.ceil(
+    Math.abs(today - new Date(document.getElementById("startdate").value)) /
+      (1000 * 3600 * 24),
+  );
+
+  try {
+    info.style.display = "none";
+    error.style.display = "none";
+    status_acc.style.display = "none";
+    progress.style.display = "none";
+
+    if (
+      JSON.stringify(new Date(startDate)) === "null" ||
+      JSON.stringify(new Date(endDate)) === "null"
+    ) {
+      error.style.display = "";
+      error.innerHTML = `From Date and/or To Date is invalid.`;
+      return;
+    }
+    if (diffDays > 400) {
+      error.style.display = "";
+      error.innerHTML = `From Date must be within the last 400 days.`;
+      return;
+    }
+    if (new Date(endDate) - new Date(startDate) < 0) {
+      error.style.display = "";
+      error.innerHTML = `From Date must be before To Date.`;
+      return;
+    }
+    if (pageSize % 1 !== 0 || pageSize < 1 || pageSize > 1000) {
+      error.style.display = "";
+      error.innerHTML = `Maximum number of messages/calls per page must be between 1 and 1000, and it must be a complete number - no decimals`;
+      return;
+    }
+    if (document.getElementById("countryCheck").innerHTML !== "") {
+      error.style.display = "";
+      error.innerHTML = `Invalid country list format.`;
+      return;
+    }
+    if (
+      !document.getElementById("Messages").checked &&
+      !document.getElementById("Calls").checked
+    ) {
+      error.style.display = "";
+      error.innerHTML = `No traffic type selected.`;
+      return;
+    }
+
+    info.style.display = "";
+    progress.style.display = "";
+    info.innerHTML = `loading...checked 0 numbers`;
+    progress.innerHTML = `In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.`;
+
+    // Disable checkboxes while script is running
+    document.getElementById("Messages").disabled = true;
+    document.getElementById("Calls").disabled = true;
+    document.getElementById("CountryYes").disabled = true;
+
+    countryPrefix = countryList
+      .replaceAll(" ", "")
+      .split(/[\r\n,\n]+/)
+      .sort()
+      .join("\n");
+    countryPrefix = countryPrefix.replace(/[^\d\+]+/g, " $&");
+    countryPrefix = countryPrefix.split(/[\s\r\n\n]/g);
+
+    if (!document.getElementById("Messages").checked) {
+      pageAll = 1;
+      allNumbers += "<pre>Message log was not checked.</pre>";
+    }
+
+    if (document.getElementById("CountryYes").checked) {
+      while (pageAll === 0) {
+        data = {
+          subAcc: subaccount,
+          pageSize: pageSize,
+          page: page,
+          pageToken: Pagetoken,
+          startDate: startDate,
+          endDate: endDate,
+        };
+
+        response = await fetch("./message_log", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(data),
+        });
+        messagesLog = await response.json();
+
+        if (messagesLog.er === 0) {
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML = ``;
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Wrong password.`;
+          return;
+        }
+        if (messagesLog.instances.length === 0 && page === 0) {
+          finalData = "";
+          allNumbers += "<pre>No Message Found.</pre>";
+          break;
+        }
+
+        if (response.status === 200) {
+          if (messagesLog.nextPageUrl) {
+            Pagetoken = new URLSearchParams(messagesLog.nextPageUrl).get("PageToken");
+            console.log (Pagetoken);
+          } else {
+            pageAll += 1;
+          }
+          page += 1;
+
+          messagesLog = messagesLog.instances.slice();
+
+          numNumbers = messagesLog.length;
+
+          info.style.display = "";
+
+          for (let m in messagesLog) {
+            if (messagesLog[m].direction === "inbound") {
+              
+              if (/^whatsapp\:\+\d+$/i.test(messagesLog[m].from)){
+                messagesLog[m].from = messagesLog[m].from.match(/^whatsapp\:(.+)$/i) || [messagesLog[m].from, messagesLog[m].from];
+                messagesLog[m].from = messagesLog[m].from[1];
+              }
+              else if (/^\d{1,7}$/i.test(messagesLog[m].from)) { // short code
+                if (inboundApi[messagesLog[m].to] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to] = {
+                    'ShortCode': { cost, segments, entity },
+                  };
+                }
+                if (inboundApi[messagesLog[m].to]['ShortCode'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to]['ShortCode'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  inboundApi[messagesLog[m].to]['ShortCode'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  inboundApi[messagesLog[m].to]['ShortCode'].segments += numSegments;
+                }
+                inboundApi[messagesLog[m].to]['ShortCode'].entity += 1;
+                continue;
+              }
+              else if (!/^\+\d+$/i.test(messagesLog[m].from)) { // alpha - not long code
+                if (inboundApi[messagesLog[m].to] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to] = {
+                    'Alpha': { cost, segments, entity },
+                  };
+                }
+                if (inboundApi[messagesLog[m].to]['Alpha'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to]['Alpha'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  inboundApi[messagesLog[m].to]['Alpha'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  inboundApi[messagesLog[m].to]['Alpha'].segments += numSegments;
+                }
+                inboundApi[messagesLog[m].to]['Alpha'].entity += 1;
+                continue;
+              }
+              
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!messagesLog[m].from.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (inboundApi[messagesLog[m].to] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to] = {
+                    [countryPrefix[i + 1]]: { cost, segments, entity },
+                  };
+                }
+                if (
+                  inboundApi[messagesLog[m].to][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to][countryPrefix[i + 1]] = {
+                    cost,
+                    segments,
+                    entity,
+                  };
+                }
+
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  inboundApi[messagesLog[m].to][countryPrefix[i + 1]].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  inboundApi[messagesLog[m].to][countryPrefix[i + 1]].segments += numSegments;
+                }
+                inboundApi[messagesLog[m].to][countryPrefix[i + 1]].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (inboundApi[messagesLog[m].to] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to] = {
+                    'Other': { cost, segments, entity },
+                  };
+                }
+                if (inboundApi[messagesLog[m].to]['Other'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  inboundApi[messagesLog[m].to]['Other'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  inboundApi[messagesLog[m].to]['Other'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  inboundApi[messagesLog[m].to]['Other'].segments += numSegments;
+                }
+                inboundApi[messagesLog[m].to]['Other'].entity += 1;
+              } // if found 0 closed
+            } // 1st if  closed
+            found = 0;
+
+            if (messagesLog[m].direction === "outbound-api") {
+              if (/^whatsapp\:\+\d+$/i.test(messagesLog[m].to)) { // whatsapp
+                messagesLog[m].to = messagesLog[m].to.match(/^whatsapp\:(.+)$/i) || [messagesLog[m].to, messagesLog[m].to];
+                messagesLog[m].to = messagesLog[m].to[1];
+              }
+              else if (/^\d{1,7}$/i.test(messagesLog[m].to)) { // short code
+                if (outboundApi[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from] = {
+                    'ShortCode': { cost, segments, entity },
+                  };
+                }
+                if (outboundApi[messagesLog[m].from]['ShortCode'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from]['ShortCode'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundApi[messagesLog[m].from]['ShortCode'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundApi[messagesLog[m].from]['ShortCode'].segments += numSegments;
+                }
+                outboundApi[messagesLog[m].from]['ShortCode'].entity += 1;
+                continue;
+              }
+              else if (!/^\+\d+$/i.test(messagesLog[m].to)) { // alpha
+                if (outboundApi[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from] = {
+                    'Alpha': { cost, segments, entity },
+                  };
+                }
+                if (outboundApi[messagesLog[m].from]['Alpha'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from]['Alpha'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundApi[messagesLog[m].from]['Alpha'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundApi[messagesLog[m].from]['Alpha'].segments += numSegments;
+                }
+                outboundApi[messagesLog[m].from]['Alpha'].entity += 1;
+                continue;
+              }
+              
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!messagesLog[m].to.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (outboundApi[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from] = {
+                    [countryPrefix[i + 1]]: { cost, segments, entity },
+                  };
+                }
+                if (
+                  outboundApi[messagesLog[m].from][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from][countryPrefix[i + 1]] = {
+                    cost,
+                    segments,
+                    entity,
+                  };
+                }
+
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundApi[messagesLog[m].from][countryPrefix[i + 1]].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundApi[messagesLog[m].from][
+                    countryPrefix[i + 1]
+                  ].segments += numSegments;
+                }
+                outboundApi[messagesLog[m].from][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (outboundApi[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from] = {
+                    'Other': { cost, segments, entity },
+                  };
+                }
+                if (outboundApi[messagesLog[m].from]['Other'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundApi[messagesLog[m].from]['Other'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundApi[messagesLog[m].from]['Other'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundApi[messagesLog[m].from]['Other'].segments += numSegments;
+                }
+                outboundApi[messagesLog[m].from]['Other'].entity += 1;
+              } // if found 0 closed
+            } // 2nd if closed
+            found = 0;
+
+            if (messagesLog[m].direction === "outbound-call") {
+              if (/^whatsapp\:\+\d+$/i.test(messagesLog[m].to)) { // whatsapp
+                messagesLog[m].to = messagesLog[m].to.match(/^whatsapp\:(.+)$/i) || [messagesLog[m].to, messagesLog[m].to];
+                messagesLog[m].to = messagesLog[m].to[1];
+              }
+              else if (/^\d{1,7}$/i.test(messagesLog[m].to)) { // short code
+                if (outboundCall[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from] = {
+                    'ShortCode': { cost, segments, entity },
+                  };
+                }
+                if (outboundCall[messagesLog[m].from]['ShortCode'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from]['ShortCode'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundCall[messagesLog[m].from]['ShortCode'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundCall[messagesLog[m].from]['ShortCode'].segments += numSegments;
+                }
+                outboundCall[messagesLog[m].from]['ShortCode'].entity += 1;
+                continue;
+              }
+              else if (!/^\+\d+$/i.test(messagesLog[m].to)) { // alpha - not long code
+                if (outboundCall[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from] = {
+                    'Alpha': { cost, segments, entity },
+                  };
+                }
+                if (outboundCall[messagesLog[m].from]['Alpha'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from]['Alpha'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundCall[messagesLog[m].from]['Alpha'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundCall[messagesLog[m].from]['Alpha'].segments += numSegments;
+                }
+                outboundCall[messagesLog[m].from]['Alpha'].entity += 1;
+                continue;
+              }
+                            
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!messagesLog[m].to.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (outboundCall[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from] = {
+                    [countryPrefix[i + 1]]: { cost, segments, entity },
+                  };
+                }
+                if (
+                  outboundCall[messagesLog[m].from][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from][countryPrefix[i + 1]] = {
+                    cost,
+                    segments,
+                    entity,
+                  };
+                }
+
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundCall[messagesLog[m].from][
+                    countryPrefix[i + 1]
+                  ].cost += price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundCall[messagesLog[m].from][
+                    countryPrefix[i + 1]
+                  ].segments += numSegments;
+                }
+                outboundCall[messagesLog[m].from][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (outboundCall[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from] = {
+                    'Other': { cost, segments, entity },
+                  };
+                }
+                if (outboundCall[messagesLog[m].from]['Other'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundCall[messagesLog[m].from]['Other'] = { cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundCall[messagesLog[m].from]['Other'].cost += price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundCall[messagesLog[m].from]['Other'].segments += numSegments;
+                }
+                outboundCall[messagesLog[m].from]['Other'].entity += 1;
+              } // if found 0 closed
+            } // 3rd if  closed
+            found = 0;
+
+            if (messagesLog[m].direction === "outbound-reply") {
+              if (/^whatsapp\:\+\d+$/i.test(messagesLog[m].to)) { // whatsapp
+                messagesLog[m].to = messagesLog[m].to.match(/^whatsapp\:(.+)$/i) || [messagesLog[m].to, messagesLog[m].to];
+                messagesLog[m].to = messagesLog[m].to[1];
+              }
+              else if (/^\d{1,7}$/i.test(messagesLog[m].to)) { // short code
+                if (outboundReply[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundReply[messagesLog[m].from] = {
+                    'ShortCode': { cost, segments, entity },
+                  };
+                }
+                if (outboundReply[messagesLog[m].from]['ShortCode'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundReply[messagesLog[m].from]['ShortCode'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundReply[messagesLog[m].from]['ShortCode'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundReply[messagesLog[m].from]['ShortCode'].segments += numSegments;
+                }
+                outboundReply[messagesLog[m].from]['ShortCode'].entity += 1;
+                continue;
+              }
+              else if (!/^\+\d+$/i.test(messagesLog[m].to)) { // alpha - not long code
+                if (outboundReply[messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundReply[messagesLog[m].from] = {
+                    'Alpha': { cost, segments, entity },
+                  };
+                }
+                if (outboundReply[messagesLog[m].from]['Alpha'] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundReply[messagesLog[m].from]['Alpha'] = {cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundReply[messagesLog[m].from]['Alpha'].cost +=
+                    price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundReply[messagesLog[m].from]['Alpha'].segments += numSegments;
+                }
+                outboundReply[messagesLog[m].from]['Alpha'].entity += 1;
+                continue;
+              }
+                            
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!messagesLog[m].to.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (outboundReply[messagesLog[m].from] === undefined) {
+                cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundReply[messagesLog[m].from] = {
+                    [countryPrefix[i + 1]]: { cost, segments, entity },
+                  };
+                }
+                if (
+                  outboundReply[messagesLog[m].from][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  outboundReply[messagesLog[m].from][countryPrefix[i + 1]] = {
+                    cost,
+                    segments,
+                    entity,
+                  };
+                }
+
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundReply[messagesLog[m].from][
+                    countryPrefix[i + 1]
+                  ].cost += price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundReply[messagesLog[m].from][
+                    countryPrefix[i + 1]
+                  ].segments += numSegments;
+                }
+                outboundReply[messagesLog[m].from][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (outboundReply[messagesLog[m].from] === undefined) {
+                  outboundReply[messagesLog[m].from] = {
+                    'Other': { cost, segments, entity },
+                  };
+                }
+                if (outboundReply[messagesLog[m].from]['Other'] === undefined) {
+                  outboundReply[messagesLog[m].from]['Other'] = { cost, segments, entity };
+                }
+                price = Number(messagesLog[m].price);
+                numSegments = Number(messagesLog[m].numSegments);
+                if (!isNaN(price)) {
+                  outboundReply[messagesLog[m].from]['Other'].cost += price;
+                }
+                if (!isNaN(numSegments)) {
+                  outboundReply[messagesLog[m].from]['Other'].segments += numSegments;
+                }
+                outboundReply[messagesLog[m].from]['Other'].entity += 1;
+              } // if found 0 closed
+            } // 4th if closed
+            found = 0;
+            // unknown direction
+            if (messagesLog[m].direction !== "outbound-reply" && messagesLog[m].direction !== "inbound" && messagesLog[m].direction !== "outbound-api" && messagesLog[m].direction !== "outbound-call") {
+              unknownS = 1;
+              if (unknownSMS[messagesLog[m].to] === undefined) {
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                unknownSMS[messagesLog[m].to] = {
+                  [messagesLog[m].from]: { cost, segments, entity},
+                  };
+                }
+                if (unknownSMS[messagesLog[m].to][messagesLog[m].from] === undefined) {
+                  cost = 0;
+                  segments = 0;
+                  entity = 0;
+                  unknownSMS[messagesLog[m].to][messagesLog[m].from] = { cost, segments, entity};
+                }
+                price = Number(messagesLog[m].price);
+                segments = Math.ceil(Number(messagesLog[m].numSegments) / 60);
+                if (!isNaN(price)) {
+                  unknownSMS[messagesLog[m].to][messagesLog[m].from].cost += price;
+                }
+                if (!isNaN(segments)) {
+                 unknownSMS[messagesLog[m].to][messagesLog[m].from].segments += segments;
+                }
+                unknownSMS[messagesLog[m].to][messagesLog[m].from].entity += 1;
+            } // last if closed
+          } // for closed
+          k += numNumbers;
+          info.innerHTML = `loading...processed ${k} messages`;
+        } // if 200 closed
+        else {
+          console.error(messagesLog.error);
+          error.style.display = "";
+          info.innerHTML = ``;
+          info.style.display = "none";
+          progress.innerHTML = ``;
+          progress.style.display = "none";
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Something is wrong with getting Message logs: ${messagesLog.error}`;
+        }
+      } // while closed
+    } // if country closed
+    else {
+      while (pageAll === 0) {
+        data = {
+          subAcc: subaccount,
+          pageSize: pageSize,
+          page: page,
+          pageToken: Pagetoken,
+          startDate: startDate,
+          endDate: endDate,
+        };
+
+        response = await fetch("./message_log", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(data),
+        });
+        messagesLog = await response.json();
+
+        if (messagesLog.er === 0) {
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML = ``;
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Wrong password.`;
+          return;
+        }
+        if (messagesLog.instances.length === 0 && page === 0) {
+          finalData = "";
+          allNumbers += "<pre>No Message Found.</pre>";
+          break;
+        }
+
+        if (response.status === 200) {
+          if (messagesLog.nextPageUrl) {
+            Pagetoken = new URLSearchParams(messagesLog.nextPageUrl).get("PageToken");
+          } else {
+            pageAll += 1;
+          }
+          page += 1;
+
+          messagesLog = messagesLog.instances.slice();
+
+          numNumbers = messagesLog.length;
+
+          info.style.display = "";
+
+          for (let m in messagesLog) {
+            if (messagesLog[m].direction === "inbound") {
+              if (inboundApi[messagesLog[m].to] === undefined) {
+                to = messagesLog[m].to;
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                country = "";
+                inboundApi[to] = { cost, segments, entity, country };
+              }
+              price = Number(messagesLog[m].price);
+              numSegments = Number(messagesLog[m].numSegments);
+              if (!isNaN(price)) {
+                inboundApi[messagesLog[m].to]["cost"] += price;
+              }
+              if (!isNaN(numSegments)) {
+                inboundApi[messagesLog[m].to]["segments"] += numSegments;
+              }
+              inboundApi[messagesLog[m].to]["entity"] += 1;
+            } // 1st if closed
+
+            if (messagesLog[m].direction === "outbound-api") {
+              if (outboundApi[messagesLog[m].from] === undefined) {
+                from = messagesLog[m].from;
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                outboundApi[from] = { cost, segments, entity };
+              }
+              price = Number(messagesLog[m].price);
+              numSegments = Number(messagesLog[m].numSegments);
+              if (!isNaN(price)) {
+                outboundApi[messagesLog[m].from]["cost"] += price;
+              }
+              if (!isNaN(numSegments)) {
+                outboundApi[messagesLog[m].from]["segments"] += numSegments;
+              }
+              outboundApi[messagesLog[m].from]["entity"] += 1;
+            } // 2nd if closed
+
+            if (messagesLog[m].direction === "outbound-call") {
+              if (outboundCall[messagesLog[m].from] === undefined) {
+                from = messagesLog[m].from;
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                outboundCall[from] = { cost, segments, entity };
+              }
+              price = Number(messagesLog[m].price);
+              if (!isNaN(price)) {
+                outboundCall[messagesLog[m].from]["cost"] += price;
+                numSegments = Number(messagesLog[m].numSegments);
+              }
+              if (!isNaN(numSegments)) {
+                outboundCall[messagesLog[m].from]["segments"] += numSegments;
+              }
+              outboundCall[messagesLog[m].from]["entity"] += 1;
+            } // 3rd if closed
+
+            if (messagesLog[m].direction === "outbound-reply") {
+              if (outboundReply[messagesLog[m].from] === undefined) {
+                from = messagesLog[m].from;
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                outboundReply[from] = { cost, segments, entity };
+              }
+              price = Number(messagesLog[m].price);
+              numSegments = Number(messagesLog[m].numSegments);
+              if (!isNaN(price)) {
+                outboundReply[messagesLog[m].from]["cost"] += price;
+              }
+              if (!isNaN(numSegments)) {
+                outboundReply[messagesLog[m].from]["segments"] += numSegments;
+              }
+              outboundReply[messagesLog[m].from]["entity"] += 1;
+            } // 4th if closed
+            // unknown direction
+            if (messagesLog[m].direction !== "outbound-reply" && messagesLog[m].direction !== "inbound" && messagesLog[m].direction !== "outbound-api" && messagesLog[m].direction !== "outbound-call") {
+              unknownS = 1;
+              if (unknownSMS[messagesLog[m].to] === undefined) {
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                unknownSMS[messagesLog[m].to] = {
+                  [messagesLog[m].from]: { cost, segments, entity},
+                  };
+                }
+              if (unknownSMS[messagesLog[m].to][messagesLog[m].from] === undefined) {
+                cost = 0;
+                segments = 0;
+                entity = 0;
+                unknownSMS[messagesLog[m].to][messagesLog[m].from] = { cost, segments, entity};
+              }
+              price = Number(messagesLog[m].price);
+              segments = Math.ceil(Number(messagesLog[m].numSegments) / 60);
+              if (!isNaN(price)) {
+                unknownSMS[messagesLog[m].to][messagesLog[m].from].cost += price;
+              }
+              if (!isNaN(segments)) {
+               unknownSMS[messagesLog[m].to][messagesLog[m].from].segments += segments;
+              }
+              unknownSMS[messagesLog[m].to][messagesLog[m].from].entity += 1;
+            } // last if closed
+          } // for closed
+          k += numNumbers;
+          info.innerHTML = `loading...processed ${k} messages`;
+        } // if 200 closed
+        else {
+          console.error(messagesLog.error);
+          error.style.display = "";
+          info.innerHTML = ``;
+          info.style.display = "none";
+          progress.innerHTML = ``;
+          progress.style.display = "none";
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Something is wrong with getting Message logs: ${messagesLog.error}`;
+        }
+      } // while closed
+    } // if country closed
+
+    if (finalData !== "") {
+      finalData = { outboundApi, inboundApi, outboundCall, outboundReply }; // save Messages
+    }
+
+    page = 0;
+    Pagetoken = "";
+    k = 0;
+    if (!document.getElementById("Calls").checked) {
+      pageAllCalls = 1;
+      allNumbers += "<pre>Call log was not checked. </pre>";
+    }
+
+    if (document.getElementById("CountryYes").checked) {
+      while (pageAllCalls === 0) {
+        data = {
+          subAcc: subaccount,
+          pageSize: pageSize,
+          page: page,
+          pageToken: Pagetoken,
+          startDate: startDate,
+          endDate: endDate,
+        };
+
+        response = await fetch("./call_log", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(data),
+        });
+        callLog = await response.json();
+
+        if (callLog.er === 0) {
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML = ``;
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Wrong password.`;
+          return;
+        }
+        if (callLog.instances.length === 0 && page === 0) {
+          finalDataCalls = "";
+          allNumbers += "<pre>No Call Found.</pre>";
+          break;
+        }
+
+        if (response.status === 200) {
+          if (callLog.nextPageUrl) {
+            Pagetoken = new URLSearchParams(callLog.nextPageUrl).get("PageToken");
+          } else {
+            pageAllCalls = 1;
+          }
+          page += 1;
+
+          callLog = callLog.instances.slice();
+          numNumbers = callLog.length;
+
+          for (let c in callLog) {
+            if (callLog[c].direction === "inbound") {
+              if (/^sip\:(.+)\@.+$/i.test(callLog[c].from)) { // sip
+                callLog[c].from = callLog[c].from.match(/^sip\:(.+)\@.+$/i) || [callLog[c].from, callLog[c].from];
+                callLog[c].from = callLog[c].from[1];
+              }
+              else if (/^client:.*$/i.test(callLog[c].from)) { // Twilio client
+                if (inboundApiCalls[callLog[c].to] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  inboundApiCalls[callLog[c].to] = {
+                    'TwilioClient': { cost, minutes, entity },
+                  };
+                }
+                if (inboundApiCalls[callLog[c].to]['TwilioClient'] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  inboundApiCalls[callLog[c].to]['TwilioClient'] = {cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  inboundApiCalls[callLog[c].to]['TwilioClient'].cost +=
+                    price;
+                }
+                if (!isNaN(minutes)) {
+                  inboundApiCalls[callLog[c].to]['TwilioClient'].minutes += minutes;
+                }
+                inboundApiCalls[callLog[c].to]['TwilioClient'].entity += 1;
+                continue;
+              }
+
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!callLog[c].from.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (inboundApiCalls[callLog[c].to] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  inboundApiCalls[callLog[c].to] = {
+                    [countryPrefix[i + 1]]: { cost, minutes, entity },
+                  };
+                }
+                if (
+                  inboundApiCalls[callLog[c].to][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  inboundApiCalls[callLog[c].to][countryPrefix[i + 1]] = {
+                    cost,
+                    minutes,
+                    entity,
+                  };
+                }
+
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  inboundApiCalls[callLog[c].to][countryPrefix[i + 1]].cost +=
+                    price;
+                }
+                if (!isNaN(minutes)) {
+                  inboundApiCalls[callLog[c].to][
+                    countryPrefix[i + 1]
+                  ].minutes += minutes;
+                }
+                inboundApiCalls[callLog[c].to][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (inboundApiCalls[callLog[c].to] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  inboundApiCalls[callLog[c].to] = {
+                    'Other': { cost, minutes, entity },
+                  };
+                }
+                if (inboundApiCalls[callLog[c].to]['Other'] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  inboundApiCalls[callLog[c].to]['Other'] = { cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  inboundApiCalls[callLog[c].to]['Other'].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  inboundApiCalls[callLog[c].to]['Other'].minutes += minutes;
+                }
+                inboundApiCalls[callLog[c].to]['Other'].entity += 1;
+              }
+            } // 1st if closed
+            found = 0;
+
+            if (callLog[c].direction === "outbound-api") {
+              if (/^sip\:(.+)\@.+$/i.test(callLog[c].to)) { // sip
+                callLog[c].to = callLog[c].to.match(/^sip\:(.+)\@.+$/i) || [callLog[c].to, callLog[c].to];
+                callLog[c].to = callLog[c].to[1];
+              }
+              else if (/^client:.*$/i.test(callLog[c].to)) { // Twilio client
+                if (outboundApiCalls[callLog[c].from] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundApiCalls[callLog[c].from] = {
+                    'TwilioClient': { cost, minutes, entity },
+                  };
+                }
+                if (outboundApiCalls[callLog[c].from]['TwilioClient'] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundApiCalls[callLog[c].from]['TwilioClient'] = {cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  outboundApiCalls[callLog[c].from]['TwilioClient'].cost +=
+                    price;
+                }
+                if (!isNaN(minutes)) {
+                  outboundApiCalls[callLog[c].from]['TwilioClient'].minutes += minutes;
+                }
+                outboundApiCalls[callLog[c].from]['TwilioClient'].entity += 1;
+                continue;
+              }
+
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!callLog[c].to.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (outboundApiCalls[callLog[c].from] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundApiCalls[callLog[c].from] = {
+                    [countryPrefix[i + 1]]: { cost, minutes, entity },
+                  };
+                }
+                if (
+                  outboundApiCalls[callLog[c].from][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundApiCalls[callLog[c].from][countryPrefix[i + 1]] = {
+                    cost,
+                    minutes,
+                    entity,
+                  };
+                }
+
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  outboundApiCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  outboundApiCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ].minutes += minutes;
+                }
+                outboundApiCalls[callLog[c].from][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (outboundApiCalls[callLog[c].from] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundApiCalls[callLog[c].from] = {
+                    'Other': { cost, minutes, entity },
+                  };
+                }
+                if (outboundApiCalls[callLog[c].from]['Other'] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundApiCalls[callLog[c].from]['Other'] ={ cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  outboundApiCalls[callLog[c].from]['Other'].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  outboundApiCalls[callLog[c].from]['Other'].minutes += minutes;
+                }
+                outboundApiCalls[callLog[c].from]['Other'].entity += 1;
+              }
+            } // 2nd if closed
+            found = 0;
+
+            if (callLog[c].direction === "outbound-dial") {
+              if (/^sip\:(.+)\@.+$/i.test(callLog[c].to)) { // sip
+                callLog[c].to = callLog[c].to.match(/^sip\:(.+)\@.+$/i) || [callLog[c].to, callLog[c].to];
+                callLog[c].to = callLog[c].to[1];
+              }
+              else if (/^client:.*$/i.test(callLog[c].to)) { // Twilio client
+                if (outboundDiallCalls[callLog[c].from] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundDiallCalls[callLog[c].from] = {
+                    'TwilioClient': { cost, minutes, entity },
+                  };
+                }
+                if (outboundDiallCalls[callLog[c].from]['TwilioClient'] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundDiallCalls[callLog[c].from]['TwilioClient'] = {cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  outboundDiallCalls[callLog[c].from]['TwilioClient'].cost +=
+                    price;
+                }
+                if (!isNaN(minutes)) {
+                  outboundDiallCalls[callLog[c].from]['TwilioClient'].minutes += minutes;
+                }
+                outboundDiallCalls[callLog[c].from]['TwilioClient'].entity += 1;
+                continue;
+              }
+
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!callLog[c].to.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (outboundDiallCalls[callLog[c].from] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundDiallCalls[callLog[c].from] = {
+                    [countryPrefix[i + 1]]: { cost, minutes, entity },
+                  };
+                }
+                if (
+                  outboundDiallCalls[callLog[c].from][countryPrefix[i + 1]] ===
+                  undefined
+                ) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundDiallCalls[callLog[c].from][countryPrefix[i + 1]] = {
+                    cost,
+                    minutes,
+                    entity,
+                  };
+                }
+
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  outboundDiallCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  outboundDiallCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ].minutes += minutes;
+                }
+                outboundDiallCalls[callLog[c].from][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (outboundDiallCalls[callLog[c].from] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundDiallCalls[callLog[c].from] = {
+                    'Other': { cost, minutes, entity },
+                  };
+                }
+                if (outboundDiallCalls[callLog[c].from]['Other'] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  outboundDiallCalls[callLog[c].from]['Other'] = { cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  outboundDiallCalls[callLog[c].from]['Other'].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  outboundDiallCalls[callLog[c].from]['Other'].minutes += minutes;
+                }
+                outboundDiallCalls[callLog[c].from]['Other'].entity += 1;
+              }
+            } // 3rd if closed
+            found = 0;
+
+            if (callLog[c].direction === "trunking-terminating") {
+              if (/^sip\:(.+)\@.+$/i.test(callLog[c].to)) { // sip
+                callLog[c].to = callLog[c].to.match(/^sip\:(.+)\@.+$/i) || [callLog[c].to, callLog[c].to];
+                callLog[c].to = callLog[c].to[1];
+              }
+              else if (/^client:.*$/i.test(callLog[c].to)) { // Twilio client
+                if (trunkingTerminatingCalls[callLog[c].from] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingTerminatingCalls[callLog[c].from] = {
+                    'TwilioClient': { cost, minutes, entity },
+                  };
+                }
+                if (trunkingTerminatingCalls[callLog[c].from]['TwilioClient'] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingTerminatingCalls[callLog[c].from]['TwilioClient'] = {cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  trunkingTerminatingCalls[callLog[c].from]['TwilioClient'].cost +=
+                    price;
+                }
+                if (!isNaN(minutes)) {
+                  trunkingTerminatingCalls[callLog[c].from]['TwilioClient'].minutes += minutes;
+                }
+                trunkingTerminatingCalls[callLog[c].from]['TwilioClient'].entity += 1;
+                continue;
+              }
+
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!callLog[c].to.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (trunkingTerminatingCalls[callLog[c].from] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingTerminatingCalls[callLog[c].from] = {
+                    [countryPrefix[i + 1]]: { cost, minutes, entity },
+                  };
+                }
+                if (
+                  trunkingTerminatingCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ] === undefined
+                ) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingTerminatingCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ] = { cost, minutes, entity };
+                }
+
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  trunkingTerminatingCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  trunkingTerminatingCalls[callLog[c].from][
+                    countryPrefix[i + 1]
+                  ].minutes += minutes;
+                }
+                trunkingTerminatingCalls[callLog[c].from][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (trunkingTerminatingCalls[callLog[c].from] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingTerminatingCalls[callLog[c].from] = {
+                    'Other': { cost, minutes, entity },
+                  };
+                }
+                if (trunkingTerminatingCalls[callLog[c].from]['Other'] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingTerminatingCalls[callLog[c].from]['Other'] = { cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  trunkingTerminatingCalls[callLog[c].from]['Other'].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  trunkingTerminatingCalls[callLog[c].from]['Other'].minutes += minutes;
+                }
+                trunkingTerminatingCalls[callLog[c].from]['Other'].entity += 1;
+              }
+            } // 4th if closed
+            found = 0;
+
+            if (callLog[c].direction === "trunking-originating") {
+              if (/^sip\:(.+)\@.+$/i.test(callLog[c].from)) { // sip
+                callLog[c].from = callLog[c].from.match(/^sip\:(.+)\@.+$/i) || [callLog[c].from, callLog[c].from];
+                callLog[c].from = callLog[c].from[1];
+              }
+              else if (/^client:.*$/i.test(callLog[c].from)) { // Twilio client
+                if (trunkingOriginatingCalls[callLog[c].to] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingOriginatingCalls[callLog[c].to] = {
+                    'TwilioClient': { cost, minutes, entity },
+                  };
+                }
+                if (trunkingOriginatingCalls[callLog[c].to]['TwilioClient'] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingOriginatingCalls[callLog[c].to]['TwilioClient'] = {cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  trunkingOriginatingCalls[callLog[c].to]['TwilioClient'].cost +=
+                    price;
+                }
+                if (!isNaN(minutes)) {
+                  trunkingOriginatingCalls[callLog[c].to]['TwilioClient'].minutes += minutes;
+                }
+                trunkingOriginatingCalls[callLog[c].to]['TwilioClient'].entity += 1;
+                continue;
+              }
+
+              for (i = 0; i < countryPrefix.length; i += 2) {
+                if (!callLog[c].from.startsWith(countryPrefix[i])) {
+                  continue;
+                }
+                found = 1;
+                if (trunkingOriginatingCalls[callLog[c].to] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingOriginatingCalls[callLog[c].to] = {
+                    [countryPrefix[i + 1]]: { cost, minutes, entity },
+                  };
+                }
+                if (
+                  trunkingOriginatingCalls[callLog[c].to][
+                    countryPrefix[i + 1]
+                  ] === undefined
+                ) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingOriginatingCalls[callLog[c].to][
+                    countryPrefix[i + 1]
+                  ] = { cost, minutes, entity };
+                }
+
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  trunkingOriginatingCalls[callLog[c].to][
+                    countryPrefix[i + 1]
+                  ].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  trunkingOriginatingCalls[callLog[c].to][
+                    countryPrefix[i + 1]
+                  ].minutes += minutes;
+                }
+                trunkingOriginatingCalls[callLog[c].to][
+                  countryPrefix[i + 1]
+                ].entity += 1;
+                break;
+              }
+              if (found === 0) {
+                if (trunkingOriginatingCalls[callLog[c].to] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingOriginatingCalls[callLog[c].to] = {
+                    'Other': { cost, minutes, entity },
+                  };
+                }
+                if (trunkingOriginatingCalls[callLog[c].to]['Other'] === undefined) {
+                cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  trunkingOriginatingCalls[callLog[c].to]['Other'] = { cost, minutes, entity };
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  trunkingOriginatingCalls[callLog[c].to]['Other'].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                  trunkingOriginatingCalls[callLog[c].to]['Other'].minutes += minutes;
+                }
+                trunkingOriginatingCalls[callLog[c].to]['Other'].entity += 1;
+              }
+            } // 5th if closed
+            found = 0;
+            // unknown direction
+            if (callLog[c].direction !== "trunking-originating" && callLog[c].direction !== "trunking-terminating" && callLog[c].direction !== "inbound" && callLog[c].direction !== "outbound-api" && callLog[c].direction !== "outbound-dial") {
+              unknownC = 1;
+              if (unknownCall[callLog[c].to] === undefined) {
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                unknownCall[callLog[c].to] = {
+                  [callLog[c].from]: { cost, minutes, entity},
+                  };
+                }
+                if (unknownCall[callLog[c].to][callLog[c].from] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  unknownCall[callLog[c].to][callLog[c].from] = { cost, minutes, entity};
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  unknownCall[callLog[c].to][callLog[c].from].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                 unknownCall[callLog[c].to][callLog[c].from].minutes += minutes;
+                }
+                unknownCall[callLog[c].to][callLog[c].from].entity += 1;
+            } // last if closed
+          } // for closed
+        } else {
+          console.error(callLog.error);
+          error.style.display = "";
+          info.innerHTML = ``;
+          info.style.display = "none";
+          progress.innerHTML = ``;
+          progress.style.display = "none";
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Something is wrong with getting call logs: ${callLog.error}`;
+          return;
+        }
+        k += numNumbers;
+        info.innerHTML = `Processed all Messages. <br />loading calls...processed ${k} calls`;
+      } // while call closed
+    } // if country call closed
+    else {
+      while (pageAllCalls === 0) {
+        data = {
+          subAcc: subaccount,
+          pageSize: pageSize,
+          page: page,
+          pageToken: Pagetoken,
+          startDate: startDate,
+          endDate: endDate,
+        };
+
+        response = await fetch("./call_log", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: password,
+          },
+          body: JSON.stringify(data),
+        });
+        callLog = await response.json();
+
+        if (callLog.er === 0) {
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML = ``;
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Wrong password.`;
+          return;
+        }
+        if (callLog.instances.length === 0 && page === 0) {
+          finalDataCalls = "";
+          allNumbers += "<pre>No Call Found.</pre>";
+          break;
+        }
+
+        if (response.status === 200) {
+          if (callLog.nextPageUrl) {
+            Pagetoken = new URLSearchParams(callLog.nextPageUrl).get("PageToken");
+          } else {
+            pageAllCalls = 1;
+          }
+          page += 1;
+
+          callLog = callLog.instances.slice();
+          numNumbers = callLog.length;
+
+          for (let c in callLog) {
+            if (callLog[c].direction === "inbound") {
+              if (inboundApiCalls[callLog[c].to] === undefined) {
+                to = callLog[c].to;
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                inboundApiCalls[to] = { cost, minutes, entity };
+              }
+              price = Number(callLog[c].price);
+              minutes = Math.ceil(Number(callLog[c].duration) / 60);
+              if (!isNaN(price)) {
+                inboundApiCalls[callLog[c].to]["cost"] += price;
+              }
+
+              if (!isNaN(minutes)) {
+                inboundApiCalls[callLog[c].to]["minutes"] += minutes;
+              }
+              inboundApiCalls[callLog[c].to]["entity"] += 1;
+            } // 1st if closed
+
+            if (callLog[c].direction === "outbound-api") {
+              if (outboundApiCalls[callLog[c].from] === undefined) {
+                from = callLog[c].from;
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                outboundApiCalls[from] = { cost, minutes, entity };
+              }
+              price = Number(callLog[c].price);
+              minutes = Math.ceil(Number(callLog[c].duration) / 60);
+              if (!isNaN(price)) {
+                outboundApiCalls[callLog[c].from]["cost"] += price;
+              }
+              if (!isNaN(minutes)) {
+                outboundApiCalls[callLog[c].from]["minutes"] += minutes;
+              }
+              outboundApiCalls[callLog[c].from]["entity"] += 1;
+            } // 2nd if closed
+
+            if (callLog[c].direction === "outbound-dial") {
+              if (outboundDiallCalls[callLog[c].from] === undefined) {
+                from = callLog[c].from;
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                outboundDiallCalls[from] = { cost, minutes, entity };
+              }
+              price = Number(callLog[c].price);
+              minutes = Math.ceil(Number(callLog[c].duration) / 60);
+              if (!isNaN(price)) {
+                outboundDiallCalls[callLog[c].from]["cost"] += price;
+              }
+              if (!isNaN(minutes)) {
+                outboundDiallCalls[callLog[c].from]["minutes"] += minutes;
+              }
+              outboundDiallCalls[callLog[c].from]["entity"] += 1;
+            } // 3rd if closed
+
+            if (callLog[c].direction === "trunking-terminating") {
+              if (trunkingTerminatingCalls[callLog[c].from] === undefined) {
+                from = callLog[c].from;
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                trunkingTerminatingCalls[from] = { cost, minutes, entity };
+              }
+              price = Number(callLog[c].price);
+              minutes = Math.ceil(Number(callLog[c].duration) / 60);
+              if (!isNaN(price)) {
+                trunkingTerminatingCalls[callLog[c].from]["cost"] += price;
+              }
+
+              if (!isNaN(minutes)) {
+                trunkingTerminatingCalls[callLog[c].from]["minutes"] += minutes;
+              }
+              trunkingTerminatingCalls[callLog[c].from]["entity"] += 1;
+            } // 4th if closed
+
+            if (callLog[c].direction === "trunking-originating") {
+              if (trunkingOriginatingCalls[callLog[c].to] === undefined) {
+                to = callLog[c].to;
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                trunkingOriginatingCalls[to] = { cost, minutes, entity };
+              }
+              price = Number(callLog[c].price);
+              minutes = Math.ceil(Number(callLog[c].duration) / 60);
+              if (!isNaN(price)) {
+                trunkingOriginatingCalls[callLog[c].to]["cost"] += price;
+              }
+
+              if (!isNaN(minutes)) {
+                trunkingOriginatingCalls[callLog[c].to]["minutes"] += minutes;
+              }
+              trunkingOriginatingCalls[callLog[c].to]["entity"] += 1;
+            } // 5th if closed
+            // unknown direction
+            if (callLog[c].direction !== "trunking-originating" && callLog[c].direction !== "trunking-terminating" && callLog[c].direction !== "inbound" && callLog[c].direction !== "outbound-api" && callLog[c].direction !== "outbound-dial") {
+              unknownC = 1;
+              if (unknownCall[callLog[c].to] === undefined) {
+                cost = 0;
+                minutes = 0;
+                entity = 0;
+                unknownCall[callLog[c].to] = {
+                  [callLog[c].from]: { cost, minutes, entity},
+                  };
+                }
+                if (unknownCall[callLog[c].to][callLog[c].from] === undefined) {
+                  cost = 0;
+                  minutes = 0;
+                  entity = 0;
+                  unknownCall[callLog[c].to][callLog[c].from] = { cost, minutes, entity};
+                }
+                price = Number(callLog[c].price);
+                minutes = Math.ceil(Number(callLog[c].duration) / 60);
+                if (!isNaN(price)) {
+                  unknownCall[callLog[c].to][callLog[c].from].cost += price;
+                }
+                if (!isNaN(minutes)) {
+                 unknownCall[callLog[c].to][callLog[c].from].minutes += minutes;
+                }
+                unknownCall[callLog[c].to][callLog[c].from].entity += 1;
+            } // last if closed
+          } // for closed
+        } else {
+          console.error(callLog.error);
+          error.style.display = "";
+          info.innerHTML = ``;
+          info.style.display = "none";
+          progress.innerHTML = ``;
+          progress.style.display = "none";
+          document.getElementById("Messages").disabled = false;
+          document.getElementById("Calls").disabled = false;
+          document.getElementById("CountryYes").disabled = false;
+          error.innerHTML = `Something is wrong with getting call logs: ${callLog.error}`;
+          return;
+        }
+        k += numNumbers;
+        info.innerHTML = `Processed all Messages. <br />loading calls...processed ${k} calls`;
+      } // while call closed
+    }
+    if (finalDataCalls !== "") {
+      finalDataCalls = {
+        outboundApiCalls,
+        inboundApiCalls,
+        outboundDiallCalls,
+        trunkingTerminatingCalls,
+        trunkingOriginatingCalls,
+      };
+    }
+
+    if (
+      document.getElementById("CountryYes").checked &&
+      (finalData !== "" || finalDataCalls !== "")
+    ) {
+      allNumbers +=
+        "<pre>TrafficType|Direction|From|To|Country|Cost|MessageVolume|Segments|CallVolume|Minutes|Asset|AssetCountry|</pre>";
+    } else if (finalData !== "" || finalDataCalls !== "") {
+      allNumbers +=
+        "<pre>TrafficType|Direction|From|To|Cost|MessageVolume|Segments|CallVolume|Minutes|Asset|</pre>";
+    }
+
+    if (document.getElementById("CountryYes").checked) {
+      for (m in finalData) {
+        for (n in finalData[m]) {
+          asset = n.match(/^whatsapp\:(.+)$/i) || [n, n];
+
+          for (i = 0; i < countryPrefix.length; i += 2) {
+            if (/^\d{1,7}$/.test(asset[1])){ // short code
+              assetCountry = 'ShortCode';
+              break;
+            } 
+            else if (!/^\+\d+$/.test(asset[1])){ // alpha
+              assetCountry = 'Alpha';
+              break;
+            }
+            else if (asset[1].startsWith(countryPrefix[i])) { // long code
+              assetCountry = countryPrefix[i+1];
+              break;
+            }
+            assetCountry = 'Other';
+          }
+
+          for (j in finalData[m][n]) {
+            if (m === "inboundApi") {
+              allNumbers += `<pre>Messages|${m}|null|${n}|${j}|${finalData[m][n][j].cost}|${finalData[m][n][j].entity}|${finalData[m][n][j].segments}|null|null|${asset[1]}|${assetCountry}|</pre>`;
+            } else {
+              allNumbers += `<pre>Messages|${m}|${n}|null|${j}|${finalData[m][n][j].cost}|${finalData[m][n][j].entity}|${finalData[m][n][j].segments}|null|null|${asset[1]}|${assetCountry}|</pre>`;
+            }
+          }
+        }
+      }
+      if (unknownS === 1){
+        for (o in unknownSMS) {
+          for (p in unknownSMS[o]) {
+           allNumbers += `<pre>Messages|unknownDirection|${p}|${o}|null|${unknownSMS[o][p].cost}|${unknownSMS[o][p].entity}|${unknownSMS[o][p].segments}|null|null|unknown|unknown|</pre>`;
+          }
+        }
+      }
+      assetCountry = '';
+      for (m in finalDataCalls) {
+        for (n in finalDataCalls[m]) {
+          asset = n.match(/^sip\:(.+)\@.+$/i) || [n, n];
+
+          for (i = 0; i < countryPrefix.length; i += 2) {
+            if (/^client\:.*$/.test(asset[1])){ // client
+              assetCountry = 'TwilioClient';
+              break;
+            }
+            else if (asset[1].startsWith(countryPrefix[i])) {
+              assetCountry = countryPrefix[i+1];
+              break;
+            }
+            assetCountry = 'Other';
+          }
+
+          for (j in finalDataCalls[m][n]) {
+            if (m === "inboundApiCalls" || m === "trunkingOriginatingCalls") {
+              allNumbers += `<pre>Calls|${m}|null|${n}|${j}|${finalDataCalls[m][n][j].cost}|null|null|${finalDataCalls[m][n][j].entity}|${finalDataCalls[m][n][j].minutes}|${asset[1]}|${assetCountry}|</pre>`;
+            } else {
+              allNumbers += `<pre>Calls|${m}|${n}|null|${j}|${finalDataCalls[m][n][j].cost}|null|null|${finalDataCalls[m][n][j].entity}|${finalDataCalls[m][n][j].minutes}|${asset[1]}|${assetCountry}|</pre>`;
+            }
+          }
+        }
+      }
+      if (unknownC === 1){
+        for (o in unknownCall) {
+          for (p in unknownCall[o]) {
+           allNumbers += `<pre>Calls|unknownDirection|${p}|${o}|null|${unknownCall[o][p].cost}|null|null|${unknownCall[o][p].entity}|${unknownCall[o][p].minutes}|unknown|unknown|</pre>`;
+          }
+        }
+      }
+    } else {
+      for (m in finalData) {
+        for (n in finalData[m]) {
+          asset = n.match(/^whatsapp\:(.+)$/i) || [n, n];
+
+          if (m === "inboundApi") {
+            allNumbers += `<pre>Messages|${m}|null|${n}|${finalData[m][n].cost}|${finalData[m][n].entity}|${finalData[m][n].segments}|null|null|${asset[1]}|</pre>`;
+          } else {
+            allNumbers += `<pre>Messages|${m}|${n}|null|${finalData[m][n].cost}|${finalData[m][n].entity}|${finalData[m][n].segments}|null|null|${asset[1]}|</pre>`;
+          }
+        }
+      }
+      if (unknownS === 1){
+        for (o in unknownSMS) {
+          for (p in unknownSMS[o]) {
+           allNumbers += `<pre>Messages|unknownDirection|${p}|${o}|${unknownSMS[o][p].cost}|${unknownSMS[o][p].entity}|${unknownSMS[o][p].segments}|null|null|unknown|</pre>`;
+          }
+        }
+      }
+      for (m in finalDataCalls) {
+        for (n in finalDataCalls[m]) {
+          asset = n.match(/^sip\:(.+)\@.+$/i) || [n, n];
+          if (m === "inboundApiCalls" || m === "trunkingOriginatingCalls") {
+            allNumbers += `<pre>Calls|${m}|null|${n}|${finalDataCalls[m][n].cost}|null|null|${finalDataCalls[m][n].entity}|${finalDataCalls[m][n].minutes}|${asset[1]}|</pre>`;
+          } else {
+            allNumbers += `<pre>Calls|${m}|${n}|null|${finalDataCalls[m][n].cost}|null|null|${finalDataCalls[m][n].entity}|${finalDataCalls[m][n].minutes}|${asset[1]}|</pre>`;
+          }
+        }
+      }
+      if (unknownC === 1){
+        for (o in unknownCall) {
+          for (p in unknownCall[o]) {
+           allNumbers += `<pre>Calls|unknownDirection|${p}|${o}|${unknownCall[o][p].cost}|null|null|${unknownCall[o][p].entity}|${unknownCall[o][p].minutes}|unknown|</pre>`;
+          }
+        }
+      }
+    }
+    document.getElementById("Messages").disabled = false;
+    document.getElementById("Calls").disabled = false;
+    document.getElementById("CountryYes").disabled = false;
+
+    if (down === 1) {
+      allNumbers = allNumbers.replace(/\"/g, "");
+      allNumbers = allNumbers.replace(/<\/pre>/g, "%0D%0A");
+      allNumbers = allNumbers.replace(/<pre>/g, "");
+      let a = document.body.appendChild(document.createElement("a"));
+      if (document.getElementById("fileFormatcsv").checked){
+
+            a.download = "listNumbers.csv";
+            a.href = "data:text/csv;charset=utf-8," + allNumbers;
+            a.click(); //Trigger a click on the element
+            info.innerHTML = `done`;
+            progress.innerHTML = ``;
+            progress.style.display = "none";
+      }
+      else {
+      a.download = "listNumbers.txt";
+      a.href = "data:text/plain," + allNumbers;
+      a.click(); //Trigger a click on the element
+      info.innerHTML = `done`;
+      progress.innerHTML = ``;
+      progress.style.display = "none";
+      }
+    } else {
+      allNumbers = allNumbers.replace(/\"/g, "");
+      info.innerHTML = `${allNumbers}`;
+      progress.innerHTML = ``;
+      progress.style.display = "none";
+    }
+  } catch (err) {
+    error.style.display = "";
+    info.innerHTML = ``;
+    info.style.display = "none";
+    progress.innerHTML = ``;
+    progress.style.display = "none";
+    document.getElementById("Messages").disabled = false;
+    document.getElementById("Calls").disabled = false;
+    document.getElementById("CountryYes").disabled = false;
+    error.innerHTML = `Something went wrong: ${err} - if you see a JSON error, please check that the correct subaccount was added.`;
+  }
+}
+
+function download() {
+  if (
+    document.getElementById("progress").innerHTML ===
+    "In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop."
+  ) {
+    return;
+  }
+  let a = document.body.appendChild(document.createElement("a"));
+  let newlines = document.getElementById("info1").innerHTML;
+  if (document.getElementById("fileFormatcsv").checked){
+    a.download = "listNumbers.csv";
+    newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
+    newlines = newlines.replace(/<pre>/g, "");
+    a.href = "data:text/csv;charset=utf-8," + newlines;
+    a.click(); //Trigger a click on the element
+  }
+  else {
+  a.download = "listNumbers.txt";
+  newlines = newlines.replace(/<\/pre>/g, "%0D%0A");
+  newlines = newlines.replace(/<pre>/g, "");
+  a.href = "data:text/plain," + newlines;
+  a.click(); //Trigger a click on the element
+  }
+}
+
+async function mask() {
+  let acc = null;
+  const response = await fetch("./mask_account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  acc = await response.json();
+
+  masking.innerHTML = acc.acc;
+  status_acc.innerHTML = ``;
+}
+
+async function unmask() {
+  const password = document.getElementById("password").value;
+
+  const response = await fetch("./get_account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: password,
+    },
+  });
+  var acc = await response.json();
+
+  if (acc.er === 0) {
+    status_acc.style.display = "";
+    status_acc.innerHTML = `Wrong password.`;
+
+    return;
+  }
+  masking.innerHTML = acc.acc;
+  status_acc.innerHTML = ``;
+}
+
+async function clear_list() {
+  if (
+    document.getElementById("progress").innerHTML ===
+    "In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop."
+  ) {
+    return;
+  }
+  info.innerHTML = ``;
+  info.style.display = "none";
+}
+    </script>
+  </body>
+</html>
