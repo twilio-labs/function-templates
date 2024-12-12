@@ -15,6 +15,10 @@
  *    "message": string
  *  }
  */
+const assets = Runtime.getAssets();
+const { detectMissingParams, VerificationException } = require(
+  assets['/utils.js'].path
+);
 
 /**
  * Checks the verification status of a given code for a specified service and recipient.
@@ -50,11 +54,6 @@ exports.handler = async function (context, event, callback) {
   response.appendHeader('Content-Type', 'application/json');
 
   try {
-    const assets = Runtime.getAssets();
-    const { detectMissingParams, VerificationException } = require(
-      assets['/utils.js'].path
-    );
-
     const missingParams = detectMissingParams(['to', 'code'], event);
     if (missingParams.length > 0) {
       throw new VerificationException(
