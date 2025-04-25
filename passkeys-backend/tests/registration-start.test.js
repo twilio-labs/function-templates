@@ -107,6 +107,34 @@ describe('registration/start', () => {
     );
   });
 
+  // This is how the CodeExchange is populating the optional field if left empty
+  it('works with ANDROID_APP_KEYS empty string', (done) => {
+    const callback = (_, { _body }) => {
+      expect(axios.post).toHaveBeenCalledWith(
+        'https://api.com/Factors',
+        mockRequestBody,
+        { auth: { password: 'mockPassword', username: 'mockUsername' } }
+      );
+      done();
+    };
+
+    const mockContextWithoutAndroidKeys = {
+      API_URL: 'https://api.com',
+      ANDROID_APP_KEYS: '""',
+      DOMAIN_NAME: 'example.com',
+      getTwilioClient: () => ({
+        username: 'mockUsername',
+        password: 'mockPassword',
+      }),
+    };
+
+    handlerFunction(
+      mockContextWithoutAndroidKeys,
+      { username: 'user001' },
+      callback
+    );
+  });
+
   it('calls the API with the expected request body', (done) => {
     const modifiedRequest = structuredClone(mockRequestBody);
     modifiedRequest.content.relying_party.origins.push('key1', 'key2', 'key3');

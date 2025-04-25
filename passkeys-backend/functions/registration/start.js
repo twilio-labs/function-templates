@@ -22,6 +22,11 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
+  const androidOrigins = (keys) => {
+    if (!keys || keys.trim() === '""') return [];
+    return keys.split(',');
+  };
+
   // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
   const requestBody = {
@@ -35,7 +40,7 @@ exports.handler = async (context, event, callback) => {
         name: 'PasskeySample',
         origins: [
           `https://${DOMAIN_NAME}`,
-          ...(ANDROID_APP_KEYS?.split(',') ?? []),
+          ...androidOrigins(ANDROID_APP_KEYS),
         ],
       },
       user: {
