@@ -57,7 +57,7 @@ Header: x-twilio-signature
 @TODO: Code samples to generate x-twilio-signature
 
 Available services
-* Message (default)
+* Messaging (default)
 * Voice
 * VoiceAddOns
 * Conversations
