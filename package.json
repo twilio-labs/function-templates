@@ -140,6 +140,7 @@
     "reminder-message",
     "passkeys-backend",
     "block-spam-calls",
-    "ai-assistants-samples"
+    "ai-assistants-samples",
+    "mcp-server"
   ]
 }
