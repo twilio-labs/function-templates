@@ -1,6 +1,6 @@
 # mcp-server
 
-Generates a remote MCP server for Twilio API tools 
+Functions to run a remote MCP server for Twilio API tools
 
 ## Pre-requisites
 
@@ -10,23 +10,10 @@ This project requires some environment variables to be set. A file named `.env` 
 
 In your `.env` file, set the following values:
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-
-
-### Function Parameters
-
-`/blank` expects the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
-
-`/hello-messaging` is protected and requires a valid Twilio signature as well as the following parameters:
-
-| Parameter | Description | Required |
-| :-------- | :---------- | :------- |
-
+* ACCOUNT_SID
+* AUTH_TOKEN
+* API_KEY
+* API_SECRET
 
 ## Create a new project with the template
 
@@ -49,8 +36,6 @@ twilio serverless:init example --template=mcp-server && cd example
 twilio serverless:start
 ```
 
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
-
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
 ## Deploying
@@ -62,3 +47,38 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
+
+## Integration with MCP clients
+
+`https://<functions-domain>.twil.io/mcp?services=`
+
+Header: x-twilio-signature
+
+@TODO: Code samples to generate x-twilio-signature
+
+Available services
+* Message (default)
+* Voice
+* VoiceAddOns
+* Conversations
+* Studio
+* TaskRouter
+* Serverless
+* Account
+* PhoneNumbers
+* Applications
+* Auth
+* AddOns
+* Usage
+
+## Example prompts
+
+@TODO
+
+## Security recommendations
+
+This remote MCP server function will provide Tools to your LLM that provide access to your Twilio account. We recommend the following considerations when giving clients access to your server:
+
+- Always the requires_approval field to ensure that there are no unintended actions taken within your account.
+- Use scoped permissions for your Twilio API Key. Not all endpoints support scoped permissions, but some do. See https://www.twilio.com/docs/iam/api-keys/restricted-api-keys for more information about which actions are supported per API Service.
+- To ensure privacy, do not use other MCP servers in conjunction with your Twilio MCP server.
