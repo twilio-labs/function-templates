@@ -353,7 +353,7 @@
     {
       "id": "mcp-server",
       "name": "MCP Server",
-      "description": "Generates an MCP server"
+      "description": "Functions to run a remote MCP server for Twilio API tools"
     }
   ]
 }
