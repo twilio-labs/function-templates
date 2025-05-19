@@ -1,12 +1,19 @@
 /* eslint-disable callback-return */
 
+const { randomUUID } = require('crypto');
+
 const modules = Runtime.getFunctions();
 const createServer = require(modules.server.path);
 const createReq = require(modules.req.path);
 const createRes = require(modules.res.path);
 
+const defaultMessaging = [
+  'Api20100401Message',
+  'Api20100401IncomingPhoneNumber',
+];
+
 const TWILIO_TAG_MAP = {
-  Messaging: ['Api20100401Message', 'Api20100401IncomingPhoneNumber'],
+  Messaging: defaultMessaging,
   Voice: ['Api20100401Call'],
   VoiceAddOns: [
     'Api20100401Recording',
@@ -26,6 +33,7 @@ const TWILIO_TAG_MAP = {
     'StudioV2ExecutionStep',
     'StudioV2Flow',
     'StudioV2FlowRevision',
+    'StudioV2FlowValidate',
   ],
   TaskRouter: [
     'TaskrouterV1Activity',
@@ -78,7 +86,7 @@ const validateContext = (context, callback) => {
 
 const getTags = (event) => {
   if (!event.services) {
-    return ['Api20100401Message'];
+    return defaultMessaging;
   }
 
   const services =
@@ -101,9 +109,11 @@ const getTags = (event) => {
 };
 
 exports.handler = async function (context, event, callback) {
-  console.log('MCPServer called with method', event.method);
+  const id = randomUUID().substring(0, 6);
+  console.log(`[${id}]`, 'STARTED MCP called with method', event.method);
   if (event.method === 'tools/call') {
     console.log(
+      `[${id}]`,
       'Calling tool',
       event.params.name,
       'with arguments',
@@ -123,11 +133,14 @@ exports.handler = async function (context, event, callback) {
 
     await transport.handleRequest(req, res);
   } catch (error) {
+    console.log(`[${id}]`, 'FAILED MCP request with method', event.method);
     console.log(error);
-    console.error('Error handling request:', error);
-    const twilioResponse = new Twilio.Response();
-    twilioResponse.setStatusCode(500);
-    twilioResponse.setBody({ error: error.message });
-    callback(twilioResponse);
+
+    const response = new Twilio.Response();
+    response.setStatusCode(500);
+    response.setBody({ error: error.message });
+    callback(null, response);
+  } finally {
+    console.log(`[${id}]`, 'COMPLETED MCP request with method', event.method);
   }
 };
