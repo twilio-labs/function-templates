@@ -349,6 +349,11 @@
       "id": "ai-assistants-samples",
       "name": "AI Assistants Samples",
       "description": "Functions to connect AI Assistants to various Channels and Tools"
+    },
+    {
+      "id": "mcp-server",
+      "name": "MCP Server",
+      "description": "Functions to run a remote MCP server for Twilio API tools"
     }
   ]
 }
