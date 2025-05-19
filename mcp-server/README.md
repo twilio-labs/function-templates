@@ -79,6 +79,6 @@ Available services
 
 This remote MCP server function will provide Tools to your LLM that provide access to your Twilio account. We recommend the following considerations when giving clients access to your server:
 
-- Always the requires_approval field to ensure that there are no unintended actions taken within your account.
+- Always set the `requires_approval` field to ensure that there are no unintended actions taken within your account.
 - Use scoped permissions for your Twilio API Key. Not all endpoints support scoped permissions, but some do. See https://www.twilio.com/docs/iam/api-keys/restricted-api-keys for more information about which actions are supported per API Service.
 - To ensure privacy, do not use other MCP servers in conjunction with your Twilio MCP server.
