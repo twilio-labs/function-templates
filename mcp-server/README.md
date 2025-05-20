@@ -85,6 +85,8 @@ The sample code below assuming that the following environment variables are set:
 * TWILIO_AUTH_TOKEN
 * TWILIO_BASE_DOMAIN
 
+ℹ️ As the generated signature depends on the full Function endpoint that you are executing, and the URL includes the set of services (e.g. `/mcp?services=PhoneNumbers` vs `/mcp?services=Messaging`), you will need to generate a valid signature every time you update any part of the URL. We recommend dynamically generating the signature whenever you initialize the MCP client configuration with your Twilio MCP server. 
+
 #### JavaScript
 
 ```javascript
@@ -109,7 +111,7 @@ function getSignature(authToken, url, params) {
 const signature =
   twilio.getExpectedTwilioSignature(
     process.env.TWILIO_AUTH_TOKEN,
-    `${process.env.TWILIO_DOMAIN_NAME}/mcp`,
+    `${process.env.TWILIO_DOMAIN_NAME}/mcp?services=...`,
     {}
   );
 ```
@@ -125,7 +127,7 @@ dotenv.config();
 const signature =
   twilio.getExpectedTwilioSignature(
     process.env.TWILIO_AUTH_TOKEN,
-    `${process.env.TWILIO_DOMAIN_NAME}/mcp`,
+    `${process.env.TWILIO_DOMAIN_NAME}/mcp?services=...`,
     {}
   );
 ```
@@ -140,12 +142,12 @@ from twilio.request_validator import RequestValidator
 auth_token = os.environ.get("TWILIO_AUTH_TOKEN")
 base_domain = os.environ.get("TWILIO_DOMAIN_NAME")
 
-url = f"{base_domain}/mcp?services=Messaging"
+url = f"{base_domain}/mcp?services=..."
 validator = RequestValidator(auth_token)
 signature = validator.compute_signature(url, {})
 ```
 
-### Services
+### Filtering tools by service
 
 Use the querystring parameter `?services=` to specify a set of tools based on the needs of your MCP client. Set multiple services by passing multiple `services` key/value pairs.
 
