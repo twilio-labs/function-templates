@@ -116,7 +116,7 @@ const signature =
   );
 ```
 
-Or, with the `twilio` Node package installed:
+or, with the [`twilio`](https://www.npmjs.com/package/twilio) Node package installed:
 
 ```javascript
 const twilio = require("twilio");
@@ -130,6 +130,30 @@ const signature =
     `${process.env.TWILIO_DOMAIN_NAME}/mcp?services=...`,
     {}
   );
+```
+
+or, with the [`twilio-signature`](https://www.npmjs.com/package/twilio-signature) Node package installed, a lightweight alternative:
+
+```javascript
+import { createTwilioSignature } from 'twilio-signature';
+const dotenv = require("dotenv");
+
+dotenv.config();
+
+const signature = 
+  createTwilioSignature(
+    process.env.TWILIO_AUTH_TOKEN,
+    `${process.env.TWILIO_DOMAIN_NAME}/mcp?services=...`,
+    {}
+  );
+```
+
+#### npx with [`twilio-signature-cli`](https://www.npmjs.com/package/twilio-signature-cli)
+
+This CLI tool makes it easy to generate Twilio signatures for webhook validation without writing any code. It's perfect for testing and debugging Twilio webhook integrations, or for generating signatures in automated scripts.
+
+```shell
+npx twilio-signature-cli -t TWILIO_AUTH_TOKEN -u YOUR_FUNCTION_URL
 ```
 
 #### Python
