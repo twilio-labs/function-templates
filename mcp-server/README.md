@@ -68,7 +68,7 @@ twilio serverless:deploy
 
 ### Testing your MCP server
 
-🐛 We're aware of a reported issue with the MCP Inspector project and the authentication header. You'll need to use your MCP client to connect to your deployed MCP server.
+ℹ️ We're aware of a reported issue with the MCP Inspector project and the authentication header. You'll need to use your MCP client to connect to your deployed MCP server.
 
 ## Integration with MCP clients
 
