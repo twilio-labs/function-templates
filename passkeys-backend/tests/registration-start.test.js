@@ -81,6 +81,36 @@ describe('registration/start', () => {
     handlerFunction(mockContext, { username: 'user001' }, callback);
   });
 
+  it('works with a phone number as a username', (done) => {
+    const modifiedBody = structuredClone(mockRequestBody);
+    modifiedBody.to.user_identifier = '+14151234567';
+    modifiedBody.content.user.display_name = '+14151234567';
+
+    const callback = (_, { _body }) => {
+      expect(axios.post).toHaveBeenCalledWith(
+        'https://api.com/Factors',
+        modifiedBody,
+        { auth: { password: 'mockPassword', username: 'mockUsername' } }
+      );
+      done();
+    };
+
+    const mockContextWithoutAndroidKeys = {
+      API_URL: 'https://api.com',
+      DOMAIN_NAME: 'example.com',
+      getTwilioClient: () => ({
+        username: 'mockUsername',
+        password: 'mockPassword',
+      }),
+    };
+
+    handlerFunction(
+      mockContextWithoutAndroidKeys,
+      { username: '+14151234567' },
+      callback
+    );
+  });
+
   it('works with empty ANDROID_APP_KEYS', (done) => {
     const callback = (_, { _body }) => {
       expect(axios.post).toHaveBeenCalledWith(
