@@ -69,6 +69,7 @@ exports.handler = async (context, event, callback) => {
     response.setStatusCode(200);
     response.setBody(APIResponse.data.next_step);
   } catch (error) {
+    console.error('Error in passkeys registration start:', error.message);
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
     response.setBody(error.message);
