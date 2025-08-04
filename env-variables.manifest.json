@@ -1885,6 +1885,38 @@
         "configurable": false,
         "contentKey": null
       }
+    ],
+    "email-events-sms": [
+      {
+        "key": "TWILIO_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "The Twilio phone number to send SMS alerts from",
+        "link": null,
+        "default": "+56667778888",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "MY_PHONE_NUMBER",
+        "required": true,
+        "format": "phone_number",
+        "description": "Your phone number that will receive email event alerts",
+        "link": null,
+        "default": "+12223334444",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_VOICE_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/send-event",
+        "configurable": false,
+        "contentKey": null
+      }
     ]
   }
 }
