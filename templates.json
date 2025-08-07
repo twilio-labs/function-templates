@@ -354,6 +354,11 @@
       "id": "mcp-server",
       "name": "MCP Server",
       "description": "Functions to run an MCP server for Twilio API tools"
+    },
+    {
+      "id": "email-events-sms",
+      "name": "Email Open and Click Alerts via SMS",
+      "description": "This template tracks and sends SMS alerts of email open and click statuses."
     }
   ]
 }

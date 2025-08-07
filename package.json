@@ -141,6 +141,7 @@
     "passkeys-backend",
     "block-spam-calls",
     "ai-assistants-samples",
-    "mcp-server"
+    "mcp-server",
+    "email-events-sms"
   ]
 }
