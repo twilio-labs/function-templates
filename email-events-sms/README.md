@@ -22,6 +22,7 @@ In your `.env` file, set the following values:
 
 `/send-event` is a public webhook endpoint that receives SendGrid email events and requires:
 
+
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |
 | SendGrid webhook data | JSON payload containing email event data (open/click events) | Yes |
@@ -73,4 +74,13 @@ After deploying your Twilio Function, configure SendGrid to send webhook events 
 6. Enter your Webhook URL within the **Post URL** textbox
 7. Within the **Engagement Data** section, click the **Opened** and **Clicked** checkboxes. This will enable webhook event tracking for only those two events
 
-Once configured, SendGrid will send open and click webhook notifications to your Twilio Function. Test out your application by sending an email with SendGrid. You can use the [**categories**](https://www.twilio.com/docs/sendgrid/for-developers/sending-email/categories) field so that the SMS alert will show which category the email event is from. 
+Once configured, SendGrid will send open and click webhook notifications to your Twilio Function. Test out your application by sending an email with SendGrid. You can use the [**categories**](https://www.twilio.com/docs/sendgrid/for-developers/sending-email/categories) field so that the SMS alert will show which category the email event is from.
+
+## Additional Resources
+
+Want to learn more about building this application or extend its functionality? Check out these helpful tutorials:
+
+- **[Receive SMS Alerts for Email Opens and Clicks with Twilio SendGrid and Node.js](https://www.twilio.com/en-us/blog/developers/tutorials/product/email-open-click-tracking-sms-alerts-twilio-sendgrid)** - A tutorial that walks through building this application from scratch, explaining each component and how they work together.
+
+- **[Using Vibe Coding to Alter a Twilio Code Exchange Template](https://www.twilio.com/en-us/blog/developers/using-vibe-coding-alter-code-exchange-template-getting-started)** - A creative coding session that builds upon this template to add advanced features
+
