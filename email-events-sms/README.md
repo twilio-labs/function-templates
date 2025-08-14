@@ -20,7 +20,8 @@ In your `.env` file, set the following values:
 
 ### Function Parameters
 
-`/send-event` receives SendGrid email events and requires:
+`/send-event` is a public webhook endpoint that receives SendGrid email events and requires:
+
 
 | Parameter | Description | Required |
 | :-------- | :---------- | :------- |

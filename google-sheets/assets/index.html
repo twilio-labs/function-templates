@@ -68,10 +68,30 @@
                     </div>
                 </h1>
                 <section>
-                    <h2>Get started with your application</h2>
+                    <h2>Configuring your application</h2>
+                    <h3>Adding your Google Service account authentication JSON file:</h3>
                     <p>
-                        Follow these steps to try out your new app:
+                        Before you can use this application, you need to provide your Google Service account authentication JSON file.
+                        This file contains the credentials needed to access your Google Sheets document.
+                        Follow these steps to add your authentication JSON file to your application:
                     </p>
+                    <ol class="steps">
+                        <li>Select <b>Edit this application</b> below to open the Functions and Assets Editor.</li>
+                        <li>Under <b>Assets</b>, select the <b>/auth.json</b> file.</li>
+                        <li>Paste the contents of your Google Service account authentication JSON key file into the <b>/auth.json</b> file.</li>
+                        <li>Select <b>Save</b>.</li>
+                        <li>Select <b>Deploy all</b> to redeploy your application.</li>
+                    </ol>
+                    <p>
+                        For more information on how to obtain your authentication JSON file, refer to the
+                        <a href="https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys"
+                           target="_blank" rel="noopener">
+                            Google Cloud documentation</a>.
+                    </p>
+                </section>
+                <section>
+                    <h2>Get started with your application</h2>
+                    <h3>Follow these steps to try out your new app:</h3>
                     <p>
                         This app automatically logs text messages sent to your Twilio phone number into the
                         specified Google Sheets document.
@@ -82,16 +102,14 @@
                             target="_blank" rel="noopener">
                                 the Google Sheets API setting in your Google Cloud Console
                             </a>
-                            and ensure it's enabled
+                            and ensure it's enabled.
                         </li>
                         <li>Open the Google Sheets document whose ID you configured for use with this app.</li>
                         <li>
                             Click the <b>Share</b> button in the toolbar of your Google Sheets document, enter the
                             <a href="https://console.cloud.google.com/iam-admin/serviceaccounts"
                                target="_blank" rel="noopener">
-                                email address belonging to your service account
-                            </a>, and press Enter to give your service account access to your Google Sheets
-                            document.
+                                email address belonging to your service account</a> and press <b>Enter</b> to give your service account access to your Google Sheets document.
                         </li>
                         <li>Text your Twilio phone number with a message.</li>
                         <li>
@@ -100,45 +118,47 @@
                         </li>
                     </ol>
                 </section>
-
                 <section>
                     <!-- APP_INFO_V2 -->
                 </section>
                 <section>
                     <h2>Troubleshooting</h2>
-                    <ul>
-                        <p>
-                            <li>
-                                Verify your Google Sheets configuration:
-                                <div id="check-status">
-                                    <button onclick="showGoogleSheetsStatus()">Verify Configuration</button>
-                                    <span id="status-message"></span>
-                                </div>
-                                If the above check reveals problems, edit this function's <code>.env</code> file via the <code>Edit This Code</code> button above, if available, and ensure that all values are correct.
-                            </li>
-                        </p>
-                        <p>
-                            If you see "Google Sheets integration error: The caller does not have permission" in your
-                            Twilio console debugger, ensure you have shared your Google Sheets document with the email
+                    <h3>Verify your Google Sheets configuration</h3>
+                    <p>
+                        Use the <b>Verify Configuration</b> button below to test your Google Sheets configuration.
+                    </p>
+                    <div id="check-status">
+                                <button onclick="showGoogleSheetsStatus()">Verify Configuration</button>
+                                <span id="status-message"></span>
+                            </div>
+                    <p>
+                        If you encounter configuration issues, edit this function's <code>.env</code> file via the <b>Edit this application</b> button above, if available, and ensure that all values are correct. Some common error messages include:
+                    </p>
+                    <ul style="list-style-type: circle;">
+                        <li>
+                            <code>Google Sheets integration error: The caller does not have permission</code>: ensure you have shared your Google Sheets document with the email
                             address associated with your Service Account.
-                        </p>
-                        <p>
-                            <li>
-                                Check the
-                                <a href="https://www.twilio.com/console/phone-numbers/incoming"
-                                   target="_blank"
-                                   rel="noopener">
-                                    phone number configuration
-                                </a>
-                                and make sure the Twilio phone number you want for your app has a SMS webhook
-                                configured to point at the following URL
-                                <form>
-                                    <label for="twilio-webhook">Webhook URL</label>
-                                    <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/google-sheets">
-                                </form>
-                            </li>
-                        </p>
+                        </li>
+                        <li>
+                            <code>Google Sheets integration error. Please check the debugger in your Twilio Console</code>: ensure that you have entered the name of the <b>Sheet</b> within the Google Sheet document in the <code>SHEET_NAME</code> environment variable.
+                        </li>
                     </ul>
+                    <p>
+                        If you continue to experience issues, please refer to the debugger in your Twilio Console.
+                    <h3>Verify SMS Webhook Configuration</h3>
+                    <p>
+                        Check the
+                        <a href="https://www.twilio.com/console/phone-numbers/incoming"
+                            target="_blank"
+                            rel="noopener">
+                            phone number configuration
+                        </a>
+                        and make sure the Twilio phone number you want for your app has a SMS webhook configured to point at the following URL:
+                        <form>
+                            <label for="twilio-webhook">Webhook URL</label>
+                            <input type="text" id="twilio-webhook" class="function-root" readonly=true value="/google-sheets">
+                        </form>
+                    </p>
                 </section>
             </div>
         </main>
