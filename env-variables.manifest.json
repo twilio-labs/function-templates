@@ -1297,8 +1297,8 @@
       {
         "key": "GOOGLE_CREDENTIALS",
         "required": true,
-        "format": "file(json)",
-        "description": "A JSON key file for your Google Sheets service account",
+        "format": "text",
+        "description": "The path to your Google Service account authentication JSON key file. Enter /auth.json. After deploying your application, select \"Go to live application\" for additional configuration steps.",
         "link": "https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys",
         "default": "/auth.json",
         "configurable": true,
@@ -1318,7 +1318,7 @@
         "key": "SHEET_NAME",
         "required": true,
         "format": "text",
-        "description": "The spreadsheet name to log to within your Google Sheets document",
+        "description": "The sheet name to log to within your Google Sheets document",
         "link": null,
         "default": "Sheet1",
         "configurable": true,
@@ -1729,7 +1729,7 @@
         "format": "text",
         "description": "Set the password that will allow you to use the application",
         "link": null,
-        "default": "1",
+        "default": "SuperSecretPassword",
         "configurable": true,
         "contentKey": null
       }
@@ -1883,6 +1883,48 @@
         "link": null,
         "default": null,
         "configurable": false,
+        "contentKey": null
+      }
+    ],
+    "mcp-server": [
+      {
+        "key": "ACCOUNT_SID",
+        "required": true,
+        "format": "text",
+        "description": "Your Twilio Account SID",
+        "link": "https://www.twilio.com/console",
+        "default": "ACxxx",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "AUTH_TOKEN",
+        "required": true,
+        "format": "text",
+        "description": "Your Twilio Auth Token",
+        "link": "https://www.twilio.com/console",
+        "default": "abc",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "API_KEY",
+        "required": true,
+        "format": "text",
+        "description": "Your Twilio API Key",
+        "link": "https://www.twilio.com/console/project/api-keys",
+        "default": "SKxxx",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "API_SECRET",
+        "required": true,
+        "format": "text",
+        "description": "Your Twilio API Secret",
+        "link": "https://www.twilio.com/console/project/api-keys",
+        "default": "abc",
+        "configurable": true,
         "contentKey": null
       }
     ],
