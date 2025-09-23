@@ -23,8 +23,7 @@ In your `.env` file, set the following values:
 | `API_URL`            | Passkeys API to point at                              | Yes |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
-| `NAMESPACE`   | UUID for generating deterministic UUIDs with the uuid library for username conversion  | Yes  |
-| `SERVICE_SID`         | Service created in Twilio verify | No |
+| `SERVICE_SID`        | Service created in Twilio verify | No |
 
 ## Create a new project with the template
 

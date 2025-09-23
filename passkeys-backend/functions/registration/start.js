@@ -26,7 +26,7 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
-  const uuidIdentity = v5(event.username, NAMESPACE);
+  const uuidIdentity = v5(event.username, v5.URL);
 
   /* eslint-disable camelcase */
   const requestBody = {

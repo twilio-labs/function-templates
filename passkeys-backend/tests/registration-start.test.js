@@ -9,7 +9,6 @@ jest.mock('axios');
 const mockContext = {
   API_URL: 'https://api.com',
   DOMAIN_NAME: 'example.com',
-  NAMESPACE: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
   SERVICE_SID: 'mockServiceSid',
   getTwilioClient: () => ({
     username: 'mockUsername',
@@ -19,7 +18,7 @@ const mockContext = {
 
 const mockRequestBody = {
   friendly_name: 'user001',
-  identity: v5('user001', mockContext.NAMESPACE),
+  identity: v5('user001', v5.URL),
   config: {
     authenticator_attachment: 'platform',
     discoverable_credentials: 'preferred',
@@ -74,7 +73,7 @@ describe('registration/start', () => {
   it('works with a phone number as a username', (done) => {
     const modifiedBody = structuredClone(mockRequestBody);
     modifiedBody.friendly_name = '+14151234567';
-    modifiedBody.identity = v5('+14151234567', mockContext.NAMESPACE);
+    modifiedBody.identity = v5('+14151234567', v5.URL);
 
     const callback = (_, { _body }) => {
       expect(axios.post).toHaveBeenCalledWith(
@@ -88,7 +87,6 @@ describe('registration/start', () => {
     const mockContextWithoutAndroidKeys = {
       API_URL: 'https://api.com',
       DOMAIN_NAME: 'example.com',
-      NAMESPACE: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
       SERVICE_SID: 'mockServiceSid',
       getTwilioClient: () => ({
         username: 'mockUsername',
