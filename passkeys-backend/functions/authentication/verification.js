@@ -37,7 +37,7 @@ exports.handler = async (context, event, callback) => {
     authenticatorAttachment: event.authenticatorAttachment || 'platform',
     type: event.type || 'public-key',
     response: responseData,
-  }
+  };
 
   const verifyChallengeURL = `${API_URL}/${SERVICE_SID}/Passkeys/ApproveChallenge`;
 
@@ -52,7 +52,7 @@ exports.handler = async (context, event, callback) => {
     response.setStatusCode(200);
     response.setBody({
       status: APIresponse.data.status,
-      identity: APIresponse.data.identity
+      identity: APIresponse.data.identity,
     });
   } catch (error) {
     const statusCode = error.status || 400;

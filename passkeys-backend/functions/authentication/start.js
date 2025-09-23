@@ -15,12 +15,16 @@ exports.handler = async (context, _, callback) => {
   const challengeURL = `${API_URL}/${SERVICE_SID}/Passkeys/Challenges`;
 
   try {
-    const APIResponse = await axios.post(challengeURL, {}, {
-      auth: {
-        username,
-        password,
-      },
-    });
+    const APIResponse = await axios.post(
+      challengeURL,
+      {},
+      {
+        auth: {
+          username,
+          password,
+        },
+      }
+    );
 
     response.setStatusCode(200);
     response.setBody(APIResponse.data.options);
