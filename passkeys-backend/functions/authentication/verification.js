@@ -4,10 +4,13 @@ const assets = Runtime.getAssets();
 const { isEmpty } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { API_URL } = context;
+  const { API_URL, SERVICE_SID } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (isEmpty(event)) {
     response.setStatusCode(400);
@@ -19,17 +22,24 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
-  const requestBody = {
-    content: {
-      rawId: event.rawId,
-      id: event.id,
-      authenticatorAttachment: event.authenticatorAttachment,
-      type: event.type,
-      response: event.response,
-    },
-  };
+  const responseData = event.response
+    ? event.response
+    : {
+        clientDataJSON: event.clientDataJSON,
+        authenticatorData: event.authenticatorData,
+        signature: event.signature,
+        userHandle: event.userHandle,
+      };
 
-  const verifyChallengeURL = `${API_URL}/Verifications/Check`;
+  const requestBody = {
+    id: event.id,
+    rawId: event.rawId,
+    authenticatorAttachment: event.authenticatorAttachment || 'platform',
+    type: event.type || 'public-key',
+    response: responseData,
+  }
+
+  const verifyChallengeURL = `${API_URL}/${SERVICE_SID}/Passkeys/ApproveChallenge`;
 
   try {
     const APIresponse = await axios.post(verifyChallengeURL, requestBody, {
@@ -42,7 +52,7 @@ exports.handler = async (context, event, callback) => {
     response.setStatusCode(200);
     response.setBody({
       status: APIresponse.data.status,
-      identity: APIresponse.data.to.user_identifier,
+      identity: APIresponse.data.identity
     });
   } catch (error) {
     const statusCode = error.status || 400;

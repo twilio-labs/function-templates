@@ -5,10 +5,13 @@ const { isEmpty } = require(assets['/services/helpers.js'].path);
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
-  const { API_URL } = context;
+  const { API_URL, SERVICE_SID } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (isEmpty(event)) {
     response.setStatusCode(400);
@@ -21,17 +24,23 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
-  const requestBody = {
-    content: {
-      id: event.id,
-      rawId: event.rawId,
-      authenticatorAttachment: event.authenticatorAttachment,
-      type: event.type,
-      response: event.response,
-    },
-  };
+  const responseData = event.response
+    ? event.response
+    : {
+        attestationObject: event.attestationObject,
+        clientDataJSON: event.clientDataJSON,
+        transports: event.transports,
+      };
 
-  const verifyFactorURL = `${API_URL}/Factors/Approve`;
+  const requestBody = {
+    id: event.id,
+    rawId: event.rawId,
+    authenticatorAttachment: event.authenticatorAttachment || 'platform',
+    type: event.type || 'public-key',
+    response: responseData,
+  }
+
+  const verifyFactorURL = `${API_URL}/${SERVICE_SID}/Passkeys/VerifyFactor`;
 
   try {
     const APIResponse = await axios.post(verifyFactorURL, requestBody, {
@@ -50,7 +59,7 @@ exports.handler = async (context, event, callback) => {
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
-    response.setBody(error.message);
+    response.setBody(error.response.headers);
   }
 
   return callback(null, response);
