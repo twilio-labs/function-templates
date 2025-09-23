@@ -38,7 +38,7 @@ exports.handler = async (context, event, callback) => {
     authenticatorAttachment: event.authenticatorAttachment || 'platform',
     type: event.type || 'public-key',
     response: responseData,
-  }
+  };
 
   const verifyFactorURL = `${API_URL}/${SERVICE_SID}/Passkeys/VerifyFactor`;
 
@@ -59,7 +59,7 @@ exports.handler = async (context, event, callback) => {
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
-    response.setBody(error.response.headers);
+    response.setBody(error.message);
   }
 
   return callback(null, response);

@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 const axios = require('axios');
+const { v5 } = require('uuid');
 const helpers = require('../../test/test-helper');
 
 jest.mock('axios');
@@ -8,7 +9,8 @@ jest.mock('axios');
 const mockContext = {
   API_URL: 'https://api.com',
   DOMAIN_NAME: 'example.com',
-  ANDROID_APP_KEYS: 'key1,key2,key3',
+  NAMESPACE: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+  SERVICE_SID: 'mockServiceSid',
   getTwilioClient: () => ({
     username: 'mockUsername',
     password: 'mockPassword',
@@ -16,24 +18,12 @@ const mockContext = {
 };
 
 const mockRequestBody = {
-  friendly_name: 'Passkey Example',
-  to: {
-    user_identifier: 'user001',
-  },
-  content: {
-    relying_party: {
-      id: 'example.com',
-      name: 'PasskeySample',
-      origins: [`https://example.com`],
-    },
-    user: {
-      display_name: 'user001',
-    },
-    authenticator_criteria: {
-      authenticator_attachment: 'platform',
-      discoverable_credentials: 'preferred',
-      user_verification: 'preferred',
-    },
+  friendly_name: 'user001',
+  identity: v5('user001', mockContext.NAMESPACE),
+  config: {
+    authenticator_attachment: 'platform',
+    discoverable_credentials: 'preferred',
+    user_verification: 'preferred',
   },
 };
 
@@ -83,12 +73,12 @@ describe('registration/start', () => {
 
   it('works with a phone number as a username', (done) => {
     const modifiedBody = structuredClone(mockRequestBody);
-    modifiedBody.to.user_identifier = '+14151234567';
-    modifiedBody.content.user.display_name = '+14151234567';
+    modifiedBody.friendly_name = '+14151234567';
+    modifiedBody.identity = v5('+14151234567', mockContext.NAMESPACE);
 
     const callback = (_, { _body }) => {
       expect(axios.post).toHaveBeenCalledWith(
-        'https://api.com/Factors',
+        'https://api.com/mockServiceSid/Passkeys/Factors',
         modifiedBody,
         { auth: { password: 'mockPassword', username: 'mockUsername' } }
       );
@@ -98,6 +88,8 @@ describe('registration/start', () => {
     const mockContextWithoutAndroidKeys = {
       API_URL: 'https://api.com',
       DOMAIN_NAME: 'example.com',
+      NAMESPACE: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+      SERVICE_SID: 'mockServiceSid',
       getTwilioClient: () => ({
         username: 'mockUsername',
         password: 'mockPassword',
@@ -111,67 +103,12 @@ describe('registration/start', () => {
     );
   });
 
-  it('works with empty ANDROID_APP_KEYS', (done) => {
-    const callback = (_, { _body }) => {
-      expect(axios.post).toHaveBeenCalledWith(
-        'https://api.com/Factors',
-        mockRequestBody,
-        { auth: { password: 'mockPassword', username: 'mockUsername' } }
-      );
-      done();
-    };
-
-    const mockContextWithoutAndroidKeys = {
-      API_URL: 'https://api.com',
-      DOMAIN_NAME: 'example.com',
-      getTwilioClient: () => ({
-        username: 'mockUsername',
-        password: 'mockPassword',
-      }),
-    };
-
-    handlerFunction(
-      mockContextWithoutAndroidKeys,
-      { username: 'user001' },
-      callback
-    );
-  });
-
-  // This is how the CodeExchange is populating the optional field if left empty
-  it('works with ANDROID_APP_KEYS empty string', (done) => {
-    const callback = (_, { _body }) => {
-      expect(axios.post).toHaveBeenCalledWith(
-        'https://api.com/Factors',
-        mockRequestBody,
-        { auth: { password: 'mockPassword', username: 'mockUsername' } }
-      );
-      done();
-    };
-
-    const mockContextWithoutAndroidKeys = {
-      API_URL: 'https://api.com',
-      ANDROID_APP_KEYS: '""',
-      DOMAIN_NAME: 'example.com',
-      getTwilioClient: () => ({
-        username: 'mockUsername',
-        password: 'mockPassword',
-      }),
-    };
-
-    handlerFunction(
-      mockContextWithoutAndroidKeys,
-      { username: 'user001' },
-      callback
-    );
-  });
-
   it('calls the API with the expected request body', (done) => {
     const modifiedRequest = structuredClone(mockRequestBody);
-    modifiedRequest.content.relying_party.origins.push('key1', 'key2', 'key3');
 
     const callback = (_, result) => {
       expect(axios.post).toHaveBeenCalledWith(
-        'https://api.com/Factors',
+        'https://api.com/mockServiceSid/Passkeys/Factors',
         modifiedRequest,
         { auth: { password: 'mockPassword', username: 'mockUsername' } }
       );

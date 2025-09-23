@@ -92,6 +92,14 @@ Besides the enviroment variables files, the project also contain two files calle
 
 `origins.js` contains the origins from where passkeys creation and authentication will be allowed
 
+##### Obtaining the SERVICE_SID
+
+In order to start working with the rest of The Twilio Verify Passkeys API, you will need to create a Verify Service. You can do this through calling one time the `/registration/service` endpoint.
+
+This will create a new Verify Service and return the `SERVICE_SID` that you will need to set in your environment variables.
+
+Inside that function you can modify the parameters of the service creation, like `friendlyName` or `Passkeys.RelyingParty.Name` to customize it to your needs.
+
 ### Function Parameters
 
 `/registration/service` a POST request, does not expect parameters

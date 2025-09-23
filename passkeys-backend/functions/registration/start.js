@@ -26,17 +26,18 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
-  const uuidIdentity = v5(event.username, NAMESPACE)
+  const uuidIdentity = v5(event.username, NAMESPACE);
 
+  /* eslint-disable camelcase */
   const requestBody = {
-      friendly_name: event.username,
-      identity: uuidIdentity,
-      config: {
-          authenticator_attachment: "platform",
-          discoverable_credentials: "preferred",
-          user_verification: "preferred"
-      }
-  }
+    friendly_name: event.username,
+    identity: uuidIdentity,
+    config: {
+      authenticator_attachment: 'platform',
+      discoverable_credentials: 'preferred',
+      user_verification: 'preferred',
+    },
+  };
 
   // Factor URL of the passkeys service
   const factorURL = `${API_URL}/${SERVICE_SID}/Passkeys/Factors`;
@@ -51,7 +52,10 @@ exports.handler = async (context, event, callback) => {
     });
 
     response.setStatusCode(200);
-    response.setBody({...APIResponse.data.options.publicKey, "identity": uuidIdentity});
+    response.setBody({
+      ...APIResponse.data.options.publicKey,
+      identity: uuidIdentity,
+    });
   } catch (error) {
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
