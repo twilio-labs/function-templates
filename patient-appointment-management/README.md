@@ -31,7 +31,7 @@ Specifically, the Appointment Management with EHR Integration application implem
 - (*Outbound*) SMS reminders sent to patient based on scheduled appointments (up to 2 reminders per patient per day)
 
 *(For more details on appointment events supported by this application
-, please reference the [EHR Integration Guide](https://twilio-cms-prod.s3.amazonaws.com/documents/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf))*
+, please reference the [EHR Integration Guide](https://raw.githubusercontent.com/twilio-labs/function-templates/refs/heads/main/patient-appointment-management/EHR_Appointment_Management_App_EHR_Integration_Guide.pdf))*
 
 ## Architecture Highlights
 
@@ -98,7 +98,7 @@ You will need the following AWS assets ready prior to installation:
 - **Create AWS deployer user and role 
   - In order to deploy the application's AWS components, you will need a deployer user and a role.
   - Use this [link](https://us-west-2.console.aws.amazon.com) to create your AWS deployer user and role through CloudFormation Quick Create
-    -Note: this runs a CloudFormation template file to create the CloudFormation stack that creates the deployer user and role. If desired, you can inspect this file [here](https://twilio-cms-prod.s3.amazonaws.com/documents/cloudformation-stack-deployer.yml).
+    -Note: this runs a CloudFormation template file to create the CloudFormation stack that creates the deployer user and role. If desired, you can inspect this file [here](https://raw.githubusercontent.com/twilio-labs/function-templates/refs/heads/main/patient-appointment-management/assets/aws/cloudformation-stack-deployer.private.yml).
     -Select “I acknowledge that AWS CloudFormation might create IAM resources with custom names” and then select “Create Stack”
     -Once the stack is created successfully, you will be taken to the CloudFormation console page that shows the newly created ‘twilio-patient-appointment-managment-deployer’ stack.
 ### Environment Variables
