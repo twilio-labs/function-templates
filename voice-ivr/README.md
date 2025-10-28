@@ -58,19 +58,12 @@ Check the developer console and terminal for any errors, and make sure you've se
 
 ### Exposing your local server
 
-To test with a real Twilio phone number, you need to expose your local server to the internet. You can use [ngrok](ngrok_url) or the Twilio CLI's built-in tunneling:
+To test with a real Twilio phone number, you need to expose your local server to the internet. You can use [ngrok](ngrok_url):
 
-**Option 1: Using ngrok**
 ```bash
 ngrok http 3000
 ```
 Copy the HTTPS URL (e.g., `https://abc123.ngrok.io`)
-
-**Option 2: Using Twilio CLI**
-```bash
-twilio phone-numbers:update YOUR_TWILIO_NUMBER --voice-url="http://localhost:3000/voice-ivr"
-```
-The Twilio CLI will automatically create a tunnel for you.
 
 ### Configuring your Twilio phone number
 
@@ -81,6 +74,21 @@ The Twilio CLI will automatically create a tunnel for you.
    - Enter your public URL: `https://your-ngrok-url.ngrok.io/voice-ivr` (or your deployed URL)
    - Set HTTP method to **POST**
 4. Click **Save**
+
+
+You can also use the Twilio CLI to configure your phone number's Voice URL.
+
+First, retrieve the phone number's SID (starts with `PN`):
+
+```bash
+twilio phone-numbers:list
+```
+
+Using the phone number SID and ngrok URL that you copied above:
+
+```bash
+twilio phone-numbers:update YOUR_PHONE_NUMBER_SID --voice-url="https://abc123.ngrok.io"
+```
 
 Now when you call your Twilio number, it will trigger the `/voice-ivr` function.
 
