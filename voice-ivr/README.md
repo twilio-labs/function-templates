@@ -12,7 +12,7 @@ The application is fully customizable, allowing you to edit the available option
 
 **For AI coding assistants:** See [AGENTS.md](./AGENTS.md) for implementation guidelines, do-not-touch areas, coding conventions, and common task recipes.
 
-## Pre-requisites
+## Prerequisites
 
 - An [ngrok][ngrok_url] account
 - A [Twilio account](try_twilio_url) with an active phone number that can send SMS
