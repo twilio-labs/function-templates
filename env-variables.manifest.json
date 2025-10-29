@@ -906,21 +906,11 @@
       {
         "key": "MY_PHONE_NUMBER",
         "required": true,
-        "format": "phone_number",
-        "description": "Your phone number",
-        "link": null,
-        "default": "+12223334444",
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "TWILIO_VOICE_WEBHOOK_URL",
-        "required": true,
         "format": "text",
-        "description": "The path to the webhook",
+        "description": "Your phone number for call forwarding (Sales option)\nEnter in E.164 format: https://www.twilio.com/docs/glossary/what-e164\nUse a test phone number during development",
         "link": null,
-        "default": "/voice-ivr",
-        "configurable": false,
+        "default": "+15551234567",
+        "configurable": true,
         "contentKey": null
       }
     ],
