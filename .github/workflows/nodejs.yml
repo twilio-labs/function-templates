@@ -8,14 +8,13 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [current, lts/*]
 
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v5
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version-file: '.nvmrc'
       - name: install latest npm
         run: npm install -g npm@latest
       - name: npm install
