@@ -23,7 +23,7 @@ In your `.env` file, set the following values:
 | `API_URL`            | Passkeys API to point at                              | Yes |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
-| `ANDROID_APP_KEYS`   | The domain of the Android identity providers hash     | No  |
+| `SERVICE_SID`        | Service created in Twilio verify | No |
 
 ## Create a new project with the template
 
@@ -89,7 +89,19 @@ Besides the enviroment variables files, the project also contain two files calle
 | RELYING_PARTY | Replace it with the value of the relaying party | yes |
 | FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
 
+`origins.js` contains the origins from where passkeys creation and authentication will be allowed
+
+##### Obtaining the SERVICE_SID
+
+In order to start working with the rest of The Twilio Verify Passkeys API, you will need to create a Verify Service. You can do this through calling one time the `/registration/service` endpoint.
+
+This will create a new Verify Service and return the `SERVICE_SID` that you will need to set in your environment variables.
+
+Inside that function you can modify the parameters of the service creation, like `friendlyName` or `Passkeys.RelyingParty.Name` to customize it to your needs.
+
 ### Function Parameters
+
+`/registration/service` a POST request, does not expect parameters
 
 `/registration/start` expects the following parameters:
 
@@ -121,4 +133,3 @@ Besides the enviroment variables files, the project also contain two files calle
 | clientDataJSON | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | userHandle | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
-
