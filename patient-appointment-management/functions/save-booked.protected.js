@@ -20,10 +20,7 @@ exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {
     const assert = require('assert');
-    const {
-      S3Client,
-      PutObjectCommand,
-    } = require('@aws-sdk/client-s3');
+    const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
     const { path } = Runtime.getFunctions().helpers;
     const { getParam, setParam, validateAppointment } = require(path);
 

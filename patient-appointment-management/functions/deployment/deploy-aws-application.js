@@ -100,8 +100,7 @@ exports.handler = async function (context, event, callback) {
     // ---------- look for stack
     let action = null;
     try {
-      await cf
-        .describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
+      await cf.describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
       if (event.hasOwnProperty('action') && event.action === 'DELETE') {
         action = 'DELETE';
       } else {
@@ -118,8 +117,7 @@ exports.handler = async function (context, event, callback) {
       AWS_CF_STACK_APPLICATION,
       'CloudFormation Stack...'
     );
-    let response = await cf
-      .validateTemplate({ TemplateBody: `${definition}` });
+    let response = await cf.validateTemplate({ TemplateBody: `${definition}` });
 
     response = null;
     switch (action) {

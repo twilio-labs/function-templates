@@ -47,8 +47,9 @@ exports.handler = async function (context, event, callback) {
         context,
         'AWS_CF_STACK_APPLICATION'
       );
-      const response = await cf
-        .describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
+      const response = await cf.describeStacks({
+        StackName: AWS_CF_STACK_APPLICATION,
+      });
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);

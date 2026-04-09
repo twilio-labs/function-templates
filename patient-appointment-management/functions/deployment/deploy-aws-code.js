@@ -20,7 +20,11 @@ const { isValidAppToken } = require(path1);
 exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {
-    const { LambdaClient, UpdateFunctionCodeCommand, GetFunctionCommand } = require('@aws-sdk/client-lambda');
+    const {
+      LambdaClient,
+      UpdateFunctionCodeCommand,
+      GetFunctionCommand,
+    } = require('@aws-sdk/client-lambda');
     const { Upload } = require('@aws-sdk/lib-storage');
     const { S3Client } = require('@aws-sdk/client-s3');
 
@@ -161,7 +165,9 @@ exports.handler = async function (context, event, callback) {
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/query_appointment_state.zip',
         };
-        const response = await lambda.send(new UpdateFunctionCodeCommand(params));
+        const response = await lambda.send(
+          new UpdateFunctionCodeCommand(params)
+        );
         console.log('Updated lambda function code for:', response.FunctionName);
       } catch (err) {
         console.log('No lambda function:', params.FunctionName);
@@ -211,7 +217,9 @@ exports.handler = async function (context, event, callback) {
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/query_appointment_history.zip',
         };
-        const response = await lambda.send(new UpdateFunctionCodeCommand(params));
+        const response = await lambda.send(
+          new UpdateFunctionCodeCommand(params)
+        );
         console.log('Updated lambda function code for:', response.FunctionName);
       } catch (err) {
         console.log('No lambda function:', params.FunctionName);

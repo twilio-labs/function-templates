@@ -173,7 +173,9 @@ exports.handler = async function (context, event, callback) {
         Key: s3key,
       };
       let results = await s3.send(new GetObjectCommand(params));
-      const appointment = JSON.parse(await results.Body.transformToString('utf-8'));
+      const appointment = JSON.parse(
+        await results.Body.transformToString('utf-8')
+      );
       console.log('appointment=', appointment);
 
       appointment.event_type = 'OPTED-OUT';

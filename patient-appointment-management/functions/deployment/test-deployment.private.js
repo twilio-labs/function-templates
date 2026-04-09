@@ -15,9 +15,17 @@ const THIS = 'test-deployment:';
  */
 const assert = require('assert');
 
-const { CloudFormationClient, DescribeStacksCommand } = require('@aws-sdk/client-cloudformation');
+const {
+  CloudFormationClient,
+  DescribeStacksCommand,
+} = require('@aws-sdk/client-cloudformation');
 const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
-const { S3Client, ListObjectsV2Command, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const {
+  S3Client,
+  ListObjectsV2Command,
+  GetObjectCommand,
+  DeleteObjectCommand,
+} = require('@aws-sdk/client-s3');
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
@@ -132,10 +140,12 @@ async function deleteAllObjects(context, params) {
   let n = 0;
   response.Contents.forEach(async function (obj) {
     try {
-      const response = await context.S3.send(new DeleteObjectCommand({
-        Bucket: params.Bucket,
-        Key: obj.Key,
-      }));
+      const response = await context.S3.send(
+        new DeleteObjectCommand({
+          Bucket: params.Bucket,
+          Key: obj.Key,
+        })
+      );
       n += 1;
     } catch (err) {
       console.log(err);
@@ -252,7 +262,9 @@ async function testFlow(context, appointment, expected) {
     Key: key,
   };
   response = await context.S3.send(new GetObjectCommand(params));
-  const appointment_out = JSON.parse(await response.Body.transformToString('utf-8'));
+  const appointment_out = JSON.parse(
+    await response.Body.transformToString('utf-8')
+  );
 
   const result = {
     step: {
@@ -363,7 +375,9 @@ async function testReminder(context, appointment, expected) {
     Key: key,
   };
   response = await context.S3.send(new GetObjectCommand(params));
-  const appointment_out = JSON.parse(await response.Body.transformToString('utf-8'));
+  const appointment_out = JSON.parse(
+    await response.Body.transformToString('utf-8')
+  );
 
   const result = {
     step: {

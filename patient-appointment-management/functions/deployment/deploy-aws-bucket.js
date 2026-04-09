@@ -84,8 +84,7 @@ exports.handler = async function (context, event, callback) {
     // ---------- read & validate CF template
     const definition = fs.readFileSync(CF_TEMPLATE_PATH);
     console.log('Validating', AWS_CF_STACK_BUCKET, 'CloudFormation Stack...');
-    let response = await cf
-      .validateTemplate({ TemplateBody: `${definition}` });
+    let response = await cf.validateTemplate({ TemplateBody: `${definition}` });
 
     response = null;
     switch (action) {
@@ -164,8 +163,7 @@ exports.handler = async function (context, event, callback) {
         {
           // ---------- look for dependent stack
           try {
-            await cf
-              .describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
+            await cf.describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
             throw new Error(
               `exists dependent ${AWS_CF_STACK_APPLICATION}stack!`
             );
@@ -174,8 +172,13 @@ exports.handler = async function (context, event, callback) {
           console.log('Emptying ', AWS_S3_BUCKET, 'S3 Bucket...');
 
           async function _deleteKeys(params, s3client) {
-            const { ListObjectsV2Command, DeleteObjectCommand } = require('@aws-sdk/client-s3');
-            const response = await s3client.send(new ListObjectsV2Command(params));
+            const {
+              ListObjectsV2Command,
+              DeleteObjectCommand,
+            } = require('@aws-sdk/client-s3');
+            const response = await s3client.send(
+              new ListObjectsV2Command(params)
+            );
             console.log('deleting:', response.KeyCount);
             response.Contents.forEach((obj) =>
               s3client.deleteObject(

@@ -12,10 +12,7 @@ const {
   GetQueryExecutionCommand,
 } = require('@aws-sdk/client-athena');
 
-const {
-  S3Client,
-  GetObjectCommand,
-} = require('@aws-sdk/client-s3');
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
 
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
@@ -79,7 +76,9 @@ async function execute_query(query, s3bucket, athenaClient) {
         OutputLocation: output_location,
       },
     };
-    let response = await athenaClient.send(new StartQueryExecutionCommand(params));
+    let response = await athenaClient.send(
+      new StartQueryExecutionCommand(params)
+    );
     const qe_id = response.QueryExecutionId;
     console.log('Started athena query...');
 
@@ -88,7 +87,9 @@ async function execute_query(query, s3bucket, athenaClient) {
     let state = null;
     do {
       await new Promise((resolve) => setTimeout(resolve, milliseconds));
-      response = await athenaClient.send(new GetQueryExecutionCommand({ QueryExecutionId: qe_id }));
+      response = await athenaClient.send(
+        new GetQueryExecutionCommand({ QueryExecutionId: qe_id })
+      );
       state = response.QueryExecution.Status.State;
     } while (state === 'QUEUED' || state === 'RUNNING');
     console.log('Athena query result :', state);
@@ -157,9 +158,13 @@ exports.handler = async function (event, context) {
       Bucket: s3uri.host,
       Key: s3uri.pathname.substr(1),
     };
-    const signedURL = await getSignedUrl(s3Client, new GetObjectCommand(params), {
-      expiresIn: signedUrlExpireSeconds,
-    });
+    const signedURL = await getSignedUrl(
+      s3Client,
+      new GetObjectCommand(params),
+      {
+        expiresIn: signedUrlExpireSeconds,
+      }
+    );
     console.log('generated signed URL', signedURL);
 
     return {

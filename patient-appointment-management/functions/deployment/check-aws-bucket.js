@@ -42,8 +42,9 @@ exports.handler = async function (context, event, callback) {
     const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
     const AWS_CF_STACK_BUCKET = await getParam(context, 'AWS_CF_STACK_BUCKET');
     try {
-      const response = await cf
-        .describeStacks({ StackName: AWS_CF_STACK_BUCKET });
+      const response = await cf.describeStacks({
+        StackName: AWS_CF_STACK_BUCKET,
+      });
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);

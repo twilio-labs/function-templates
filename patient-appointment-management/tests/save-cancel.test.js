@@ -37,7 +37,11 @@ afterAll(() => {
 
 // --------------------------------------------------------------------------------
 const { mockClient } = require('aws-sdk-client-mock');
-const { S3Client, HeadObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
+const {
+  S3Client,
+  HeadObjectCommand,
+  PutObjectCommand,
+} = require('@aws-sdk/client-s3');
 
 const s3Mock = mockClient(S3Client);
 

@@ -123,9 +123,11 @@ exports.handler = async function (event, context) {
     const SM = new SecretsManagerClient({
       region: process.env.AWS_REGION,
     });
-    const data = await SM.send(new GetSecretValueCommand({
-      SecretId: process.env.TWILIO_SECRET_ARN,
-    }));
+    const data = await SM.send(
+      new GetSecretValueCommand({
+        SecretId: process.env.TWILIO_SECRET_ARN,
+      })
+    );
     const secret = JSON.parse(data.SecretString);
 
     // ---------- environment variables & input event
@@ -194,7 +196,9 @@ exports.handler = async function (event, context) {
         Key: s3key,
       };
       const results = await s3.send(new GetObjectCommand(params));
-      const appointment = JSON.parse(await results.Body.transformToString('utf-8'));
+      const appointment = JSON.parse(
+        await results.Body.transformToString('utf-8')
+      );
       console.log('appointment=', appointment);
 
       const appointment_ltz = new Date(appointment.appointment_datetime);
