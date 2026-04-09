@@ -26,7 +26,8 @@ async function getAppointmentsForPatient(
   s3client,
   allKeys = []
 ) {
-  const response = await s3client.listObjectsV2(params).promise();
+  const { ListObjectsV2Command } = require('@aws-sdk/client-s3');
+  const response = await s3client.send(new ListObjectsV2Command(params));
   response.Contents.forEach(function (obj) {
     if (obj.Key.includes(`${patient_id}.json`)) allKeys.push(obj.Key);
   });
@@ -44,7 +45,12 @@ exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {
     const assert = require('assert');
-    const AWS = require('aws-sdk');
+    const {
+      S3Client,
+      GetObjectCommand,
+      PutObjectCommand,
+      DeleteObjectCommand,
+    } = require('@aws-sdk/client-s3');
     const { path } = Runtime.getFunctions().helpers;
     const { getParam, setParam, validateAppointment } = require(path);
 
@@ -88,9 +94,12 @@ exports.handler = async function (context, event, callback) {
     appointment.event_type = 'OPTED-OUT'; // over-ride
 
     // initialize s3 client
-    const s3 = new AWS.S3({
-      accessKeyId: AWS_ACCESS_KEY_ID,
-      secretAccessKey: AWS_SECRET_ACCESS_KEY,
+    const s3 = new S3Client({
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+
       region: AWS_REGION,
     });
 
@@ -163,8 +172,8 @@ exports.handler = async function (context, event, callback) {
         Bucket: AWS_S3_BUCKET,
         Key: s3key,
       };
-      let results = await s3.getObject(params).promise();
-      const appointment = JSON.parse(results.Body.toString('utf-8'));
+      let results = await s3.send(new GetObjectCommand(params));
+      const appointment = JSON.parse(await results.Body.transformToString('utf-8'));
       console.log('appointment=', appointment);
 
       appointment.event_type = 'OPTED-OUT';
@@ -175,14 +184,14 @@ exports.handler = async function (context, event, callback) {
         Body: JSON.stringify(appointment),
         ServerSideEncryption: 'AES256',
       };
-      results = await s3.putObject(params).promise();
+      results = await s3.send(new PutObjectCommand(params));
       console.log('  PUT - ', params.Key);
 
       params = {
         Bucket: AWS_S3_BUCKET,
         Key: s3key,
       };
-      results = await s3.deleteObject(params).promise();
+      results = await s3.send(new DeleteObjectCommand(params));
       console.log('  DELETE - ', params.Key);
 
       params = {
@@ -194,7 +203,7 @@ exports.handler = async function (context, event, callback) {
         Body: JSON.stringify(appointment),
         ServerSideEncryption: 'AES256',
       };
-      results = await s3.putObject(params).promise();
+      results = await s3.send(new PutObjectCommand(params));
       console.log(THIS, 'PUT - ', params.Key);
     }
 

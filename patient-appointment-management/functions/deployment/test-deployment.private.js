@@ -14,7 +14,10 @@ const THIS = 'test-deployment:';
  *
  */
 const assert = require('assert');
-const AWS = require('aws-sdk');
+
+const { CloudFormationClient, DescribeStacksCommand } = require('@aws-sdk/client-cloudformation');
+const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
+const { S3Client, ListObjectsV2Command, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
@@ -73,12 +76,12 @@ function getDatetimeParts(datetime_iso) {
 
 // --------------------------------------------------------------------------------
 async function getAllKeys(params, s3client, allKeys = []) {
-  const response = await s3client.listObjectsV2(params).promise();
+  const response = await s3client.send(new ListObjectsV2Command(params));
   response.Contents.forEach((obj) => allKeys.push(obj.Key));
 
   if (response.NextContinuationToken) {
     params.ContinuationToken = response.NextContinuationToken;
-    await getAllKeys(params, allKeys); // recursive synchronous call
+    await getAllKeys(params, s3client, allKeys); // recursive synchronous call
   }
   return allKeys;
 }
@@ -91,7 +94,7 @@ async function getAllKeys(params, s3client, allKeys = []) {
 async function findObject(context, params, object_key) {
   let found_key = null;
 
-  const response = await context.S3.listObjectsV2(params).promise();
+  const response = await context.S3.send(new ListObjectsV2Command(params));
   response.Contents.some(function (obj) {
     if (obj.Key.endsWith(object_key)) {
       found_key = obj.Key;
@@ -113,7 +116,7 @@ async function findObject(context, params, object_key) {
  * --------------------------------------------------------------------------------
  */
 async function countObjects(context, params) {
-  const response = await context.S3.listObjectsV2(params).promise();
+  const response = await context.S3.send(new ListObjectsV2Command(params));
   let n = response.Contents.length;
 
   if (response.NextContinuationToken) {
@@ -125,14 +128,14 @@ async function countObjects(context, params) {
 
 // --------------------------------------------------------------------------------
 async function deleteAllObjects(context, params) {
-  const response = await context.S3.listObjectsV2(params).promise();
+  const response = await context.S3.send(new ListObjectsV2Command(params));
   let n = 0;
   response.Contents.forEach(async function (obj) {
     try {
-      const response = await context.S3.deleteObject({
+      const response = await context.S3.send(new DeleteObjectCommand({
         Bucket: params.Bucket,
         Key: obj.Key,
-      }).promise();
+      }));
       n += 1;
     } catch (err) {
       console.log(err);
@@ -248,8 +251,8 @@ async function testFlow(context, appointment, expected) {
     Bucket: context.AWS_S3_BUCKET,
     Key: key,
   };
-  response = await context.S3.getObject(params).promise();
-  const appointment_out = JSON.parse(response.Body.toString('utf-8'));
+  response = await context.S3.send(new GetObjectCommand(params));
+  const appointment_out = JSON.parse(await response.Body.transformToString('utf-8'));
 
   const result = {
     step: {
@@ -301,7 +304,7 @@ async function testReminder(context, appointment, expected) {
     FunctionName: context.AWS_LAMBDA_SEND_REMINDERS,
     InvocationType: 'RequestResponse',
   };
-  let response = await context.Lambda.invoke(params).promise();
+  let response = await context.Lambda.send(new InvokeCommand(params));
 
   // ---------- wait 10 sec to let flow execute
   await new Promise((resolve) => setTimeout(resolve, 10 * 1000));
@@ -359,8 +362,8 @@ async function testReminder(context, appointment, expected) {
     Bucket: context.AWS_S3_BUCKET,
     Key: key,
   };
-  response = await context.S3.getObject(params).promise();
-  const appointment_out = JSON.parse(response.Body.toString('utf-8'));
+  response = await context.S3.send(new GetObjectCommand(params));
+  const appointment_out = JSON.parse(await response.Body.transformToString('utf-8'));
 
   const result = {
     step: {
@@ -792,12 +795,14 @@ exports.handler = async function (context, event, callback) {
     );
 
     const AWS_CONFIG = {
-      accessKeyId: await getParam(context, 'AWS_ACCESS_KEY_ID'),
-      secretAccessKey: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
+      credentials: {
+        accessKeyId: await getParam(context, 'AWS_ACCESS_KEY_ID'),
+        secretAccessKey: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
+      },
       region: await getParam(context, 'AWS_REGION'),
     };
-    context.S3 = new AWS.S3(AWS_CONFIG);
-    context.Lambda = new AWS.Lambda(AWS_CONFIG);
+    context.S3 = new S3Client(AWS_CONFIG);
+    context.Lambda = new LambdaClient(AWS_CONFIG);
     context.AWS_LAMBDA_SEND_REMINDERS = await getParam(
       context,
       'AWS_LAMBDA_SEND_REMINDERS'
@@ -818,11 +823,11 @@ exports.handler = async function (context, event, callback) {
       console.log('found studio flow:', context.TWILIO_FLOW_SID);
     }
 
-    const cf = new AWS.CloudFormation(AWS_CONFIG);
+    const cf = new CloudFormationClient(AWS_CONFIG);
     // aws bucket cloudformation stack
     try {
       const stack_name = await getParam(context, 'AWS_CF_STACK_BUCKET');
-      await cf.describeStacks({ StackName: stack_name }).promise();
+      await cf.send(new DescribeStacksCommand({ StackName: stack_name }));
       console.log('found bucket cf stack:', stack_name);
     } catch (AmazonCloudFormationException) {
       const err = 'aws bucket cloudformation stack not deployed!';
@@ -833,7 +838,7 @@ exports.handler = async function (context, event, callback) {
     // aws application cloudformation stack
     try {
       const stack_name = await getParam(context, 'AWS_CF_STACK_APPLICATION');
-      await cf.describeStacks({ StackName: stack_name }).promise();
+      await cf.send(new DescribeStacksCommand({ StackName: stack_name }));
       console.log('found application cf stack:', stack_name);
     } catch (AmazonCloudFormationException) {
       const err = 'aws application cloudformation stack not deployed!';

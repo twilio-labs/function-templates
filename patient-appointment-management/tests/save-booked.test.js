@@ -36,13 +36,14 @@ afterAll(() => {
 });
 
 // --------------------------------------------------------------------------------
-const mockS3PutObject = jest.fn();
-jest.mock('aws-sdk', () => {
-  return {
-    S3: jest.fn(() => ({
-      putObject: mockS3PutObject,
-    })),
-  };
+const { mockClient } = require('aws-sdk-client-mock');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+
+const s3Mock = mockClient(S3Client);
+
+// --------------------------------------------------------------------------------
+beforeEach(() => {
+  s3Mock.reset();
 });
 
 // --------------------------------------------------------------------------------
@@ -71,14 +72,7 @@ test('normal flow of events', async () => {
       '}',
   };
 
-  mockS3PutObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(PutObjectCommand).resolves({});
 
   const callback = jest.fn();
   await handler(context, event, callback);

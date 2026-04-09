@@ -6,7 +6,7 @@ const THIS = 'deployment/check-aws-bucket:';
  * --------------------------------------------------------------------------------
  */
 const assert = require('assert');
-const aws = require('aws-sdk');
+const { CloudFormation } = require('@aws-sdk/client-cloudformation');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -36,15 +36,14 @@ exports.handler = async function (context, event, callback) {
       ),
       region: await getParam(context, 'AWS_REGION'),
     };
-    const cf = new aws.CloudFormation(options);
+    const cf = new CloudFormation(options);
 
     // ---------- look for dependent stack
     const AWS_S3_BUCKET = await getParam(context, 'AWS_S3_BUCKET');
     const AWS_CF_STACK_BUCKET = await getParam(context, 'AWS_CF_STACK_BUCKET');
     try {
       const response = await cf
-        .describeStacks({ StackName: AWS_CF_STACK_BUCKET })
-        .promise();
+        .describeStacks({ StackName: AWS_CF_STACK_BUCKET });
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);

@@ -35,19 +35,15 @@ afterAll(() => {
 });
 
 // --------------------------------------------------------------------------------
-const mockS3DeleteObject = jest.fn();
-const mockS3HeadObject = jest.fn();
-const mockS3PutObject = jest.fn();
-jest.mock('aws-sdk', () => {
-  return {
-    S3: jest.fn(() => ({
-      deleteObject: mockS3DeleteObject,
-      headObject: mockS3HeadObject,
-      putObject: mockS3PutObject,
-    })),
-  };
-});
+const { mockClient } = require('aws-sdk-client-mock');
+const { S3Client, HeadObjectCommand, PutObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 
+const s3Mock = mockClient(S3Client);
+
+// --------------------------------------------------------------------------------
+beforeEach(() => {
+  s3Mock.reset();
+});
 // --------------------------------------------------------------------------------
 test('normal flow of event: 1st reminder', async () => {
   const event = {
@@ -74,32 +70,11 @@ test('normal flow of event: 1st reminder', async () => {
       '}',
   };
 
-  mockS3DeleteObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(DeleteObjectCommand).resolves({});
 
-  mockS3HeadObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(HeadObjectCommand).resolves({});
 
-  mockS3PutObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(PutObjectCommand).resolves({});
 
   const callback = jest.fn();
   await handler(context, event, callback);
@@ -137,33 +112,16 @@ test('normal flow of event: 2nd reminder', async () => {
       '}',
   };
 
-  mockS3DeleteObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
+  s3Mock.on(DeleteObjectCommand).resolves({});
+
+  s3Mock.on(HeadObjectCommand).callsFake((params) => {
+    if (params.Key && params.Key.includes('REMINDED-1')) {
+      return Promise.resolve({});
+    }
+    return Promise.reject(new Error('Not found'));
   });
 
-  mockS3HeadObject.mockImplementation((params) => {
-    if (!params.Key.includes('REMINDED-1')) throw new Error();
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
-
-  mockS3PutObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(PutObjectCommand).resolves({});
 
   const callback = jest.fn();
   await handler(context, event, callback);
@@ -201,33 +159,16 @@ test('abnormal flow of event: MAX_REMINDERS_REACHED', async () => {
       '}',
   };
 
-  mockS3DeleteObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
+  s3Mock.on(DeleteObjectCommand).resolves({});
+
+  s3Mock.on(HeadObjectCommand).callsFake((params) => {
+    if (params.Key && params.Key.includes('REMINDED-2')) {
+      return Promise.resolve({});
+    }
+    return Promise.reject(new Error('Not found'));
   });
 
-  mockS3HeadObject.mockImplementation((params) => {
-    if (!params.Key.includes('REMINDED-2')) throw new Error();
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
-
-  mockS3PutObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(PutObjectCommand).resolves({});
 
   const callback = jest.fn();
   await handler(context, event, callback);
@@ -265,9 +206,7 @@ test('abnormal flow of event: NO_APPOINTMENT_FOUND', async () => {
       '}',
   };
 
-  mockS3HeadObject.mockImplementation((params) => {
-    throw new Error();
-  });
+  s3Mock.on(HeadObjectCommand).rejects(new Error('Not found'));
 
   const callback = jest.fn();
   await handler(context, event, callback);

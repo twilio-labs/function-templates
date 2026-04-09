@@ -36,18 +36,16 @@ afterAll(() => {
 
 // --------------------------------------------------------------------------------
 const mockS3DeleteObject = jest.fn();
-const mockS3HeadObject = jest.fn();
-const mockS3PutObject = jest.fn();
-jest.mock('aws-sdk', () => {
-  return {
-    S3: jest.fn(() => ({
-      deleteObject: mockS3DeleteObject,
-      headObject: mockS3HeadObject,
-      putObject: mockS3PutObject,
-    })),
-  };
-});
+// --------------------------------------------------------------------------------
+const { mockClient } = require('aws-sdk-client-mock');
+const { S3Client, HeadObjectCommand, PutObjectCommand } = require('@aws-sdk/client-s3');
 
+const s3Mock = mockClient(S3Client);
+
+// --------------------------------------------------------------------------------
+beforeEach(() => {
+  s3Mock.reset();
+});
 // --------------------------------------------------------------------------------
 test('normal flow of events', async () => {
   const event = {
@@ -83,23 +81,9 @@ test('normal flow of events', async () => {
     };
   });
 
-  mockS3HeadObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(HeadObjectCommand).resolves({});
 
-  mockS3PutObject.mockImplementation((params) => {
-    return {
-      promise: () =>
-        Promise.resolve({
-          Body: params.Key,
-        }),
-    };
-  });
+  s3Mock.on(PutObjectCommand).resolves({});
 
   const callback = jest.fn();
   await handler(context, event, callback);
