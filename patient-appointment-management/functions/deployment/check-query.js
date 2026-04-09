@@ -10,7 +10,9 @@
  * --------------------------------------------------------------------------------
  */
 const assert = require('assert');
-const AWS = require('aws-sdk');
+
+const { SFN } = require('@aws-sdk/client-sfn');
+const { STS } = require('@aws-sdk/client-sts');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -52,11 +54,11 @@ exports.handler = async function (context, event, callback) {
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
       region: AWS_REGION,
     };
-    const sts = new AWS.STS(options);
-    const sfn = new AWS.StepFunctions(options);
+    const sts = new STS(options);
+    const sfn = new SFN(options);
 
     // ----------
-    let response = await sts.getCallerIdentity().promise();
+    let response = await sts.getCallerIdentity();
     const account_id = response.Account.toString();
     const stm_arn = [
       'arn:aws:states',
@@ -71,14 +73,14 @@ exports.handler = async function (context, event, callback) {
     let params = {
       stateMachineArn: stm_arn,
     };
-    response = await sfn.describeStateMachine(params).promise();
+    response = await sfn.describeStateMachine(params);
 
     // get last (most recent) execution
     params = {
       stateMachineArn: stm_arn,
       maxResults: 1, // returns most recent execution first
     };
-    response = await sfn.listExecutions(params).promise();
+    response = await sfn.listExecutions(params);
     if (response.executions.length === 0) {
       // never executed yet
       console.log(THIS, 'Returning READY - never executed');
@@ -104,7 +106,7 @@ exports.handler = async function (context, event, callback) {
         params = {
           executionArn: response.executions[0].executionArn,
         };
-        response = await sfn.describeExecution(params).promise();
+        response = await sfn.describeExecution(params);
         console.log(THIS, 'output -', response.output);
         const output = JSON.parse(response.output);
         signed_url = output.result;

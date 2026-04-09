@@ -10,7 +10,9 @@ const THIS = 'deployment/deploy-aws-bucket';
  */
 const assert = require('assert');
 const fs = require('fs');
-const aws = require('aws-sdk');
+
+const { CloudFormation } = require('@aws-sdk/client-cloudformation');
+const { S3 } = require('@aws-sdk/client-s3');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -63,13 +65,13 @@ exports.handler = async function (context, event, callback) {
       secretAccessKey: DEPLOYER_AWS_SECRET_ACCESS_KEY,
       region: AWS_REGION,
     };
-    const cf = new aws.CloudFormation(options);
-    const s3 = new aws.S3(options);
+    const cf = new CloudFormation(options);
+    const s3 = new S3(options);
 
     // ---------- look for stack
     let action = null;
     try {
-      await cf.describeStacks({ StackName: AWS_CF_STACK_BUCKET }).promise();
+      await cf.describeStacks({ StackName: AWS_CF_STACK_BUCKET });
       if (event.hasOwnProperty('action') && event.action === 'DELETE') {
         action = 'DELETE';
       } else {
@@ -82,9 +84,7 @@ exports.handler = async function (context, event, callback) {
     // ---------- read & validate CF template
     const definition = fs.readFileSync(CF_TEMPLATE_PATH);
     console.log('Validating', AWS_CF_STACK_BUCKET, 'CloudFormation Stack...');
-    let response = await cf
-      .validateTemplate({ TemplateBody: `${definition}` })
-      .promise();
+    let response = await cf.validateTemplate({ TemplateBody: `${definition}` });
 
     response = null;
     switch (action) {
@@ -116,7 +116,7 @@ exports.handler = async function (context, event, callback) {
               'CAPABILITY_AUTO_EXPAND',
             ],
           };
-          response = await cf.updateStack(params).promise();
+          response = await cf.updateStack(params);
           console.log('Successfully initiated stack update');
         } catch (err) {
           if (err.message.includes('No updates are to be performed')) {
@@ -155,7 +155,7 @@ exports.handler = async function (context, event, callback) {
             'CAPABILITY_AUTO_EXPAND',
           ],
         };
-        response = await cf.createStack(params).promise();
+        response = await cf.createStack(params);
         console.log('Successfully initiated stack creation');
         break;
 
@@ -163,9 +163,7 @@ exports.handler = async function (context, event, callback) {
         {
           // ---------- look for dependent stack
           try {
-            await cf
-              .describeStacks({ StackName: AWS_CF_STACK_APPLICATION })
-              .promise();
+            await cf.describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
             throw new Error(
               `exists dependent ${AWS_CF_STACK_APPLICATION}stack!`
             );
@@ -174,7 +172,13 @@ exports.handler = async function (context, event, callback) {
           console.log('Emptying ', AWS_S3_BUCKET, 'S3 Bucket...');
 
           async function _deleteKeys(params, s3client) {
-            const response = await s3client.listObjectsV2(params).promise();
+            const {
+              ListObjectsV2Command,
+              DeleteObjectCommand,
+            } = require('@aws-sdk/client-s3');
+            const response = await s3client.send(
+              new ListObjectsV2Command(params)
+            );
             console.log('deleting:', response.KeyCount);
             response.Contents.forEach((obj) =>
               s3client.deleteObject(
@@ -202,7 +206,7 @@ exports.handler = async function (context, event, callback) {
           const params = {
             StackName: AWS_CF_STACK_BUCKET,
           };
-          response = await cf.deleteStack(params).promise();
+          response = await cf.deleteStack(params);
           console.log('Successfully initiated stack deletion');
         }
         break;

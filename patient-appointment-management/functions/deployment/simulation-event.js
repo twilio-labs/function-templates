@@ -2,7 +2,7 @@
 
 const path0 = Runtime.getFunctions().helpers.path;
 const { getParam, setParam } = require(path0);
-const AWS = require('aws-sdk');
+const { LambdaClient, InvokeCommand } = require('@aws-sdk/client-lambda');
 
 const ts = Math.round(new Date().getTime() / 1000);
 const tsTomorrow = ts + 17 * 3600;
@@ -27,11 +27,13 @@ async function createAppointment(context, appointment) {
 
 async function remindAppointment(context) {
   const AWS_CONFIG = {
-    accessKeyId: await getParam(context, 'AWS_ACCESS_KEY_ID'),
-    secretAccessKey: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
+    credentials: {
+      accessKeyId: await getParam(context, 'AWS_ACCESS_KEY_ID'),
+      secretAccessKey: await getParam(context, 'AWS_SECRET_ACCESS_KEY'),
+    },
     region: await getParam(context, 'AWS_REGION'),
   };
-  context.Lambda = new AWS.Lambda(AWS_CONFIG);
+  context.Lambda = new LambdaClient(AWS_CONFIG);
   context.AWS_LAMBDA_SEND_REMINDERS = await getParam(
     context,
     'AWS_LAMBDA_SEND_REMINDERS'
@@ -40,7 +42,7 @@ async function remindAppointment(context) {
     FunctionName: context.AWS_LAMBDA_SEND_REMINDERS,
     InvocationType: 'RequestResponse',
   };
-  const response = await context.Lambda.invoke(params).promise();
+  const response = await context.Lambda.send(new InvokeCommand(params));
 }
 
 exports.handler = function (context, event, callback) {

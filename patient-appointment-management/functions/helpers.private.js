@@ -21,7 +21,6 @@
  * sets environment variable
  * --------------------------------------------------------------------------------
  */
-const AWS = require('aws-sdk');
 const assert = require('assert');
 const validator = require('validator');
 
@@ -108,48 +107,67 @@ async function getParam(context, key) {
     : process.env.AUTH_TOKEN;
   const client = context.getTwilioClient();
 
-  const AWS = require('aws-sdk');
+  const {
+    SecretsManagerClient,
+    GetSecretValueCommand,
+  } = require('@aws-sdk/client-secrets-manager');
+  const { SSMClient, GetParameterCommand } = require('@aws-sdk/client-ssm');
+
   const options = {
-    accessKeyId: context.DEPLOYER_AWS_ACCESS_KEY_ID,
-    secretAccessKey: context.DEPLOYER_AWS_SECRET_ACCESS_KEY,
+    credentials: {
+      accessKeyId: context.DEPLOYER_AWS_ACCESS_KEY_ID,
+      secretAccessKey: context.DEPLOYER_AWS_SECRET_ACCESS_KEY,
+    },
     region: context.AWS_REGION,
   };
-  const SSM = new AWS.SSM(options);
+  const ssmClient = new SSMClient(options);
   // ----------------------------------------------------------------------
   try {
     switch (key) {
       case 'DEPLOYER_AWS_ROLE_ARN': {
         const name = '/twilio/patient-appointment-management/deployer/role-arn';
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_ACCESS_KEY_ID': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/aws-secret`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         const secretName = data.Parameter.Value;
 
-        const SM = new AWS.SecretsManager(options);
-        const sdata = await SM.getSecretValue({
-          SecretId: secretName,
-        }).promise();
+        const smClient = new SecretsManagerClient(options);
+        const sdata = await smClient.send(
+          new GetSecretValueCommand({
+            SecretId: secretName,
+          })
+        );
         const secret = JSON.parse(sdata.SecretString);
         return secret.AWS_ACCESS_KEY_ID;
       }
       case 'AWS_SECRET_ACCESS_KEY': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/aws-secret`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         const secretName = data.Parameter.Value;
 
-        const SM = new AWS.SecretsManager(options);
-        const sdata = await SM.getSecretValue({
-          SecretId: secretName,
-        }).promise();
+        const smClient = new SecretsManagerClient(options);
+        const sdata = await smClient.send(
+          new GetSecretValueCommand({
+            SecretId: secretName,
+          })
+        );
         const secret = JSON.parse(sdata.SecretString);
         return secret.AWS_SECRET_ACCESS_KEY;
       }
       case 'AWS_ATHENA_WORKGROUP': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/athena-workgroup`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_CF_STACK_APPLICATION': {
@@ -163,7 +181,9 @@ async function getParam(context, key) {
       }
       case 'AWS_GLUE_CRAWLER': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/crawler`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_GLUE_DATABASE': {
@@ -171,17 +191,23 @@ async function getParam(context, key) {
       }
       case 'AWS_LAMBDA_SEND_REMINDERS': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/lambda-send-reminders`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_LAMBDA_QUERY_STATE': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/lambda-query-state`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_LAMBDA_QUERY_HISTORY': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/lambda-query-history`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_S3_BUCKET': {
@@ -189,22 +215,30 @@ async function getParam(context, key) {
       }
       case 'AWS_SECRET_AWS_ARN': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/aws-secret`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_SECRET_TWILIO_ARN': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/twilio-secret`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_SFN_QUERY_STATE': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/sfn-query-state`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'AWS_SFN_QUERY_HISTORY': {
         const name = `/twilio/patient-appointment-management-${context.CUSTOMER_CODE}/application/sfn-query-history`;
-        const data = await SSM.getParameter({ Name: name }).promise();
+        const data = await ssmClient.send(
+          new GetParameterCommand({ Name: name })
+        );
         return data.Parameter.Value;
       }
       case 'TWILIO_ACCOUNT_SID': {

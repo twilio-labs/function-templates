@@ -21,7 +21,11 @@ exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {
     const assert = require('assert');
-    const AWS = require('aws-sdk');
+    const {
+      S3Client,
+      HeadObjectCommand,
+      PutObjectCommand,
+    } = require('@aws-sdk/client-s3');
     const { path } = Runtime.getFunctions().helpers;
     const { getParam, setParam, validateAppointment } = require(path);
 
@@ -73,9 +77,12 @@ exports.handler = async function (context, event, callback) {
     appointment.event_type = 'CANCELED'; // over-ride
 
     // initialize s3 client
-    const s3 = new AWS.S3({
-      accessKeyId: AWS_ACCESS_KEY_ID,
-      secretAccessKey: AWS_SECRET_ACCESS_KEY,
+    const s3 = new S3Client({
+      credentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+      },
+
       region: AWS_REGION,
     });
 
@@ -97,7 +104,7 @@ exports.handler = async function (context, event, callback) {
           Bucket: AWS_S3_BUCKET,
           Key: state_file_s3key.replace('{DISPOSITION}', d),
         };
-        const results = await s3.headObject(params).promise();
+        const results = await s3.send(new HeadObjectCommand(params));
         disposition = d;
         break;
       } catch (err) {
@@ -118,7 +125,7 @@ exports.handler = async function (context, event, callback) {
       Body: JSON.stringify(appointment),
       ServerSideEncryption: 'AES256',
     };
-    let results = await s3.putObject(params).promise();
+    let results = await s3.send(new PutObjectCommand(params));
     console.log(THIS, 'PUT - ', params.Key);
 
     params = {
@@ -129,7 +136,7 @@ exports.handler = async function (context, event, callback) {
       Body: JSON.stringify(appointment),
       ServerSideEncryption: 'AES256',
     };
-    results = await s3.putObject(params).promise();
+    results = await s3.send(new PutObjectCommand(params));
     console.log(THIS, 'PUT - ', params.Key);
 
     const response = {

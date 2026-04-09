@@ -10,7 +10,9 @@ const THIS = 'execute-query:';
  * --------------------------------------------------------------------------------
  */
 const assert = require('assert');
-const AWS = require('aws-sdk');
+
+const { SFN } = require('@aws-sdk/client-sfn');
+const { STS } = require('@aws-sdk/client-sts');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -51,11 +53,11 @@ exports.handler = async function (context, event, callback) {
       secretAccessKey: AWS_SECRET_ACCESS_KEY,
       region: AWS_REGION,
     };
-    const sts = new AWS.STS(options);
-    const sfn = new AWS.StepFunctions(options);
+    const sts = new STS(options);
+    const sfn = new SFN(options);
 
     // ----------
-    let response = await sts.getCallerIdentity().promise();
+    let response = await sts.getCallerIdentity();
     const account_id = response.Account.toString();
     const stm_arn = [
       'arn:aws:states',
@@ -69,7 +71,7 @@ exports.handler = async function (context, event, callback) {
     let params = {
       stateMachineArn: stm_arn,
     };
-    response = await sfn.describeStateMachine(params).promise();
+    response = await sfn.describeStateMachine(params);
 
     // check for execution
     params = {
@@ -77,7 +79,7 @@ exports.handler = async function (context, event, callback) {
       statusFilter: 'RUNNING',
       maxResults: 1,
     };
-    response = await sfn.listExecutions(params).promise();
+    response = await sfn.listExecutions(params);
     if (response.executions.length > 0) {
       return callback(null, 'RUNNING');
     }
@@ -86,7 +88,7 @@ exports.handler = async function (context, event, callback) {
       stateMachineArn: stm_arn,
       input: '{}',
     };
-    response = await sfn.startExecution(params).promise();
+    response = await sfn.startExecution(params);
 
     return callback(null, 'STARTED');
   } catch (err) {

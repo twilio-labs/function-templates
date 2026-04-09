@@ -10,7 +10,6 @@ const THIS = 'deployment/deploy-aws-code:';
  */
 const assert = require('assert');
 const fs = require('fs');
-const aws = require('aws-sdk');
 const JSZip = require('jszip');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
@@ -21,6 +20,14 @@ const { isValidAppToken } = require(path1);
 exports.handler = async function (context, event, callback) {
   console.time(THIS);
   try {
+    const {
+      LambdaClient,
+      UpdateFunctionCodeCommand,
+      GetFunctionCommand,
+    } = require('@aws-sdk/client-lambda');
+    const { Upload } = require('@aws-sdk/lib-storage');
+    const { S3Client } = require('@aws-sdk/client-s3');
+
     assert(event.token, 'missing event.token');
     if (!isValidAppToken(event.token, context)) {
       const response = new Twilio.Response();
@@ -58,12 +65,14 @@ exports.handler = async function (context, event, callback) {
 
     // ---------- get aws clients
     const options = {
-      accessKeyId: DEPLOYER_AWS_ACCESS_KEY_ID,
-      secretAccessKey: DEPLOYER_AWS_SECRET_ACCESS_KEY,
+      credentials: {
+        accessKeyId: DEPLOYER_AWS_ACCESS_KEY_ID,
+        secretAccessKey: DEPLOYER_AWS_SECRET_ACCESS_KEY,
+      },
       region: AWS_REGION,
     };
-    const s3 = new aws.S3(options);
-    const lambda = new aws.Lambda(options);
+    const s3 = new S3Client(options);
+    const lambda = new LambdaClient(options);
 
     {
       // ---------- send_appointment_reminders.zip
@@ -90,21 +99,24 @@ exports.handler = async function (context, event, callback) {
         Body: content,
         ServerSideEncryption: 'AES256',
       };
-      let response = await s3.upload(params).promise();
+      let response = await new Upload({
+        client: s3,
+        params,
+      }).done();
       console.log('Uploaded:', response.Location);
 
       try {
         params = {
           FunctionName: AWS_LAMBDA_SEND_REMINDERS,
         };
-        response = await lambda.getFunction(params).promise();
+        response = await lambda.getFunction(params);
 
         params = {
           FunctionName: AWS_LAMBDA_SEND_REMINDERS,
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/send_appointment_reminders.zip',
         };
-        response = await lambda.updateFunctionCode(params).promise();
+        response = await lambda.send(new UpdateFunctionCodeCommand(params));
         console.log('Updated lambda function code for:', response.FunctionName);
       } catch (err) {
         console.log('No lambda function:', params.FunctionName);
@@ -136,21 +148,26 @@ exports.handler = async function (context, event, callback) {
         Body: content,
         ServerSideEncryption: 'AES256',
       };
-      const response = await s3.upload(params).promise();
+      const response = await new Upload({
+        client: s3,
+        params,
+      }).done();
       console.log('Uploaded:', response.Location);
 
       try {
         params = {
           FunctionName: AWS_LAMBDA_QUERY_STATE,
         };
-        await lambda.getFunction(params).promise();
+        await lambda.send(new GetFunctionCommand(params));
 
         params = {
           FunctionName: AWS_LAMBDA_QUERY_STATE,
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/query_appointment_state.zip',
         };
-        const response = await lambda.updateFunctionCode(params).promise();
+        const response = await lambda.send(
+          new UpdateFunctionCodeCommand(params)
+        );
         console.log('Updated lambda function code for:', response.FunctionName);
       } catch (err) {
         console.log('No lambda function:', params.FunctionName);
@@ -183,21 +200,26 @@ exports.handler = async function (context, event, callback) {
         Body: content,
         ServerSideEncryption: 'AES256',
       };
-      const response = await s3.upload(params).promise();
+      const response = await new Upload({
+        client: s3,
+        params,
+      }).done();
       console.log('Uploaded:', response.Location);
 
       try {
         params = {
           FunctionName: AWS_LAMBDA_QUERY_HISTORY,
         };
-        await lambda.getFunction(params).promise();
+        await lambda.send(new GetFunctionCommand(params));
 
         params = {
           FunctionName: AWS_LAMBDA_QUERY_HISTORY,
           S3Bucket: AWS_S3_BUCKET,
           S3Key: 'artifacts/query_appointment_history.zip',
         };
-        const response = await lambda.updateFunctionCode(params).promise();
+        const response = await lambda.send(
+          new UpdateFunctionCodeCommand(params)
+        );
         console.log('Updated lambda function code for:', response.FunctionName);
       } catch (err) {
         console.log('No lambda function:', params.FunctionName);

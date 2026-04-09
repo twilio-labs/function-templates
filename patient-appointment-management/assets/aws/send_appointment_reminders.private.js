@@ -9,14 +9,16 @@ const THIS = 'send-appointment-reminders: ';
  * --------------------------------------------------------------------------------
  */
 
+const { ListObjectsV2Command } = require('@aws-sdk/client-s3');
+
 // --------------------------------------------------------------------------------
 async function getAllKeys(params, s3client, allKeys = []) {
-  const response = await s3client.listObjectsV2(params).promise();
+  const response = await s3client.send(new ListObjectsV2Command(params));
   response.Contents.forEach((obj) => allKeys.push(obj.Key));
 
   if (response.NextContinuationToken) {
     params.ContinuationToken = response.NextContinuationToken;
-    await getAllKeys(params, allKeys); // recursive synchronous call
+    await getAllKeys(params, s3client, allKeys); // recursive synchronous call
   }
   return allKeys;
 }
@@ -101,16 +103,31 @@ exports.handler = async function (event, context) {
   console.time(THIS);
   try {
     const assert = require('assert');
-    const AWS = require('aws-sdk');
+
+    const {
+      S3Client,
+      GetObjectCommand,
+      PutObjectCommand,
+      DeleteObjectCommand,
+    } = require('@aws-sdk/client-s3');
+
+    const {
+      SecretsManagerClient,
+      GetSecretValueCommand,
+    } = require('@aws-sdk/client-secrets-manager');
 
     // initialize AWS client
-    const s3 = new AWS.S3();
+    const s3 = new S3Client();
 
     // SecretsManager client requires region to be specified
-    const SM = new AWS.SecretsManager({ region: process.env.AWS_REGION });
-    const data = await SM.getSecretValue({
-      SecretId: process.env.TWILIO_SECRET_ARN,
-    }).promise();
+    const SM = new SecretsManagerClient({
+      region: process.env.AWS_REGION,
+    });
+    const data = await SM.send(
+      new GetSecretValueCommand({
+        SecretId: process.env.TWILIO_SECRET_ARN,
+      })
+    );
     const secret = JSON.parse(data.SecretString);
 
     // ---------- environment variables & input event
@@ -178,8 +195,10 @@ exports.handler = async function (event, context) {
         Bucket: AWS_S3_BUCKET,
         Key: s3key,
       };
-      const results = await s3.getObject(params).promise();
-      const appointment = JSON.parse(results.Body.toString('utf-8'));
+      const results = await s3.send(new GetObjectCommand(params));
+      const appointment = JSON.parse(
+        await results.Body.transformToString('utf-8')
+      );
       console.log('appointment=', appointment);
 
       const appointment_ltz = new Date(appointment.appointment_datetime);
@@ -245,14 +264,14 @@ exports.handler = async function (event, context) {
           Body: JSON.stringify(appointment),
           ServerSideEncryption: 'AES256',
         };
-        let results = await s3.putObject(params).promise();
+        let results = await s3.send(new PutObjectCommand(params));
         console.log('PUT - ', params.Key);
 
         params = {
           Bucket: AWS_S3_BUCKET,
           Key: s3key,
         };
-        results = await s3.deleteObject(params).promise();
+        results = await s3.send(new DeleteObjectCommand(params));
         console.log('DELETE - ', params.Key);
 
         params = {
@@ -264,7 +283,7 @@ exports.handler = async function (event, context) {
           Body: JSON.stringify(appointment),
           ServerSideEncryption: 'AES256',
         };
-        results = await s3.putObject(params).promise();
+        results = await s3.send(new PutObjectCommand(params));
         console.log('PUT - ', params.Key);
 
         continue;

@@ -9,7 +9,7 @@ const THIS = 'deployment/check-aws-application:';
  * --------------------------------------------------------------------------------
  */
 const assert = require('assert');
-const aws = require('aws-sdk');
+const { CloudFormation } = require('@aws-sdk/client-cloudformation');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -39,7 +39,7 @@ exports.handler = async function (context, event, callback) {
       ),
       region: await getParam(context, 'AWS_REGION'),
     };
-    const cf = new aws.CloudFormation(options);
+    const cf = new CloudFormation(options);
 
     // ---------- look for dependent stack
     try {
@@ -47,9 +47,9 @@ exports.handler = async function (context, event, callback) {
         context,
         'AWS_CF_STACK_APPLICATION'
       );
-      const response = await cf
-        .describeStacks({ StackName: AWS_CF_STACK_APPLICATION })
-        .promise();
+      const response = await cf.describeStacks({
+        StackName: AWS_CF_STACK_APPLICATION,
+      });
       const status = response.Stacks[0].StackStatus;
 
       console.log(THIS, 'StackStatus=', status);

@@ -12,7 +12,7 @@ const THIS = path.basename(__filename, '.js');
  * --------------------------------------------------------------------------------
  */
 const assert = require('assert');
-const AWS = require('aws-sdk');
+const { STS } = require('@aws-sdk/client-sts');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -95,8 +95,8 @@ async function checkParameters(context) {
       secretAccessKey: context.DEPLOYER_AWS_SECRET_ACCESS_KEY,
       region: context.AWS_REGION,
     };
-    const sts = new AWS.STS(options);
-    await sts.getCallerIdentity({}).promise();
+    const sts = new STS(options);
+    await sts.getCallerIdentity({});
   } catch (err) {
     errors.push({
       DEPLOYER_AWS_ACCESS_KEY_ID: `${v} may be invalid, unable to authenticate to AWS`,

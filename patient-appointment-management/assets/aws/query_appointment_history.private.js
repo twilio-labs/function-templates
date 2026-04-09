@@ -1,4 +1,21 @@
 /* eslint-disable camelcase, prefer-destructuring */
+const {
+  GlueClient,
+  GetCrawlerCommand,
+  StartCrawlerCommand,
+  GetTableCommand,
+} = require('@aws-sdk/client-glue');
+
+const {
+  AthenaClient,
+  StartQueryExecutionCommand,
+  GetQueryExecutionCommand,
+} = require('@aws-sdk/client-athena');
+
+const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+
 /*
  * --------------------------------------------------------------------------------
  * synchronously runs glue crawler
@@ -9,21 +26,19 @@
  * returns response.Crawler if successful; null otherwise
  * --------------------------------------------------------------------------------
  */
-async function run_crawler_synchronous(crawler_name, AWS) {
-  const glue = new AWS.Glue();
-
+async function run_crawler_synchronous(crawler_name, glueClient) {
   try {
     const params = {
       Name: crawler_name,
     };
 
     // check if crawler is already running
-    let response = await glue.getCrawler(params).promise();
+    let response = await glueClient.send(new GetCrawlerCommand(params));
     let crawler_state = response.Crawler.State;
 
     // start crawler is not running
     if (crawler_state === 'READY') {
-      await glue.startCrawler(params).promise();
+      await glueClient.send(new StartCrawlerCommand(params));
       console.log('Started glue crawler:', crawler_name);
     }
 
@@ -31,7 +46,7 @@ async function run_crawler_synchronous(crawler_name, AWS) {
     const sleep_milliseconds = 30000;
     do {
       await new Promise((resolve) => setTimeout(resolve, sleep_milliseconds));
-      response = await glue.getCrawler(params).promise();
+      response = await glueClient.send(new GetCrawlerCommand(params));
       crawler_state = response.Crawler.State;
     } while (crawler_state !== 'READY');
 
@@ -51,9 +66,7 @@ async function run_crawler_synchronous(crawler_name, AWS) {
  * returns response.QueryExecution if successful; null otherwise
  * --------------------------------------------------------------------------------
  */
-async function execute_query(query, s3bucket, AWS) {
-  const athena = new AWS.Athena();
-
+async function execute_query(query, s3bucket, athenaClient) {
   try {
     const output_location = `s3://${s3bucket}/query-results/`;
     const params = {
@@ -63,7 +76,9 @@ async function execute_query(query, s3bucket, AWS) {
         OutputLocation: output_location,
       },
     };
-    let response = await athena.startQueryExecution(params).promise();
+    let response = await athenaClient.send(
+      new StartQueryExecutionCommand(params)
+    );
     const qe_id = response.QueryExecutionId;
     console.log('Started athena query...');
 
@@ -72,9 +87,9 @@ async function execute_query(query, s3bucket, AWS) {
     let state = null;
     do {
       await new Promise((resolve) => setTimeout(resolve, milliseconds));
-      response = await athena
-        .getQueryExecution({ QueryExecutionId: qe_id })
-        .promise();
+      response = await athenaClient.send(
+        new GetQueryExecutionCommand({ QueryExecutionId: qe_id })
+      );
       state = response.QueryExecution.Status.State;
     } while (state === 'QUEUED' || state === 'RUNNING');
     console.log('Athena query result :', state);
@@ -99,24 +114,26 @@ async function execute_query(query, s3bucket, AWS) {
  */
 exports.handler = async function (event, context) {
   try {
-    const AWS = require('aws-sdk');
-
     // ---------- environment variables & input event
     const GLUE_CRAWLER = process.env.GLUE_CRAWLER;
     const S3_BUCKET = process.env.S3_BUCKET;
 
+    // ---------- initialize AWS clients
+    const glueClient = new GlueClient();
+    const athenaClient = new AthenaClient();
+    const s3Client = new S3Client();
+
     // ---------- run glue crawler
-    const crawler = await run_crawler_synchronous(GLUE_CRAWLER, AWS);
+    const crawler = await run_crawler_synchronous(GLUE_CRAWLER, glueClient);
     const database_name = crawler.DatabaseName;
 
     // ---------- check if table data exists
-    const glue = new AWS.Glue();
     try {
       const params = {
         DatabaseName: database_name,
         Name: 'state',
       };
-      await glue.getTable(params).promise();
+      await glueClient.send(new GetTableCommand(params));
     } catch (err) {
       // table does not exist
       return {
@@ -127,7 +144,7 @@ exports.handler = async function (event, context) {
 
     // ---------- execute athena query
     const query = `select * from ${database_name}.history`;
-    const queryExecution = await execute_query(query, S3_BUCKET, AWS);
+    const queryExecution = await execute_query(query, S3_BUCKET, athenaClient);
 
     // ---------- generate s3 signed URL
     console.log(
@@ -137,13 +154,17 @@ exports.handler = async function (event, context) {
     const s3uri = new URL(queryExecution.ResultConfiguration.OutputLocation);
     const signedUrlExpireSeconds = 60 * 60;
 
-    const s3 = new AWS.S3();
     const params = {
       Bucket: s3uri.host,
       Key: s3uri.pathname.substr(1),
-      Expires: signedUrlExpireSeconds,
     };
-    const signedURL = s3.getSignedUrl('getObject', params);
+    const signedURL = await getSignedUrl(
+      s3Client,
+      new GetObjectCommand(params),
+      {
+        expiresIn: signedUrlExpireSeconds,
+      }
+    );
     console.log('generated signed URL', signedURL);
 
     return {

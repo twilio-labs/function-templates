@@ -10,7 +10,7 @@ const THIS = 'deployment/deploy-aws-application';
  */
 const assert = require('assert');
 const fs = require('fs');
-const aws = require('aws-sdk');
+const { CloudFormation } = require('@aws-sdk/client-cloudformation');
 
 const path0 = Runtime.getFunctions()['helpers'].path;
 const { getParam, setParam } = require(path0);
@@ -88,11 +88,11 @@ exports.handler = async function (context, event, callback) {
       secretAccessKey: DEPLOYER_AWS_SECRET_ACCESS_KEY,
       region: AWS_REGION,
     };
-    const cf = new aws.CloudFormation(options);
+    const cf = new CloudFormation(options);
 
     // ---------- look for dependent stack
     try {
-      await cf.describeStacks({ StackName: AWS_CF_STACK_BUCKET }).promise();
+      await cf.describeStacks({ StackName: AWS_CF_STACK_BUCKET });
     } catch (AmazonCloudFormationException) {
       throw new Error(`no dependent ${AWS_CF_STACK_BUCKET} stack!`);
     }
@@ -100,9 +100,7 @@ exports.handler = async function (context, event, callback) {
     // ---------- look for stack
     let action = null;
     try {
-      await cf
-        .describeStacks({ StackName: AWS_CF_STACK_APPLICATION })
-        .promise();
+      await cf.describeStacks({ StackName: AWS_CF_STACK_APPLICATION });
       if (event.hasOwnProperty('action') && event.action === 'DELETE') {
         action = 'DELETE';
       } else {
@@ -119,9 +117,7 @@ exports.handler = async function (context, event, callback) {
       AWS_CF_STACK_APPLICATION,
       'CloudFormation Stack...'
     );
-    let response = await cf
-      .validateTemplate({ TemplateBody: `${definition}` })
-      .promise();
+    let response = await cf.validateTemplate({ TemplateBody: `${definition}` });
 
     response = null;
     switch (action) {
@@ -193,7 +189,7 @@ exports.handler = async function (context, event, callback) {
               'CAPABILITY_AUTO_EXPAND',
             ],
           };
-          response = await cf.updateStack(params).promise();
+          response = await cf.updateStack(params);
           console.log('Successfully initiated stack update');
         } catch (err) {
           if (err.message.includes('No updates are to be performed')) {
@@ -275,7 +271,7 @@ exports.handler = async function (context, event, callback) {
               'CAPABILITY_AUTO_EXPAND',
             ],
           };
-          response = await cf.createStack(params).promise();
+          response = await cf.createStack(params);
           console.log('Successfully initiated stack creation');
         }
         break;
@@ -290,7 +286,7 @@ exports.handler = async function (context, event, callback) {
           const params = {
             StackName: AWS_CF_STACK_APPLICATION,
           };
-          response = await cf.deleteStack(params).promise();
+          response = await cf.deleteStack(params);
           console.log('Successfully initiated stack deletion');
         }
         break;
