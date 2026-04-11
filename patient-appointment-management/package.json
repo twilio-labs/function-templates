@@ -16,7 +16,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1027.0",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.6.0",
-    "twilio": "^3.61.0",
+    "twilio": "^4.19.3",
     "uuid": "^8.3.2",
     "validator": "^13.6.0"
   },
