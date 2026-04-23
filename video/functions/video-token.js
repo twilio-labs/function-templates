@@ -32,7 +32,6 @@ exports.handler = function (context, event, callback) {
     { identity: ACCESS_TOKEN_IDENTITY }
   );
   accessToken.addGrant(videoGrant); // Add the grant to the token
-
   return callback(null, {
     token: accessToken.toJwt(), // Serialize the token to a JWT string
     room: ROOM_NAME,
