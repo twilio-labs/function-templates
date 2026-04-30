@@ -906,10 +906,10 @@
       {
         "key": "TWILIO_PHONE_NUMBER",
         "required": true,
-        "format": "text",
-        "description": "Your phone number for call forwarding (Sales option)\nEnter in E.164 format: https://www.twilio.com/docs/glossary/what-e164\nUse a test phone number during development",
+        "format": "phone_number",
+        "description": "Your phone number",
         "link": null,
-        "default": "+15551234567",
+        "default": "+12223334444",
         "configurable": true,
         "contentKey": null
       },
