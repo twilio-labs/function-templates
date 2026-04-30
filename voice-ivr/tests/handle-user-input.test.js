@@ -20,7 +20,7 @@ const mockTwilioClient = {
 
 const context = {
   getTwilioClient: () => mockTwilioClient,
-  MY_PHONE_NUMBER: 'TwilioNumber',
+  TWILIO_PHONE_NUMBER: 'TwilioNumber',
 };
 const baseEvent = {
   From: '+12223334444',
@@ -56,7 +56,7 @@ describe('handles digit inputs', () => {
     const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        `<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>${context.MY_PHONE_NUMBER}</Dial></Response>`
+        `<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>${context.TWILIO_PHONE_NUMBER}</Dial></Response>`
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();
@@ -122,7 +122,7 @@ describe('handles speech inputs', () => {
     const callback = (_err, result) => {
       const twiml = result.toString();
       expect(twiml).toMatch(
-        `<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>${context.MY_PHONE_NUMBER}</Dial></Response>`
+        `<Response><Say>Thank you. You will now be forwarded to our sales department.</Say><Dial>${context.TWILIO_PHONE_NUMBER}</Dial></Response>`
       );
       expect(mockTwilioClient.messages.create).not.toHaveBeenCalled();
       done();

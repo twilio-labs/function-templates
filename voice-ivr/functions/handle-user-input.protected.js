@@ -43,7 +43,7 @@ async function sendMessage(context, event) {
  * counterpart.
  *
  * If option 1 (sales) was chosen, the function will forward the call
- * and dial the MY_PHONE_NUMBER specified in /.env. If option 2
+ * and dial the TWILIO_PHONE_NUMBER specified in /.env. If option 2
  * (opening hours) was chosen, the Voice Response will respond to the
  * caller with the opening hours. If option 3 (address) was chosen,
  * the SMS handler will be executed and text the address to the caller.
@@ -76,7 +76,7 @@ exports.handler = async function (context, event, callback) {
       twiml.say(
         'Thank you. You will now be forwarded to our sales department.'
       );
-      twiml.dial(context.MY_PHONE_NUMBER);
+      twiml.dial(context.TWILIO_PHONE_NUMBER);
       break;
     case '2':
       twiml.say('We are open from 9am to 5pm every day but Sunday.');
