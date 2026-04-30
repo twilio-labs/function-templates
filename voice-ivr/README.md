@@ -25,7 +25,7 @@ Copy `.env.example`, and set the following values:
 
 | Variable          | Meaning                                                  | Required |
 | :---------------- | :------------------------------------------------------- | :------- |
-| `MY_PHONE_NUMBER` | The "Sales" phone number that you want calls to be forwarded to. | yes      |
+| `TWILIO_PHONE_NUMBER` | The "Sales" phone number that you want calls to be forwarded to. | yes      |
 
 ## Create a new project with the template
 
