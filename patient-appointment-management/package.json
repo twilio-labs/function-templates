@@ -14,10 +14,10 @@
     "@aws-sdk/client-sts": "^3.1027.0",
     "@aws-sdk/lib-storage": "^3.1027.0",
     "@aws-sdk/s3-request-presigner": "^3.1027.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.3",
     "jszip": "^3.6.0",
     "twilio": "^3.61.0",
-    "uuid": "^8.3.2",
+    "uuid": "^14.0.0",
     "validator": "^13.6.0"
   },
   "devDependencies": {
