@@ -17,7 +17,7 @@
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.6.0",
     "twilio": "^3.61.0",
-    "uuid": "^8.3.2",
+    "uuid": "^14.0.0",
     "validator": "^13.6.0"
   },
   "devDependencies": {
