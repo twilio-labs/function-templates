@@ -51,6 +51,11 @@
       "description": "Drops all incoming calls into a conference room"
     },
     {
+      "id": "send-receive-sms-messages",
+      "name": "Send & receive SMS messages",
+      "description": "Learn how to send and receive SMS with Twilio"
+    },
+    {
       "id": "stripe-payment-link-sms",
       "name": "Stripe payments via SMS",
       "description": "Send payment links via SMS using Stripe"
@@ -359,6 +364,11 @@
       "id": "email-events-sms",
       "name": "Email Open and Click Alerts via SMS",
       "description": "This template tracks and sends SMS alerts of email open and click statuses."
+    },
+    {
+      "id": "send-receive-sms-messages",
+      "name": "Send & receive SMS messages with Twilio",
+      "description": "Demonstrates how to send & receive SMS messages with Twilio"
     }
   ]
 }
