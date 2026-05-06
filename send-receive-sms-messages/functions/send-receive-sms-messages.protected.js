@@ -26,7 +26,7 @@
  */
 
 exports.handler = function (context, event, callback) {
-  const default_option =
+  const defaultOption =
     "I just wanna tell you how I'm feeling - Gotta make you understand";
   const options = [
     'give you up',
@@ -39,11 +39,11 @@ exports.handler = function (context, event, callback) {
   const body = event.Body;
 
   const twiml = new Twilio.twiml.MessagingResponse();
-  if (body.toLowerCase() == 'never gonna') {
+  if (body.toLowerCase() === 'never gonna') {
     const index = Math.floor(Math.random() * options.length - 1) + 1;
     twiml.message(options[index]);
   } else {
-    twiml.message(default_option);
+    twiml.message(defaultOption);
   }
 
   callback(null, twiml);

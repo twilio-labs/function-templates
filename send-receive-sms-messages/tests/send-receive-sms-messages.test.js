@@ -53,12 +53,12 @@ test('includes the default response when body is not "never gonna"', (done) => {
   const event = {
     Body: '',
   };
-  const default_response =
+  const defaultResponse =
     "I just wanna tell you how I'm feeling - Gotta make you understand";
 
   const callback = (_err, result) => {
     const twiml = result.toString();
-    const re = new RegExp(default_response);
+    const re = new RegExp(defaultResponse);
     expect(twiml.match(re));
     done();
   };
