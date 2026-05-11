@@ -21,7 +21,7 @@ The application is fully customizable, allowing you to edit the available option
 
 This project requires some environment variables to be set. To keep any tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
-Copy `.env.example`, and set the following values:
+Set the following values in `.env`:
 
 | Variable          | Meaning                                                  | Required |
 | :---------------- | :------------------------------------------------------- | :------- |
