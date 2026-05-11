@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@langchain/community": "^0.0.32",
-    "@langchain/core": "^0.1.32",
+    "@langchain/community": "^1.1.28",
+    "@langchain/core": "^1.1.44",
     "@langchain/openai": "^0.0.14",
     "@twilio/runtime-handler": "1.3.0",
     "exa-js": "^1.0.12",
     "jsonwebtoken": "^9.0.2",
-    "langchain": "^0.1.21",
+    "langchain": "^1.4.0",
     "twilio": "^3.56"
   }
 }
