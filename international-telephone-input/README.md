@@ -1,6 +1,67 @@
-# International telephone input validation
+# International Telephone Input Validation with Twilio Lookup
 
-This project will show you one way to validate phone number inputs with the [`intl-tel-input`](https://github.com/jackocnr/intl-tel-input) plugin and Twilio's [Lookup API](https://www.twilio.com/docs/lookup/api). For a production use case we recommend adding [phone verification](https://github.com/twilio-labs/function-templates/tree/main/verify), which is a best practice for collecting phone numbers from your users in order to make sure they have control of the number.
+Validate international phone numbers with automatic country detection and Twilio's Lookup API v2
+
+![Phone Input Demo](./assets/phone-number-input-demo.png)
+
+## Overview
+
+This template provides a production-ready international phone number input form with:
+- **Automatic formatting** using the intl-tel-input library (v23.1.0)
+- **Country detection** based on user's geographic location
+- **Client-side validation** with real-time format checking
+- **Server-side verification** via Twilio Lookup API v2
+- **E.164 format conversion** for global compatibility
+
+For production phone number collection, we strongly recommend adding [phone verification](https://github.com/twilio-labs/function-templates/tree/main/verify) to confirm users have control of the number.
+
+## Demo
+
+![Phone Input Demo](./assets/phone-number-input-demo.png)
+
+*The form provides real-time phone number formatting with country-specific patterns and validation feedback.*
+
+### Creating the Demo Screenshot
+
+To create or update the demo GIF for this template:
+
+1. Run the template locally: `npm start`
+2. Open https://localhost:3000/index.html in your browser
+3. Use a screen recording tool (LICEcap, Gifox, Kap, or ScreenToGif)
+4. Record the following sequence (~10 seconds):
+   - Show the empty form with country selector
+   - Type a phone number and show auto-formatting
+   - Change the country dropdown to demonstrate different formatting
+   - Click "Verify" with a valid number and show success message
+   - Enter an invalid number and show error message
+5. Optimize GIF size (keep under 2MB)
+6. Save as `phone-input-demo.gif` in the template root directory
+7. Recommended dimensions: 800x600px or similar
+
+## Related Resources
+
+- [Phone Verification Template](https://github.com/twilio-labs/function-templates/tree/main/verify) - Recommended for production phone number collection
+- [International Phone Number Input Blog Post](https://www.twilio.com/blog/international-phone-number-input-html-javascript) - Tutorial and best practices
+- [intl-tel-input Library Documentation](https://github.com/jackocnr/intl-tel-input) - Complete library reference
+- [Twilio Lookup API v2 Documentation](https://www.twilio.com/docs/lookup/v2-api) - API reference and capabilities
+
+## Technology Stack
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Phone Input**: intl-tel-input v23.1.0
+- **Backend**: Twilio Functions (Node.js)
+- **Validation**: Twilio Lookup API v2
+- **Deployment**: Twilio Serverless (QuickDeploy compatible)
+
+## How It Works
+
+This template uses a simple, lightweight HTML/JavaScript implementation for zero-build-step deployment. All code is static and runs directly in the browser, maintaining full compatibility with Twilio Functions QuickDeploy.
+
+When a user submits a phone number:
+1. intl-tel-input formats the number to E.164 standard
+2. The frontend sends a POST request to `/lookup` endpoint
+3. The backend function calls Twilio Lookup API v2
+4. The result is returned and displayed to the user
 
 ## How to use the template
 

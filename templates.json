@@ -232,8 +232,8 @@
     },
     {
       "id": "international-telephone-input",
-      "name": "International telephone input",
-      "description": "International telephone input form field and phone number validation with Twilio Lookup."
+      "name": "International Telephone Input Validation",
+      "description": "Validate international phone numbers with automatic country detection, intl-tel-input formatting, and Twilio Lookup API v2. Includes E.164 conversion and server-side validation for global phone number collection."
     },
     {
       "id": "forward-message-mailgun",
