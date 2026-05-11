@@ -1,40 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>International telephone input</title>
+    <title>International Telephone Input</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Twilio Paste Theme CSS -->
+    <link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css" />
+
+    <!-- Custom integration styles -->
     <link rel="stylesheet" href="styles.css" />
+
+    <!-- intl-tel-input CSS -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/intl-tel-input@23.1.0/build/css/intlTelInput.css"
     />
   </head>
   <body>
-    <div class="container">
-      <h1>International telephone input</h1>
-      <p>
-        This example shows how to process and parse international phone numbers
-        with the
-        <a href="https://github.com/jackocnr/intl-tel-input"
-          ><code>intl-tel-input</code></a
-        >
-        library and detect invalid phone numbers with the
-        <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>.
-        Learn more in
-        <a
-          href="https://www.twilio.com/blog/international-phone-number-input-html-javascript"
-          >this blog post.</a
-        >
-      </p>
-      <div>
-        <form id="lookup">
-          <p>Enter your phone number:</p>
-          <input id="phone" type="tel" name="phone" />
-          <input type="submit" class="btn" value="Verify" />
-        </form>
-      </div>
-      <div class="alert alert-info" style="display: none"></div>
-      <div class="alert alert-error" style="display: none"></div>
+    <div class="page-top">
+      <main>
+        <div class="content">
+          <header>
+            <h1>International Telephone Input</h1>
+            <p class="subtitle">
+              Validate phone numbers with automatic country detection and the
+              <a href="https://twilio.com/docs/lookup/api">Twilio Lookup API</a>
+            </p>
+          </header>
+
+          <section class="card">
+            <h2>Try it out</h2>
+            <p>
+              Enter a phone number below to validate it. The form uses the
+              <a href="https://github.com/jackocnr/intl-tel-input"
+                ><code>intl-tel-input</code></a
+              >
+              library for formatting and automatic country detection based on your location.
+            </p>
+
+            <form id="lookup">
+              <div class="form-field">
+                <label for="phone">Enter your phone number</label>
+                <input
+                  id="phone"
+                  type="tel"
+                  name="phone"
+                  placeholder="(201) 555-0123"
+                  required
+                />
+              </div>
+              <div class="actions">
+                <button type="submit" class="button-primary">Verify Phone Number</button>
+              </div>
+            </form>
+
+            <div class="alert alert-info" style="display: none"></div>
+            <div class="alert alert-error" style="display: none"></div>
+          </section>
+
+          <section class="info-section">
+            <h3>How it works</h3>
+            <ol>
+              <li>The form automatically detects your country</li>
+              <li>As you type, the number is formatted to your country's standard</li>
+              <li>When you submit, the number is validated using Twilio's Lookup API</li>
+              <li>You'll see a success or error message with details</li>
+            </ol>
+            <p class="small-text">
+              <strong>Learn more:</strong> Read our
+              <a href="https://www.twilio.com/blog/international-phone-number-input-html-javascript"
+                >blog post about international phone input</a>.
+            </p>
+          </section>
+        </div>
+      </main>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@23.1.0/build/js/intlTelInput.min.js"></script>
     <script>
@@ -53,14 +92,49 @@
 
       const info = document.querySelector(".alert-info");
       const error = document.querySelector(".alert-error");
+      const submitButton = document.querySelector('button[type="submit"]');
 
       function process(event) {
         event.preventDefault();
 
         const phoneNumber = phoneInput.getNumber();
 
+        // Hide previous messages
         info.style.display = "none";
         error.style.display = "none";
+
+        // Client-side validation first
+        if (!phoneInput.isValidNumber()) {
+          const errorCode = phoneInput.getValidationError();
+          let errorMessage = "Invalid phone number.";
+
+          // Provide specific error messages based on error code
+          switch (errorCode) {
+            case 1:
+              errorMessage = "Invalid country code.";
+              break;
+            case 2:
+              errorMessage = "Phone number is too short.";
+              break;
+            case 3:
+              errorMessage = "Phone number is too long.";
+              break;
+            case 4:
+              errorMessage = "Invalid phone number format.";
+              break;
+            case 5:
+              errorMessage = "Invalid phone number length.";
+              break;
+          }
+
+          error.style.display = "";
+          error.innerHTML = errorMessage;
+          return;
+        }
+
+        // Show loading state
+        submitButton.disabled = true;
+        submitButton.textContent = "Verifying...";
 
         // OPTION 1 - Twilio Lookup API
         // Pros: Free API call, updated data
@@ -81,12 +155,17 @@
             } else {
               console.log(json.error);
               error.style.display = "";
-              error.innerHTML = `Invalid phone number.`;
+              error.innerHTML = "This phone number could not be validated. Please check and try again.";
             }
           })
           .catch((err) => {
             error.style.display = "";
-            error.innerHTML = `Something went wrong: ${err}`;
+            error.innerHTML = `Something went wrong: ${err.message}`;
+          })
+          .finally(() => {
+            // Reset button state
+            submitButton.disabled = false;
+            submitButton.textContent = "Verify";
           });
 
         // OPTION 2 - intl-tel-input validity check
