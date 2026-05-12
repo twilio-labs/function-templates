@@ -1,158 +1,60 @@
-/* Integration styles for intl-tel-input with Twilio Paste theme */
+body {
+  font-family: Helvetica, sans-serif;
+}
 
-/* Overall page layout improvements */
-.content {
+.container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 3rem 2rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
 }
 
-@media (max-width: 768px) {
-  .content {
-    padding: 2rem 1.5rem;
-  }
+#phone,
+.btn,
+input {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-
-/* Ensure intl-tel-input takes full width of form field */
-.iti {
-  width: 100%;
-  display: block;
+.btn {
+  color: #ffffff;
+  background-color: #428bca;
+  border-color: #357ebd;
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+  padding-left: 12px;
+  padding-right: 12px;
 }
 
-/* Ensure intl-tel-input country dropdown displays above other elements */
-.iti__country-list {
-  z-index: 1000;
+.btn:focus,
+.btn:hover {
+  background-color: #3276b1;
+  border-color: #285e8e;
 }
 
-/* Add top margin to alerts for better spacing */
+.btn:active {
+  box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
 .alert {
-  margin-top: 1.5rem;
+  padding: 15px;
+  margin-top: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
 }
 
-/* Header styling - dark card with white text */
-header {
-  background: #0D122B !important;
-  padding: 2rem !important;
-  margin-bottom: 2.5rem !important;
-  border-radius: 8px !important;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
-  display: flex !important;
-  flex-direction: column !important;
+.alert-info {
+  border-color: #bce8f1;
+  color: #31708f;
+  background-color: #d9edf7;
 }
 
-header h1 {
-  font-size: 1.75rem !important;
-  font-weight: 600 !important;
-  color: #FFFFFF !important;
-  margin: 0 0 0.75rem 0 !important;
-  line-height: 1.3 !important;
-  width: 100% !important;
-  display: block !important;
-}
-
-header .subtitle {
-  font-size: 0.875rem !important;
-  font-weight: 400 !important;
-  color: rgba(255, 255, 255, 0.75) !important;
-  line-height: 1.6 !important;
-  margin: 0 !important;
-  width: 100% !important;
-  display: block !important;
-}
-
-header .subtitle a {
-  color: #5AB0FF !important;
-  text-decoration: none !important;
-}
-
-header .subtitle a:hover {
-  color: #7EC3FF !important;
-  text-decoration: underline !important;
-}
-
-.card {
-  background: white;
-  border-radius: 8px;
-  padding: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
-}
-
-.card h2 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-}
-
-.card p {
-  color: #606B85;
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-}
-
-.form-field {
-  margin-bottom: 1.5rem;
-}
-
-.form-field label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #121C2D;
-}
-
-.form-field input[type="tel"] {
-  font-size: 1rem;
-  padding: 0.75rem;
-}
-
-.actions {
-  margin-top: 1.5rem;
-}
-
-.button-primary {
-  font-size: 1rem;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-}
-
-.info-section {
-  background: #F4F5F6;
-  border-radius: 8px;
-  padding: 1.5rem;
-}
-
-.info-section h3 {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  color: #121C2D;
-}
-
-.info-section ol {
-  margin-bottom: 1rem;
-  padding-left: 1.5rem;
-  line-height: 1.8;
-}
-
-.info-section li {
-  margin-bottom: 0.5rem;
-  color: #606B85;
-}
-
-.small-text {
-  font-size: 0.875rem;
-  color: #606B85;
-  margin-bottom: 0;
-}
-
-/* Alert enhancements */
-.alert {
-  border-radius: 6px;
-  font-size: 0.9375rem;
-  line-height: 1.5;
-}
-
-.alert strong {
-  font-weight: 600;
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
 }
