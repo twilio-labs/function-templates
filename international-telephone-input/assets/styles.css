@@ -13,7 +13,6 @@
   }
 }
 
-
 /* Ensure intl-tel-input takes full width of form field */
 .iti {
   width: 100%;
@@ -32,7 +31,7 @@
 
 /* Header styling - dark card with white text */
 header {
-  background: #0D122B !important;
+  background: #0d122b !important;
   padding: 2rem !important;
   margin-bottom: 2.5rem !important;
   border-radius: 8px !important;
@@ -44,7 +43,7 @@ header {
 header h1 {
   font-size: 1.75rem !important;
   font-weight: 600 !important;
-  color: #FFFFFF !important;
+  color: #ffffff !important;
   margin: 0 0 0.75rem 0 !important;
   line-height: 1.3 !important;
   width: 100% !important;
@@ -62,12 +61,12 @@ header .subtitle {
 }
 
 header .subtitle a {
-  color: #5AB0FF !important;
+  color: #5ab0ff !important;
   text-decoration: none !important;
 }
 
 header .subtitle a:hover {
-  color: #7EC3FF !important;
+  color: #7ec3ff !important;
   text-decoration: underline !important;
 }
 
@@ -86,7 +85,7 @@ header .subtitle a:hover {
 }
 
 .card p {
-  color: #606B85;
+  color: #606b85;
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
@@ -99,10 +98,10 @@ header .subtitle a:hover {
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: #121C2D;
+  color: #121c2d;
 }
 
-.form-field input[type="tel"] {
+.form-field input[type='tel'] {
   font-size: 1rem;
   padding: 0.75rem;
 }
@@ -118,7 +117,7 @@ header .subtitle a:hover {
 }
 
 .info-section {
-  background: #F4F5F6;
+  background: #f4f5f6;
   border-radius: 8px;
   padding: 1.5rem;
 }
@@ -126,7 +125,7 @@ header .subtitle a:hover {
 .info-section h3 {
   margin-top: 0;
   margin-bottom: 1rem;
-  color: #121C2D;
+  color: #121c2d;
 }
 
 .info-section ol {
@@ -137,12 +136,12 @@ header .subtitle a:hover {
 
 .info-section li {
   margin-bottom: 0.5rem;
-  color: #606B85;
+  color: #606b85;
 }
 
 .small-text {
   font-size: 0.875rem;
-  color: #606B85;
+  color: #606b85;
   margin-bottom: 0;
 }
 
