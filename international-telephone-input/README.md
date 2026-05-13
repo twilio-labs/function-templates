@@ -15,11 +15,6 @@ This template provides a production-ready international phone number input form 
 
 For production phone number collection, we strongly recommend adding [phone verification](https://github.com/twilio-labs/function-templates/tree/main/verify) to confirm users have control of the number.
 
-## Demo
-
-![Phone Input Demo](./assets/phone-number-input-demo.png)
-
-
 ## Related Resources
 
 - [Phone Verification Template](https://github.com/twilio-labs/function-templates/tree/main/verify) - Recommended for production phone number collection
