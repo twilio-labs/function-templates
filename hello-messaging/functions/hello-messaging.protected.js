@@ -21,13 +21,21 @@
  */
 
 // Defining the handler function
+
 exports.handler = function (context, event, callback) {
-  // Creating a new instance of Twilio's MessagingResponse object
+  /*
+   * Create a new TwiML MessagingResponse object
+   * This generates the XML that tells Twilio how to respond to the incoming message
+   */
   const twiml = new Twilio.twiml.MessagingResponse();
 
-  // Adding a message to the response object. This message will be sent back to the user.
+  // Add a message to the TwiML response
   twiml.message('Hello World');
 
-  // Using the callback function to return the response object (twiml) back to the user
+  /*
+   * Return the TwiML response using the callback
+   * The first parameter is for errors (null = no error)
+   * The second parameter is the response to send back
+   */
   callback(null, twiml);
 };

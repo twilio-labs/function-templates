@@ -17,8 +17,8 @@
     },
     {
       "id": "hello-messaging",
-      "name": "Hello Messaging",
-      "description": "Function to get you started with Twilio Prog. Messaging"
+      "name": "SMS Auto-Response",
+      "description": "Automatically respond to incoming SMS messages with 'Hello World'. When a user texts your Twilio phone number, they instantly receive an automated reply. Perfect starting point for SMS applications."
     },
     {
       "id": "never-gonna-give-you-up",
