@@ -19,24 +19,6 @@ For production phone number collection, we strongly recommend adding [phone veri
 
 ![Phone Input Demo](./assets/phone-number-input-demo.png)
 
-*The form provides real-time phone number formatting with country-specific patterns and validation feedback.*
-
-### Creating the Demo Screenshot
-
-To create or update the demo GIF for this template:
-
-1. Run the template locally: `npm start`
-2. Open https://localhost:3000/index.html in your browser
-3. Use a screen recording tool (LICEcap, Gifox, Kap, or ScreenToGif)
-4. Record the following sequence (~10 seconds):
-   - Show the empty form with country selector
-   - Type a phone number and show auto-formatting
-   - Change the country dropdown to demonstrate different formatting
-   - Click "Verify" with a valid number and show success message
-   - Enter an invalid number and show error message
-5. Optimize GIF size (keep under 2MB)
-6. Save as `phone-input-demo.gif` in the template root directory
-7. Recommended dimensions: 800x600px or similar
 
 ## Related Resources
 
@@ -45,17 +27,10 @@ To create or update the demo GIF for this template:
 - [intl-tel-input Library Documentation](https://github.com/jackocnr/intl-tel-input) - Complete library reference
 - [Twilio Lookup API v2 Documentation](https://www.twilio.com/docs/lookup/v2-api) - API reference and capabilities
 
-## Technology Stack
-
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Phone Input**: intl-tel-input v23.1.0
-- **Backend**: Twilio Functions (Node.js)
-- **Validation**: Twilio Lookup API v2
-- **Deployment**: Twilio Serverless (QuickDeploy compatible)
 
 ## How It Works
 
-This template uses a simple, lightweight HTML/JavaScript implementation for zero-build-step deployment. All code is static and runs directly in the browser, maintaining full compatibility with Twilio Functions QuickDeploy.
+This template uses a simple, lightweight HTML/JavaScript implementation for zero-build-step deployment. All code is static and runs directly in the browser, maintaining full compatibility with Twilio Functions Quick Deploy.
 
 When a user submits a phone number:
 1. intl-tel-input formats the number to E.164 standard
