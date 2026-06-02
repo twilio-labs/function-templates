@@ -142,6 +142,7 @@
     "block-spam-calls",
     "ai-assistants-samples",
     "mcp-server",
-    "email-events-sms"
+    "email-events-sms",
+    "send-receive-sms-messages"
   ]
 }
