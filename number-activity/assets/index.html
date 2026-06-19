@@ -1,0 +1,603 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Check Number Activity</title>
+    <link
+      rel="icon"
+      href="https://twilio-labs.github.io/function-templates/static/v1/favicon.ico"
+    />
+<link rel="stylesheet" href="https://twilio-labs.github.io/function-templates/static/v1/ce-paste-theme.css">
+<script src="https://twilio-labs.github.io/function-templates/static/v1/ce-helpers.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .success {
+        border-color: #bce8f1;
+        color: #31708f;
+        background-color: #d9edf7;
+      }
+      .warning {
+        color: #c21e1e;
+        background-color: #f2dede;
+        border-color: #ebccd1;
+      }
+    </style>
+  </head>
+  <body onload="mask()">
+    <div class="page-top">
+      <header>
+        <div id="twilio-logo">
+          <a href="https://www.twilio.com/" target="_blank" rel="noopener">
+            <svg
+              class="logo"
+              data-name="Layer 1"
+              xmlns="http://www.w3.org/2000/svg"
+              viewbox="0 0 60 60"
+            >
+              <title>Twilio Logo</title>
+              <path
+                class="cls-1"
+                d="M30,15A15,15,0,1,0,45,30,15,15,0,0,0,30,15Zm0,26A11,11,0,1,1,41,30,11,11,0,0,1,30,41Zm6.8-14.7a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,26.3Zm0,7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,36.8,33.7Zm-7.4,0a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,33.7Zm0-7.4a3.1,3.1,0,1,1-3.1-3.1A3.12,3.12,0,0,1,29.4,26.3Z"
+              />
+            </svg>
+          </a>
+        </div>
+        <nav>
+          <span>Your Twilio application</span>
+          <aside>
+            <svg
+              class="icon"
+              role="img"
+              aria-hidden="true"
+              width="100%"
+              height="100%"
+              viewBox="0 0 20 20"
+              aria-labelledby="NewIcon-1577"
+            >
+              <path
+                fill="currentColor"
+                fill-rule="evenodd"
+                d="M6.991 7.507c.003-.679 1.021-.675 1.019.004-.012 2.956 1.388 4.41 4.492 4.48.673.016.66 1.021-.013 1.019-2.898-.011-4.327 1.446-4.48 4.506-.033.658-1.01.639-1.018-.02-.03-3.027-1.382-4.49-4.481-4.486-.675 0-.682-1.009-.008-1.019 3.02-.042 4.478-1.452 4.49-4.484zm.505 2.757l-.115.242c-.459.9-1.166 1.558-2.115 1.976l.176.08c.973.465 1.664 1.211 2.083 2.22l.02.05.088-.192c.464-.973 1.173-1.685 2.123-2.124l.039-.018-.118-.05c-.963-.435-1.667-1.117-2.113-2.034l-.068-.15zm10.357-8.12c.174.17.194.434.058.625l-.058.068-1.954 1.905 1.954 1.908a.482.482 0 010 .694.512.512 0 01-.641.056l-.07-.056-1.954-1.908-1.954 1.908a.511.511 0 01-.71 0 .482.482 0 01-.058-.626l.058-.068 1.954-1.908-1.954-1.905a.482.482 0 010-.693.512.512 0 01.64-.057l.07.057 1.954 1.905 1.954-1.905a.511.511 0 01.71 0z"
+              ></path>
+            </svg>
+            Live
+          </aside>
+        </nav>
+      </header>
+    </div>
+    <main>
+      <div class="content">
+        <h1>
+          <img
+            src="https://twilio-labs.github.io/function-templates/static/v1/success.svg"
+          />
+          <div>
+            <p>Welcome!</p>
+            <p>Your live application with Twilio is ready to use!</p>
+          </div>
+        </h1>
+
+        <p>
+          Before you start, make sure that the checkbox "Add my Twilio
+          Credentials (ACCOUNT_SID) and (AUTH_TOKEN) to ENV" is checked in the
+          "Environmental Variables" of this Function. If it's not checked,
+          enable it and click "Deploy All" at the bottom.
+        </p>
+        <h2>Check activity per number on main account or subaccounts</h2>
+
+        <p>
+          This page allows you to check if there is SMS/MMS and/or Call activity
+          for each number that is <b>currently active</b> on your Main account or the inserted subaccount. If in
+          the results the SMS/MMS, Whatsapp or Call SID is present, it means that there was
+          activity with the number in the selected time-period. The columns with the word "Date" show the date of the  most recent activity of the number. <br />
+          The columns that have "Volume" in their names
+          show how many SMS/MMS, Whatsapp requests or Calls were made in the selected time-period.
+          The SMS/MMS volumes shows the number of SMS/MMS requests, not the number of 
+          segments. The data is checked based on <b>UTC timezone</b>.
+          <br />
+          Because the Messaging API only displays messages that were sent in the
+          last 400 days, make sure that the selected From Date is within the
+          last 400 days. An error will be returned if it's not.
+          <br /><br />
+          <b>Be careful</b>, if you deleted your Message and/or Call logs, or
+          they are deleted automatically for your account, those messages/calls will
+          not be returned nor counted with this report. <br />
+          SIP Trunking calls are not checked with this app, since those calls are logged differently in the format "sip:number@domain;edge/location"<br />
+          If you have a large amount of numbers on your account, use the
+          "<i>Check Activity and 
+          Download Without Listing Data</i>" button, which will download the
+          results directly without listing them on this page.<br />
+          Results listed on this page will be limited to 200 numbers. "<i>Check Activity and 
+          Download Without Listing Data</i>" button has no limits. 
+          <br /><br />
+          While the number activity is being checked, a progress log will be displayed at the bottom. 
+        </p>
+
+        <p>
+          Because this is a publicly accessible URL that automatically uses your
+          Account SID and auth_token, to limit it's access, please set a
+          password in your
+          <a href="https://console.twilio.com/us1/develop/functions/services"
+            >Function</a
+          >
+          - open the Function and click on "Environment Variables" in the bottom
+          left corner, and change the value of Password. Click
+          <b>"Deploy All"</b> afterwards in the bottom left corner.
+          <br />
+        </p>
+        Password:<div><input id="password" type="password" name="password" /></div>
+        <br />
+        <p>You are working with account:</p>
+        <div id="masking"></div>
+        <div><button onclick="unmask()">Show Account</button></div>
+        <div id="status_acc" style="color: #a94442; background-color: #f2dede; border-color: #ebccd1;"></div>
+        <div>
+        <p>
+          Enter the subaccount SID. Leave empty if you want to check the activity
+          on your main account.
+        </p>
+        </div>
+        <div><input id="sAccount" type="text" name="sAccount" /></div>
+        <p>
+          Enter the Twilio number for which you would like to check activity. Leave
+          empty if you want to check the activity for all Twilio numbers present on
+          the account.
+        </p>
+        <div><input id="oneNumber" type="text" name="oneNumber" /></div>
+         <p>
+          Only show results for numbers that start with (filter based on country-code): 
+        </p>
+        <div><input id="startNumber" type="text" name="startNumber" value="+"/></div>
+        <div>
+          From Date:<input
+            type="date"
+            id="startdate"
+            name="startdate"
+            required
+            value="2023-06-25"
+          />
+          To Date:<input
+            type="date"
+            id="enddate"
+            name="enddate"
+            required
+            value="2023-10-30"
+          />
+        </div>
+        <div>
+          Use volume limits?  
+          <select name="limitation" id="limitation">
+                <option value="Yes">Yes</option>
+                <option value="No" selected>No</option>
+              </select>
+          &nbsp; Maximum number of messages/calls to check per number (1-2000):
+          <input
+                type="number"
+                id="limit"
+                name="limit"
+                min="1"
+                max="2000"
+                value="1"
+              />
+        </div>
+
+        <div><br /></div>
+        <div>Select the format that will be used when the data is downloaded: <br />
+          <input type="radio" id="fileFormatcsv" name="fileFormatcsv" value="csv">
+          <label for="fileFormatcsv">csv</label><br / >
+          <input type="radio" id="fileFormattxt" name="fileFormatcsv" value="txt" checked>
+          <label for="fileFormattxt">text</label><br />  <br />
+        </div>
+        <div><button onclick="checkUsage()">Check and List activity</button>
+        <button onclick="checkUsage(1)">Check activity and Download Without Listing Data</button></div>
+        <div><br /></div>
+
+        <div>
+          <button onclick="clear_list()">Clear list</button>
+          <button onclick="download()">Download listed numbers</button>
+        </div>
+        <pre></pre>
+        <div id="progress" style="color: #a94442; background-color: #16e85c; border-color: #16e85c;"></div>
+        <div id="info1" class="alert alert-info" style="display: none"></div>
+        <div class="alert alert-error" style="display: none"></div>
+      </div>
+      <div>
+        <!-- EDIT_CODE -->
+      </div>
+    </main>
+    <footer>
+      <span>We can't wait to see what you build.</span>
+    </footer>
+<script type="text/javascript">
+const info = document.querySelector(".alert-info");
+const error = document.querySelector(".alert-error");
+
+async function checkUsage(down) {
+
+  if (document.getElementById("progress").innerHTML === 'In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.'){
+    return;
+  }
+
+  let allNumbers = "";
+  let page = 0;
+  let Pagetoken = "";
+  let pageAll = 0;
+  let columnAdded = 0;
+  let data = null;
+  let response = null;
+  let usageResponse = null;
+  let json = null;
+  let numNumbers = null;
+  let k = 0;
+  let today = new Date();
+
+  const subaccount = document.getElementById("sAccount").value;
+  const oneNumber = document.getElementById("oneNumber").value;
+  const password = document.getElementById("password").value;
+  const startDate = document.getElementById("startdate").value;
+  const endDate = document.getElementById("enddate").value;
+  const limitation = document.getElementById("limitation").value;
+  const limit = document.getElementById("limit").value;
+  const startNumber = document.getElementById("startNumber").value;
+  const pagination = "Yes";
+  const pageSize = 100;
+  const diffDays = Math.ceil(
+    Math.abs(today - new Date(document.getElementById("startdate").value)) /
+      (1000 * 3600 * 24),
+  );
+
+  try {
+    info.style.display = "none";
+    error.style.display = "none";
+    status_acc.style.display = "none";
+    progress.style.display = "none";
+
+    if (diffDays > 400) {
+      error.style.display = "";
+      error.innerHTML = `From Date must be within the last 400 days.`;
+      console.log(diffDays);
+      console.log(today);
+      return;
+    }
+    if (new Date(endDate) - new Date(startDate) < 0) {
+      error.style.display = "";
+      error.innerHTML = `From Date must be before To Date.`;
+      return;
+    }
+    if (((limit % 1 !== 0) || (limit<1 || limit>2000)) && limitation==="Yes"){
+      error.style.display = "";
+      error.innerHTML = `Maximum number of messages/calls to check must be between 1 and 2000, and it must be a complete number - no decimals`;
+      return; 
+    }
+    if(startNumber !== ""){
+      if (!/^\+/.test(startNumber))
+      {
+         error.style.display = "";
+        error.innerHTML = `<i>Only show results for numbers that start with</i> should start with the leading + sign or the field should be empty.`;
+        return;
+      }
+      if (!/^\+{1}[0-9]*$/.test(startNumber)){
+        error.style.display = "";
+        error.innerHTML = `<i>Only show results for numbers that start with</i> must only contain the leading + sign and numbers, or the field should be empty.`;
+        return;
+      }
+    }
+    info.style.display = "";
+    progress.style.display = "";
+
+    info.innerHTML = `loading...checked 0 numbers`;
+    progress.innerHTML=`In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.`;
+
+    while (pageAll === 0) {
+      if (oneNumber !== "") {
+        pageAll = 1;
+        data = {
+          subAcc: subaccount,
+          number: oneNumber,
+        };
+        console.log(data);
+      } else {
+        data = {
+          subAcc: subaccount,
+          pageSize: pageSize,
+          page: page,
+          pageToken: Pagetoken,
+        };
+      }
+
+      response = await fetch("./listNumbers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": password,
+        },
+        body: JSON.stringify(data),
+      });
+      console.log(data);
+      console.log(response);
+      if (response.status === 200) {
+        json = await response.json();
+        console.log(json);
+
+        if (json.er === 0) {
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML=``;
+          error.innerHTML = `Wrong password.`;
+          console.log(response);
+          return;
+        }
+        if (json === "number not found") {
+          error.style.display = "";
+          info.style.display = "none";
+          progress.style.display = "none";
+          progress.innerHTML=``;
+          error.innerHTML = `Number not found.`;
+          return;
+        }
+
+        if (pagination === "Yes" && oneNumber === "") {
+          if (json.nextPageUrl) {
+            Pagetoken = json.nextPageUrl.split("PageToken=")[1];
+          } else {
+            pageAll = 1;
+          }
+          console.log(Pagetoken);
+          page++;
+
+          json = json.instances.slice();
+        }
+
+        numNumbers = json.length;
+        console.log(json);
+
+        info.style.display = "";
+
+        for (let i = 0; i < numNumbers; i++) {
+          if(!json[i].phoneNumber.startsWith(startNumber)){
+            info.innerHTML = `loading...checked ${++k} numbers`;
+            continue;
+          }
+          allNumbers = allNumbers + "<pre>";
+
+          if (columnAdded === 0) {
+            //inserts column names
+            allNumbers =
+              allNumbers +
+              "AccountSID;numberDateCreated;friendlyName;phoneNumber;NumberSID;numberStatus;smsInboundExample;smsInboundDateCreted;smsOutboundExample;smsOutboundDateCreated;whatsappInboundExample;whatsappInboundDateCreated;whatsappOutboundExample;whatsappOutboundDateCreated;callInboundExample;callInboundDateCreated;callOutboundExample;callOutboundDateCreated;smsInboundVolume;smsOutboundVolume;whatsappInboundVolume;whatsappOutboundVolume;callInboundVolume;callOutboundVolume;</pre>";
+            columnAdded = 1;
+            allNumbers = allNumbers + "<pre>";
+          }
+          allNumbers =
+            allNumbers +
+            json[i].accountSid +
+            ";" +
+            json[i].dateCreated +
+            ";" +
+            json[i].friendlyName +
+            ";" +
+            json[i].phoneNumber +
+            ";" +
+            json[i].sid +
+            ";" +
+            json[i].status +
+            ";";
+
+          if (limitation==="Yes"){
+            data = {
+            subAcc: subaccount,
+            number: json[i].phoneNumber,
+            startDate: startDate,
+            endDate: endDate,
+            limit: limit,
+            };
+          }
+          else {
+          data = {
+            subAcc: subaccount,
+            number: json[i].phoneNumber,
+            startDate: startDate,
+            endDate: endDate,
+          };
+          }
+
+          console.log(data);
+          usageResponse = await fetch("./usageNumber", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": password,
+            },
+            body: JSON.stringify(data),
+          });
+          console.log(usageResponse);
+          
+        if (usageResponse.status === 200) {
+          usagejson = await usageResponse.json();
+          console.log(usagejson);
+          allNumbers =
+            allNumbers +
+            usagejson[0] +
+            ";" +
+            usagejson[1] +
+            ";" +
+            usagejson[2] +
+            ";" +
+            usagejson[3] +
+            ";" +
+            usagejson[4] +
+            ";" +
+            usagejson[5] +
+            ";" +
+            usagejson[6] +
+            ";" +
+            usagejson[7] +
+            ";" +
+            usagejson[8] +
+            ";" +
+            usagejson[9] +
+            ";" +
+            usagejson[10] +
+            ";" +
+            usagejson[11] +
+            ";" +
+            usagejson[12] +
+            ";" +
+            usagejson[13] +
+            ";" +
+            usagejson[14] +
+            ";" +
+            usagejson[15] +
+            ";" +
+            usagejson[16] +
+            ";" +
+            usagejson[17] +
+            ";</pre>";
+          info.innerHTML = `loading...checked ${++k} numbers`;
+          if (k === 200 && down !== 1){
+            allNumbers = allNumbers + '<pre> <b>Results limited to 200 numbers</b>. Not all results displayed. Use the button "<i>Check Activity and Download Without Listing Data</i>" for larger requests.</pre>';
+            break;
+          }
+        }
+          else{
+            usagejson = await usageResponse.text();
+            console.log(usagejson);
+            error.style.display = "";
+            info.innerHTML = ``;
+            info.style.display = "none";
+            progress.innerHTML=``;
+            progress.style.display = "none";
+            error.innerHTML = `Something is wrong with getting the Usage: <br />Request sent: ${JSON.stringify(data)}<br/>Server response status is: ${usageResponse.status}<br />Server message is: ${usagejson}`;
+            return;
+          }
+        } //for closed
+      } //if status 200 closed
+      else {
+        json = await response.text();
+        console.log(json);
+        error.style.display = "";
+        info.innerHTML = ``;
+        info.style.display = "none";
+        progress.style.display = "none";
+        progress.innerHTML=``;
+        error.innerHTML = `Something went wrong with getting the list of numbers present on account: <br />Server response status is: ${response.status}<br />Server message is: ${json}`;
+        return;
+      }
+    } //while closed
+
+    if (down === 1) {
+      allNumbers = allNumbers.replace(/\"/g, "");
+      allNumbers = allNumbers.replace(/<pre>/g, "%0D%0A");
+      allNumbers = allNumbers.replace(/<\/pre>/g, "");
+      allNumbers = encodeURIComponent(allNumbers).replaceAll("%250D%250A", "%0D%0A");
+      let a = document.body.appendChild(document.createElement("a"));
+      if (document.getElementById("fileFormatcsv").checked){
+
+            a.download = "listNumbers.csv";
+            a.href = "data:text/csv;charset=utf-8," + allNumbers;
+            a.click(); //Trigger a click on the element
+            info.innerHTML = `done`;
+            progress.innerHTML = ``;
+            progress.style.display = "none";
+      }
+      else {
+      a.download = "listNumbers.txt";
+      a.href = "data:text/plain," + allNumbers;
+      a.click(); //Trigger a click on the element
+      info.innerHTML = `done`;
+      progress.innerHTML = ``;
+      progress.style.display = "none";
+      }
+    } else {
+      allNumbers = allNumbers.replace(/\"/g, "");
+      info.innerHTML = `${allNumbers}`;
+      progress.innerHTML = ``;
+      progress.style.display = "none";
+    }
+  } catch (err) {
+    //console.log (err);
+    error.style.display = "";
+    info.innerHTML = ``;
+    info.style.display = "none";
+    progress.innerHTML=``;
+    progress.style.display = "none";
+    error.innerHTML = `Something went wrong: ${err} - if you see a JSON error, please check that the correct subaccount was added.`;
+  }
+}
+
+function download() {
+  if (document.getElementById("progress").innerHTML === 'In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.')
+  {
+    return;
+  }
+  let a = document.body.appendChild(document.createElement("a"));
+  let newlines = document.getElementById("info1").innerHTML;
+  newlines = newlines.replace(/<pre>/g, "%0D%0A");
+  newlines = newlines.replace(/<\/pre>/g, "");
+  newlines = encodeURIComponent(newlines).replaceAll("%250D%250A", "%0D%0A");
+  if (document.getElementById("fileFormatcsv").checked){
+    a.download = "listNumbers.csv";
+    a.href = "data:text/csv;charset=utf-8," + newlines;
+    a.click(); //Trigger a click on the element
+  }
+  else {
+  a.download = "listNumbers.txt";
+  a.href = "data:text/plain," + newlines;
+  a.click(); //Trigger a click on the element
+  }
+}
+
+async function mask() {
+  let acc= null;
+  const response = await fetch("./mask_account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  acc = await response.json();
+ 
+  masking.innerHTML = acc.acc;
+  status_acc.innerHTML = ``;
+}
+
+async function unmask() {
+  const password = document.getElementById("password").value;
+
+
+  const response = await fetch("./get_account", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": password,
+    }
+  });
+  var acc = await response.json();
+
+  if (acc.er === 0) {
+    status_acc.innerHTML = `Wrong password.`;
+
+    return;
+  }
+  masking.innerHTML = acc.acc;
+  status_acc.innerHTML = ``;
+}
+
+async function clear_list() {
+
+  if (document.getElementById("progress").innerHTML === 'In progress. No other buttons will work until the current request is completed. Refresh the page if you want to stop.')
+  {
+    return;
+  }
+  info.innerHTML = ``;
+  info.style.display = "none";
+}
+
+    </script>
+  </body>
+</html>
