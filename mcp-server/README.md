@@ -6,7 +6,7 @@ Functions to run an MCP server for Twilio API tools
 
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 
-Recommended method, homebrew: 
+Recommended method, homebrew:
 ```shell
 brew tap twilio/brew && brew install twilio
 twilio login
@@ -70,24 +70,25 @@ twilio serverless:deploy
 
 ℹ️ We're aware of a reported issue with the MCP Inspector project and the authentication header. You'll need to use your MCP client to connect to your deployed MCP server.
 
-## Integration with MCP clients
+## Generatin Twilio Signature
 
-* **URL**: `https://{functions-domain}.twil.io/mcp?services=`
-* **Authentication Header**: 
-  * Key: `x-twilio-signature`
-  * Value: {Valid Twilio signature}
-
-### Code samples for generating a Twilio signature
-
-Learn more about the use of `x-twilio-signature` header for executing `protected` Functions. https://www.twilio.com/docs/serverless/functions-assets/visibility#protected 
+Learn more about the use of `x-twilio-signature` header for executing `protected` Functions. https://www.twilio.com/docs/serverless/functions-assets/visibility#protected
 
 The sample code below assuming that the following environment variables are set:
 * TWILIO_AUTH_TOKEN
 * TWILIO_BASE_DOMAIN
 
-ℹ️ As the generated signature depends on the full Function endpoint that you are executing, and the URL includes the set of services (e.g. `/mcp?services=PhoneNumbers` vs `/mcp?services=Messaging`), you will need to generate a valid signature every time you update any part of the URL. We recommend dynamically generating the signature whenever you initialize the MCP client configuration with your Twilio MCP server. 
+ℹ️ As the generated signature depends on the full Function endpoint that you are executing, and the URL includes the set of services (e.g. `/mcp?services=PhoneNumbers` vs `/mcp?services=Messaging`), you will need to generate a valid signature every time you update any part of the URL. We recommend dynamically generating the signature whenever you initialize the MCP client configuration with your Twilio MCP server.
 
-#### JavaScript
+### npx with [`twilio-signature-cli`](https://www.npmjs.com/package/twilio-signature-cli)
+
+This CLI tool makes it easy to generate Twilio signatures for webhook validation without writing any code. It's perfect for testing and debugging Twilio webhook integrations, or for generating signatures in automated scripts.
+
+```shell
+npx twilio-signature-cli -t TWILIO_AUTH_TOKEN -u YOUR_FUNCTION_URL
+```
+
+### JavaScript
 
 ```javascript
 const crypto = require("crypto");
@@ -140,7 +141,7 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const signature = 
+const signature =
   createTwilioSignature(
     process.env.TWILIO_AUTH_TOKEN,
     `${process.env.TWILIO_DOMAIN_NAME}/mcp?services=...`,
@@ -148,15 +149,7 @@ const signature =
   );
 ```
 
-#### npx with [`twilio-signature-cli`](https://www.npmjs.com/package/twilio-signature-cli)
-
-This CLI tool makes it easy to generate Twilio signatures for webhook validation without writing any code. It's perfect for testing and debugging Twilio webhook integrations, or for generating signatures in automated scripts.
-
-```shell
-npx twilio-signature-cli -t TWILIO_AUTH_TOKEN -u YOUR_FUNCTION_URL
-```
-
-#### Python
+### Python
 
 ```python
 import os
@@ -171,7 +164,31 @@ validator = RequestValidator(auth_token)
 signature = validator.compute_signature(url, {})
 ```
 
-### Filtering tools by service
+## Integration with MCP clients
+
+* **URL**: `https://{functions-domain}.twil.io/mcp?services=`
+* **Authentication Header**:
+  * Key: `x-twilio-signature`
+  * Value: {Valid Twilio signature}
+
+### OpenAI Playground
+
+You can use [OpenAI Playground](https://platform.openai.com/playground) to try out the Twilio MCP server.
+
+1) Follow the instructions here to first deploy your MCP server.
+2) Visit [OpenAI Playground](https://platform.openai.com/playground) and click on `Create` in front of Tools. Then select `MCP Server` from the dropdown menu. Then select `Add new`.
+3) Paste the URL of Twilio Functions MCP Server from step 1) in the URL `https://{functions-domain}.twil.io/mcp`. Include any services you want in the query parameter.
+4) For the `Authorization`, select `Custom headers`. For the header key, type in `x-twilio-signature`.
+5) For the header value, open your terminal and type `npx twilio-signature-cli -t AUTH_TOKEN -u https://{functions-domain}.twil.io/mcp`. Copy the output and paste it in the header value
+6) `Connect`
+
+_NOTE_: You can filter different Twilio Services by using the query param `services` in the URL. For example `https://{functions-domain}.twil.io/mcp?services=Studio&services=PhoneNumbers` would give you `Studio` and `Phone Numbers` services. If you change this URL, remember to re-run the `npx twilio-signature-cli ...` with the updated URL (including the query params) to generate a new signature. For a list of all available services, visit [Twilio Functions](https://github.com/twilio-labs/function-templates/tree/main/mcp-server#filtering-tools-by-service).
+
+### Javascript Code Sample
+
+You can visit and clone https://github.com/twilio-samples/openai-mcp-samples/ for examples of how to use the MCP Server with OpenAI.
+
+## Filtering tools by service
 
 Use the querystring parameter `?services=` to specify a set of tools based on the needs of your MCP client. Set multiple services by passing multiple `services` key/value pairs.
 
