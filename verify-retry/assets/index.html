@@ -75,7 +75,7 @@
               class="logo"
               data-name="Layer 1"
               xmlns="http://www.w3.org/2000/svg"
-              viewbox="0 0 60 60"
+              viewBox="0 0 60 60"
             >
               <title>Twilio Logo</title>
               <path
@@ -144,7 +144,7 @@
               <input type="submit" value="Verify" />
             </div>
           </form>
-          <button id="retry" disabled="true" style="display: none"></button>
+          <button id="retry" disabled style="display: none"></button>
           <button id="call" style="display: none">
             📞 Having trouble receiving SMS, call me instead
           </button>
@@ -169,7 +169,7 @@
 
     function showError(error) {
       console.error(error);
-      showStatus(error, (color = "#a94442"));
+      showStatus(error, color = "#a94442");
     }
 
     function showStatus(message, color = "gray") {
@@ -184,7 +184,21 @@
       ).innerHTML = `<a href="#" onclick="window.location.reload(false);">${message}</a>`;
     }
 
+    function showOtpForm() {
+      document.getElementById("login").style.display = "none";
+      document.getElementById("otp").style.display = "block";
+    }
+
+    function showCallFallback(attempts) {
+      let minAttemptForVoice = 3;
+      if (attempts < minAttemptForVoice) return;
+
+      document.getElementById("call").style.display = "block";
+    }
+
     function getRetryTimeout(attemptNumber) {
+      // progressively back off the retry timeout
+      // the more times someone requests a code the longer it will take to retry
       const retryTimeouts = {
         1: 30,
         2: 40,
@@ -198,18 +212,6 @@
         maxTimeout - Object.values(retryTimeouts).reduce((a, b) => a + b);
 
       return retryTimeouts[attemptNumber] || defaultTimeout;
-    }
-
-    function showOtpForm() {
-      document.getElementById("login").style.display = "none";
-      document.getElementById("otp").style.display = "block";
-    }
-
-    function showCallFallback(attempts) {
-      let minAttemptForVoice = 3;
-      if (attempts < minAttemptForVoice) return;
-
-      document.getElementById("call").style.display = "block";
     }
 
     let timer;
@@ -240,9 +242,10 @@
       }
     }
 
+    // save the phone number to use for both sending and checking verifications
     var to;
 
-    function sendVerificationToken(event, channel = "sms") {
+    async function sendVerificationToken(event, channel = "sms") {
       event.preventDefault();
       let statusMessage =
         channel == "call" ? "☎️ calling..." : "Sending verification code...";
@@ -254,43 +257,43 @@
       data.append("channel", channel);
       data.append("to", to);
 
-      fetch("./start-verify", {
-        method: "POST",
-        body: data,
-      })
-        .then((response) => {
-          if (response.status == 429) {
-            clearStatus();
-            showOtpForm();
-            showError(
-              `You have attempted to verify the phone number ${to} too many times. If you received a code, enter it below. Otherwise, please wait 10 minutes and `
-            );
-            showReset("try again.");
-          } else if (response.status >= 400) {
-            clearStatus();
-            document.getElementById("otp").style.display = "none";
-            document.getElementById("login").style.display = "flex";
-
-            return response.json().then(({ message }) => {
-              showError(message);
-            });
-          } else {
-            showOtpForm();
-            return response.json().then((json) => {
-              if (json.success) {
-                showStatus(json.message + `.`);
-                startCountdown(json.attempts);
-              } else {
-                showError(json.message);
-              }
-              showReset("Edit phone number.");
-            });
-          }
-        })
-        .catch(() => {
-          showError(`Something went wrong while sending code to ${to}.`);
-          showReset("Edit phone number.");
+      try {
+        let response = await fetch("./start-verify", {
+          method: "POST",
+          body: data,
         });
+
+        if (response.status == 429) {
+          clearStatus();
+          showOtpForm();
+          showError(
+            `You have attempted to verify the phone number ${to} too many times. If you received a code, enter it below. Otherwise, please wait 10 minutes and `
+          );
+          showReset("try again.");
+        } else if (response.status >= 400) {
+          clearStatus();
+          document.getElementById("otp").style.display = "none";
+          document.getElementById("login").style.display = "flex";
+
+          return response.json().then(({ message }) => {
+            showError(message);
+          });
+        } else {
+          showOtpForm();
+          return response.json().then((json) => {
+            if (json.success) {
+              showStatus(json.message + `.`);
+              startCountdown(json.attempts);
+            } else {
+              showError(json.message);
+            }
+            showReset("Edit phone number.");
+          });
+        }
+      } catch (error) {
+        showError(`Something went wrong while sending code to ${to}.`);
+        showReset("Edit phone number.");
+      };
     }
 
     function clearStatus() {
@@ -301,17 +304,17 @@
       document.getElementById("call").style.display = "none";
     }
 
-    function retrySend(event) {
+    async function retrySend(event) {
       clearStatus();
       sendVerificationToken(event);
     }
 
-    function sendVoiceToken(event) {
+    async function sendVoiceToken(event) {
       clearStatus();
-      sendVerificationToken(event, (channel = "call"));
+      sendVerificationToken(event, channel = "call");
     }
 
-    function validateToken(event) {
+    async function validateToken(event) {
       event.preventDefault();
       clearStatus();
       showStatus("Checking code...");
@@ -323,36 +326,32 @@
       var tags = document.querySelectorAll("input[name=tags]:checked");
       tags.forEach((tag) => data.append("tags", tag.value));
 
-      fetch("./check-verify", {
-        method: "POST",
-        body: data,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          if (json.success) {
-            clearStatus();
-            document.getElementById("otp").style.display = "none";
-            showStatus(json.message, (color = "#3c763d"));
-          } else {
-            showError(`${json.message} Check the code sent to ${to}.`);
-          }
-          showReset(
-            "Use a different phone number or start a new verification."
-          );
-          document.getElementById("code").value = "";
-        })
-        .catch((error) => {
-          showError(error);
+      try {
+        let response = await fetch("./check-verify", {
+          method: "POST",
+          body: data,
         });
+
+        let json = await response.json();
+
+        if (json.success) {
+          clearStatus();
+          document.getElementById("otp").style.display = "none";
+          showStatus(json.message, "#3c763d");
+        } else {
+          showError(`${json.message} Check the code sent to ${to}.`);
+        }
+        showReset("Use a different phone number or start a new verification.");
+        document.getElementById("code").value = "";
+      } catch (error) {
+        showError(error);
+      }
     }
 
-    document
-      .getElementById("login")
-      .addEventListener("submit", sendVerificationToken);
-    document.getElementById("retry").addEventListener("click", retrySend);
-    document.getElementById("call").addEventListener("click", sendVoiceToken);
-    document.getElementById("otp").addEventListener("submit", validateToken);
+    document.getElementById("login")
+      .addEventListener("submit", (event) => sendVerificationToken(event));
+    document.getElementById("retry").addEventListener("click", (event) => retrySend(event));
+    document.getElementById("call").addEventListener("click", (event) => sendVoiceToken(event));
+    document.getElementById("otp").addEventListener("submit", (event) => validateToken(event));
   </script>
 </html>
