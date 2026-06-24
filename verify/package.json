@@ -1,5 +1,19 @@
 {
+  "name": "twilio-verify-otp",
   "version": "1.0.2",
+  "description": "Serverless one-time passcode verification using Twilio Verify with multi-channel support (SMS, voice, WhatsApp, email)",
+  "keywords": [
+    "twilio",
+    "verify",
+    "otp",
+    "2fa",
+    "two-factor-authentication",
+    "phone-verification",
+    "email-verification",
+    "sms",
+    "whatsapp",
+    "serverless"
+  ],
   "private": true,
   "dependencies": {
     "twilio": "^5.2.1"
