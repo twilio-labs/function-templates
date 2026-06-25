@@ -28,10 +28,10 @@ exports.handler = function (context, event, callback) {
   const accessToken = new AccessToken(
     TWILIO_ACCOUNT_SID,
     TWILIO_API_KEY,
-    TWILIO_API_SECRET
+    TWILIO_API_SECRET,
+    { identity: ACCESS_TOKEN_IDENTITY }
   );
   accessToken.addGrant(videoGrant); // Add the grant to the token
-  accessToken.identity = ACCESS_TOKEN_IDENTITY;
   return callback(null, {
     token: accessToken.toJwt(), // Serialize the token to a JWT string
     room: ROOM_NAME,
