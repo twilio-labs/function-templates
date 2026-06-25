@@ -4,8 +4,8 @@ This template shows you how to create an invoice in Stripe based on an SMS promp
 
 It is divided up into two functions:
 
-- [create-invoice](./functions/create-invoice.js): handles the Twilio webhook event when an SMS is received and creates the invoice in Stripe.
-- [send-invoice-sms](./functions/create-invoice.js): handles the Stripe webhook event when the invoice is finalized and send the payment link SMS to the customer.
+- [create-invoice](./functions/create-invoice.protected.js): handles the Twilio webhook event when an SMS is received and creates the invoice in Stripe.
+- [send-invoice-sms](./functions/send-invoice-sms.js): handles the Stripe webhook event when the invoice is finalized and send the payment link SMS to the customer.
 
 ![Stripe SMS receipt demo gif](https://github.com/thorsten-stripe/demo-gifs/blob/master/twilio-stripe-payment-link-sms.gif?raw=true)
 
