@@ -1,6 +1,10 @@
-# Twilio Verify
+# Twilio Verify - One-Time Passcode Verification
 
-These function show you how to send and check verification tokens for [Twilio Verify](https://www.twilio.com/docs/verify/api). More details about how to work with Verify and Twilio functions can be found in [this blog post](https://www.twilio.com/blog/serverless-phone-verification).
+## Serverless phone, email, and WhatsApp verification with Twilio Verify
+
+These functions show you how to send and check verification tokens for [Twilio Verify](https://www.twilio.com/docs/verify/api). Build secure, serverless user verification flows with one-time passcodes (OTP) delivered via SMS, voice call, WhatsApp, or email. More details about how to work with Verify and Twilio functions can be found in [this blog post](https://www.twilio.com/blog/serverless-phone-verification).
+
+Perfect for two-factor authentication (2FA), account verification, password resets, transaction confirmations, and any use case requiring identity verification.
 
 ![phone-verification-gif](./phone-verification-v3.gif?raw=true)
 
@@ -31,7 +35,7 @@ In your `.env` file, set the following values:
 | Parameter      | Description                                 | Required |
 | :------------- | :------------------------------------------ | :------- |
 | `to`           | Either an email or phone number in [E.164 format](https://www.twilio.com/docs/glossary/what-e164) | Yes |
-| `channel`      | 'sms', 'call', or 'email'. Default is 'sms' | No |
+| `channel`      | 'sms', 'call', 'whatsapp', or 'email'. Default is 'sms' | No |
 | `locale`       | Localization language. See [supported languages](https://www.twilio.com/docs/verify/supported-languages). Default is 'en' | No |
 
 `check-verify.js` expects the following parameters:
@@ -83,3 +87,10 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
+
+## Additional Resources
+
+- [Twilio Verify API Documentation](https://www.twilio.com/docs/verify/api)
+- [Verify Quickstart Guide](https://www.twilio.com/docs/verify/quickstarts)
+- [Email Verification Setup](https://www.twilio.com/docs/verify/email)
+- [Phone Verification with Twilio Verify Blog Tutorial](https://www.twilio.com/en-us/blog/serverless-phone-verification)
