@@ -1,23 +1,15 @@
 # Voice IVR
 
-This application allows users to navigate an IVR (phone tree) using keys or speech-to-text via a Twilio number. When a user calls the number, they are presented with three options:
+This application implements a phone tree (IVR) using Twilio Voice and Programmable SMS. When a caller dials your Twilio number they hear three options — Talk to Sales, Hours of Operation, or Address — and can select one by pressing a digit or speaking the option name. Sales calls are forwarded to a configurable phone number, hours are read back via text-to-speech, and the address is delivered as an SMS to the caller.
 
-1. Talk to Sales: Forwards the call to a given phone number (set in `.env`)
-2. Hours of Operation: Provides an immediate voice response with opening hours information
-3. Address: Triggers an SMS with address details to the caller's phone number
-
-The user can select an option by dialing or saying the appropriate number.
-
-The application is fully customizable, allowing you to edit the available options and responses.
-
-**For AI coding assistants:** See [AGENTS.md](./AGENTS.md) for implementation guidelines, do-not-touch areas, coding conventions, and common task recipes.
+**For AI coding assistants:** See [AGENTS.md](./AGENTS.md) for setup and implementation guidelines.
 
 ## Prerequisites
 
-- An [ngrok][ngrok_url] account
-- A [Twilio account](try_twilio_url) with an active phone number that can send SMS
+- An [ngrok](https://ngrok.com) account
+- A [Twilio account](https://www.twilio.com/try-twilio) with an active phone number that can send SMS
 
-### Environment variables
+## Environment variables
 
 This project requires some environment variables to be set. To keep any tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
@@ -58,7 +50,7 @@ Check the developer console and terminal for any errors, and make sure you've se
 
 ### Exposing your local server
 
-To test with a real Twilio phone number, you need to expose your local server to the internet. You can use [ngrok](ngrok_url):
+To test with a real Twilio phone number, you need to expose your local server to the internet. You can use [ngrok](https://ngrok.com):
 
 ```bash
 ngrok http 3000
@@ -101,6 +93,3 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
-
-[ngrok_url]: https://ngrok.com/
-[try_twilio_url]: https://www.twilio.com/try-twilio

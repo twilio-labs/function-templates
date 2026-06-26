@@ -1,86 +1,74 @@
-# Voice IVR - Agent Guidelines
+# Voice IVR
 
-This document provides AI assistants with essential information for working with the Voice IVR project.
+This sample demonstrates a phone tree (IVR) using Twilio Voice and Programmable SMS, where callers navigate options by keypad or speech-to-text to reach sales, hear hours, or receive an address by SMS.
 
-## Project Overview
+## Environment Variables
 
-The Voice IVR project implements an interactive voice response system using Twilio. The system allows callers to navigate a phone tree using keypad digits or speech recognition. When users call the Twilio number, they can choose between: talking to sales, hearing business hours, or receiving an SMS with the company address.
+Copy `.env.example` to `.env`. Never commit `.env`.
 
-## Documentation Links
-
-All Twilio documentation URLs in this guide can be accessed in markdown format by adding `.md` to the end of the URL.
-
-## Do-Not-Touch Areas
-
-### 1. Webhook Signature Verification
-
-The `.protected.js` suffix on function files indicates they require valid Twilio signatures. Never remove this protection or modify the validation logic. Twilio's serverless toolkit handles this automatically.
-
-### 2. Critical Parameters
-
-Never modify these critical parameters without explicit instructions:
-
-- `numDigits: 1` in voice-ivr.js - This ensures the system expects a single digit input
-- `input: 'speech dtmf'` in voice-ivr.js - This enables both speech and touch-tone input
-- Webhook paths (`voice-ivr` and `handle-user-input`) - These must match Twilio configurations
-
-### 3. Sensitive Data
-
-Never expose or hardcode these sensitive details:
-
-- Phone numbers (use environment variables)
-- Twilio account credentials
-- Customer information received during calls
-
-## Coding Conventions
-
-**TwiML must be returned via callback**: All functions must call `callback(null, twiml)` to return TwiML responses. Never use `return twiml` directly.
-
-```javascript
-const twiml = new Twilio.twiml.VoiceResponse();
-twiml.say('Message to speak');
-callback(null, twiml); // Required pattern
+```bash
+cp .env.example .env
 ```
 
-## Tests
+| Variable | Where to find | Format |
+| -------- | ------------- | ------ |
+| `MY_PHONE_NUMBER` | The phone number you want the Sales option to forward calls to — use your own mobile during development | E.164 format: `+15551234567` |
 
-Run `npm test` from the repository root. Comprehensive test coverage exists in `tests/` for both functions, covering DTMF inputs, speech recognition, error handling, and SMS delivery.
+> Note: `ACCOUNT_SID` and `AUTH_TOKEN` are injected automatically by Twilio Serverless and do not need to be set in `.env`.
 
-## Common Tasks
+## Commands
 
-### Adding a New Menu Option
+```bash
+# Install Twilio CLI serverless plugin (once)
+twilio plugins:install @twilio-labs/plugin-serverless
 
-To add a new menu option (e.g., "Support"):
+# Initialize a new project from this template
+twilio serverless:init example --template=voice-ivr && cd example
 
-1. Add new option in `voice-ivr.protected.js`:
-   ```javascript
-   gather.say('Press 4 or say Support to get technical help');
-   ```
+# Run locally
+twilio serverless:start
 
-2. Add speech recognition and handler in `handle-user-input.protected.js`:
-   ```javascript
-   // In speech normalization section
-   if (UserInput.toLowerCase().includes('support')) {
-     UserInput = '4';
-   }
+# Expose webhooks locally
+# Requires ngrok — install and authenticate at https://ngrok.com before running
+ngrok http 3000
+# Set the resulting HTTPS URL + /voice-ivr as the webhook in Twilio Console (Voice → A Call Comes In → POST)
 
-   // In switch statement
-   case '4':
-     twiml.say('Connecting you to our support team');
-     twiml.dial(context.SUPPORT_PHONE_NUMBER);
-     break;
-   ```
+# Deploy to Twilio Serverless
+twilio serverless:deploy
 
-3. Add any necessary environment variable to `.env`:
-   ```
-   SUPPORT_PHONE_NUMBER=+15551234567
-   ```
+# Test
+npm test
+```
 
-4. Add any required unit tests
+## Project Structure
 
-## Further Resources
+- `functions/voice-ivr.protected.js` — entry point; presents the IVR menu via TwiML `<Gather>`
+- `functions/handle-user-input.protected.js` — handles digit/speech input; forwards call, reads hours, or sends SMS
+- `.env.example` — environment variable template
+- `tests/` — Jest test suite
 
-- [Twilio TwiML Voice Documentation](https://www.twilio.com/docs/voice/twiml)
-- [Twilio Speech Recognition](https://www.twilio.com/docs/voice/twiml/gather#speechmodel)
-- [Twilio SMS Documentation](https://www.twilio.com/docs/sms)
-- [Twilio Serverless Functions](https://www.twilio.com/docs/runtime/functions)
+## Agent Boundaries
+
+**Always:**
+
+- Confirm `.env` is configured before running any command
+- Use the Environment Variables section to guide the user to each credential — don't ask them to find values without direction
+- Confirm the app is running before asking the user to test it
+
+**Never:**
+
+- Run the app with missing or placeholder credentials
+- Hardcode credentials or phone numbers in source files
+- Skip the `cp .env.example .env` step
+
+## Verify It's Working
+
+1. Call your Twilio phone number. You should hear the IVR prompt offering three options.
+2. Press `1` (or say "Sales") — the call should forward to the number set in `MY_PHONE_NUMBER`. Press `3` (or say "Address") — you should receive an SMS with the address to the caller's number within a few seconds.
+
+## Twilio Resources
+
+- [Twilio Console](https://console.twilio.com) — credentials, phone numbers, webhook configuration
+- [Twilio Voice TwiML](https://www.twilio.com/docs/voice/twiml) — TwiML verb reference
+- [Twilio Serverless Toolkit](https://www.twilio.com/docs/labs/serverless-toolkit) — deploy and manage Twilio Functions
+- [Programmable SMS](https://www.twilio.com/docs/sms) — SMS API reference
