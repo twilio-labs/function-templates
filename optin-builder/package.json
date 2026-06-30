@@ -1,0 +1,26 @@
+{
+  "name": "twilio-keyword",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "start": "twilio serverless:start --live",
+    "deploy": "twilio serverless:deploy"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "jest": "^30.4.2",
+    "rewire": "^9.0.1",
+    "sinon": "^11.1.2",
+    "twilio-run": "^2.4.1"
+  },
+  "engines": {
+    "node": "12"
+  },
+  "dependencies": {
+    "airtable": "^0.11.0",
+    "analytics-node": "^3.0.0",
+    "axios": "^1.18.1",
+    "twilio": "^6.0.2"
+  }
+}
