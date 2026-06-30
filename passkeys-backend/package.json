@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "twilio": "^5.3.3",
-    "axios": "^1.7.7"
+    "axios": "^1.7.7",
+    "uuid": "^11.0.4"
   }
 }

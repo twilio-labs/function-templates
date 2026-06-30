@@ -1,13 +1,17 @@
 const axios = require('axios');
+const { v5 } = require('uuid');
 
 const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { DOMAIN_NAME, API_URL, ANDROID_APP_KEYS } = context;
+  const { API_URL, SERVICE_SID } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Verify request comes with username
   const missingParams = detectMissingParams(['username'], event);
@@ -22,40 +26,21 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
-  const androidOrigins = (keys) => {
-    if (!keys || keys.trim() === '""') return [];
-    return keys.split(',');
-  };
+  const uuidIdentity = v5(event.username, v5.URL);
 
-  // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
   const requestBody = {
-    friendly_name: 'Passkey Example',
-    to: {
-      user_identifier: event.username,
-    },
-    content: {
-      relying_party: {
-        id: DOMAIN_NAME,
-        name: 'PasskeySample',
-        origins: [
-          `https://${DOMAIN_NAME}`,
-          ...androidOrigins(ANDROID_APP_KEYS),
-        ],
-      },
-      user: {
-        display_name: event.username,
-      },
-      authenticator_criteria: {
-        authenticator_attachment: 'platform',
-        discoverable_credentials: 'preferred',
-        user_verification: 'preferred',
-      },
+    friendly_name: event.username,
+    identity: uuidIdentity,
+    config: {
+      authenticator_attachment: 'platform',
+      discoverable_credentials: 'preferred',
+      user_verification: 'preferred',
     },
   };
 
   // Factor URL of the passkeys service
-  const factorURL = `${API_URL}/Factors`;
+  const factorURL = `${API_URL}/${SERVICE_SID}/Passkeys/Factors`;
 
   // Call made to the passkeys service
   try {
@@ -67,9 +52,11 @@ exports.handler = async (context, event, callback) => {
     });
 
     response.setStatusCode(200);
-    response.setBody(APIResponse.data.next_step);
+    response.setBody({
+      ...APIResponse.data.options.publicKey,
+      identity: uuidIdentity,
+    });
   } catch (error) {
-    console.error('Error in passkeys registration start:', error.message);
     const statusCode = error.status || 400;
     response.setStatusCode(statusCode);
     response.setBody(error.message);
