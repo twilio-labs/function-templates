@@ -1,0 +1,24 @@
+name: Template Request
+description: Request a template for a new or existing use case
+title: "[Template Request]: "
+labels: template-request
+assignees: ''
+body:
+- type: textarea
+  attributes:
+    label: What is your use case? 
+    description: A clear and concise description of what your use case is.
+    placeholder: SMS Broadcast Notifications
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Describe the solution you'd like.
+    description: A clear and concise description of what you want to happen.
+    placeholder: I want a user to be able to input a list of phone numbers and a message into a browser interface. When I click "Send" I want that message to be sent to all of numbers via SMS.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: "Additional requirements/dependencies:"
+    description: List any additional requirements this template should fulfill.
