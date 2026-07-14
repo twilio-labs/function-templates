@@ -3,6 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "mailgun.js": "^3.3.0"
+    "mailgun.js": "^7.0.0"
   }
 }
