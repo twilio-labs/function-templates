@@ -1,20 +1,20 @@
+/* eslint-disable camelcase */
 const helpers = require('../../test/test-helper');
 const forwardCall = require('../functions/forward-call.protected').handler;
 
 const mockFetch = jest.fn().mockResolvedValue({
-  carrier: {
-    name: 'Verizon',
+  lineTypeIntelligence: {
+    carrier_name: 'Verizon',
     type: 'mobile',
   },
   callerName: {
-    // eslint-disable-next-line camelcase
     caller_name: 'Lottie Matthews',
   },
 });
 
 const mockClient = {
   lookups: {
-    v1: {
+    v2: {
       phoneNumbers: jest.fn(() => ({
         fetch: mockFetch,
       })),
@@ -56,11 +56,11 @@ test('forwards the call to the number from the context', (done) => {
 
 test('looks up the incoming phone number', (done) => {
   const expectedParams = {
-    type: ['carrier', 'caller-name'],
+    fields: 'caller_name,line_type_intelligence',
   };
   const callback = (_err, result) => {
     expect(result).toBeDefined();
-    expect(mockClient.lookups.v1.phoneNumbers).toHaveBeenCalledWith(event.From);
+    expect(mockClient.lookups.v2.phoneNumbers).toHaveBeenCalledWith(event.From);
     expect(mockFetch).toHaveBeenCalledWith(expectedParams);
     done();
   };
@@ -69,27 +69,27 @@ test('looks up the incoming phone number', (done) => {
 });
 
 test('sets the callername to Unknown if not returned', (done) => {
-  const callback = (_err, result) => {
-    expect(result).toBeDefined();
-    const expectedParams = {
-      body: `Incoming call from 54321
+  const expectedParams = {
+    body: `Incoming call from 54321
 Name: Unknown
 Carrier: Verizon (mobile)`,
-      to: context.MY_PHONE_NUMBER,
-      from: context.TWILIO_PHONE_NUMBER,
-    };
+    to: context.MY_PHONE_NUMBER,
+    from: context.TWILIO_PHONE_NUMBER,
+  };
+
+  const callback = (_err, result) => {
+    expect(result).toBeDefined();
     expect(mockClient.messages.create).toHaveBeenCalledWith(expectedParams);
     done();
   };
 
   mockFetch.mockResolvedValueOnce({
-    callerName: {
-      // eslint-disable-next-line camelcase
-      caller_name: null,
-    },
-    carrier: {
-      name: 'Verizon',
+    lineTypeIntelligence: {
+      carrier_name: 'Verizon',
       type: 'mobile',
+    },
+    callerName: {
+      caller_name: null,
     },
   });
 
