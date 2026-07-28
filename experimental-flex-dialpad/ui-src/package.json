@@ -17,7 +17,7 @@
     "@twilio/flex-plugin-scripts": "7.0.0"
   },
   "devDependencies": {
-    "@twilio/flex-ui": "^1",
+    "@twilio/flex-ui": "^2.0.0",
     "react-test-renderer": "16.5.2"
   }
 }
