@@ -20,32 +20,38 @@ const { detectMissingParams, VerificationException } = require(
   assets['/utils.js'].path
 );
 
-async function checkVerification(client, service, to, code) {
+/**
+ * Checks the verification status of a given code for a specified service and recipient.
+ *
+ * @param {Object} client - The client object used to interact with the verification service.
+ * @param {string} service - The ID of the verification service.
+ * @param {string} to - The recipient's phone number or email address.
+ * @param {string} code - The verification code to check.
+ * @returns {Promise<string>} - A promise that resolves to a success message if the verification is approved.
+ * @throws {VerificationException} - Throws an exception if the verification code is incorrect.
+ */
+async function verifyToken(client, service, to, code) {
   const check = await client.verify
     .services(service)
-    .verificationChecks.create({
-      to,
-      code,
-    });
+    .verificationChecks.create({ to, code });
 
   if (check.status === 'approved') {
     return 'Verification success.';
-    // eslint-disable-next-line no-else-return
-  } else {
-    throw new VerificationException(401, 'Incorrect token.');
   }
+
+  throw new VerificationException(401, 'Incorrect token.');
 }
 
+/**
+ * Twilio Function to handle verification check.
+ *
+ * @param {Object} context - The context object containing environment variables.
+ * @param {Object} event - The event object containing the request parameters.
+ * @param {Function} callback - The callback function to return the response.
+ */
 exports.handler = async function (context, event, callback) {
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
-
-  /*
-   * uncomment to support CORS
-   * response.appendHeader('Access-Control-Allow-Origin', '*');
-   * response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-   * response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-   */
 
   try {
     const missingParams = detectMissingParams(['to', 'code'], event);
@@ -59,8 +65,7 @@ exports.handler = async function (context, event, callback) {
     const client = context.getTwilioClient();
     const service = context.VERIFY_SERVICE_SID;
     const { to, code } = event;
-
-    const message = await checkVerification(client, service, to, code);
+    const message = await verifyToken(client, service, to, code);
 
     response.setStatusCode(200);
     response.setBody({
