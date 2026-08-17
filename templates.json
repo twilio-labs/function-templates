@@ -208,7 +208,7 @@
     {
       "id": "verify-totp",
       "name": "Authenticator app (TOTP) authentication",
-      "description": "Use authenticator apps like Authy or Google Authenticator that support Time-based One-Time Passwords (TOTP) with the Verify API."
+      "description": "Two-factor authentication (2FA) with authenticator apps like Google Authenticator or Authy, using TOTP and the Verify API."
     },
     {
       "id": "verify-totp-sms",

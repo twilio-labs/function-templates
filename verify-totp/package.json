@@ -1,5 +1,18 @@
 {
+  "name": "verify-totp",
   "version": "0.0.1",
+  "description": "Two-factor authentication with authenticator apps using time-based one-time passwords (TOTP) and the Twilio Verify API",
+  "keywords": [
+    "twilio",
+    "verify",
+    "totp",
+    "2fa",
+    "two-factor-authentication",
+    "authenticator-app",
+    "google-authenticator",
+    "authy",
+    "serverless"
+  ],
   "private": true,
   "dependencies": {
     "twilio": "^3.67.2",

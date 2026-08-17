@@ -5,6 +5,7 @@ This demo of the [Twilio Verify API](https://www.twilio.com/docs/verify/api) inc
 ## Pre-requisites
 
 * A Verify Service. [Create one in the Twilio Console](https://www.twilio.com/console/verify/services)
+* An authenticator app such as [Authy](https://authy.com/download/), Google Authenticator or Microsoft Authenticator
 
 ### Environment variables
 
@@ -70,7 +71,7 @@ Make sure variables are populated in your `.env` file. See [Environment variable
 twilio serverless:start
 ```
 
-5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+6. Open the web page at http://localhost:3000/index.html and enter a username to set up your authenticator app
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
@@ -83,3 +84,9 @@ With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
 ```
 twilio serverless:deploy
 ```
+## Related resources
+
+* [Verify TOTP Quickstart](https://www.twilio.com/docs/verify/quickstarts/totp) — step-by-step tutorial, including the TOTP settings (issuer, code length, time skew) on your Verify Service
+* [Verify Factor API reference](https://www.twilio.com/docs/verify/api/factor) and [Challenge API reference](https://www.twilio.com/docs/verify/api/challenge) — the two resources these Functions call
+* [How to use the Authy API with Google Authenticator](https://www.twilio.com/en-us/blog/developers/tutorials/product/authy-api-and-google-authenticator)
+* [Verify API overview](https://www.twilio.com/docs/verify/api) — all supported verification channels
