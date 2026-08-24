@@ -143,6 +143,7 @@
     "ai-assistants-samples",
     "mcp-server",
     "email-events-sms",
-    "send-receive-sms-messages"
+    "send-receive-sms-messages",
+    "sms-spam-scam-filter"
   ]
 }

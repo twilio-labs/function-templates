@@ -369,6 +369,11 @@
       "id": "send-receive-sms-messages",
       "name": "Send & receive SMS messages with Twilio",
       "description": "Demonstrates how to send & receive SMS messages with Twilio"
+    },
+    {
+      "id": "sms-spam-scam-filter",
+      "name": "SMS Spam and Scam Filter",
+      "description": "Filters inbound SMS for spam and scams with OpenAI, then redirects genuine messages to your webhook."
     }
   ]
 }
