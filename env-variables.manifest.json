@@ -219,6 +219,7 @@
         "contentKey": null
       }
     ],
+    "send-receive-sms-messages": [],
     "stripe-payment-link-sms": [
       {
         "key": "STRIPE_SECRET_KEY",
@@ -1947,6 +1948,68 @@
         "link": null,
         "default": "+12223334444",
         "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "sms-spam-scam-filter": [
+      {
+        "key": "OPENAI_API_KEY",
+        "required": true,
+        "format": "secret",
+        "description": "API key used to call OpenAI for SMS spam and scam classification",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "OPENAI_MODEL",
+        "required": false,
+        "format": "text",
+        "description": "OpenAI model used for SMS classification",
+        "link": null,
+        "default": "gpt-5.6-luna",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FORWARD_WEBHOOK_URL",
+        "required": true,
+        "format": "url",
+        "description": "Webhook URL that should receive inbound SMS requests classified as genuine",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "FORWARD_WEBHOOK_METHOD",
+        "required": false,
+        "format": "text",
+        "description": "HTTP method used when redirecting genuine SMS requests to the forwarding webhook",
+        "link": null,
+        "default": "POST",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "OPENAI_TIMEOUT_MS",
+        "required": false,
+        "format": "number",
+        "description": "Timeout in milliseconds for OpenAI classification requests",
+        "link": null,
+        "default": "7000",
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_SMS_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/sms-spam-scam-filter",
+        "configurable": false,
         "contentKey": null
       }
     ]
