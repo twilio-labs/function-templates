@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { templates } = require('../templates.json');
 
 console.log('Generating templates.md');
@@ -19,7 +20,10 @@ const templateList = templates.map(({ id, name, description }) =>
 const templateMarkdown = [docHeader, ...templateList].join('\n');
 
 try {
-  fs.writeFileSync('../docs/templates.md', templateMarkdown);
+  fs.writeFileSync(
+    path.join(__dirname, '..', 'docs', 'templates.md'),
+    templateMarkdown
+  );
   console.log('file updated');
 } catch (err) {
   console.error(err);

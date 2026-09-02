@@ -4,15 +4,14 @@ This is the list of Functions available in this repo:
 * [Blank Template](https://github.com/twilio-labs/function-templates/blob/main/blank): Barebones template to get started
 * [Hello World](https://github.com/twilio-labs/function-templates/blob/main/hello-world): Basic Function that will return Hello World
 * [Hello Voice](https://github.com/twilio-labs/function-templates/blob/main/hello-voice): Function to get you started with Twilio Prog. Voice
-* [Hello Messaging](https://github.com/twilio-labs/function-templates/blob/main/hello-messaging): Function to get you started with Twilio Prog. Messaging
+* [SMS Auto-Response](https://github.com/twilio-labs/function-templates/blob/main/hello-messaging): Automatically respond to incoming SMS messages with 'Hello World'. When a user texts your Twilio phone number, they instantly receive an automated reply. Perfect starting point for SMS applications.
 * [Never gonna give you up](https://github.com/twilio-labs/function-templates/blob/main/never-gonna-give-you-up): Never gonna let you down. Plays a song to a phone call
 * [Forward Call](https://github.com/twilio-labs/function-templates/blob/main/forward-call): Forwards an incoming call to another number
-* [Forward Message](https://github.com/twilio-labs/function-templates/blob/main/forward-message): Forwards incoming messages to another number or to a set of numbers
-* [Forward Message to Email via SendGrid](https://github.com/twilio-labs/function-templates/blob/main/forward-message-sendgrid): Uses SendGrid to forward incoming messages via email
+* [Forward Message](https://github.com/twilio-labs/function-templates/blob/main/forward-message): Forwards incoming messages to another number or set of numbers
 * [Voicemail](https://github.com/twilio-labs/function-templates/blob/main/voicemail): Forwards calls during business hours. Records messages otherwise.
-* [Forward Message to Email via Sparkpost](https://github.com/twilio-labs/function-templates/blob/main/forward-message-sparkpost): Uses Sparkpost to forward incoming messages via email
 * [Airtable SMS Broadcast](https://github.com/twilio-labs/function-templates/blob/main/airtable): Read and write data from an Airtable table to broadcast messages
 * [Simple Conference](https://github.com/twilio-labs/function-templates/blob/main/conference): Drops all incoming calls into a conference room
+* [Send & receive SMS messages](https://github.com/twilio-labs/function-templates/blob/main/send-receive-sms-messages): Learn how to send and receive SMS with Twilio
 * [Stripe payments via SMS](https://github.com/twilio-labs/function-templates/blob/main/stripe-payment-link-sms): Send payment links via SMS using Stripe
 * [Stripe SMS Receipt Webhook Handler Function](https://github.com/twilio-labs/function-templates/blob/main/stripe-sms-receipt): Send an SMS receipt to your Stripe customers
 * [Chat Token Function](https://github.com/twilio-labs/function-templates/blob/main/chat-token): Generates a Chat Access Token for client-side applications
@@ -44,10 +43,12 @@ This is the list of Functions available in this repo:
 * [Email Verification Magic Links](https://github.com/twilio-labs/function-templates/blob/main/magic-links): Send one-click email verification using Verify and SendGrid
 * [Verify Testing Dashboard](https://github.com/twilio-labs/function-templates/blob/main/verify-dashboard): Helpful dashboard for testing and debugging during your development with Twilio Verify.
 * [Authenticator app (TOTP) authentication](https://github.com/twilio-labs/function-templates/blob/main/verify-totp): Use authenticator apps like Authy or Google Authenticator that support Time-based One-Time Passwords (TOTP) with the Verify API.
+* [Combined authenticator app (TOTP) authentication with SMS/WhatsApp fallback](https://github.com/twilio-labs/function-templates/blob/main/verify-totp-sms): Use Time-based One-Time Passwords (TOTP) authentication with fallback options to SMS or WhatsApp using the Verify API.
 * [Verification with Retry Logic](https://github.com/twilio-labs/function-templates/blob/main/verify-retry): Best practices UI for resending SMS verification codes and voice channel fallback.
+* [Verify Push Backend for Authy](https://github.com/twilio-labs/function-templates/blob/main/verify-push-authy-backend): Issue QR codes with access tokens and create push challenges from this helpful app and dashboard.
 * [Verify Push Backend](https://github.com/twilio-labs/function-templates/blob/main/verify-push-backend): Issue access tokens and create push challenges from this helpful app and dashboard.
 * [SMS Broadcast with Verification](https://github.com/twilio-labs/function-templates/blob/main/verified-broadcast): Broadcast messages to verified subscribers from a web application dashboard.
-* [International telephone input](https://github.com/twilio-labs/function-templates/blob/main/international-telephone-input): International telephone input form field and phone number validation with Twilio Lookup.
+* [International Telephone Input Validation](https://github.com/twilio-labs/function-templates/blob/main/international-telephone-input): Validate international phone numbers with automatic country detection, intl-tel-input formatting, and Twilio Lookup API v2. Includes E.164 conversion and server-side validation for global phone number collection.
 * [Forward SMS message as an email (Mailgun)](https://github.com/twilio-labs/function-templates/blob/main/forward-message-mailgun): The function will forward incoming SMS messages to an email address using the Mailgun API
 * [JSON Webhook Adapter](https://github.com/twilio-labs/function-templates/blob/main/json-webhook): Forward a URL encoded Twilio webhook event to a JSON webhook, suitable for use with services like Zapier and IFTTT
 * [SMS Broadcast](https://github.com/twilio-labs/function-templates/blob/main/sms-broadcast): Use a Twilio Notify service to subscribe users and broadcast messages to them
@@ -58,5 +59,20 @@ This is the list of Functions available in this repo:
 * [COVID-19 Vaccine FAQ Bot](https://github.com/twilio-labs/function-templates/blob/main/covid-vaccine-faq-bot): Address COVID-19 vaccine hesitancy among consumers and answer their vaccine-related questions through an SMS chatbot
 * [Patient Appointment Management](https://github.com/twilio-labs/function-templates/blob/main/patient-appointment-management): Patient Appointment Management including notification and reminders sent via SMS
 * [Phone Number Lookup](https://github.com/twilio-labs/function-templates/blob/main/lookup): Detect invalid phone numbers and get carrier and caller name information with this interface to Twilio's Lookup API.
+* [OpenAI Vector Store Search](https://github.com/twilio-labs/function-templates/blob/main/openai-vector-store-search): Query an OpenAI Vector Store for the documents most relevant to a search query
 * [Email contact form](https://github.com/twilio-labs/function-templates/blob/main/contact-form): A contact form that uses SendGrid to send emails
 * [Caller ID with call forwarding](https://github.com/twilio-labs/function-templates/blob/main/caller-id-forwarding): Set up a Twilio number to forward calls and receive an SMS with caller ID information when a call comes in.
+* [Frontline Functions Quickstart](https://github.com/twilio-labs/function-templates/blob/main/frontline-quickstart): Creates 1 function for each callback needed to setup Frontline features. This is intended to be used as the Integration Service of a Frontline instance.
+* [A Video Token Backend](https://github.com/twilio-labs/function-templates/blob/main/video-token-backend): Creates a backend that mints Twilio Video Access tokens
+* [Verify Silent Network Auth Sample Backend](https://github.com/twilio-labs/function-templates/blob/main/verify-sna): Backend to communicate with Verify API. This backend starts and validates login requests against the Verify API by using the SNA channel functionality. The results will be presented on the UI dashboard.
+* [Native Flex Dialpad Add-on](https://github.com/twilio-labs/function-templates/blob/main/experimental-flex-dialpad): Adds agent to agent outbound call and external number transfer to Twilio Flex native dialpad 
+* [List Numbers](https://github.com/twilio-labs/function-templates/blob/main/list-numbers): Lists all phone numbers in your account
+* [Transfers](https://github.com/twilio-labs/function-templates/blob/main/transfers): Transfers a call to another number
+* [Twilio Verify Pre-Fill Sample App](https://github.com/twilio-labs/function-templates/blob/main/verify-prefill): Showcases the new Twilio Lookup Pre-Fill API
+* [Send scheduled reminder messages](https://github.com/twilio-labs/function-templates/blob/main/reminder-message): Schedule a reminder message to be sent a specified time after the initial message
+* [Backend for passkeys app](https://github.com/twilio-labs/function-templates/blob/main/passkeys-backend): Connect applications with the passkeys service
+* [Block Spam Calls](https://github.com/twilio-labs/function-templates/blob/main/block-spam-calls): Uses Twilio Add-ons to block unwanted calls by checking the spam ratings of incoming phone numbers.
+* [AI Assistants Samples](https://github.com/twilio-labs/function-templates/blob/main/ai-assistants-samples): Functions to connect AI Assistants to various Channels and Tools
+* [MCP Server](https://github.com/twilio-labs/function-templates/blob/main/mcp-server): Functions to run an MCP server for Twilio API tools
+* [Email Open and Click Alerts via SMS](https://github.com/twilio-labs/function-templates/blob/main/email-events-sms): This template tracks and sends SMS alerts of email open and click statuses.
+* [Send & receive SMS messages with Twilio](https://github.com/twilio-labs/function-templates/blob/main/send-receive-sms-messages): Demonstrates how to send & receive SMS messages with Twilio
