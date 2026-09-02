@@ -9,8 +9,6 @@ function getVectorStoreId(context, event) {
     trimIfString(event.vector_store_id) || // eslint-disable-line camelcase
     trimIfString(context.OPENAI_VECTOR_STORE_ID);
 
-  console.log('using vectorStoreId: [${vectorStoreId}]');
-
   if (!vectorStoreId) {
     throw new Error(
       'Missing parameter; please provide a `vector_store_id` or set the OPENAI_VECTOR_STORE_ID environment variable.'
