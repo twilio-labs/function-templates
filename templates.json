@@ -291,6 +291,11 @@
       "description": "Detect invalid phone numbers and get carrier and caller name information with this interface to Twilio's Lookup API."
     },
     {
+      "id": "openai-vector-store-search",
+      "name": "OpenAI Vector Store Search",
+      "description": "Query an OpenAI Vector Store for the documents most relevant to a search query"
+    },
+    {
       "id": "contact-form",
       "name": "Email contact form",
       "description": "A contact form that uses SendGrid to send emails"
