@@ -1,36 +1,27 @@
-const axios = require('axios');
+const assets = Runtime.getAssets();
+const { jsonResponse } = require(assets['/services/helpers.js'].path);
 
-// eslint-disable-next-line consistent-return
 exports.handler = async (context, _, callback) => {
-  const { DOMAIN_NAME, API_URL } = context;
+  const { VERIFY_SERVICE_SID } = context;
 
-  const response = new Twilio.Response();
-  response.appendHeader('Content-Type', 'application/json');
+  const response = jsonResponse();
 
-  const { username, password } = context.getTwilioClient();
-
-  const requestBody = {
-    content: {
-      // eslint-disable-next-line camelcase
-      rp_id: DOMAIN_NAME,
-    },
-  };
-
-  const challengeURL = `${API_URL}/Verifications`;
+  const client = context.getTwilioClient();
 
   try {
-    const APIResponse = await axios.post(challengeURL, requestBody, {
-      auth: {
-        username,
-        password,
-      },
-    });
+    /*
+     * No identity is sent: the challenge is resolved by the discoverable
+     * credential the user picks on their device.
+     */
+    const challenge = await client.verify.v2
+      .services(VERIFY_SERVICE_SID)
+      .newChallenge()
+      .create({});
 
     response.setStatusCode(200);
-    response.setBody(APIResponse.data.next_step);
+    response.setBody(challenge.options);
   } catch (error) {
-    const statusCode = error.status || 400;
-    response.setStatusCode(statusCode);
+    response.setStatusCode(error.status || 400);
     response.setBody(error.message);
   }
 

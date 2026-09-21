@@ -1,41 +1,61 @@
-const axios = require('axios');
 const helpers = require('../../test/test-helper');
 
-jest.mock('axios');
+const mockNewChallenge = {
+  create: jest.fn(),
+};
+
+const mockClient = {
+  verify: {
+    v2: {
+      services: jest.fn(() => ({ newChallenge: () => mockNewChallenge })),
+    },
+  },
+};
 
 const mockContext = {
-  getTwilioClient: () => ({
-    username: 'mockUsername',
-    password: 'mockPassword',
-  }),
+  VERIFY_SERVICE_SID: 'VAxxx',
+  getTwilioClient: () => mockClient,
 };
 
 describe('authentication/start', () => {
   beforeAll(() => {
-    jest.clearAllMocks();
     const runtime = new helpers.MockRuntime();
     runtime._addAsset(
       '/services/helpers.js',
       '../assets/services/helpers.private.js'
     );
-    helpers.setup({}, runtime);
+    helpers.setup(mockContext, runtime);
     handlerFunction = require('../functions/authentication/start').handler;
   });
   afterAll(() => {
     helpers.teardown();
   });
   beforeEach(() => {
-    jest.resetModules();
-    axios.post.mockClear();
+    jest.clearAllMocks();
+    mockNewChallenge.create.mockResolvedValue({
+      options: { publicKey: { challenge: 'mockChallenge' } },
+    });
+  });
+
+  it('returns the challenge options', (done) => {
+    const callback = (_, { _body, _statusCode }) => {
+      expect(mockClient.verify.v2.services).toHaveBeenCalledWith('VAxxx');
+      expect(mockNewChallenge.create).toHaveBeenCalledWith({});
+      expect(_statusCode).toEqual(200);
+      expect(_body).toEqual({ publicKey: { challenge: 'mockChallenge' } });
+      done();
+    };
+
+    handlerFunction(mockContext, {}, callback);
   });
 
   it('returns error with unsuccesfull request', (done) => {
     const expectedError = new Error('something bad happened');
-    axios.post = jest.fn(() => Promise.reject(expectedError));
+    mockNewChallenge.create.mockRejectedValue(expectedError);
 
-    const callback = (_, { _body }) => {
-      expect(_body).toBeDefined();
-      expect(axios.post).toHaveBeenCalledTimes(1);
+    const callback = (_, { _body, _statusCode }) => {
+      expect(mockNewChallenge.create).toHaveBeenCalledTimes(1);
+      expect(_statusCode).toEqual(400);
       expect(_body).toEqual(expectedError.message);
       done();
     };

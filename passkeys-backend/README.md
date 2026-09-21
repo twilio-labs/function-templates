@@ -2,6 +2,8 @@
 
 Verify enables developers to easily add Passkeys into their existing authentication flows, similar to Verify TOTP and Push. The Verify API supports passkey registration, public key storage, and auth flows. On the client-side, developers can optionally embed an open-source library (SDK) that handles interactions with operating systems and customizable UI widgets that maximize conversion.
 
+The functions talk to the Verify Passkeys API through the [Twilio Node helper library](https://www.twilio.com/docs/libraries/reference/twilio-node) (`context.getTwilioClient().verify.v2`), so there is no API URL or HTTP client to configure. See the [Verify Passkeys quickstart](https://www.twilio.com/docs/verify/quickstarts/passkeys) for the full API reference.
+
 ## How to use the template
 
 The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
@@ -12,18 +14,23 @@ The best way to use the Function templates is through the Twilio CLI as describe
 
 This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
-- Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
-
 You can find a `.env.example` file to copy for creating your own `.env` file
 
 In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| `API_URL`            | Passkeys API to point at                              | Yes |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
-| `ANDROID_APP_KEYS`   | The domain of the Android identity providers hash     | No  |
+| `VERIFY_SERVICE_SID` | Verify Service with Passkeys enabled. See [Obtaining the VERIFY_SERVICE_SID](#obtaining-the-verify_service_sid) | No |
+| `IOS_APP_ID`         | See [Using this backend from an iOS or Android app](#using-this-backend-from-an-ios-or-android-app) | No |
+| `ANDROID_PACKAGE_NAME` | See [Using this backend from an iOS or Android app](#using-this-backend-from-an-ios-or-android-app) | No |
+| `ANDROID_SHA256_CERT_FINGERPRINT` | See [Using this backend from an iOS or Android app](#using-this-backend-from-an-ios-or-android-app) | No |
+
+`ACCOUNT_SID` and `AUTH_TOKEN` are needed because every Function in this template calls the Verify API through `context.getTwilioClient()`:
+
+- **Running locally**, the development server does not pick up your Twilio CLI profile. Put both values in `.env` (or export them in your shell and start with `--load-local-env`), otherwise `getTwilioClient()` throws.
+- **Once deployed**, enable them in your [Functions configuration](https://www.twilio.com/console/functions/configure) instead of storing them as environment variables.
 
 ## Create a new project with the template
 
@@ -54,9 +61,7 @@ npm start
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
-6. [optional] Configure email verification
-
-[Follow the instructions in the docs](https://www.twilio.com/docs/verify/email) to set up email verification.
+ℹ️ Passkeys require the relying party to match the domain serving the page, so the local server can only be used against `localhost`. To test from a device, deploy the project first.
 
 ## Deploying
 
@@ -72,24 +77,54 @@ twilio serverless:deploy
 
 The following describes customization options and more details for understanding how this application works.
 
+### Using this backend from an iOS or Android app
+
+Native apps only get to use the passkeys stored for this domain if the domain publicly declares that it trusts them, and if the Verify Service accepts the origin the app reports. Both sides are driven by environment variables, so there are no files to hand-edit.
+
+Set the values for the platforms you need and redeploy:
+
+| Variable | Platform | Where to find it |
+| :------- | :------- | :--------------- |
+| `IOS_APP_ID` | iOS | `<Team ID>.<bundle identifier>`, e.g. `ABCDE12345.com.example.passkeys`. The Team ID is in the [Apple Developer account page](https://developer.apple.com/account). |
+| `ANDROID_PACKAGE_NAME` | Android | The `applicationId` of your app module, e.g. `com.example.passkeys`. |
+| `ANDROID_SHA256_CERT_FINGERPRINT` | Android | Colon separated SHA-256 of the signing certificate: `keytool -list -v -keystore <keystore> -alias <alias>`. For Play-signed builds use the fingerprint shown in Play Console → Setup → App signing. |
+
+The template then serves everything the platforms look for:
+
+| Endpoint | Used by | Purpose |
+| :------- | :------ | :------ |
+| `/.well-known/apple-app-site-association` | iOS | Declares `IOS_APP_ID` under `webcredentials`. Served from a Function so it gets a `application/json` content type, which Apple requires. |
+| `/.well-known/assetlinks.json` | Android | Digital Asset Links statement with `delegate_permission/common.get_login_creds` for `ANDROID_PACKAGE_NAME`. |
+| `/.well-known/webauthn` | Browsers | Related origin requests, so other origins in the list can use the same passkeys. |
+
+On the app side:
+
+- **iOS:** add `webcredentials:<your-domain>` to the Associated Domains capability. iOS reports `https://<your-domain>` as the origin, which is always in the allow list.
+- **Android:** use the Credential Manager API with the same package name and signing key. Android reports its origin as `android:apk-key-hash:<base64url SHA-256 of the signing certificate>`; `assets/origins.private.js` derives that value from `ANDROID_SHA256_CERT_FINGERPRINT`, so you do not need to compute it yourself.
+
+The endpoints also send permissive CORS headers so the apps and any allowed web origin can call them.
+
+⚠️ The allowed origins are baked into the Verify Service when it is created. If you set `ANDROID_SHA256_CERT_FINGERPRINT` after creating the service, update the service's origins in the [console](https://www.twilio.com/console/verify/services) or create a new one.
+
 ### Service customization
 
-Besides the enviroment variables files, the project also contain two files called `assetlink.json` and `apple-app-site-association` inside `./assets/.well-know/`, that is a public file that contains the identificators for the apps that will be connecting the service.
+`assets/origins.private.js` builds the list of origins from which passkey creation and authentication is allowed. Edit it if you need to allow origins beyond the deployed domain and the Android app.
 
-`apple-app-site-association` contains identificator hash for the origin app in iOS:
+#### Obtaining the VERIFY_SERVICE_SID
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-| ORIGIN_IOS_APP_HASH | Replace it with the identificator of the iOS app | yes |
+In order to start working with the rest of the Twilio Verify Passkeys API, you will need a Verify Service with Passkeys enabled. You can create one by calling the `/registration/service` endpoint once:
 
-`assetlink.json` contains identificator hash for the origin apps in android and web:
+```
+curl -X POST https://<your-domain>/registration/service
+```
 
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-| RELYING_PARTY | Replace it with the value of the relaying party | yes |
-| FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
+The response contains the `sid` of the new service. Set it as `VERIFY_SERVICE_SID` in your environment variables and redeploy.
+
+Inside that function you can modify the parameters of the service creation, like `friendlyName` or `passkeys.relyingParty.name`, to customize it to your needs.
 
 ### Function Parameters
+
+`/registration/service` a POST request, does not expect parameters
 
 `/registration/start` expects the following parameters:
 
@@ -121,4 +156,3 @@ Besides the enviroment variables files, the project also contain two files calle
 | clientDataJSON | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | userHandle | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
-

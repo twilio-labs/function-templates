@@ -1,14 +1,12 @@
-const axios = require('axios');
-
 const assets = Runtime.getAssets();
-const { isEmpty } = require(assets['/services/helpers.js'].path);
+const { isEmpty, jsonResponse, credentialFrom } = require(
+  assets['/services/helpers.js'].path
+);
 
-// eslint-disable-next-line consistent-return
 exports.handler = async (context, event, callback) => {
-  const { API_URL } = context;
+  const { VERIFY_SERVICE_SID } = context;
 
-  const response = new Twilio.Response();
-  response.appendHeader('Content-Type', 'application/json');
+  const response = jsonResponse();
 
   if (isEmpty(event)) {
     response.setStatusCode(400);
@@ -19,37 +17,28 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const { username, password } = context.getTwilioClient();
-
-  const requestBody = {
-    content: {
-      id: event.id,
-      rawId: event.rawId,
-      authenticatorAttachment: event.authenticatorAttachment,
-      type: event.type,
-      response: event.response,
-    },
-  };
-
-  const verifyFactorURL = `${API_URL}/Factors/Approve`;
+  const client = context.getTwilioClient();
 
   try {
-    const APIResponse = await axios.post(verifyFactorURL, requestBody, {
-      auth: {
-        username,
-        password,
-      },
-    });
+    const verifiedFactor = await client.verify.v2
+      .services(VERIFY_SERVICE_SID)
+      .newVerifyFactors.update(
+        credentialFrom(event, [
+          'attestationObject',
+          'clientDataJSON',
+          'transports',
+        ])
+      );
+
     response.setStatusCode(200);
     response.setBody({
       status:
-        APIResponse.data.status === 'approved'
+        verifiedFactor.status === 'approved'
           ? 'verified'
-          : APIResponse.data.status,
+          : verifiedFactor.status,
     });
   } catch (error) {
-    const statusCode = error.status || 400;
-    response.setStatusCode(statusCode);
+    response.setStatusCode(error.status || 400);
     response.setBody(error.message);
   }
 

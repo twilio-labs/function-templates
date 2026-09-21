@@ -1792,20 +1792,60 @@
     ],
     "passkeys-backend": [
       {
-        "key": "API_URL",
+        "key": "ACCOUNT_SID",
         "required": true,
-        "format": "url",
-        "description": "The URL of the API for passkeys",
-        "link": null,
-        "default": "https://comms.twilio.com/preview",
+        "format": "sid",
+        "description": "SID of your Twilio Account or Subaccount",
+        "link": "https://www.twilio.com/console",
+        "default": null,
         "configurable": true,
         "contentKey": null
       },
       {
-        "key": "ANDROID_APP_KEYS",
+        "key": "AUTH_TOKEN",
+        "required": true,
+        "format": "text",
+        "description": "Auth Token of your Twilio Account or Subaccount",
+        "link": "https://www.twilio.com/console",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "VERIFY_SERVICE_SID",
         "required": false,
-        "format": "list(text)",
-        "description": "[Optional] Comma separated domains for Android application",
+        "format": "sid",
+        "description": "[Optional] SID of the Verify Service with Passkeys enabled. Leave empty and call /registration/service once to create one.",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "IOS_APP_ID",
+        "required": false,
+        "format": "text",
+        "description": "[Optional] Apple App ID (Team ID + bundle ID) allowed to use passkeys from this domain, e.g. ABCDE12345.com.example.passkeys",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ANDROID_PACKAGE_NAME",
+        "required": false,
+        "format": "text",
+        "description": "[Optional] Package name of the Android app allowed to use passkeys from this domain, e.g. com.example.passkeys",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ANDROID_SHA256_CERT_FINGERPRINT",
+        "required": false,
+        "format": "text",
+        "description": "[Optional] SHA-256 fingerprint of the Android app signing certificate, colon separated",
         "link": null,
         "default": null,
         "configurable": true,
